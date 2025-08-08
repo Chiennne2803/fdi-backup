@@ -1,0 +1,8 @@
+<app-datatable [dataSource]="_dataSource"
+               [tableConfig]="_tableConfig"
+               [taskbarConfig]="_taskBarConfig"
+               [tableConfigBtns]="_btnConfig"
+               (rowClick)="handleRowClick($event)"
+               (tableEvent)="handleTableEvent($event)"
+               (handleSearch)="handleSearch($event)"
+               (pageSwitch)="handlePageSwitch($event)"></app-datatable>

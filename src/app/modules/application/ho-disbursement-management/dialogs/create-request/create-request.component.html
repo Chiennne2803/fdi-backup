@@ -1,0 +1,195 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Lập yêu cầu giải ngân</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="close()"></mat-icon>
+        </button>
+    </div>
+    <div [formGroup]="createRequest" class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="w-full">
+                <mat-label>Mã yêu cầu giải ngân</mat-label>
+                <div class="font-bold text-lg pt-4">{{createRequest.get('transCode').value}}</div>
+            </div>
+            <mat-form-field
+                class="w-full">
+                <mat-label>Hồ sơ giải ngân</mat-label>
+                <mat-select formControlName="fsLoanProfilesId" (ngModelChange)="onSelectLoanProfile($event)">
+                    <mat-option
+                        *ngFor="let loanProfiles of data.loanProfiles"
+                        [value]="loanProfiles.fsLoanProfilesId"
+                        class="min-h-15">
+                        {{loanProfiles.fsLoanProfilesId}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="createRequest.get('fsLoanProfilesId').hasError('required')">
+                    {{ 'GDGN007' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <div class="w-full">
+                <mat-label>Bên huy động vốn</mat-label>
+                <div class="font-bold text-lg pt-4">{{createRequest.get('fullName').value}}</div>
+            </div>
+            <div class="w-full">
+                <mat-label>Kỳ hạn vay</mat-label>
+                <div class="font-bold text-lg pt-4">{{createRequest.get('loanTimeCycle').value}}</div>
+            </div>
+            <div class="w-full">
+                <mat-label>Số tiền huy động</mat-label>
+                <div class="font-bold text-lg pt-4">{{createRequest.get('mobilizedAmount').value | currencyFormatPipe: 10}} VND</div>
+            </div>
+            <div class="w-full"></div>
+            <mat-form-field
+                class="w-full">
+                <mat-label>Thời gian giao dịch đầu tư cần giải ngân</mat-label>
+                <mat-select formControlName="investorTimeStart" (ngModelChange)="onSelectInvestorTimeStart($event)">
+                    <mat-option
+                        *ngFor="let investorTimeStart of lstInvestorTimeStart"
+                        [value]="investorTimeStart"
+                        class="min-h-15">
+                        {{investorTimeStart | datetimeformat: 'DD/MM/YYYY' }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="createRequest.get('investorTimeStart').hasError('required')">
+                    {{ 'GDGN009' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field
+                class="w-full">
+                <mat-label>Chọn khoản đầu tư cần giản ngân</mat-label>
+                <mat-select formControlName="selectTransInvestors" multiple
+                            (ngModelChange)="onSelectTransInvestors($event)">
+                    <!--                    <mat-select-trigger>Chọn</mat-select-trigger>-->
+                    <mat-option
+                        *ngFor="let investor of investors"
+                        [value]="investor.fsTransInvestorId"
+                        class="min-h-15"
+                    >
+                        {{investor.fullName}} {{ " : " }}
+                        {{investor.amount | currencyFormatPipe: 10}} VND
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="createRequest.get('selectTransInvestors').hasError('required')">
+                    {{ 'GDGN010' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-1 gap-5 py-5">
+            <div class="font-bold text-lg pt-2">Thông tin giải ngân</div>
+            <table class="min-w-full text-left text-sm font-light  rounded-xl w-full">
+                <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
+                <tr>
+                    <th scope="col" class="px-6 py-2">Tổng tiền giải ngân (VNĐ)</th>
+                    <th scope="col" class="px-6 py-2">Tổng lãi phải trả (VNĐ)</th>
+                    <th scope="col" class="px-6 py-2">Phí kết nối huy động vốn (VNĐ)</th>
+                    <th scope="col" class="px-6 py-2">Tổng tiền thực nhận (VNĐ)</th>
+                </tr>
+
+                </thead>
+                <tbody class=" text-gray-700 uppercase my-2 ">
+                <tr class="border-b dark:border-neutral-500 font-bold text-lg uppercase">
+                    <td class=" px-6 py-2">{{ totalAmount  | currencyFormatPipe: 10}}</td>
+                    <td class=" px-6 py-2">{{ totalInteres  | currencyFormatPipe: 10 }}</td>
+                    <td class=" px-6 py-2">{{ totalFee  | currencyFormatPipe: 10 }}</td>
+                    <td class=" px-6 py-2">{{ totalAmountRecive  | currencyFormatPipe: 10 }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- <div class="grid grid-cols-2 gap-5">
+             <div class="w-full ">
+                 <mat-label>Người thụ hưởng</mat-label>
+                 <div class="font-bold text-lg pt-2">{{createRequest.get('accName').value}}</div>
+             </div>
+             <div class="w-full">
+                 <mat-label>Số tài khoản</mat-label>
+                 <div class="font-bold text-lg pt-2">{{createRequest.get('accNo').value}}</div>
+             </div>
+             <div class="w-full">
+                 <mat-label>Ngân hàng</mat-label>
+                 <div class="font-bold text-lg pt-2">{{createRequest.get('bankName').value}}</div>
+             </div>
+             <div class="w-full">
+                 <mat-label>Chi nhánh</mat-label>
+                 <div class="font-bold text-lg pt-2">{{createRequest.get('branchName').value}}</div>
+             </div>
+         </div>-->
+        <div class="grid grid-cols-1 gap-5 py-5">
+            <div class="font-bold text-lg pt-2">Danh sách khoản đầu tư giải ngân</div>
+            <table mat-table [dataSource]="selectedTransInvestors" *ngIf="selectedTransInvestors.length > 0">
+                <ng-container matColumnDef="index">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            STT
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let j = index">
+                        <div class="cell-overflow">
+                            {{j + 1}}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fullName">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Nhà đầu tư
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.fullName }}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="amount">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Số tiền đầu tư
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.amount | currencyFormatPipe : 10 }}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="interestAtimate">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Lãi phải trả
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.interestAtimate | currencyFormatPipe : 10 }}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row
+                    class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800"
+                    *matHeaderRowDef="['index', 'fullName', 'amount', 'interestAtimate']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['index', 'fullName', 'amount', 'interestAtimate'];"
+                    class="text-gray-700 uppercase my-2 hover:bg-accent-50 hover:cursor-pointer"></tr>
+            </table>
+        </div>
+        <mat-dialog-actions align="end">
+            <button class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    (click)="close()">
+                Đóng
+            </button>
+            <button mat-flat-button
+                    *ngIf=" ('SFF_DISBURSEMENT_TRANSACTION_INSERT' | permission)"
+                    color="primary"
+                    (click)="onAlert()">Xác nhận</button>
+        </mat-dialog-actions>
+    </div>
+</div>

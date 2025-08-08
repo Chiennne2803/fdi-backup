@@ -1,0 +1,455 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+
+    <mat-drawer class="w-full sm:w-100" [mode]="'side'" [opened]="false" [position]="'end'" #fileDrawer>
+        <file-detail [fileDrawer]="fileDrawer" [selectedFile]="selectedFile"></file-detail>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <div class="flex flex-col w-full">
+            <ng-container>
+                <div class="relative w-full px-5">
+                    <div class="flex items-center justify-between w-full mx-auto py-2">
+                        <article class="prose break-words">
+                            <h3 class="flex flex-col sm:flex-row items-center justify-start gap-3">
+                                <span [routerLink]="['../']"
+                                    class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                                    <mat-icon class="icon-size-3 text-primary-grayNeutral-1"
+                                        svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                                    Quay lại
+                                </span>
+                                Thông tin hồ sơ
+                            </h3>
+                        </article>
+                        <!-- <div class="flex items-center justify-end">
+                            <a
+                                mat-icon-button
+                                [routerLink]="['../']">
+                                <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                            </a>
+                        </div> -->
+                    </div>
+                </div>
+                <ng-container *ngIf="loanProfile">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pb-5">
+                        <app-radial-bar-chart color="#4c84fc" title="Điểm tài chính" [hideLabel]="true"
+                            [score]="loanProfile.financialScoreChart"></app-radial-bar-chart>
+                        <app-radial-bar-chart title="Điểm định tính" color="#5cc9ff" [hideLabel]="true"
+                            [score]="loanProfile.qualitativeScoreChart"></app-radial-bar-chart>
+                        <app-radial-bar-chart title="Điểm tổng cộng" color="#2ebf7e" [hideLabel]="true"
+                            [score]="loanProfile.totalScoreChart"></app-radial-bar-chart>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-5 px-10">
+                        <article class=" break-words">
+                            <p>Số hồ sơ: <br> <b>{{ loanProfile.fsLoanProfilesId }}</b></p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Số tiền huy động(VNĐ): <br> <b>{{ loanProfile.amount | currencyFormatPipe : 10 }}</b>
+                            </p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Kỳ hạn(ngày): <br> <b>{{ loanProfile.loanTimeCycle }}</b></p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Lãi suất(%/năm): <br> <b>{{ loanProfile.rate }}</b></p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Mục đích: <br> <b>{{ loanProfile.reasons }}</b></p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Số tiền sau phí(VNĐ): <br> <b>{{ loanProfile.feePlus | currencyFormatPipe : 10 }}</b>
+                            </p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Số lãi(VNĐ): <br> <b>{{ loanProfile.interest | currencyFormatPipe : 10 }}</b></p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Số tiền cần trả(VNĐ): <br>
+                                <b>{{ loanProfile.totalAmount | currencyFormatPipe : 10 }}</b>
+                            </p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Hình thức bảo đảm: <br> <b>{{ loanProfile.collateralTypeName }}</b></p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Thời điểm dự kiến huy động: <br>
+                                <b>{{ loanProfile.expectedTime | datetimeformat : 'DD/MM/YYYY' }}</b>
+                            </p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Chi tiết: <br> <b>{{ loanProfile.info }}</b></p>
+                        </article>
+                        <article class=" break-words">
+                            <p>Trạng thái: <br> <b>{{ loanProfile.statusName }}</b></p>
+                        </article>
+                    </div>
+                    <div class="p-5">
+                        <mat-tab-group>
+                            <mat-tab label="Thông tin bên huy động vốn" class="px-0">
+                                <div class="flex flex-col px-6 pb-4 border border-primary-grayLight-2 rounded-lg"
+                                    *ngIf="admAccountDetail.type === userType.CA_NHAN">
+                                    <article class="prose pt-4">
+                                        <h4>Thông tin cá nhân</h4>
+                                    </article>
+                                    <div
+                                        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-5">
+                                        <!-- Avatar (chiếm 3 hàng dọc) -->
+                                        <div class="row-span-1 col-span-2 md:row-span-3 md:col-span-1">
+                                            <div class="w-full h-50 rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 bg-center bg-contain bg-no-repeat"
+                                                [ngStyle]="{
+                                                    'background-image': 'url(' + (avatar && avatar?.contentBase64 ? avatar.contentBase64 : 'assets/images/icon/user-avatar.svg') + ')'
+                                                }">
+                                            </div>
+                                        </div>
+
+                                        <!-- Các field thông tin cá nhân -->
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Họ và tên: <br> <b>{{ admAccountDetail.fullName }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>SĐT liên hệ: <br> <b>{{ admAccountDetail.mobile }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Email: <br> <b>{{ admAccountDetail.email }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>CCCD/Hộ chiếu: <br> <b>{{ admAccountDetail.identification }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Ngày cấp: <br> <b>{{ admAccountDetail.dateOfIdnumber | datetimeformat
+                                                        : 'DD/MM/YYYY' }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Nơi cấp: <br> <b>{{ admAccountDetail.placeOfIdnumber }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Giới tính: <br> <b>{{ admAccountDetail.genderName }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Ngày sinh: <br> <b>{{ admAccountDetail.dateOfBirth | datetimeformat :
+                                                        'DD/MM/YYYY' }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Tình trạng hôn nhân: <br> <b>{{ admAccountDetail.maritalName }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Nghề nghiệp: <br> <b>{{ admAccountDetail.jobName }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Đơn vị công tác: <br> <b>{{ admAccountDetail.jobAddress }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>MST cá nhân: <br> <b>{{ admAccountDetail.taxCode }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1">
+                                            <article class="break-words">
+                                                <p>Trang Facebook: <br> <b>{{ admAccountDetail.facebook }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-2">
+                                            <article class="break-words">
+                                                <p>Địa chỉ (theo CCCD/Hộ chiếu): <br> <b>{{ admAccountDetail.address2 }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-2">
+                                            <article class="break-words">
+                                                <p>Địa chỉ hiện tại: <br> <b>{{ admAccountDetail.address1 }}</b></p>
+                                            </article>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="flex flex-col px-6 pb-4 border border-primary-grayLight-2 rounded-lg"
+                                    *ngIf="admAccountDetail.type === userType.DOANH_NGHIEP">
+                                    <article class="prose pt-4">
+                                        <h4>Thông tin doanh nghiệp</h4>
+                                    </article>
+                                    <div  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-4">
+                                        <!-- Avatar (chiếm 3 hàng dọc) -->
+                                        <div class="row-span-1 col-span-2 md:row-span-3 md:col-span-1">
+                                            <div class="w-full h-50 rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 bg-center bg-contain bg-no-repeat"
+                                                [ngStyle]="{
+                                                    'background-image': 'url(' + (avatar && avatar?.contentBase64 ? avatar.contentBase64 : 'assets/images/icon/user-avatar.svg') + ')'
+                                                }">
+                                            </div>
+                                        </div>
+                                        <div class="col-span-1">
+                                            <article class=" break-words">
+                                                <p>Bên huy động vốn: <br> <b>{{ admAccountDetail.fullName }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words">
+                                                <p>Lĩnh vực hoạt động: <br>
+                                                    <b>{{ admAccountDetail.admCategoriesName }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words">
+                                                <p>MST doanh nghiệp: <br> <b>{{ admAccountDetail.businessCode }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words">
+                                                <p>SĐT liên hệ: <br> <b>{{ admAccountDetail.landline }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words">
+                                                <p>Số GPKD: <br> <b>{{ admAccountDetail.businessLicense }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words">
+                                                <p>Ngày cấp phép: <br>
+                                                    <b>{{ admAccountDetail.businessLicenseDate | datetimeformat :
+                                                        'DD/MM/YYYY' }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words">
+                                                <p>Được cấp bởi: <br>
+                                                    <b>{{ admAccountDetail.placeOfBusinessLicense }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words">
+                                                <p>Email: <br> <b>{{ admAccountDetail.email }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words truncate"
+                                                [matTooltip]="admAccountDetail.facebook">
+                                                <p>Trang Facebook: <br> <b><a target="_blank"
+                                                            [href]="admAccountDetail.facebook">{{
+                                                            admAccountDetail.facebook }}</a></b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ">
+                                            <article class=" break-words truncate"
+                                                [matTooltip]="admAccountDetail.website">
+                                                <p>Website: <br> <b><a target="_blank"
+                                                            [href]="admAccountDetail.website">{{
+                                                            admAccountDetail.website }}</a></b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-2">
+                                            <article class=" break-words">
+                                                <p>Địa chỉ(theo GPKD): <br> <b>{{ admAccountDetail.address3 }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-2">
+                                            <article class=" break-words">
+                                                <p>Địa chỉ hoạt động: <br> <b>{{ admAccountDetail.address2 }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col px-6 pb-4 mt-5 border border-primary-grayLight-2 rounded-lg"
+                                    *ngIf="admAccountDetail?.representative">
+                                    <article class="prose pt-4">
+                                        <h4>Thông tin người đại diện</h4>
+                                    </article>
+                                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-4">
+                                        <article class=" break-words">
+                                            <p>Họ và tên: <br> <b>{{ admAccountDetail.representative.fullName }}</b>
+                                            </p>
+                                        </article>
+                                        <article class=" break-words">
+                                            <p>Giới tính: <br> <b>{{ admAccountDetail.representative.genderName }}</b>
+                                            </p>
+                                        </article>
+                                        <article class=" break-words">
+                                            <p>Ngày sinh: <br>
+                                                <b>{{ admAccountDetail.representative.dateOfBirth | datetimeformat :
+                                                    'DD/MM/YYYY' }}</b>
+                                            </p>
+                                        </article>
+                                      
+                                        <article class=" break-words">
+                                            <p>SĐT liên hệ: <br> <b>{{ admAccountDetail.representative.mobile }}</b>
+                                            </p>
+                                        </article>
+                                        <article class=" break-words">
+                                            <p>Email: <br> <b>{{ admAccountDetail.representative.email }}</b>
+                                            </p>
+                                        </article>
+                                        <article class=" break-words">
+                                            <p>Chức vụ: <br>
+                                                <b>{{ admAccountDetail.representative.positionCompany }}</b>
+                                            </p>
+                                        </article>
+                                       
+                                        <article class=" break-words col-span-2">
+                                            <p>Địa chỉ thường trú: <br>
+                                                <b>{{ admAccountDetail.representative.address2 }}</b>
+                                            </p>
+                                        </article>
+                                        
+                                    </div>
+                                </div>
+                                <div class="flex flex-col px-6 pb-4 mt-5 border border-primary-grayLight-2 rounded-lg"
+                                    *ngFor="let pcontact of admAccountDetail?.contact; let idx = index">
+                                    <article class="prose pt-4">
+                                        <h4>Thông tin người Liên hệ </h4>
+                                    </article>
+                                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-5">
+                                        <article class=" break-words">
+                                            <p>Họ và tên: <br> <b>{{ pcontact.fullName }}</b></p>
+                                        </article>
+                                        <article class=" break-words">
+                                            <p>Giới tính: <br> <b>{{ pcontact.genderName }}</b></p>
+                                        </article>
+                                        <article class=" break-words">
+                                            <p>Ngày sinh: <br>
+                                                <b>{{ pcontact.dateOfBirth | datetimeformat : 'DD/MM/YYYY' }}</b>
+                                            </p>
+                                        </article>
+                                   
+                                        <article class=" break-words">
+                                            <p>SĐT liên hệ: <br> <b>{{ pcontact.mobile }}</b></p>
+                                        </article>
+                                        <article class=" break-words">
+                                            <p>Email: <br> <b>{{ pcontact.email }}</b></p>
+                                        </article>
+                                       
+                                        <article class=" break-words col-span-1">
+                                            <p>Nghề nghiệp: <br> <b>{{ pcontact.job }}</b></p>
+                                        </article>
+                                        <article class=" break-words col-span-2">
+                                            <p>Địa chỉ thường trú: <br> <b>{{ pcontact.address2 }}</b></p>
+                                        </article>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Tài liệu đính kèm" *ngIf="admAccountDetail.type === userType.DOANH_NGHIEP">
+                                <div class="w-full">
+                                    <article class=" mt-5">
+                                        <h4>Tài liệu đính kèm</h4>
+                                    </article>
+                                    <div class="flex flex-wrap">
+                                        <file-ui *ngFor="let file of finDocumentsId" [file]="file"
+                                            (click)="onClickFile(file)"></file-ui>
+                                    </div>
+
+                                    <div *ngFor="let conf of legal_documents_config">
+                                        <article class=" mt-5 w-full">
+                                            <h4>{{conf.title}}</h4>
+                                        </article>
+                                        <div class="flex flex-wrap">
+                                            <file-ui *ngFor="let file of conf.lstFile" [file]="file"
+                                                (click)="onClickFile(file)"></file-ui>
+                                        </div>
+                                    </div>
+
+                                    <div *ngFor="let conf of financial_documents_config">
+                                        <article class=" mt-5 w-full">
+                                            <h4>{{conf.title}}</h4>
+                                        </article>
+                                        <div class="flex flex-wrap">
+                                            <file-ui *ngFor="let file of conf.lstFile" [file]="file"
+                                                (click)="onClickFile(file)"></file-ui>
+                                        </div>
+                                    </div>
+
+                                    <div *ngFor="let conf of business_documentation_config">
+                                        <article class=" mt-5">
+                                            <h4>{{conf.title}}</h4>
+                                        </article>
+                                        <div class="flex flex-wrap">
+                                            <file-ui *ngFor="let file of conf.lstFile" [file]="file"
+                                                (click)="onClickFile(file)"></file-ui>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Tài liệu đính kèm" *ngIf="admAccountDetail.type === userType.CA_NHAN">
+                                <article class=" mt-5">
+                                    <h4>Tài liệu đính kèm</h4>
+                                </article>
+                                <div class="flex flex-wrap">
+                                    <file-ui *ngFor="let file of finDocumentsId" [file]="file"
+                                        (click)="onClickFile(file)"></file-ui>
+                                </div>
+                                <article class=" mt-5">
+                                    <h4>Hợp đồng lao động</h4>
+                                </article>
+                                <div class="flex flex-wrap">
+                                    <file-ui *ngFor="let file of laborContract" [file]="file" colume
+                                        (click)="onClickFile(file)"></file-ui>
+                                </div>
+                                <article class=" mt-5">
+                                    <h4>Hợp đồng cho thuê tài sản</h4>
+                                </article>
+                                <div class="flex flex-wrap">
+                                    <file-ui *ngFor="let file of rentalContract" [file]="file" colume
+                                        (click)="onClickFile(file)"></file-ui>
+                                </div>
+                                <article class=" mt-5">
+                                    <h4>Giấy chứng minh thu nhập khác</h4>
+                                </article>
+                                <div class="flex flex-wrap">
+                                    <file-ui *ngFor="let file of fileValues1" [file]="file" colume
+                                        (click)="onClickFile(file)"></file-ui>
+                                </div>
+                                <article class=" mt-5">
+                                    <h4>Giấy tờ có giá khác</h4>
+                                </article>
+                                <div class="flex flex-wrap">
+                                    <file-ui *ngFor="let file of fileValues2" [file]="file" colume
+                                        (click)="onClickFile(file)"></file-ui>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

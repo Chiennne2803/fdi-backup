@@ -1,0 +1,29 @@
+<a
+    class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
+    <div class="aspect-[9/6]">
+        <div class="flex items-center justify-center h-full">
+            <!-- Icons -->
+            <div class="relative">
+                <mat-icon
+                    class="icon-size-14 text-hint opacity-50"
+                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                <div
+                    class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                    [class.bg-red-600]="file?.type?.toUpperCase() === 'PDF'"
+                    [class.bg-blue-600]="file?.type?.toUpperCase() === 'DOC'"
+                    [class.bg-green-600]="['XLS', 'XLSX'].includes(file?.type?.toUpperCase())"
+                    [class.bg-gray-600]="['TXT', 'ZIP'].includes(file?.type?.toUpperCase())"
+                    [class.bg-amber-600]="['JPG', 'JPEG', 'PNG'].includes(file?.type?.toUpperCase())">
+                    {{file?.type?.toUpperCase()}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+<!--        <a-->
+<!--            (click)="downloadFile(file.finDocumentsId.toString())"-->
+<!--            class="truncate"-->
+<!--            [matTooltip]="'Tải về'">{{file.docName}}</a>-->
+        <a class="truncate">{{docname != null ? docname : file.docName}}</a>
+    </div>
+</a>

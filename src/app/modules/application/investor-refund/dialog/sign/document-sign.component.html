@@ -1,0 +1,58 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Xác nhận trình ký văn bản này ?</div>
+        <button mat-icon-button>
+            <mat-icon
+                mat-dialog-close
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"
+            ></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto">
+        <!-- Content -->
+        <div mat-dialog-content class="flex flex-col py-2 px-8" [formGroup]="formGroup">
+            <mat-form-field class="w-full">
+                <mat-label>Người phê duyệt</mat-label>
+                <mat-select formControlName="approvalBy">
+                    <mat-option
+                        *ngFor="let acc of (lstAccountApproval | async)"
+                        [value]="acc.admAccountId"
+                    >
+                        {{ acc.fullName }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="isInvalid('approvalBy')">
+                    {{ message.form.errors.required }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-full mt-5">
+                <mat-label>Nội dung trình ký</mat-label>
+                <input matInput type="text" formControlName="note">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="flex items-center mt-4 sm:mt-0">
+            <!-- Discard -->
+            <button
+                mat-flat-button
+                mat-dialog-close
+            >
+                Hủy
+            </button>
+            <button
+                mat-flat-button
+                color="warn"
+                class="ml-2"
+                (click)="onSubmit()"
+            >
+                Trình ký
+            </button>
+        </div>
+    </div>
+</div>

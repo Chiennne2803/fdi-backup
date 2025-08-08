@@ -1,0 +1,182 @@
+<!-- Header -->
+<div mat-dialog-title
+     class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-color-vnv text-on-primary -m-6 mb-4">
+    <div class="text-lg font-medium">Lập yêu cầu rút tiền từ ví HO</div>
+    <button mat-icon-button>
+        <mat-icon class="text-current"
+                  [svgIcon]="'heroicons_outline:x'"
+                  (click)="discard()"></mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content>
+    <!-- Compose form -->
+    <form class="flex flex-col flex-auto"
+          [formGroup]="requestWithdrawForm">
+        <!-- Info -->
+        <fuse-card>
+            <div class="flex flex-row w-full gap-4 m-5">
+                <article class="prose  w-full">
+                    <p>Mã yêu cầu <br>
+                        <span class="text-2xl">{{ requestWithdrawForm.get('transCode').value }}</span></p>
+                </article>
+            </div>
+            <div class="flex flex-row w-full gap-4 m-5">
+                <article class="prose  w-full">
+                    <p>Tài khoản ví rút <br>
+                        <span class="text-2xl">W_HO</span></p>
+                </article>
+            </div>
+            <div class="flex flex-row w-full gap-4 m-5">
+                <article class="prose  w-full">
+                    <p>Số dư khả dụng (VNĐ) <br>
+                        <span
+                            class="text-2xl">{{ requestWithdrawForm.get('availableBalances').value | currencyFormatPipe: 10}}
+                            VND</span></p>
+                </article>
+            </div>
+        </fuse-card>
+
+        <div class="flex flex-col mt-5">
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Tên tài khoản</mat-label>
+                    <input id="accName"
+                           matInput
+                           formControlName="accName">
+                    <mat-error *ngIf="requestWithdrawForm.get('accName').hasError('required')">
+                        {{ 'RTTK023' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="requestWithdrawForm.get('accName').hasError('maxlength')">
+                        {{ 'RTTK024' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Số tài khoản</mat-label>
+                    <input id="accNo"
+                           matInput
+                           formControlName="accNo">
+                    <mat-error *ngIf="requestWithdrawForm.get('accNo').hasError('required')">
+                        {{ 'RTTK025' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="requestWithdrawForm.get('accNo').hasError('maxlength')">
+                        {{ 'RTTK026' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <div class="w-full flex gap-5">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngân hàng</mat-label>
+                        <input id="bankName"
+                               matInput
+                               formControlName="bankName">
+                        <mat-error *ngIf="requestWithdrawForm.get('bankName').hasError('required')">
+                            {{ 'RTTK029' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="requestWithdrawForm.get('bankName').hasError('maxlength')">
+                            {{ 'RTTK030' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Chi nhánh</mat-label>
+                        <input id="branchName"
+                               matInput
+                               maxlength="100"
+                               formControlName="branchName">
+                        <mat-error *ngIf="requestWithdrawForm.get('branchName').hasError('required')">
+                            {{ 'RTTK027' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="requestWithdrawForm.get('branchName').hasError('maxlength')">
+                            {{ 'RTTK027' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Số tiền giao dịch (VNĐ)</mat-label>
+                    <input id="amount"
+                           matInput
+                           currencyMask autocomplete="off"
+                           maxlength="15"
+                           class="text-left"
+                           [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                           formControlName="amount">
+                    <mat-error *ngIf="requestWithdrawForm.get('amount').hasError('required')">
+                        {{ 'RTTK001' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="requestWithdrawForm.get('amount').hasError('max')">
+                        {{ 'RTTK002' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="requestWithdrawForm.get('amount').hasError('min')">
+                        {{ 'RTTK018' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="requestWithdrawForm.get('amount').hasError('maxlength')">
+                        {{ 'RTTK019' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Trạng thái</mat-label>
+                    <mat-select formControlName="status"
+                                [disabled]="true">
+                        <mat-option *ngFor="let item of status"
+                                    [value]="item.id">{{ item.label }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Ghi chú</mat-label>
+                    <textarea id="note"
+                              matInput
+                              trim="blur"
+                              maxlength="100"
+                              class="text-left"
+                              formControlName="note"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Người lập</mat-label>
+                    <input id="createdByName"
+                           matInput
+                           formControlName="createdByName">
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Ngày lập</mat-label>
+                    <input id="createdDate"
+                           matInput
+                           readonly
+                           formControlName="createdDate">
+                </mat-form-field>
+            </div>
+        </div>
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="mb-1">
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="-ml-2">
+        </div>
+
+        <div class="flex items-center mt-4 sm:mt-0">
+            <!-- Discard -->
+            <button class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    (click)="discard()">
+                Đóng
+            </button>
+            <!-- Submit -->
+
+            <button class="order-first sm:order-last ml-2"
+                    mat-flat-button
+                    *ngIf="'SFF_WITHDRAW_WALLET_INSERT' | permission"
+                    [color]="'primary'"
+                    (click)="submit()">
+                Lập yêu cầu
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

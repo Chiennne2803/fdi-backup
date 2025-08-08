@@ -1,0 +1,667 @@
+<mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent">
+
+    <mat-drawer
+        class="w-full sm:w-100"
+        [mode]="'side'"
+        [opened]="false"
+        [position]="'end'"
+        #fileDrawer>
+        <file-detail
+            [fileDrawer]="fileDrawer"
+            [selectedFile]="selectedFile"
+        ></file-detail>
+    </mat-drawer>
+
+
+
+    <mat-drawer-content class="flex flex-col">
+        <div class="flex flex-col w-full">
+            <ng-container>
+                <div class="relative w-full px-5">
+                    <div class="flex items-center justify-between w-full mx-auto py-2">
+                        <article class="prose break-words">
+                            <h3>
+                                Thông tin giao dịch chuyển nhượng
+                            </h3>
+                        </article>
+                        <div class="flex items-center justify-end">
+                            <a
+                                mat-icon-button
+                                (click)="onClose()"
+                            >
+                                <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="detailInvestmentTransferData">
+                    <div class="p-5">
+                        <mat-tab-group>
+                            <mat-tab label="Chi tiết giao dịch">
+                                <fuse-card class="flex flex-col px-8 pb-4">
+                                    <article class="prose">
+                                        <h4>Thông tin hồ sơ chuyển nhượng</h4>
+                                    </article>
+                                    <div class="grid grid-cols-4  gap-5 pt-5">
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Số hồ sơ huy động vốn: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesId }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Mã giao dịch: <br> <b>{{ detailInvestmentTransferData.transCode }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Bên huy động vốn: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.createdByName }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Kỳ hạn(ngày): <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.loanTimeCycle }} Ngày</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Số tiền gốc (VNĐ): <br> <b>{{ detailInvestmentTransferData.remainTranferAmount | currencyFormatPipe : 10 }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Giá đăng ký chuyển nhượng (VNĐ): <br> <b>{{ detailInvestmentTransferData.remainSalAmount | currencyFormatPipe : 10 }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Ngày đáo hạn: <br>
+                                                    <b>{{ detailInvestmentTransferData.investorTimeExpried | datetimeformat : 'DD/MM/YYYY' }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Lãi suất (%): <br>
+                                                    <b>{{ detailInvestmentTransferData.rate }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+<!--                                        <div class="col-span-1 ...">-->
+<!--                                            <article class="prose break-words">-->
+<!--                                                <p>Phí chuyển nhượng123 (VNĐ): <br>-->
+<!--                                                    <b>{{ detailInvestmentTransferData?.feeP2P | currencyFormatPipe : 10}}</b>-->
+<!--                                                </p>-->
+<!--                                            </article>-->
+<!--                                        </div>-->
+                                    </div>
+                                </fuse-card>
+                                <fuse-card class="flex flex-col px-8 pb-4 mt-5" [formGroup]="buyInvestment">
+                                    <article class="prose">
+                                        <h4>Thông tin mua chuyển nhượng</h4>
+                                    </article>
+                                    <div class="grid grid-rows-3 grid-cols-4  gap-5 pt-5">
+                                        <div class="col-span-2 ...">
+                                            <mat-form-field class="w-full pr-10">
+                                                <mat-label>Số tiền đầu tư nhận chuyển nhượng (VNĐ): </mat-label>
+                                                <input
+                                                    matInput
+                                                    currencyMask autocomplete="off"
+                                                    id="transferAmount"
+                                                    maxlength="15"
+                                                    [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                                    formControlName="transferAmount"
+                                                    [placeholder]="'Nhập số tiền...'"
+                                                >
+                                                <mat-error *ngIf="buyInvestment.get('transferAmount').hasError('required')">
+                                                    {{ 'INVP30028' | transloco }}
+                                                </mat-error>
+                                                <mat-error *ngIf="initInvestorTransP2PRes.isEnough">
+                                                    {{initInvestorTransP2PRes.message}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <p class="mat-error" *ngIf="initInvestorTransP2PRes.isEnough">*{{initInvestorTransP2PRes.message}}</p>
+                                        </div>
+
+                                        <!-- <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Doanh thu dự kiến (VNĐ): <br> <b>{{ estimateInvestorTrans?.totalAmountEstimate | currencyFormatPipe : 10 }}</b>
+                                                </p>
+                                            </article>
+                                        </div> -->
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Lãi dự kiến (VNĐ): <br> <b>{{ estimateInvestorTrans?.interestEstimate | currencyFormatPipe : 10 }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p class="mb-0">Số tiền phải trả (VNĐ): </p>
+                                                <div class="mt-1 text-3xl font-semibold tracking-tight">{{ estimateInvestorTrans?.payAmount | currencyFormatPipe : 10 }}</div>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-4 ...">
+                                            <article class="prose break-words">
+                                                <mat-checkbox class="example-margin"
+                                                              [color]="'primary'"
+                                                              (change)="clearTerms($event.checked)"
+                                                >
+                                                    Tôi xác nhận đã đọc, hiểu và đồng ý với các điều khoản và điều kiện của
+                                                    <a href="javascript:void(0)" (click)="downloadContract()">Hợp đồng chuyển nhượng đầu tư</a>
+                                                </mat-checkbox>
+                                            </article>
+                                        </div>
+                                    </div>
+                                </fuse-card>
+                                <div class="flex justify-center mt-3">
+                                    <button mat-flat-button color="primary"
+                                            *ngIf=" 'INVESTOR_P2P_RECEIVE_TRANSFER' | permission"
+                                            [disabled]="!(isValidRequest && isClearTerms)"
+                                            (click)="doBuyP2p()">Xác nhận</button>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Chi tiết hồ sơ">
+                                <div class="flex flex-col justify-center px-8 pb-4">
+                                    <div class="grid rid-flow-col auto-cols-max grid-cols-3 gap-5 pb-5 ">
+                                        <app-radial-bar-chart
+                                            title="Điểm tài chính"
+                                            color="#4c84fc"
+                                            [hideLabel]="true"
+                                            [score]="detailInvestmentTransferData?.fsLoanProfilesDTO?.financialScoreChart"
+                                        ></app-radial-bar-chart>
+                                        <app-radial-bar-chart
+                                            color="#5cc9ff"
+                                            title="Điểm định tính"
+                                            [hideLabel]="true"
+                                            [score]="detailInvestmentTransferData?.fsLoanProfilesDTO?.qualitativeScoreChart"
+                                        ></app-radial-bar-chart>
+                                        <app-radial-bar-chart
+                                            color="#2ebf7e"
+                                            title="Điểm tổng cộng"
+                                            [hideLabel]="true"
+                                            [score]="detailInvestmentTransferData?.fsLoanProfilesDTO?.totalScoreChart"
+                                        ></app-radial-bar-chart>
+                                    </div>
+                                    <div class="grid grid-cols-4 gap-5 pb-5">
+                                        <article class="prose break-words">
+                                            <p>Số hồ sơ: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.fsLoanProfilesId }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Số tiền huy động(VNĐ): <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.amount | currencyFormatPipe : 10 }}</b>
+                                            </p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Kỳ hạn(ngày): <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.loanTimeCycle }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Lãi suất(%/năm): <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.rate }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Hình thức huy động vốn: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.raisingCapitalName }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Mục đích: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.reasonsName }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Hình thức bảo đảm: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.collateralTypeName }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Trạng thái hồ sơ: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.statusName }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Chi tiết: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesDTO.info }}</b></p>
+                                        </article>
+                                    </div>
+                                    <mat-divider class="pb-5"></mat-divider>
+                                    <article class="prose mt-5">
+                                        <h4>Báo cáo đánh giá hồ sơ huy động vốn</h4>
+                                    </article>
+                                    <div class="flex flex-wrap pb-5">
+                                        <file-ui *ngFor="let file of reportLoanProfileAtt" [file]="file"
+                                                 (click)="onClickFile(file)"></file-ui>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Chi tiết bên huy động" >
+                                <fuse-card class="flex flex-col px-8 pb-4 " style="min-height: 600px;"
+                                           *ngIf="detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.type === userType.CA_NHAN">
+                                    <article class="prose">
+                                        <h4>Thông tin cá nhân</h4>
+                                    </article>
+                                    <div class="grid grid-rows-4 grid-cols-4  gap-5 pt-5">
+                                        <div class="row-span-3 ...">
+                                            <div class="w-full h-50 avatar"
+                                                 [ngStyle]="{
+                                    'background-image':'url('+ (avatar && avatar?.contentBase64 ? avatar.contentBase64 : 'assets/images/avatars/defaut-avatar-' +((detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.genderName == 'Nam') ? 'man' : 'woman')+ '.png') +')',
+                                    'background-size':     'contain',
+                                    'background-repeat':   'no-repeat',
+                                    'background-position': 'center center',
+                                    'border': '1px solid #ccc',
+                                    'border-radius': '25px'
+                                 }"></div>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Họ và tên: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.fullName }}</b></p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>SĐT liên hệ: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.mobile }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Email: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.email }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>CCCD/Hộ chiếu: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.identification }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Ngày cấp: <br>
+                                                    <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.dateOfIdnumber | datetimeformat : 'DD/MM/YYYY' }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Nơi cấp: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.placeOfIdnumber }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Giới tính: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.genderName }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Ngày sinh: <br>
+                                                    <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.dateOfBirth | datetimeformat : 'DD/MM/YYYY' }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Tình trạng hôn nhân: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.maritalName }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Nghề nghiệp: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.jobName }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Đơn vị công tác: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.jobAddress }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>MST cá nhân: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.taxCode }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Trang Facebook: <br> <b><a target="_blank" [href]="detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.facebook">{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.facebook }}</a></b></p>
+                                            </article>
+                                        </div>
+                                       
+                                        <div class="col-span-2 ...">
+                                            <article class="prose break-words">
+                                                <p>Địa chỉ thường trú: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.address2 }}</b></p>
+                                            </article>
+                                        </div>
+                                         <div class="col-span-2 ...">
+                                            <article class="prose break-words">
+                                                <p>Địa chỉ hiện tại: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.address1 }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                    </div>
+                                </fuse-card>
+                                <fuse-card class="flex flex-col px-8 pb-4" *ngIf="detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.type === userType.DOANH_NGHIEP">
+                                    <article class="prose">
+                                        <h4>Thông tin doanh nghiệp</h4>
+                                    </article>
+                                    <div class="grid grid-rows-4 grid-cols-4  gap-5 pt-5">
+                                        <div class="row-span-3 ...">
+                                            <div class="w-full h-50 avatar"
+                                                 [ngStyle]="{
+                                    'background-image':'url('+(avatar && avatar?.contentBase64 ? avatar.contentBase64 : 'assets/images/avatars/defaut-avatar-man.png') +')',
+                                    'background-size':     'contain',
+                                    'background-repeat':   'no-repeat',
+                                    'background-position': 'center center',
+                                    'border': '1px solid #ccc',
+                                    'border-radius': '25px'
+                                 }"></div>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Bên huy động vốn: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.fullName }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Lĩnh vực hoạt động: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.admCategoriesName }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words truncate"
+                                                     [matTooltip]="detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.website">
+                                                <p>Website: <br> <b><a target="_blank"
+                                                                       [href]="detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.website">{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.website }}</a></b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Số GPKD: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.businessLicense }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Ngày cấp phép: <br>
+                                                    <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.businessLicenseDate | datetimeformat : 'DD/MM/YYYY' }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Nơi cấp: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.placeOfBusinessLicense }}</b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>MST doanh nghiệp: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.businessCode }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words">
+                                                <p>Số điện thoại bàn: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.landline }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-1 ...">
+                                            <article class="prose break-words truncate"
+                                                     [matTooltip]="detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.facebook">
+                                                <p>Trang Facebook: <br> <b><a target="_blank"
+                                                                              [href]="detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.facebook">{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.facebook }}</a></b>
+                                                </p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-2 ...">
+                                            <article class="prose break-words">
+                                                <p>Địa chỉ(theo GPKD): <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.address3 }}</b></p>
+                                            </article>
+                                        </div>
+                                        <div class="col-span-2 ...">
+                                            <article class="prose break-words">
+                                                <p>Địa chỉ hoạt động: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.address2 }}</b></p>
+                                            </article>
+                                        </div>
+                                    </div>
+                                </fuse-card>
+                                <fuse-card class="flex flex-col px-8 pb-4 mt-5" *ngIf="detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative">
+                                    <article class="prose">
+                                        <h4>Thông tin người đại diện</h4>
+                                    </article>
+                                    <div class="grid grid-cols-4 gap-5 p-5">
+                                        <article class="prose break-words">
+                                            <p>Họ và tên: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.fullName }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Giới tính: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.genderName }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Ngày sinh: <br>
+                                                <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.dateOfBirth | datetimeformat : 'DD/MM/YYYY' }}</b>
+                                            </p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>MST cá nhân: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.taxCode }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>CCCD/Hộ chiếu: <br>
+                                                <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.identification }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Ngày cấp: <br>
+                                                <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.idDate | datetimeformat : 'DD/MM/YYYY' }}</b>
+                                            </p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Nơi cấp: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.idAddress }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>SĐT liên hệ: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.mobile }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Email: <br> <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.email }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Chức vụ: <br>
+                                                <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.positionCompany }}</b></p>
+                                        </article>
+                                        <article class="prose break-words ">
+                                            <p>Trang facebook: <br>
+                                                <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.facebook }}</b></p>
+                                        </article>
+                                        <article class="prose break-words col-span-2">
+                                            <p>Địa chỉ thường trú: <br>
+                                                <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.address2 }}</b></p>
+                                        </article>
+                                        <article class="prose break-words col-span-2">
+                                            <p>Địa chỉ hiện tại: <br>
+                                                <b>{{ detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.representative.address1 }}</b></p>
+                                        </article>
+                                        
+                                    </div>
+                                </fuse-card>
+
+                                <!--<fuse-card class="flex flex-col px-8 pb-4 mt-5">
+                                    <article class="prose">
+                                        <h4>Báo cáo đánh giá hồ sơ huy động vốn: </h4>
+                                    </article>
+                                    <div class="grid grid-cols-4  gap-5 pt-5">
+                                        <div class="flex flex-wrap">
+                                            <file-ui *ngFor="let file of reportLoanProfileAtt" [file]="file" (click)="onClickFile(file)" ></file-ui>
+                                        </div>
+                                    </div>
+                                </fuse-card>-->
+
+                                <fuse-card class="flex flex-col px-8 pb-4 mt-5" *ngFor="let pcontact of detailInvestmentTransferData?.fsLoanProfilesDTO?.lender?.contact; let idx = index">
+                                    <mat-divider class="pb-5"></mat-divider>
+                                    <article class="prose">
+                                        <h4>Thông tin người Liên hệ {{idx + 1}}</h4>
+                                    </article>
+                                    <div class="grid grid-cols-4 gap-5 p-5">
+                                        <article class="prose break-words">
+                                            <p>Họ và tên: <br> <b>{{ pcontact.fullName }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Giới tính: <br> <b>{{ pcontact.genderName }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Ngày sinh: <br> <b>{{ pcontact.dateOfBirth | datetimeformat : 'DD/MM/YYYY' }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>MST cá nhân: <br> <b>{{ pcontact.taxCode }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>CCCD/Hộ chiếu: <br> <b>{{ pcontact.identification }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Ngày cấp: <br> <b>{{ pcontact.idDate | datetimeformat : 'DD/MM/YYYY' }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Nơi cấp: <br> <b>{{ pcontact.idAddress }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>SĐT liên hệ: <br> <b>{{ pcontact.mobile }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Email: <br> <b>{{ pcontact.email }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Chức vụ: <br> <b>{{ pcontact.positionCompany }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Ảnh CCCD/Hộ chiếu(Mặt trước): <br> <a href="javascript:void(0)"
+                                                                                          (click)="clickViewImage(pcontact.frontPhotoIdentication)">Xem
+                                                file</a></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Ảnh CCCD/Hộ chiếu(Mặt sau): <br> <a href="javascript:void(0)"
+                                                                                       (click)="clickViewImage(pcontact.backsitePhotoIdentication)">Xem
+                                                file</a></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Địa chỉ thường trú: <br> <b>{{ pcontact.address2 }}</b></p>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Địa chỉ hiện tại: <br> <b>{{ pcontact.address1 }}</b></p>
+                                        </article>
+                                        
+                                    </div>
+                                </fuse-card>
+
+
+
+                            </mat-tab>
+                            <mat-tab label="Lịch sử huy động">
+                                <article class="prose">
+                                    <h4>Danh sách lịch sử huy động</h4>
+                                </article>
+                                <div class="flex flex-col flex-auto p-2 sm:p4 overflow-y-auto">
+                                    <table mat-table [dataSource]="_dataSource" *ngIf="_dataSource?.data.length > 0">
+
+                                        <ng-container matColumnDef="loanProfilesCode">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <div class="cell-overflow table-header">
+                                                    Số hồ sơ
+                                                </div>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <div class="cell-overflow">
+                                                    {{ element.fsLoanProfilesId }}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="reasonsName">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <div class="cell-overflow table-header">
+                                                    Mục đích
+                                                </div>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <div class="cell-overflow">
+                                                    {{ element.reasonsName }}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="amount">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <div class="cell-overflow table-header">
+                                                    Số tiền yêu cầu (VNĐ)
+                                                </div>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <div class="cell-overflow">
+                                                    {{ element.amount | currencyFormatPipe : 10 }}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="rate">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <div class="cell-overflow table-header">
+                                                    Lãi suất (%/Năm)
+                                                </div>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <div class="cell-overflow">
+                                                    {{ element.rate }}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="loanTimeCycle">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <div class="cell-overflow table-header">
+                                                    Kỳ hạn(ngày)
+                                                </div>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <div class="cell-overflow">
+                                                    {{ element.loanTimeCycle }}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+
+
+                                        <ng-container matColumnDef="amountRef">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <div class="cell-overflow table-header">
+                                                    Tổng tiền đã huy động (VNĐ)
+                                                </div>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <div class="cell-overflow">
+                                                    {{ element.amountRef | currencyFormatPipe : 10}}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="statusName">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <div class="cell-overflow table-header">
+                                                    Trạng thái
+                                                </div>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <div class="cell-overflow">
+                                                    {{ element.statusName }}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="['loanProfilesCode', 'reasonsName', 'amount', 'rate', 'loanTimeCycle', 'amountRef', 'statusName']"></tr>
+                                        <tr
+                                            mat-row *matRowDef="let row; columns: ['loanProfilesCode', 'reasonsName', 'amount', 'rate', 'loanTimeCycle', 'amountRef', 'statusName'];"
+                                            class="hover:bg-accent-50 hover:cursor-pointer"></tr>
+                                    </table>
+                                    <mat-paginator [pageSizeOptions]="[10, 20, 30, 50 , 100]"
+                                                   showFirstLastButtons
+                                                   aria-label="Select page of periodic elements"></mat-paginator>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Chi tiết bên chuyển nhượng">
+
+                                <transferor-details
+                                    [data]="{
+                                            admAccountDetailDTO: detailInvestmentTransferData?.admAccountDetailDTO,
+                                            admDeputyContactDTO: detailInvestmentTransferData?.admDeputyContactDTO
+                                        }"
+                                >
+                                </transferor-details>
+                            </mat-tab>
+                        </mat-tab-group>
+                        <mat-divider class="pb-5"></mat-divider>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

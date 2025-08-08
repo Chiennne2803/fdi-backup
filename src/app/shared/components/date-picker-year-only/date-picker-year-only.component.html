@@ -1,0 +1,25 @@
+<mat-form-field class="w-full overflow-hidden custom-datepicker"
+                [class]="styleFormFieldClass">
+    <mat-label>{{ label }}</mat-label>
+    <input matInput
+           [formControl]="control"
+           [autocomplete]="false"
+           [matDatepicker]="datepicker!"
+           [max]="max"
+           [min]="min"
+           inputMask
+           maskType="year"
+           (dateChange)="setControlValueToYearFormat($event.value)"
+    >
+    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+    <mat-datepicker #datepicker startView="multi-year" (yearSelected)="yearSelected($event, datepicker)"></mat-datepicker>
+    <mat-error *ngIf="control.hasError('required') && control.touched" class="h-[18px]">
+        {{ appText.form.errors.required }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('onlyCurrentYear') && control.touched" class="h-[18px]">
+        {{ appText.form.errors.onlyCurrentYear }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('onlyPastYear') && control.touched" class="h-[18px]">
+        {{ appText.form.errors.onlyPastYear }}
+    </mat-error>
+</mat-form-field>

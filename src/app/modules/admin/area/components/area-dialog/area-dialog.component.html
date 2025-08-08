@@ -1,0 +1,137 @@
+<div class="flex flex-col md:min-w-160 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium"
+             *ngIf="!isUpdate">Tạo mới {{data.parentCategoriesName + ((data.nameParent) ? ' thuộc ' + data.nameParent : '')}}</div>
+        <div class="text-lg font-medium"
+             *ngIf="isUpdate">Cập nhật {{data.parentCategoriesName + ((data.nameParent) ? ' thuộc ' + data.nameParent : '')}}</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="discard()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+          [formGroup]="categoryForm">
+        <!-- Info -->
+        <div class="flex flex-col p-4 border rounded-md mb-4">
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Tên {{data.parentCategoriesName}}</mat-label>
+                    <input id="categoriesName"
+                           trim="blur"
+                           matInput
+                           formControlName="categoriesName">
+                    <mat-error *ngIf="categoryForm.get('categoriesName').hasError('required')">
+                        {{ 'DLDM017' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="categoryForm.get('categoriesName').hasError('maxlength')">
+                        {{ 'DLDM018' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Giá trị {{data.parentCategoriesName}}</mat-label>
+                    <input id="value"
+                           trim="blur"
+                           matInput
+                           formControlName="value">
+                    <mat-error *ngIf="categoryForm.get('value').hasError('required')">
+                        {{ 'DLDM020' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="categoryForm.get('value').hasError('maxlength')">
+                        {{ 'DLDM021' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Trạng thái</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option *ngFor="let item of status"
+                                    [disabled]="categoryForm.get('admCategoriesId').value === null"
+                                    [value]="item.id">{{ item.label }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="categoryForm.get('status').hasError('required')">
+                        {{ 'DLDM010' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Ghi chú</mat-label>
+                    <input id="info"
+                           matInput
+                           formControlName="info">
+                    <mat-error *ngIf="categoryForm.get('info').hasError('maxlength')">
+                        {{ 'DLDM012' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Another Info -->
+        <div class="flex flex-col p-4 border rounded-md">
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Người tạo</mat-label>
+                    <input id="createdByName"
+                           matInput
+                           formControlName="createdByName">
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Ngày tạo</mat-label>
+                    <input id="createdDate"
+                           matInput
+                           formControlName="createdDate">
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Người cập nhật</mat-label>
+                    <input id="lastUpdatedByName"
+                           matInput
+                           formControlName="lastUpdatedByName">
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Ngày cập nhật</mat-label>
+                    <input id="lastUpdatedDate"
+                           matInput
+                           formControlName="lastUpdatedDate">
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="-ml-2">
+        </div>
+
+        <div class="flex items-center mt-4 sm:mt-0">
+            <!-- Discard -->
+            <button class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    (click)="discard()">
+                Huỷ
+            </button>
+            <!-- Submit -->
+            <ng-container *ngIf="!isUpdate; else btnTemplate">
+                <button class="order-first sm:order-last ml-2"
+                        mat-flat-button
+                        [color]="'primary'"
+                        (click)="submit()">
+                    Tạo mới
+                </button>
+            </ng-container>
+            <ng-template #btnTemplate>
+                <button class="order-first sm:order-last ml-2"
+                        mat-flat-button
+                        [color]="'primary'"
+                        (click)="submit()">
+                    Cập nhật
+                </button>
+            </ng-template>
+        </div>
+    </div>
+</div>

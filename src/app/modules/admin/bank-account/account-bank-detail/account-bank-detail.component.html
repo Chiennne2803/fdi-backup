@@ -1,0 +1,217 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer-content class="flex flex-col overflow-hidden">
+        <ng-container>
+            <div class="relative w-full px-5">
+                <div class="flex items-center justify-between w-full mx-auto py-2">
+                    <article class="w-2/4 prose break-words">
+                        <h3>
+                            {{isEditable ? 'Cập nhật thông tin tài khoản ngân hàng ' : 'Thông tin tài khoản ngân hàng '}}
+                        </h3>
+                    </article>
+                    <div class="flex items-center justify-end">
+                        <button (click)="onClose()"
+                                *ngIf="!isEditable"
+                                mat-stroked-button>
+                            Đóng
+                        </button>
+                        <button @fadeInRight
+                                *ngIf="!isEditable && ('SFF_CONFIGURE_BANK_ACCOUNT_UPDATE' | permission)"
+                                mat-flat-button
+                                color="primary"
+                                class="ml-5"
+                                (click)="isEditable = true">
+                            Cập nhật
+                        </button>
+                        <button (click)="isEditable = false"
+                                *ngIf="isEditable"
+                                mat-stroked-button>
+                            Huỷ
+                        </button>
+                        <button @fadeInRight
+                                *ngIf="isEditable && ('SFF_CONFIGURE_BANK_ACCOUNT_INSERT' | permission)"
+                                mat-flat-button
+                                color="primary"
+                                class="ml-5"
+                                (click)="submit()">
+                            Lưu
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="!isEditable; else elseTemplate">
+                <div class="p-5 flex flex-col overflow-y-auto"
+                     *ngIf="detailAccount">
+                    <div class="py-5">
+                        <h3 class="font-semibold">Thông tin tài khoản ngân hàng</h3>
+                        <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                            <article class="w-1/2 prose break-words">
+                                <p>Số tài khoản<br><b>{{detailAccount.accNo}}</b></p>
+                            </article>
+                            <article class="w-1/2 prose break-words">
+                                <p>Tên chủ tài khoản<br> <b>{{detailAccount.accName}}</b></p>
+                            </article>
+                        </div>
+                        <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                            <article class="w-1/2 prose break-words">
+                                <p>Tên ngân hàng<br>
+                                    <b>{{detailAccount.bankName}}</b>
+                                </p>
+                            </article>
+                            <article class="w-1/2 prose break-words">
+                                <p>Chi nhánh<br>
+                                    <b>{{detailAccount.bankBranch}}</b>
+                                </p>
+                            </article>
+                        </div>
+                        <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                            <article class="w-1/2 prose break-words">
+                                <p>Phân loại tài khoản <br>
+                                    <b>{{getAccType()}}</b>
+                                </p>
+                            </article>
+                            <article class="w-1/2 prose break-words"></article>
+                        </div>
+                        <div class="mt-5">
+                            <div class="w-full flex gap-5 p-5 border-b border-solid">
+                                <article class="w-1/2 prose break-words">
+                                    <p>Người lập<br>
+                                        <b>{{detailAccount.createdByName}}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/2 prose break-words">
+                                    <p>Ngày lập<br>
+                                        <b>{{detailAccount.createdDate | datetimeformat: 'DD/MM/YYYY'}}</b>
+                                    </p>
+                                </article>
+                            </div>
+                            <div class="w-full flex gap-5 p-5 border-b border-solid">
+                                <article class="w-1/2 prose break-words">
+                                    <p>Người cập nhật<br>
+                                        <b>{{detailAccount.lastUpdatedByName}}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/2 prose break-words">
+                                    <p>Ngày cập nhật<br>
+                                        <b>{{detailAccount.lastUpdatedDate | datetimeformat: 'DD/MM/YYYY'}}</b>
+                                    </p>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #elseTemplate>
+                <div class="p-5 flex flex-col overflow-y-auto"
+                     [formGroup]="accountBankForm">
+                    <div class="py-5">
+                        <h3 class="font-semibold">Thông tin tài khoản ngân hàng</h3>
+                        <div class="w-full flex gap-5 p-5">
+                            <mat-form-field class="w-1/2">
+                                <mat-label>Số tài khoản</mat-label>
+                                <input id="accNo"
+                                       trim="blur"
+                                       maxlength="15"
+                                       matInput
+                                       formControlName="accNo">
+                                <mat-error *ngIf="accountBankForm.get('accNo').hasError('required')">
+                                    {{ 'BANK001' | transloco }}
+                                </mat-error>
+                                <mat-error *ngIf="accountBankForm.get('accNo').hasError('pattern')">
+                                    {{ 'BANK013' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="w-1/2">
+                                <mat-label>Tên chủ tài khoản</mat-label>
+                                <input id="accName"
+                                       trim="blur"
+                                       maxlength="50"
+                                       matInput
+                                       formControlName="accName">
+                                <mat-error *ngIf="accountBankForm.get('accName').hasError('required')">
+                                    {{ 'BANK006' | transloco }}
+                                </mat-error>
+                                <mat-error *ngIf="accountBankForm.get('accName').hasError('maxlength')">
+                                    {{ 'BANK007' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="w-full flex gap-5 p-5">
+                            <mat-form-field class="w-1/2">
+                                <mat-label>Tên ngân hàng</mat-label>
+                                <mat-select formControlName="bankId">
+                                    <mat-option *ngFor="let item of banks"
+                                                [value]="item.id">{{ item.label }}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="accountBankForm.get('bankId').hasError('required')">
+                                    {{ 'BANK004' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="w-1/2">
+                                <mat-label>Chi nhánh</mat-label>
+                                <input id="bankBranch"
+                                       trim="blur"
+                                       maxlength="100"
+                                       matInput
+                                       formControlName="bankBranch">
+                                <mat-error *ngIf="accountBankForm.get('bankBranch').hasError('required')">
+                                    {{ 'BANK008' | transloco }}
+                                </mat-error>
+                                <mat-error *ngIf="accountBankForm.get('bankBranch').hasError('maxlength')">
+                                    {{ 'BANK009' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                            <mat-form-field class="w-1/2">
+                                <mat-label>Phân loại tài khoản </mat-label>
+                                <mat-select formControlName="accType">
+                                    <mat-option *ngFor="let item of accTypes" disabled="true"
+                                                [value]="item.id">{{ item.label }}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="accountBankForm.get('accType').hasError('required')">
+                                    {{ 'BANK010' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                            <article class="w-1/2 prose break-words">
+                            </article>
+                        </div>
+                        <div class="mt-5 p-5">
+                            <div class="flex flex-row gap-4">
+                                <mat-form-field class="w-1/2">
+                                    <mat-label>Người tạo</mat-label>
+                                    <input id="createdByName"
+                                           matInput
+                                           readonly
+                                           formControlName="createdByName">
+                                </mat-form-field>
+                                <mat-form-field class="w-1/2">
+                                    <mat-label>Ngày tạo</mat-label>
+                                    <input id="createdDate"
+                                           matInput
+                                           readonly
+                                           formControlName="createdDate">
+                                </mat-form-field>
+                            </div>
+                            <div class="flex flex-row gap-4">
+                                <mat-form-field class="w-1/2">
+                                    <mat-label>Người cập nhật</mat-label>
+                                    <input id="lastUpdatedByName"
+                                           matInput
+                                           readonly
+                                           formControlName="lastUpdatedByName">
+                                </mat-form-field>
+                                <mat-form-field class="w-1/2">
+                                    <mat-label>Ngày cập nhật</mat-label>
+                                    <input id="lastUpdatedDate"
+                                           matInput
+                                           readonly
+                                           formControlName="lastUpdatedDate">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </mat-drawer-content>
+</mat-drawer-container>

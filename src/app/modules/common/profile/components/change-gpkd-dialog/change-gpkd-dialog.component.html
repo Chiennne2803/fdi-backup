@@ -1,0 +1,63 @@
+<div class="flex flex-col max-w-240 md:min-w-160 sm:min-w-120 max-h-screen -m-6">
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Yêu cầu thay đổi giấy phép kinh doanh</div>
+        <button mat-icon-button>
+            <mat-icon
+                mat-dialog-close
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"
+            ></mat-icon>
+        </button>
+    </div>
+    <form
+        class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+        [formGroup]="changeBusinessLicenseForm"
+    >
+        <div class="flex flex-row w-full gap-4">
+            <mat-form-field class="w-full">
+                <mat-label>Địa chỉ (Theo GPKD)</mat-label>
+                <input id="address3"
+                       class="cursor-pointer"
+                       matInput
+                       readonly
+                       formControlName="address3"
+                       (click)="openAddressDialog()">
+                <mat-error *ngIf="isInvalid('address3')">
+                    {{ 'TKDT111' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="flex flex-row w-full gap-4 mb-4">
+            <!-- File -->
+            <app-dropzone
+                [multiple]="true"
+                topTitle="Ảnh giấy phép kinh doanh"
+                title="Tải ảnh lên"
+                styleClass="h-12 mt-[3px]"
+                class="w-full"
+                previewClass="max-w-fit w-full"
+                [formGroup]="changeBusinessLicenseForm"
+                field="photoOfBusiness"
+                accept="image/png, image/jpg, image/jpeg,image/jpeg,application/pdf"
+                [isRequired]="true"
+                maxFileSize="5"
+                requiredMsg="TKDT115"
+                typeMsg="TKDT112"
+                sizeMsg="TKDT113"
+            ></app-dropzone>
+        </div>
+    </form>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <button class="ml-auto sm:ml-0"
+                mat-flat-button
+                mat-dialog-close>
+            Quay lại
+        </button>
+        <button class="order-first sm:order-last ml-2"
+                mat-flat-button
+                (click)="onSubmit()"
+                [color]="'primary'">
+            Gửi yêu cầu
+        </button>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<div mat-dialog-title>
+    <div class="flex justify-center">
+        <span class="text-lg">Xử lý giao dịch tiếp quỹ</span>
+    </div>
+</div>
+<div mat-dialog-content
+     class="flex flex-col w-full"
+     [formGroup]="rechargeRequestForm">
+
+    <mat-form-field class="w-full"  *ngIf="this.data.status === 7">
+        <mat-label>Mã yêu cầu</mat-label>
+        <mat-select formControlName="fsChargeCashReqId"
+                    #transCode>
+            <input (keyup)="onKey($event.target)"
+                   style="height: 40px; width: 100%"
+                   autofocus>
+            <mat-option *ngIf="lstChargeCashReqDTOS.length === 0"
+                        (click)="transCode.close()">None</mat-option>
+
+            <mat-option *ngFor="let ChargeCashReqDTOS of lstChargeCashReqDTOS"
+                        [value]="ChargeCashReqDTOS.fsChargeCashReqId"
+                        (click)="transCode.close()">{{ChargeCashReqDTOS.transCode}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="rechargeRequestForm.get('fsChargeCashReqId').hasError('required')">
+            {{ 'GDNT001' | transloco }}
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="w-full" *ngIf="this.data.status === 3">
+        <mat-label>Số tiền: </mat-label>
+        <input id="amount"
+               placeholder="Số tiền..."
+               [maxlength]="15"
+               readonly
+               matInput
+               currencyMask autocomplete="off"
+               class="text-left"
+               [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+               formControlName="amount">
+        <mat-error *ngIf="rechargeRequestForm?.get('amount').hasError('required')">
+            {{ 'GDNT004' | transloco }}
+        </mat-error>
+        <mat-error
+            *ngIf="!rechargeRequestForm?.get('amount').hasError('required') && rechargeRequestForm?.get('amount').hasError('min')">
+            {{ 'GDNT004' | transloco }}
+        </mat-error>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions
+     class="flex flex-row justify-center">
+    <button mat-stroked-button
+            (click)="discard()"
+            class="mr-3"
+            cdkFocusInitial>Huỷ</button>
+    <button mat-flat-button
+            (click)="submit()"
+            color="primary"
+            cdkFocusInitial>Xác nhận</button>
+</div>

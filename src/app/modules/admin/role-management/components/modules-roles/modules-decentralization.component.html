@@ -1,0 +1,135 @@
+<div class="mat-elevation-z8">
+    <table mat-table
+           [dataSource]="dataSource"
+           *transloco="let t; read: 'decentralized'">
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+            <th mat-header-cell
+                *matHeaderCellDef> #
+            </th>
+            <td mat-cell
+                *matCellDef="let row">
+                <mat-checkbox color="primary"
+                              [disabled]="disabled"
+                              (click)="$event.stopPropagation()"
+                              (change)="onCheckedFull($event, row)"
+                              [checked]="allChecked(row)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Module Name Column -->
+        <ng-container matColumnDef="module">
+            <th mat-header-cell
+                *matHeaderCellDef> Module </th>
+            <td mat-cell
+                *matCellDef="let row"> {{ t(row.module)}} </td>
+        </ng-container>
+
+        <!-- View Checkbox Column -->
+        <ng-container matColumnDef="_VIEW">
+            <th mat-header-cell
+                *matHeaderCellDef> Xem
+            </th>
+            <td mat-cell
+                *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              [disabled]="disabled"
+                              color="primary"
+                              (change)="onSelectedChange('_VIEW', row)"
+                              [checked]="row.isSelect">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Add Checkbox Column -->
+        <ng-container matColumnDef="_INSERT">
+            <th mat-header-cell
+                *matHeaderCellDef> Thêm
+            </th>
+            <td mat-cell
+                *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              [disabled]="disabled"
+                              color="primary"
+                              (change)="onSelectedChange('_INSERT', row)"
+                              [checked]="row.isInsert">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Edit Checkbox Column -->
+        <ng-container matColumnDef="_UPDATE">
+            <th mat-header-cell
+                *matHeaderCellDef> Sửa
+            </th>
+            <td mat-cell
+                *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              [disabled]="disabled"
+                              color="primary"
+                              (change)="onSelectedChange('_UPDATE', row)"
+                              [checked]="row.isUpdate">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Delete Checkbox Column -->
+        <ng-container matColumnDef="_DELETE">
+            <th mat-header-cell
+                *matHeaderCellDef> Xoá
+            </th>
+            <td mat-cell
+                *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              [disabled]="disabled"
+                              color="primary"
+                              (change)="onSelectedChange('_DELETE', row)"
+                              [checked]="row.isDelete">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Export Checkbox Column -->
+        <ng-container matColumnDef="_EXPORT">
+            <th mat-header-cell
+                *matHeaderCellDef> Export
+            </th>
+            <td mat-cell
+                *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              [disabled]="disabled"
+                              color="primary"
+                              (change)="onSelectedChange('_EXPORT', row)"
+                              [checked]="row.isExport">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Approval Checkbox Column -->
+        <ng-container matColumnDef="_APPROVE">
+            <th mat-header-cell
+                *matHeaderCellDef> Phê duyệt
+            </th>
+            <td mat-cell
+                *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              [disabled]="disabled"
+                              color="primary"
+                              (change)="onSelectedChange('_APPROVE', row)"
+                              [checked]="row.isAcceptance">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row
+            *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row
+            *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                   [showFirstLastButtons]="true">
+    </mat-paginator>
+</div>

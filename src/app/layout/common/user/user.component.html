@@ -1,0 +1,47 @@
+<!-- Button -->
+<button [matMenuTriggerFor]="userActions">
+    <span class="flex items-center gap-2.5 px-2 py-1 w-fit cursor-pointer">
+        <img class="w-8 h-8 rounded-full bg-white" *ngIf="avatar" [src]="avatar">
+        <mat-icon class="icon-size-8" *ngIf="!avatar" [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+        <div *ngIf="user.fullName" class="hidden md:block text-left text-white leading-tight">
+            <p class="text-sm">Xin chào,</p>
+            <p class="text-base font-medium truncate max-w-[5.5rem]">
+                {{ user.fullName }}
+            </p>
+        </div>
+
+    </span>
+</button>
+<mat-menu [xPosition]="'before'" #userActions="matMenu">
+    <button mat-menu-item (click)="goToProfile()" *ngIf="accStatus == 2">
+        <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+        <span>Hồ sơ của tôi</span>
+    </button>
+    <!--    <button mat-menu-item>
+        <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
+        <span>Thiết lập</span>
+    </button>-->
+    <button mat-menu-item (click)="signOut()">
+        <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+        <span>Đăng xuất</span>
+    </button>
+</mat-menu>
+
+<!-- <mat-menu class="user-status-menu" #userStatus="matMenu">
+    <button mat-menu-item (click)="updateUserStatus('online')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-green-500"></span>
+        <span>Online</span>
+    </button>
+    <button mat-menu-item (click)="updateUserStatus('away')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-amber-500"></span>
+        <span>Away</span>
+    </button>
+    <button mat-menu-item (click)="updateUserStatus('busy')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-red-500"></span>
+        <span>Busy</span>
+    </button>
+    <button mat-menu-item (click)="updateUserStatus('not-visible')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-gray-400"></span>
+        <span>Invisible</span>
+    </button>
+</mat-menu> -->

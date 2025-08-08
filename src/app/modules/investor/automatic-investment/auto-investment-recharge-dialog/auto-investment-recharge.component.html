@@ -1,0 +1,82 @@
+<div class="flex flex-col max-w-240 md:min-w-120 max-h-screen -m-6">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Nạp tiền đầu tư tự động</div>
+        <button mat-icon-button>
+            <mat-icon
+                mat-dialog-close
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"
+            ></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto">
+        <!-- Content -->
+        <div mat-dialog-content class="flex flex-col py-2 px-8">
+            <div class="flex flex-col border-b">
+                <label class="font-bold">Tài khoản gốc</label>
+                <div class="flex justify-between mt-2 pb-2">
+                    <span class="text-xl text-primary font-bold">
+                        {{ showTopUpAutoInvestAmount
+                            ? (data?.account?.weu | currencyFormatPipe: 10)
+                            : '***000'
+                        }}
+                    </span>
+                    <mat-icon
+                        [svgIcon]="showTopUpAutoInvestAmount ? 'heroicons_outline:eye' : 'heroicons_outline:eye-off'"
+                        class="cursor-pointer"
+                        (click)="showTopUpAutoInvestAmount = !showTopUpAutoInvestAmount">
+                    </mat-icon>
+                </div>
+            </div>
+            <mat-form-field class="w-full mt-5">
+                <mat-label>Nạp tiền đầu tư tự động (VNĐ)</mat-label>
+                <input id="topupAmount"
+                       matInput
+                       currencyMask autocomplete="off"
+                       maxlength="15"
+                       class="text-left"
+                       *ngIf=" 'INVESTOR_AUTO_AUTO_DEPOSIT' | permission"
+                       (keyup)="generateSuggestedAmount2($event)"
+                       [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                       [formControl]="topupAmount"
+                >
+                <mat-error *ngIf="topupAmount?.hasError('required')">
+                    {{ 'INVA10011' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="topupAmount?.hasError('max')">
+                    Số tiền nhập phải nhỏ hơn hoặc bằng {{ data?.account?.weu | currencyFormatPipe: 10 }}
+                </mat-error>
+                <mat-error *ngIf="topupAmount?.hasError('min')">
+                    {{ 'INVA10025' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <div class="grid grid-cols-3 gap-4">
+                <ng-container *ngFor="let amount of suggestAmount">
+                    <button
+                        class="rounded-md font-bold"
+                        mat-raised-button
+                        mat-button
+                        [disabled]="amount > data.account.weu"
+                        (click)="topupAmount.patchValue(amount)"
+                    >{{ amount | currencyFormatPipe: 10 }}</button>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="flex items-center mt-4 sm:mt-0">
+            <button
+                mat-flat-button
+                color="warn"
+                class="ml-2"
+                (click)="onSubmit()"
+                [disabled]="topupAmount?.hasError('required')"
+            >
+                Nạp tiền
+            </button>
+        </div>
+    </div>
+</div>

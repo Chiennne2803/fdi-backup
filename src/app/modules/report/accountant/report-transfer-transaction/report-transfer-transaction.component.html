@@ -1,0 +1,104 @@
+<div class="flex flex-col flex-auto w-full">
+    <app-datatable
+        [tableConfig]="tableConfig"
+        [tableConfigBtns]="_btnConfig"
+        [dataSource]="dataSource$"
+        [taskbarConfig]="taskBarConfig"
+        (tableEvent)="handleTableEvent($event)"
+        (handleSearch)="handleSearch($event)"
+        (pageSwitch)="handlePageSwitch($event)"
+        [tableChild]="childTemplate"
+        (onExpand)="onExpandDetail($event)"
+    ></app-datatable>
+    <ng-template #childTemplate let-element>
+        <div  @fadeOutTop
+              @fadeInRight class="child-table-container p-1 px-10 pl-40 flex" *ngIf="getDataSourceChild(element)?.length > 0">
+            <table mat-table class="mat-elevation-z8" [dataSource]="getDataSourceChild(element)">
+                <ng-container matColumnDef="index">
+                    <th class="text-center" mat-header-cell *matHeaderCellDef>STT</th>
+                    <td class="text-center" mat-cell *matCellDef="let row; let i = index;">
+                        {{i + 1}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef class="font-bold"></td>
+                </ng-container>
+                <ng-container matColumnDef="receiveAdmAccountName">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Bên nhận chuyển nhượng
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.receiveAdmAccountName }}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="transCode">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Mã chuyển nhượng
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.transCode }}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="createdDate">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Ngày nhận chuyển nhượng
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.createdDate | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="transferAmount">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Số tiền nhận chuyển nhượng (VNĐ)
+                        </div>
+                    </th>
+                    <td mat-cell class="text-right" *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.transferAmount | currencyFormatPipe : 10 }}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="payAmount">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Số tiền đã thanh toán (VNĐ)
+                        </div>
+                    </th>
+                    <td mat-cell class="text-right" *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.payAmount | currencyFormatPipe : 10 }}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="interestEstimate">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Lãi dự kiến (VNĐ)
+                        </div>
+                    </th>
+                    <td mat-cell class="text-right" *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.interestEstimate | currencyFormatPipe : 10 }}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row
+                    *matHeaderRowDef="['index', 'receiveAdmAccountName', 'transCode', 'createdDate', 'transferAmount', 'payAmount', 'interestEstimate']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['index', 'receiveAdmAccountName', 'transCode', 'createdDate', 'transferAmount', 'payAmount', 'interestEstimate'];"
+                    class="hover:bg-accent-50 hover:cursor-default"></tr>
+            </table>
+        </div>
+    </ng-template>
+</div>

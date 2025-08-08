@@ -1,0 +1,117 @@
+<!-- Header -->
+<div mat-dialog-title
+     class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary -m-6 mb-2">
+    <div class="text-lg font-medium">Lập yêu cầu điều chuyển tiền ví</div>
+    <button mat-icon-button>
+        <mat-icon class="text-current"
+                  [svgIcon]="'heroicons_outline:x'"
+                  (click)="discard()"></mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content>
+    <!-- Compose form -->
+    <form mat-dialog-content
+          class="flex flex-col flex-auto "
+          [formGroup]="requestCommissionForm">
+        <!-- Info -->
+        <div class="flex flex-col">
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Mã yêu cầu</mat-label>
+                    <input id="transCode"
+                           matInput
+                           readonly
+                           formControlName="transCode">
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Tài khoản ví điều chuyển</mat-label>
+                    <input id="fromWallet"
+                           [disabled]="true"
+                           readonly
+                           matInput
+                           formControlName="fromWallet">
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Tài khoản ví nhận</mat-label>
+                    <input id="toWallet"
+                           [disabled]="true"
+                           readonly
+                           matInput
+                           formControlName="toWallet">
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Tổng số tiền giao dịch (VNĐ)</mat-label>
+                    <input id="amount"
+                               tabindex="1"
+                               [maxlength]="15"
+                               matInput readonly
+                               currencyMask autocomplete="off"
+                               class="text-left"
+                               [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                               formControlName="amount">
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Trạng thái</mat-label>
+                    <mat-select formControlName="status"
+                                readonly
+                                [disabled]="true">
+                        <mat-option *ngFor="let item of status"
+                                    [value]="item.id">{{ item.label }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Người lập</mat-label>
+                    <input id="createdByName"
+                           matInput
+                           formControlName="createdByName">
+                </mat-form-field>
+                <mat-form-field class="w-1/2 pr-2">
+                    <mat-label>Ngày lập</mat-label>
+                    <input id="createdDate"
+                           matInput
+                           readonly
+                           formControlName="createdDate">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Another Info -->
+        <div class="flex flex-col ">
+            <div class="text-lg font-bold mb-3">Danh sách giao dịch điều chuyển</div>
+            <app-datatable class="sm:relative w-full"
+                           [ngStyle]="{'min-height': ((_dataSource | async).content.length * 3 + 8) + 'rem'}"
+                           [dataSource]="_dataSource"
+                           [tableConfig]="_tableConfig"></app-datatable>
+
+        </div>
+    </form>
+</mat-dialog-content>
+<!-- Actions -->
+<mat-dialog-actions align="end">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mmy-4 pr-8 sm:pr-8">
+
+        <div class="flex items-center mt-4 sm:mt-0">
+            <!-- Discard -->
+            <button class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    (click)="discard()">
+                Đóng
+            </button>
+            <!-- Submit -->
+
+            <button class="order-first sm:order-last ml-2"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="submit()">
+                Lập yêu cầu
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

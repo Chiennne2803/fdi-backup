@@ -1,0 +1,14 @@
+<div mat-dialog-title>
+    <div class="flex justify-center">
+        <h2>{{this.data && this.data.title ? this.data.title : ''}}</h2>
+    </div>
+</div>
+<mat-dialog-actions align="center">
+    <a
+        (click)="close()"
+        mat-button
+        [matTooltip]="'Huỷ'">
+        Huỷ
+    </a>
+    <button mat-flat-button color="primary" (click)="update()">Đồng ý</button>
+</mat-dialog-actions>

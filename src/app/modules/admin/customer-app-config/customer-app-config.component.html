@@ -1,0 +1,16 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent p-8">
+    <mat-drawer-content class="flex flex-col">
+        <mat-tab-group (selectedTabChange)="tabChanged($event)">
+            <mat-tab *ngFor="let tab of tabs" [label]="tab.label">
+                <ng-container [ngSwitch]="tab.id">
+                    <customer-app-config-list
+                        (onUpdateStatusSuccess)="onStatusUpdated()"
+                        [activeTab]="activeTab">
+                    </customer-app-config-list>
+                </ng-container>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-drawer-content>
+</mat-drawer-container>
+
+

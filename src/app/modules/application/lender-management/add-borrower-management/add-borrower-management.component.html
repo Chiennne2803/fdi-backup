@@ -1,0 +1,36 @@
+<div class="absolute inset-0 flex flex-col min-w-0">
+    <!-- Main -->
+    <div class="flex flex-col">
+        <div class="absolute z-10 top-6 left-9 flex items-center cursor-pointer"
+             (click)="back()">
+            <mat-icon svgIcon="arrow_back"></mat-icon>
+            <span class="ml-3">Quay lại</span>
+        </div>
+        <div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+            <ng-container *ngIf="borrowerType === userType.CA_NHAN; else businessTemplate">
+                <app-personal-borrower #personal
+                                       class="w-full"></app-personal-borrower>
+            </ng-container>
+        </div>
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-end mt-4 sm:mt-6 mr-8 mb-6">
+            <button class="order-first sm:order-last ml-2"
+                    mat-stroked-button
+                    (click)="back()">
+                Huỷ
+            </button>
+            <!-- Submit -->
+            <button class="order-first sm:order-last ml-2"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="submit()">
+                Lưu
+            </button>
+        </div>
+    </div>
+</div>
+
+<ng-template #businessTemplate>
+    <app-corporate-borrower #corporate
+                            class="w-full"></app-corporate-borrower>
+</ng-template>

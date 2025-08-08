@@ -1,0 +1,84 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer-content class="flex flex-col">
+        <div class="w-full px-5">
+            <div class="flex items-center justify-between w-full mx-auto py-2">
+                <article class="w-2/4 prose break-words">
+                    <h3>
+                        Chi tiết yêu cầu điều chuyển tiền ví
+                    </h3>
+                </article>
+                <div class="flex items-center justify-end">
+                    <button (click)="onClose()"
+                            mat-stroked-button>
+                        Đóng
+                    </button>
+                    <button (click)="onClickApprove()"
+                            @fadeInRight
+                            *ngIf="detail?.status === 2 && ('SFF_TRANSFER_REQUESTS_APPROVE' | permission)"
+                            mat-flat-button
+                            color="primary"
+                            class="ml-5">
+                        Xử lý
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="p-5 flex flex-col overflow-y-auto">
+            <div class="py-5">
+                <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                    <article class="w-1/4 prose break-words">
+                        <p>Mã yêu cầu <br> <b>{{ detail?.transCode }} </b></p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Tài khoản ví điều chuyển <br> <b>{{ detail?.fromWallet }} </b></p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Tài khoản ví nhận<br> <b>{{ detail?.toWallet }} </b></p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Tổng số tiền giao dịch (VNĐ)<br> <b>{{ detail?.amount | currencyFormatPipe: 3 }} </b></p>
+                    </article>
+                </div>
+                <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                    <article class="w-1/4 prose break-words">
+                        <p>Trạng thái<br> <b>{{ detail?.statusName }} </b></p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Người lập<br>
+                            <b>{{ detail?.createdByName }} </b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Ngày lập<br>
+                            <b>{{ detail?.createdDate | datetimeformat: 'DD/MM/YYYY HH:mm:ss' }} </b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words"></article>
+                </div>
+                <div class="w-full flex gap-5 p-5 border-b border-solid"
+                     *ngIf="detail?.status !== 2">
+                    <article class="w-1/4 prose break-words">
+                        <p>Người xử lý<br>
+                            <b>{{ detail?.approvalByName }} </b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Ngày xử lý<br>
+                            <b>{{ detail?.approvalDate | datetimeformat: 'DD/MM/YYYY HH:mm:ss' }} </b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words"></article>
+                    <article class="w-1/4 prose break-words"></article>
+                </div>
+            </div>
+            <h3 class="font-semibold">Danh sách giao dịch điều chuyển</h3>
+            <div class="py-5 relative"
+                 *ngIf="(_dataSource | async)"
+                 [ngStyle]="{'min-height': ((_dataSource | async).content.length + 3 * 8) + 'rem'}">
+                <app-datatable class="w-full"
+                               [dataSource]="_dataSource"
+                               [tableConfig]="_tableConfig"></app-datatable>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

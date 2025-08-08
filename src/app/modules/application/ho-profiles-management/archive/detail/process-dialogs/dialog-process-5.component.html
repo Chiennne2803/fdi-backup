@@ -1,0 +1,48 @@
+<div mat-dialog-title>
+    <div class="flex justify-between">
+        <h2>Kết quả rà soát hồ sơ vay</h2>
+        <a
+            mat-dialog-close
+            mat-icon-button>
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </a>
+    </div>
+</div>
+<mat-dialog-content [formGroup]="formGroup">
+    <div class="grid grid-cols-3 gap-5">
+        <mat-form-field class="w-full">
+            <mat-label>Người rà soát</mat-label>
+            <input
+                matInput
+                formControlName="createdByName"
+            >
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Ngày rà soát</mat-label>
+            <input
+                matInput
+                formControlName="createdDate"
+            >
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Kết quả rà soát</mat-label>
+            <mat-select formControlName="status">
+                <mat-option [value]="0">Từ chối</mat-option>
+                <mat-option [value]="1">Phê duyệt</mat-option>
+                <mat-option [value]="2">Làm lại</mat-option>
+            </mat-select>
+            <mat-error *ngIf="formGroup.get('status').hasError('required')">
+                {{ 'QLHS004' | transloco }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <mat-form-field class="w-full mt-3">
+        <mat-label>Nội dung rà soát hồ sơ</mat-label>
+        <textarea matInput formControlName="content"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="onClickSubmit()">Xác nhận</button>
+</mat-dialog-actions>

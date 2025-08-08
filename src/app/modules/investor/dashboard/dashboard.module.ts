@@ -1,0 +1,35 @@
+import { NgModule } from '@angular/core';
+import {Route, RouterModule} from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { SharedModule } from 'app/shared/shared.module';
+import { DashboardComponent } from './dashboard.component';
+import {MatTableModule} from "@angular/material/table";
+import {TranslocoModule} from "@ngneat/transloco";
+
+const dashBoardRoute: Route[] = [
+    {
+        path     : '',
+        component: DashboardComponent,
+    }
+];
+
+@NgModule({
+    declarations: [
+        DashboardComponent
+    ],
+    imports     : [
+        RouterModule.forChild(dashBoardRoute),
+        MatButtonModule,
+        MatIconModule,
+        SharedModule,
+        MatTabsModule,
+        MatMenuModule,
+        TranslocoModule,
+    ]
+})
+export class DashboardModule
+{
+}

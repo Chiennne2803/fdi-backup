@@ -1,0 +1,27 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <div class="absolute flex flex-col overflow-hidden w-full bg-card dark:bg-transparent">
+        <div class="w-full relative flex flex-row justify-center h-10 items-center border-b border-solid">
+            <div class="text-2xl font-extrabold tracking-tight uppercase">
+                Tuỳ chỉnh sản phẩm huy động vốn
+            </div>
+        </div>
+        <mat-tab-group (selectedTabChange)="onTabChanged($event);">
+            <mat-tab *ngFor="let tab of tabs" [label]="tab.label" >
+                <ng-container [ngSwitch]="tab.id">
+                    <ng-container *ngSwitchCase="1">
+                        <app-rate-loan-tenure></app-rate-loan-tenure>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="3">
+                        <app-conf-refun #disburTab></app-conf-refun>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="2" >
+                        <app-config-bonus></app-config-bonus>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                        <app-conf-credit></app-conf-credit>
+                    </ng-container>
+                </ng-container>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

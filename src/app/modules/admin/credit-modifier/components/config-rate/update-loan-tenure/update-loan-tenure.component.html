@@ -1,0 +1,60 @@
+<div class="flex flex-col  md:min-w-160 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">
+            Quản lý lãi suất vay tín chấp
+        </div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="back()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto gap-8">
+        <div class="flex flex-col flex-auto gap-8 px-6 pt-4 border rounded-md">
+            <div class="text-lg font-bold">Thông tin lãi suất vay tín chấp</div>
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Lãi suất cộng thêm khi vay tín chấp (%)</mat-label>
+                    <input type="number"
+                           id="creditRateAdd"
+                           matInput
+                           [(ngModel)]="creditRateAdd"
+                           [ngModelOptions]="{standalone: true}">
+                </mat-form-field>
+                <mat-error *ngIf="creditRateAdd == null">
+                    {{ 'SPTD082' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="creditRateAdd != null && creditRateAdd < 0">
+                    {{ 'SPTD129' | transloco }}
+                </mat-error>
+               <!-- <mat-error *ngIf="creditRateAdd && creditRateAdd > 9999">
+                    {{ 'SPTD080' | transloco }}
+                </mat-error>-->
+               <!-- <mat-error *ngIf="creditRateAdd && creditRateAdd > 100">
+                    {{ 'SPTD081' | transloco }}
+                </mat-error>-->
+            </div>
+        </div>
+    </form>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-end mb-4 sm:mb-6 pr-8 sm:pr-8 mb-8">
+        <div class="flex items-center mt-4 sm:mt-0 gap-4">
+            <button class="fuse-mat-button-large w-48"
+                    mat-stroked-button
+                    (click)="back()">
+                Đóng
+            </button>
+            <button class="fuse-mat-button-large w-48"
+                    mat-flat-button
+                    *ngIf="('SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE' | permission)"
+                    [color]="'primary'"
+                    (click)="submit()">
+                <span>Lưu</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="flex flex-col max-w-240 md:min-w-160 -m-6 max-h-full">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Danh sách yêu cầu thanh toán khoản vay</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      mat-dialog-close></mat-icon>
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="formGroup">
+        <mat-form-field class="w-full">
+            <mat-label>Mã giao dịch</mat-label>
+            <mat-select formControlName="transPayReq" class="{{this.statusTopupMailTrans !== 2 ? 'custom-select' : ''}}">
+                <mat-option
+                    *ngFor="let transPay of lstTranspayReq"
+                    [value]="transPay"
+                >
+                    {{ transPay?.transCode }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="isInvalid('transPayReq')">
+                {{ message.form.errors.required }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full mt-5" *ngIf="statusTopupMailTrans === 3 || statusTopupMailTrans === 6">
+            <mat-label>Số tiền chuyển (VNĐ)</mat-label>
+            <input matInput
+                   currencyMask autocomplete="off"
+                   maxlength="15"
+                   class="text-left"
+                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                   formControlName="paidAmount">
+            <mat-error *ngIf="isInvalid('paidAmount')">
+                {{ message.form.errors.required }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <!-- Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="flex items-center mt-4 sm:mt-0">
+            <button
+                mat-flat-button
+                mat-dialog-close
+            >
+                Hủy
+            </button>
+            <button
+                mat-flat-button
+                color="warn"
+                class="ml-2"
+                (click)="onSubmit()"
+            >
+                Xác nhận
+            </button>
+        </div>
+    </div>
+
+</div>

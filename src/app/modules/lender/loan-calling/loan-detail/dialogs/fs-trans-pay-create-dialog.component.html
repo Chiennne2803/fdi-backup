@@ -1,0 +1,149 @@
+<!--
+<div mat-dialog-title>
+    <div class="flex justify-between">
+        <h2>Lập yêu cầu thanh toán khoản huy động</h2>
+        <a
+            mat-dialog-close
+            mat-icon-button>
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </a>
+    </div>
+</div>
+<mat-dialog-content>
+    <article class="prose mb-5">
+        <h3>Thông tin hồ sơ</h3>
+    </article>
+    <div class="flex flex-col flex-auto overflow-hidden sm:overflow-y-auto">
+        <div class="grid grid-cols-2 gap-5">
+            <article class="prose break-words">
+                <p>Số hồ sơ vay: <br> <b>{{ data.fsLoanProfiles.fsLoanProfilesId }}</b></p>
+            </article>
+            <article class="prose break-words">
+                <p>Số tiền phải thanh toán(VNĐ): <br> <b>{{(this.paymentPeriod ? this.paymentPeriod.amount : 0) | currencyFormatPipe: 10}}</b></p>
+            </article>
+        </div>
+    </div>
+    <mat-divider class="my-5"></mat-divider>
+    <div class="grid grid-cols-2 gap-5">
+        <mat-form-field class="flex-auto gt-xs:pr-3">
+            <mat-label>Đợt giải ngân</mat-label>
+            <mat-select [placeholder]="'Đợt giải ngân'" (selectionChange)="onSelectCardDown($event)">
+                <mat-option [value]="cardDown.fsCardDownId" *ngFor="let cardDown of data.lstCardDowns">{{cardDown.transCode}} ({{ cardDown.createdDate | datetimeformat: 'DD/MM/YYYY' }})</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="flex-auto gt-xs:pr-3">
+            <mat-label>Kỳ thanh toán</mat-label>
+            <mat-select [placeholder]="'Kỳ thanh toán'" (selectionChange)="onSelectPaymentPeriod($event)">
+                <mat-option [value]="transPayPeriod.fsTranspayPeriodId" *ngFor="let transPayPeriod of transPayPeriods">{{transPayPeriod.periodName}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Số tiền đã thanh toán</mat-label>
+            <input
+                matInput
+                disabled
+                value="{{this.paymentPeriod && this.paymentPeriod.paidAmount ? this.paymentPeriod.paidAmount : 0}}"
+                [placeholder]="'Số tiền đã thanh toán'"
+            >
+            <span class="ml-2" matSuffix>VND</span>
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Số tiền thanh toán</mat-label>
+            <input
+                matInput
+                disabled
+                value="{{this.paymentPeriod ? this.paymentPeriod.amount : ''}}"
+                [placeholder]="'Số tiền thanh toán'"
+            >
+            <span class="ml-2" matSuffix>VND</span>
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Ngày phải thanh toán</mat-label>
+            <input
+                matInput
+                disabled
+                [placeholder]="'Ngày phải thanh toán'"
+                value="{{(this.paymentPeriod ? this.paymentPeriod.expirDate : 0) | datetimeformat : 'DD/MM/YYYY'}}"
+            >
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Tiền phạt</mat-label>
+            <input
+                matInput
+                disabled
+                [placeholder]="'Tiền phạt'"
+                value="{{this.paymentPeriod ? this.paymentPeriod.expireRate : ''}}"
+            >
+            <span class="ml-2" matSuffix>VND</span>
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Mã giao dịch</mat-label>
+            <input
+                matInput
+                disabled
+                [placeholder]="'Mã giao dịch'"
+                value="{{this.paymentPeriod ? this.paymentPeriod.transCode : ''}}"
+            >
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Tổng tiền thanh toán</mat-label>
+            <input
+                matInput
+                disabled
+                [placeholder]="'Tổng tiền thanh toán'"
+                value="{{this.paymentPeriod ? (this.paymentPeriod.amount + this.paymentPeriod.expireRate) : ''}}"
+            >
+            <span class="ml-2" matSuffix>VND</span>
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Người lập</mat-label>
+            <input
+                matInput
+                disabled
+                [value]="authService.authenticatedUser.fullName"
+                [placeholder]="'Người lập'">
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Ngày lập</mat-label>
+            <input
+                disabled
+                matInput
+                [placeholder]="'Ngày lập'"
+                [matDatepicker]="datePicker"
+                [(ngModel)]="currentDate"
+            >
+            <mat-datepicker #datePicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <mat-divider class="my-5"></mat-divider>
+    <div class="grid grid-cols-2 gap-5">
+        <article class="prose break-words">
+            <p>Tên tài khoản ngân hàng thụ hưởng: <br> <b>{{this.paymentPeriod ? this.paymentPeriod.accName : '-'}}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Tên ngân hàng thụ hưởng: <br> <b>{{this.paymentPeriod ? this.paymentPeriod.bankName : '-'}}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Chi nhánh: <br> <b>{{this.paymentPeriod ? this.paymentPeriod.branchName : '-'}}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Số tài khoản thụ hưởng: <br> <b>{{this.paymentPeriod ? this.paymentPeriod.accNo : '-'}}</b></p>
+        </article>
+    </div>
+    <mat-divider class="my-5"></mat-divider>
+    <article class="prose">
+        <h3>Nội dung thanh toán khoản huy động</h3>
+    </article>
+    <article class="prose">
+        <p>Chú ý:</p>
+        <ul>
+            <li>Chuyển khoản đúng nội dung giao dịch để tránh phát sinh lỗi nạp tiền đầu tư</li>
+            <li>Chuyển 24/7 nếu khác ngân hàng</li>
+        </ul>
+    </article>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Huỷ</button>
+    <button mat-flat-button color="primary" (click)="submit()">Xác nhận</button>
+</mat-dialog-actions>
+-->

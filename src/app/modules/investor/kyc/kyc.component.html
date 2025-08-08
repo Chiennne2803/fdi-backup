@@ -1,0 +1,28 @@
+<ng-container *ngIf="isKycContactCustomerService else kyc">
+    <kyc-contact-customer-service
+        (isContactFinished)="isKycContactCustomerService = $event"
+    ></kyc-contact-customer-service>
+</ng-container>
+
+<ng-template #kyc>
+    <ng-container *ngIf="!isKycStarted else kycStarted">
+        <layout-common-kyc-starter
+            (isContactCustomerService)="isKycContactCustomerService = $event"
+            (isKycStarted)="isKycStarted = $event"
+        ></layout-common-kyc-starter>
+    </ng-container>
+
+    <ng-template #kycStarted>
+        <ng-container *ngIf="!isKycFinished else finishedTemplate">
+            <kyc-details
+                (isStartContactCustomerService)="isKycContactCustomerService = $event"
+                (toKycFinished)="isKycFinished = $event"
+                (backToKycStarted)="isKycStarted = $event"
+            ></kyc-details>
+        </ng-container>
+        <ng-template #finishedTemplate>
+            <kyc-finised></kyc-finised>
+        </ng-template>
+    </ng-template>
+</ng-template>
+

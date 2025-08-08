@@ -1,0 +1,179 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+        <div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+            <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+                  [formGroup]="emailConfigForm">
+                <div class="flex justify-center text-2xl font-bold uppercase mb-4">Cấu hình email</div>
+
+                <!-- Info -->
+                <div class="flex flex-col p-4 border rounded-md mb-4">
+                    <div class="flex flex-row w-full gap-64">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Tên hiển thị</mat-label>
+                            <input id="displayName"
+                                   matInput
+                                   formControlName="displayName">
+                            <mat-error *ngIf="emailConfigForm.get('displayName').hasError('required')">
+                                {{ 'MAIL001' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="emailConfigForm.get('displayName').hasError('maxlength')">
+                                {{ 'MAIL002' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="emailConfigForm.get('displayName').hasError('pattern')">
+                                {{ 'MAIL015' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Tên đăng nhập</mat-label>
+                            <input id="username"
+                                   matInput
+                                   maxlength="255"
+                                   formControlName="username">
+                            <mat-error *ngIf="emailConfigForm.get('username').hasError('required')">
+                                {{ 'MAIL003' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="emailConfigForm.get('username').hasError('maxlength')">
+                                {{ 'MAIL016' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-row w-full gap-64">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Địa chỉ gửi thư</mat-label>
+                            <input id="fromEmail"
+                                   maxlength="255"
+                                   matInput
+                                   formControlName="fromEmail">
+                            <mat-error *ngIf="emailConfigForm.get('fromEmail').hasError('required')">
+                                {{ 'MAIL005' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="emailConfigForm.get('fromEmail')?.hasError('email')">
+                                {{ 'MAIL006' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="emailConfigForm.get('fromEmail')?.hasError('maxlength')">
+                                {{ 'MAIL017' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Mật khẩu</mat-label>
+                            <input id="password"
+                                   matInput
+                                   type="password"
+                                   formControlName="password"
+                                   #passwordField>
+                            <button mat-icon-button
+                                    type="button"
+                                    (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                                    matSuffix>
+                                <mat-icon class="icon-size-5"
+                                          *ngIf="passwordField.type === 'password'"
+                                          [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                <mat-icon class="icon-size-5"
+                                          *ngIf="passwordField.type === 'text'"
+                                          [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                            </button>
+                            <mat-error *ngIf="emailConfigForm.get('password').hasError('required')">
+                                {{ 'MAIL004' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-row w-full gap-64">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>SMTP Server</mat-label>
+                            <input id="smtpServer"
+                                   maxlength="200"
+                                   matInput
+                                   formControlName="smtpServer">
+                            <mat-error *ngIf="emailConfigForm.get('smtpServer').hasError('required')">
+                                {{ 'MAIL007' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="emailConfigForm.get('smtpServer').hasError('maxlength')">
+                                {{ 'MAIL008' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>SMTP Port</mat-label>
+                            <input id="smtpPort"
+                                   maxlength="19"
+                                   matInput
+                                   type="number"
+                                   min="0"
+                                   formControlName="smtpPort">
+                            <mat-error *ngIf="emailConfigForm.get('smtpPort').hasError('required')">
+                                {{ 'MAIL009' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-row w-full gap-64">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Kiểu mã hoá</mat-label>
+                            <mat-select formControlName="encodeType">
+                                <mat-option *ngFor="let item of encodeTypes"
+                                            [value]="item.id">{{ item.label }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="emailConfigForm.get('encodeType').hasError('required')">
+                                {{ 'MAIL010' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="w-1/2 flex flex-col">
+                            <mat-label>Tuỳ chọn</mat-label>
+                            <div class="flex flex-col gap-3 mt-4">
+                                <mat-checkbox color="primary"
+                                              formControlName="requireAuth">Yêu cầu xác thực</mat-checkbox>
+                                <mat-checkbox color="primary"
+                                              formControlName="isDefault">Mặc địnhh</mat-checkbox>
+                                <mat-checkbox color="primary"
+                                              formControlName="isUse">Có sử dụng</mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Another Info -->
+                <div class="flex flex-col p-4 border rounded-md">
+                    <div class="flex flex-row w-full gap-64">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Ngày tạo</mat-label>
+                            <input id="createdDate"
+                                   matInput
+                                   formControlName="createdDate">
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Người tạo</mat-label>
+                            <input id="createdByName"
+                                   matInput
+                                   formControlName="createdByName">
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-row w-full gap-64">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Ngày cập nhật</mat-label>
+                            <input id="lastUpdatedDate"
+                                   matInput
+                                   formControlName="lastUpdatedDate">
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Người cập nhật</mat-label>
+                            <input id="lastUpdatedByName"
+                                   matInput
+                                   formControlName="lastUpdatedByName">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-center mt-4 sm:mt-6">
+                    <!-- Submit -->
+                    <button class="order-first sm:order-last ml-2"
+                            *ngIf="'SFF_CONFIGURE_BANK_ACCOUNT_UPDATE' | permission"
+                            mat-flat-button
+                            [color]="'primary'"
+                            (click)="submit()">
+                        Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

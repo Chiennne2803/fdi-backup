@@ -1,0 +1,33 @@
+<mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent">
+    <!-- Drawer -->
+    <mat-drawer
+        class="w-80 p-3"
+        [mode]="'side'"
+        [opened]="true"
+        [position]="'start'"
+        [disableClose]="true"
+        #drawer>
+        <fuse-card class="flex flex-col max-w-90 w-full p-6 filter-info text-white" style="background: linear-gradient(106.46deg, #2854F2 18.36%, #394EE4 27.43%, #6641C1 42.73%, #BA219D 65.37%, #FF6C0E 92.94%);">
+            <div class="flex justify-between">
+                <div class="text-1xl font-semibold leading-tight">Số dư khả dụng(VNĐ)</div>
+            </div>
+            <div class="mt-3 text-3xl"><strong>{{wControlEuDTO?.weu | number}}</strong></div>
+            <div class="mt-3 text-1xl">{{fullName | uppercase}}</div>
+<!--            <div class="flex justify-end pt-2 text-2xl ">-->
+<!--                <button-->
+<!--                    mat-button-->
+<!--                    class="text-2xl"-->
+<!--                    (click)="openTopupDialog()">-->
+<!--                    <mat-icon class="cursor-pointer text-white "-->
+<!--                              [ngClass]="'icon-size-10'" svgIcon="add_to_photos"></mat-icon>-->
+<!--                    <span>Nạp tiền</span>-->
+<!--                </button>-->
+<!--            </div>-->
+
+        </fuse-card>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>

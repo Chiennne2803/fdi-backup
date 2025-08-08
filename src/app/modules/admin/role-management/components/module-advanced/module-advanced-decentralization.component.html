@@ -1,0 +1,43 @@
+<div *transloco="let t; read: 'module'">
+    <mat-tab-group (selectedTabChange)="onTabAdvanceModuleChange($event)" #moduleMatTabGroup>
+        <mat-tab *ngFor="let item of lstAdvancedTabs" label="{{ t(item.moduleName) }}">
+
+            <mat-expansion-panel class="mb-5" *ngFor="let department of item.admDepartmentsDTOS" [expanded]="department?.admRolesAdvanceDTOS?.length > 0">
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="font-bold">
+                        {{department.departmentName}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="grid grid-cols-2 p-5 pt-2 pb-2 bg-gray-100 font-bold">
+                    <div class="grid grid-cols-11 gap-4">
+                        <div class="content-center content-between"> #</div>
+                        <div class="col-span-5 ">Nhân viên</div>
+                        <div class="col-span-5 ">Xem</div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 p-5 pt-3">
+                    <div class="grid grid-cols-11 gap-4">
+                        <ng-container *ngFor="let row of department.admRolesAdvanceDTOS">
+                            <div class="content-center content-between">
+                                <mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                                              (change)="onCheckedFull($event, row)">
+                                </mat-checkbox>
+                            </div>
+                            <div class="col-span-5 ">
+                                {{ row.fullName }}
+                            </div>
+                            <div class="col-span-5 ">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                              [disabled]="disabled"
+                                              color="primary"
+                                              (change)="onSelectedChange('_VIEW', row, $event)"
+                                              [checked]="row.isSelect==1">
+                                </mat-checkbox>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-tab>
+    </mat-tab-group>
+</div>

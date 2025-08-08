@@ -1,0 +1,38 @@
+<div *transloco="let t; read: 'module'" >
+    <mat-expansion-panel class="mb-5"  *ngFor="let lstReport of getListReport() " [expanded]="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title class="font-bold">
+                {{convertReportName(lstReport[0].module)}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="grid grid-cols-2 p-5 pt-2 pb-2 bg-gray-100 font-bold">
+            <div class="grid grid-cols-11 gap-4">
+                <div class="content-center content-between"> #</div>
+                <div class="col-span-5 ">Tên báo cáo</div>
+                <div class="col-span-5 ">Xem</div>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 p-5 pt-3">
+            <div class="grid grid-cols-11 gap-4">
+                <ng-container *ngFor="let row of lstReport">
+                    <div class="content-center content-between">
+                        <mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                                      (change)="onCheckedFull($event, row)">
+                        </mat-checkbox>
+                    </div>
+                    <div class="col-span-5 ">
+                        {{ t(row.module)}}
+                    </div>
+                    <div class="col-span-5 ">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                                      [disabled]="disabled"
+                                      color="primary"
+                                      (change)="onSelectedChange('_VIEW', row, $event)"
+                                      [checked]="row.isSelect">
+                        </mat-checkbox>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</div>

@@ -1,0 +1,90 @@
+<h1 mat-dialog-title
+    class="flex flex-row justify-between align-center">
+    Nhập địa chỉ
+    <button mat-icon-button>
+        <mat-icon class="text-current"
+                  [svgIcon]="'heroicons_outline:x'"
+                  (click)="discard()"></mat-icon>
+    </button>
+</h1>
+<div mat-dialog-content
+     class="flex flex-col w-full"
+     [formGroup]="addressForm">
+    <div class="w-full flex flex-row gap-3 align-center">
+        <mat-label class="w-1/3">Tỉnh/Thành phố
+            <span *ngIf="isValidatorRequired('province')">(<span style="color: red">*</span>)</span>
+        </mat-label>
+        <div class="w-3/4">
+            <mat-form-field class="w-full">
+                <mat-select formControlName="province"
+                            (valueChange)="onPickProvince($event)">
+                    <mat-option *ngFor="let item of provinces"
+                                [value]="item.id">{{ item.label }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="addressForm.get('province').hasError('required')">
+                    {{ 'BM004' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="w-full flex flex-row gap-3 align-center">
+        <mat-label class="w-1/3">Quận/Huyện
+            <span *ngIf="isValidatorRequired('province')">(<span style="color: red">*</span>)</span>
+        </mat-label>
+        <div class="w-3/4">
+            <mat-form-field class="w-full">
+                <mat-select formControlName="district"
+                            (valueChange)="onPicDistrict($event)">
+                    <mat-option *ngFor="let item of districts"
+                                [value]="item.id">{{ item.label }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="addressForm.get('district').hasError('required')">
+                    {{ 'BM006' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="w-full flex flex-row gap-3 align-center">
+        <mat-label class="w-1/3">Xã/Phường
+            <span *ngIf="isValidatorRequired('province')">(<span style="color: red">*</span>)</span>
+        </mat-label>
+        <div class="w-3/4">
+            <mat-form-field class="w-full">
+                <mat-select formControlName="commune">
+                    <mat-option *ngFor="let item of communes"
+                                [value]="item.id">{{ item.label }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="addressForm.get('commune').hasError('required')">
+                    {{ 'BM008' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="w-full flex flex-row gap-3 align-center">
+        <mat-label class="w-1/3">Địa chỉ chi tiết
+            <span *ngIf="isValidatorRequired('province')">(<span style="color: red">*</span>)</span>
+        </mat-label>
+        <div class="w-3/4">
+            <mat-form-field class="w-full">
+                <input id="address"
+                       matInput
+                       maxlength="200"
+                       trim="blur"
+                       formControlName="address">
+                <mat-error *ngIf="addressForm.get('address').hasError('required')">
+                    {{ 'BM011' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions
+     class="flex flex-row justify-center">
+    <button mat-stroked-button
+            (click)="reset()"
+            cdkFocusInitial>Nhập lại</button>
+    <button mat-flat-button
+            (click)="submit()"
+            color="primary"
+            cdkFocusInitial>Xác nhận</button>
+</div>

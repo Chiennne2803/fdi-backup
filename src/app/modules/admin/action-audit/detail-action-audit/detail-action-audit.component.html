@@ -1,0 +1,85 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer-content class="flex flex-col">
+        <div class="w-full px-5">
+            <div class="flex items-center justify-between w-full mx-auto py-2">
+                <article class="w-2/4 prose break-words">
+                    <h3>
+                        Giám sát truy cập
+                    </h3>
+                </article>
+                <div class="flex items-center justify-end">
+                    <a (click)="closeDrawer()"
+                       class="ml-auto sm:ml-0"
+                       mat-stroked-button
+                       [matTooltip]="'Đóng'">
+                        Đóng
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-8" *ngIf="dataSource">
+            <table mat-table [dataSource]="dataSource" class="w-full">
+                <ng-container matColumnDef="issueDatetime">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Thời gian
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.issueDatetime | datetimeformat : 'DD/MM/YYYY HH:MM:SS' }}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="admActionAuditId">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            ID
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.admActionAuditId }}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="function">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            Màn hình
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.function }}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="actionCode">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="cell-overflow table-header">
+                            actionCode
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="cell-overflow">
+                            {{ element.actionCode }}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row
+                    *matHeaderRowDef="['issueDatetime', 'function', 'actionCode', 'admActionAuditId']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['issueDatetime','function','actionCode','admActionAuditId'];"
+                    class="hover:bg-accent-50 hover:cursor-pointer"></tr>
+            </table>
+            <mat-paginator #paginator
+                           [pageSizeOptions]="pageSizeOptions"
+                           [length]="lengthRecords"
+                           [pageSize]="pageSize"
+                           [showFirstLastButtons]="true">
+            </mat-paginator>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

@@ -1,0 +1,355 @@
+<change-id-gpkd></change-id-gpkd>
+<mat-drawer
+    class="w-full sm:w-100"
+    [mode]="'side'"
+    [opened]="false"
+    [position]="'end'"
+    #fileDrawer>
+    <file-detail
+        [fileDrawer]="fileDrawer"
+        [selectedFile]="selectedFile"
+    ></file-detail>
+</mat-drawer>
+<div class="relative flex overflow-hidden h-full min-w-0 md:w-full p-4">
+    <div class="flex-auto ">
+        <div class="flex flex-col p-4 h-full">
+            <ng-container *ngIf="isEditable; else viewTemplate">
+                <div class="flex flex-col flex-auto overflow-y-auto mt-4 gap-3"
+                     [formGroup]="representativeDetailForm">
+                    <div class="flex flex-row flex-auto overflow-hidden sm:overflow-y-auto gap-8 px-8">
+                        <avatar-component-shared styleClass="h-[220px] aspect-[9/6]"
+                                                 [formGroup]="representativeDetailForm"
+                                                 field="avatar"></avatar-component-shared>
+                        <div class="flex flex-col w-1/4 gap-4">
+                            <mat-form-field class="w-full">
+                                <mat-label>Họ và tên</mat-label>
+                                <input id="fullName"
+                                       matInput
+                                       trim="blur"
+                                       maxlength="50"
+                                       formControlName="fullName">
+                                <mat-error *ngIf="representativeDetailForm.get('fullName').hasError('required')">
+                                    {{ 'HSVV276' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>CCCD/Hộ Chiếu</mat-label>
+                                <input id="identification"
+                                       matInput
+                                       inputMask
+                                       maskType="number"
+                                       trim="blur"
+                                       maxlength="12"
+                                       formControlName="identification">
+                                <mat-error *ngIf="representativeDetailForm.get('identification').hasError('required')">
+                                    {{ 'TKDT088' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Giới tính</mat-label>
+                                <mat-select formControlName="gender">
+                                    <mat-option *ngFor="let item of genders"
+                                                [value]="item.admCategoriesId">{{ item.categoriesName }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="representativeDetailForm.get('gender').hasError('required')">
+                                    {{ 'TKDT094' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col w-1/4 gap-4">
+                            <mat-form-field class="w-full">
+                                <mat-label>SĐT liên hệ</mat-label>
+                                <input id="mobile"
+                                       matInput
+                                       maxlength="11"
+                                       inputMask
+                                       maskType="number"
+                                       formControlName="mobile">
+                                <mat-error *ngIf="!!getErrorMobile()">
+                                    {{ getErrorMobile() | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+
+                            <app-date-picker
+                                class="w-full"
+                                label="Ngày cấp"
+                                [maxDate]="{'days': 0}"
+                                formControlName="idDate"
+                                [isRequired]="true"
+                                requiredMsg="TKDT091"
+                                fomatMsg="HSVV281"
+                                maxMsg="HSVV282"
+                            ></app-date-picker>
+
+                            <app-date-picker
+                                class="w-full"
+                                label="Ngày sinh"
+                                [maxDate]="{'months': -216}"
+                                [validationType]="['upper18']"
+                                formControlName="dateOfBirth"
+                                [isRequired]="true"
+                                requiredMsg="TKDT097"
+                                fomatMsg="TKDT153"
+                                maxMsg="HSVV194"
+                            ></app-date-picker>
+                        </div>
+                        <div class="flex flex-col w-1/4 gap-4">
+                            <mat-form-field class="w-full">
+                                <mat-label>Email</mat-label>
+                                <input id="email"
+                                       matInput
+                                       maxlength="100"
+                                       formControlName="email">
+                                <mat-error *ngIf="representativeDetailForm.get('email').hasError('required')">
+                                    {{ 'TKDT103' | transloco }}
+                                </mat-error>
+                                <mat-error *ngIf="representativeDetailForm.get('email').hasError('maxlength')">
+                                    {{ 'TKDT102' | transloco }}
+                                </mat-error>
+                                <mat-error *ngIf="representativeDetailForm.get('email').hasError('email')">
+                                    {{ 'TKDT104' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>Nơi cấp</mat-label>
+                                <input id="idAddress"
+                                       matInput
+                                       maxlength="100"
+                                       formControlName="idAddress">
+                                <mat-error *ngIf="representativeDetailForm.get('idAddress').hasError('required')">
+                                    {{ 'TKDT093' | transloco }}
+                                </mat-error>
+                                <mat-error *ngIf="representativeDetailForm.get('idAddress').hasError('maxlength')">
+                                    {{ 'TKDT092' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="w-full">
+                                <mat-label>MST cá nhân</mat-label>
+                                <input id="taxCode"
+                                       inputMask
+                                       maskType="number"
+                                       matInput
+                                       maxlength="13"
+                                       formControlName="taxCode"
+                                       required="true"
+                                       requiredMsg="TKDT051"
+                                       placeholder=" Nhập '0' nếu chưa có Mã số thuế">
+                                <mat-error *ngIf="representativeDetailForm.get('taxCode').hasError('maxlength')">
+                                    {{ 'TKDT105' | transloco }}
+                                </mat-error>
+                                <mat-error *ngIf="representativeDetailForm.get('taxCode').hasError('required')">
+                                    {{ 'TKDT051' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-auto overflow-hidden sm:overflow-y-auto gap-8 px-8 mt-2">
+                        <mat-form-field class="w-full">
+                            <mat-label>Chức vụ</mat-label>
+                            <input matInput
+                                   formControlName="positionCompany">
+                            <mat-error *ngIf="representativeDetailForm.get('positionCompany').hasError('required')">
+                                {{ 'TKDT107' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="representativeDetailForm.get('positionCompany').hasError('maxlength')">
+                                {{ 'TKDT106' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-full">
+                            <mat-label>Trang Facebook</mat-label>
+                            <input id="facebook"
+                                   matInput
+                                   formControlName="facebook">
+                            <mat-error *ngIf="representativeDetailForm.get('facebook').hasError('maxlength')">
+                                {{ 'TKDT108' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-full">
+                            <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
+                            <input id="address2"
+                                   class="cursor-pointer"
+                                   matInput
+                                   readonly
+                                   formControlName="address2"
+                                   (click)="openAddressDialog('address2')">
+                            <mat-error *ngIf="representativeDetailForm.get('address2').hasError('required')">
+                                {{ 'TKDT110' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        
+                    </div>
+                    <div class="flex flex-row flex-auto overflow-hidden sm:overflow-y-auto gap-8 px-8 mt-2">
+                        
+                        <mat-form-field class="w-full">
+                            <mat-label>Địa chỉ hiện tại</mat-label>
+                            <input class="cursor-pointer"
+                                   matInput
+                                   readonly
+                                   formControlName="address1"
+                                   (click)="openAddressDialog('address1')">
+                            <mat-error *ngIf="representativeDetailForm.get('address1').hasError('required')">
+                                {{ 'TKDT109' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-row flex-auto overflow-hidden sm:overflow-y-auto gap-8 px-8 mt-2">
+                        <div class="w-full">
+                            <app-dropzone
+                                inputId="frontPhotoIdentication"
+                                styleClass="max-h-[46px]"
+                                [maxFile]="1"
+                                topTitle="Ảnh CCCD/Hộ Chiếu mặt trước"
+                                title="Ảnh CCCD/Hộ Chiếu mặt trước *"
+                                [maxFileSize]="5"
+                                accept="image/png, image/jpg, image/jpeg"
+                                [formGroup]="representativeDetailForm"
+                                field="frontPhotoIdentication"
+                                [isRequired]="true"
+                                [multiple]="false"
+                                requiredMsg="QLDT110"
+                                typeMsg="QLDT111"
+                                sizeMsg="QLDT112"
+                            ></app-dropzone>
+                        </div>
+                        <div class="w-full">
+                            <app-dropzone
+                                inputId="backsitePhotoIdentication"
+                                field="backsitePhotoIdentication"
+                                styleClass="max-h-[46px]"
+                                [maxFile]="1"
+                                [multiple]="false"
+                                [isRequired]="true"
+                                topTitle="Ảnh CCCD/Hộ Chiếu mặt sau"
+                                title="Ảnh CCCD/Hộ Chiếu mặt sau *"
+                                [maxFileSize]="5"
+                                accept="image/png, image/jpg, image/jpeg"
+                                [formGroup]="representativeDetailForm"
+                                requiredMsg="QLDT114"
+                                typeMsg="QLDT115"
+                                sizeMsg="QLDT116"
+                            ></app-dropzone>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-end flex-auto overflow-hidden sm:overflow-y-auto mt-4 px-8">
+                    <!-- Discard -->
+                    <button class="ml-auto sm:ml-0"
+                            mat-stroked-button
+                            (click)="cancel()">
+                        Đóng
+                    </button>
+                    <!-- Submit -->
+                    <button class="order-first sm:order-last ml-2"
+                            mat-flat-button
+                            [color]="'primary'"
+                            (click)="update()">
+                        Lưu
+                    </button>
+                </div>
+            </ng-container>
+            <ng-template #viewTemplate>
+                <div class="flex flex-col flex-auto sm:overflow-y-auto mt-4 gap-3">
+                    <div class="flex flex-row flex-auto sm:overflow-y-auto gap-8 px-8">
+                        <avatar-component-shared styleClass="h-[220px] aspect-[9/6]"
+                                                 [fileFromServer]="representativeDetail?.avatar"
+                                                 [showFileButton]="false"></avatar-component-shared>
+                        <div class="w-3/4 flex flex-col">
+                            <div class="flex flex-row flex-auto border-b-2">
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>Họ và tên</mat-label>
+                                    <strong>{{representativeDetail?.fullName}}</strong>
+                                </div>
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>SĐT liên hệ</mat-label>
+                                    <strong>{{representativeDetail?.mobile}}</strong>
+                                </div>
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>Email</mat-label>
+                                    <strong class="text-blue-500 underline">
+                                        <a
+                                            [href]="'mailto:' + representativeDetail?.email">{{representativeDetail?.email}}</a>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="flex flex-row flex-auto pt-3 border-b-2">
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>CCCD/Hộ chiếu</mat-label>
+                                    <strong>{{representativeDetail?.identification}}</strong>
+                                </div>
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>Ngày cấp</mat-label>
+                                    <strong>{{representativeDetail?.idDate | date: 'dd/MM/YYYY'}}</strong>
+                                </div>
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>Nơi cấp</mat-label>
+                                    <strong>{{representativeDetail?.idAddress}}</strong>
+                                </div>
+                            </div>
+                            <div class="flex flex-row flex-auto pt-3 border-b-2">
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>Giới tính</mat-label>
+                                    <strong>{{representativeDetail?.genderName}}</strong>
+                                </div>
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>Ngày sinh</mat-label>
+                                    <strong>{{representativeDetail?.dateOfBirth | date: 'dd/MM/YYYY'}}</strong>
+                                </div>
+                                <div class="flex flex-col w-1/3 gap-4">
+                                    <mat-label>MST cá nhân</mat-label>
+                                    <strong>{{representativeDetail?.taxCode}}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-auto overflow-hidden mt-2 border-b-2 px-8 pb-2 gap-8 sm:overflow-y-auto">
+                        <div>
+                            <div class="flex flex-col w-[330px] gap-4">
+                                <mat-label>Chức vụ</mat-label>
+                                <strong>{{representativeDetail?.positionCompany}}</strong>
+                            </div>
+                        </div>
+                        <div class="w-3/4 flex flex-row">
+                            <div class="flex flex-col w-1/3 gap-4">
+                                <mat-label>Trang facebook</mat-label>
+                                <strong>{{representativeDetail?.facebook}}</strong>
+                            </div>
+                            <div class="flex flex-col w-2/3 gap-4">
+                               <mat-label>Địa chỉ thường trú</mat-label>
+                                <strong>{{representativeDetail?.address2}}</strong>     
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-auto overflow-hidden mt-2 border-b-2 px-8 pb-2">
+                        <div class="flex flex-col w-1/2 gap-4">
+                             <mat-label>Địa chỉ hiện tại</mat-label>
+                                <strong>{{representativeDetail?.address1}}</strong>
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-auto overflow-hidden mt-2 border-b-2 px-8 pb-2 gap-8 sm:overflow-y-auto">
+                        <div style="width: calc(50% - 56px)" class="flex flex-col gap-4">
+                            <mat-label>Ảnh CCCD/Hộ chiếu(Mặt trước):</mat-label>
+                            <span class="text-primary underline cursor-pointer"
+                               (click)="clickViewImage(representativeDetail?.frontPhotoIdentication)">Xem
+                                file</span>
+                        </div>
+                        <div class="flex flex-col w-1/2 gap-4">
+                            <mat-label>Ảnh CCCD/Hộ chiếu(Mặt sau):</mat-label>
+                            <span class="text-primary underline cursor-pointer"
+                               (click)="clickViewImage(representativeDetail?.backsitePhotoIdentication)">Xem
+                               file</span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-row justify-end flex-auto overflow-hidden sm:overflow-y-auto gap-4 px-8 mb-6 mt-8">
+                    <button mat-flat-button
+                            [color]="'primary'"
+                            (click)="edit()">
+                        <span>Cập nhật</span>
+                    </button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

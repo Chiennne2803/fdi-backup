@@ -1,0 +1,14 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+        <mat-drawer-content class="flex flex-col">
+            <app-datatable [dataSource]="_dataSource"
+                           [tableConfig]="_tableConfig"
+                           [taskbarConfig]="_taskBarConfig"
+                           [tableConfigBtns]="_btnConfig"
+                           (checkboxItemChange)="checkboxItemChange($event)"
+                           (tableEvent)="handleTableEvent($event)"
+                           (pageSwitch)="handlePageSwitch($event)"
+                           (buttonClick)="onButtonActionClick($event)"
+                           (rowClick)="handleRowClick($event)"
+                           (handleSearch)="handleSearch($event)"></app-datatable>
+        </mat-drawer-content>
+</mat-drawer-container>

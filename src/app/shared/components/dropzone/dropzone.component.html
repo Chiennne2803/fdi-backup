@@ -1,0 +1,38 @@
+<ngx-dropzone-label class="flex" *ngIf="topTitle">
+    <span class="mr-1">{{ topTitle }}
+        <bold *ngIf="isRequired" [ngClass]="{'dropzone-error': isInvalidFormControl()}" [style]="{'color' : 'red'}">*
+        </bold>
+    </span>
+</ngx-dropzone-label>
+<div ngx-dropzone [id]="inputId" class="custom-dropzone" [class]="styleClass"
+    [ngClass]="{'dropzone-error': isInvalidFormControl()}" (change)="onSelect($event)" [multiple]="multiple"
+    (click)="onClick()" [accept]="accept">
+    <ngx-dropzone-label>
+        <span class="flex items-center justify-center gap-2">
+            <mat-icon svgIcon="feather:upload"></mat-icon>
+            <!-- {{title}} -->Tải lên
+        </span>
+    </ngx-dropzone-label>
+    <ng-container *ngIf="hasPreview">
+        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" class="w-full h-auto"
+            *ngFor="let f of files; let i = index" [file]="f" [removable]="true" (removed)="onRemove(f, i)">
+        </ngx-dropzone-image-preview>
+    </ng-container>
+    <ng-container *ngIf="!hasPreview">
+        <ngx-dropzone-preview [class]="previewClass" *ngFor="let f of files; let i = index" [removable]="true"
+            (removed)="onRemove(f, i)">
+            <ngx-dropzone-label>
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
+                {{ f.name }}
+            </ngx-dropzone-label>
+        </ngx-dropzone-preview>
+    </ng-container>
+</div>
+<mat-error class="text-[12px] font-medium" *ngIf="isInvalidRequired()">{{ (requiredMsg ||
+    appTextConfig.form.errors.required) | transloco }}</mat-error>
+<mat-error class="text-[12px] font-medium" *ngIf="validateByPattem('validateByPattern')">{{ (typeMsg ||
+    appTextConfig.form.errors.filePattern) | transloco }}</mat-error>
+<mat-error class="text-[12px] font-medium" *ngIf="validateByPattem('fileType')">{{ appTextConfig.form.errors.filePattern
+    }}</mat-error>
+<mat-error class="text-[12px] font-medium" *ngIf="isMaxFileSize()">{{ (sizeMsg || 'File không được quá ' + maxFileSize +
+    'MB') | transloco }}</mat-error>

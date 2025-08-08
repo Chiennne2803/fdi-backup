@@ -1,0 +1,116 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer-content class="flex flex-col">
+        <div class="w-full px-5">
+            <div class="flex items-center justify-between w-full mx-auto py-2">
+                <article class="w-2/4 prose break-words">
+                    <h3>
+                        Chi tiết yêu cầu rút tiền
+                    </h3>
+                </article>
+                <div class="flex items-center justify-end">
+                    <button (click)="onClose()"
+                            mat-stroked-button>
+                        Đóng
+                    </button>
+                    <button  @fadeInRight
+                             (click)="onClickApprove()"
+                            *ngIf="detail?.status === 0 && ('SFF_PROCESSING_WALLET_APPROVE' | permission) "
+                            mat-flat-button
+                            color="primary"
+                            class="ml-5">
+                        Xử lý
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="p-5 flex flex-col overflow-y-auto">
+            <div class="py-5">
+                <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                    <article class="w-1/4 prose break-words">
+                        <p>Mã yêu cầu <br> <b>{{ detail?.transCode }}</b></p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Tài khoản ví rút<br> <b>W_HO</b></p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Số tiền giao dịch (VNĐ)<br> <b>{{ detail?.amount | currencyFormatPipe: 3 }}</b></p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Trạng thái<br> <b>{{ detail?.statusName }}</b></p>
+                    </article>
+                </div>
+                <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Tên tài khoản</mat-label>
+                        <b>{{ detail?.accName }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Số tài khoản</mat-label>
+                        <b>{{ detail?.accNo }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Ngân hàng</mat-label>
+                        <b>{{ detail?.bankName}}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Chi nhánh</mat-label>
+                        <b>{{ detail?.branchName }}</b>
+                    </div>
+                </div>
+                <div class="w-full flex gap-5 p-5 border-b border-solid ">
+                    <article class="w-1/4 prose break-words">
+                        <p>Người lập<br>
+                            <b>{{ detail?.createdByName }}</b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Ngày lập<br>
+                            <b>{{ detail?.createdDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Ghi chú<br>
+                            <b>{{ detail?.note}}</b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words"></article>
+
+                </div>
+                <div class="w-full flex gap-5 p-5 border-b border-solid " *ngIf="detail?.status !== 0">
+                    <article class="w-1/4 prose break-words">
+                        <p>Người trình ký<br>
+                            <b>{{ detail?.approvalByName }}</b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Ngày trình ký<br>
+                            <b>{{ detail?.approvalDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                        </p>
+                    </article>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Nội dung trình ký</mat-label>
+                        <b>{{ detail?.assignComment}}</b>
+                    </div>
+                    <article class="w-1/4 prose break-words"></article>
+                </div>
+                <div class="w-full flex gap-5 p-5 border-b border-solid " *ngIf="detail?.status !== 3 && detail?.status !== 0">
+                    <article class="w-1/4 prose break-words">
+                        <p>Người xử lý<br>
+                            <b>{{ detail?.approvalByName }}</b>
+                        </p>
+                    </article>
+                    <article class="w-1/4 prose break-words">
+                        <p>Ngày xử lý<br>
+                            <b>{{ detail?.approvalDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                        </p>
+                    </article>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Nội dung xử lý</mat-label>
+                        <b>{{ detail?.approvalComment}}</b>
+                    </div>
+                    <article class="w-1/4 prose break-words"></article>
+                </div>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

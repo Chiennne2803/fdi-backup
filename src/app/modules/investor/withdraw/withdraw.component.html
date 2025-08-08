@@ -1,0 +1,27 @@
+<mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent">
+    <!-- Drawer -->
+    <mat-drawer
+        class="w-full md:w-10/12"
+        [mode]="'side'"
+        [opened]="false"
+        [position]="'end'"
+        [disableClose]="true"
+        #matDrawer>
+        <router-outlet></router-outlet>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <app-datatable
+            [containerStyle]="{width: '100%'}"
+            [tableConfig]="_tableConfig"
+            [taskbarConfig]="_taskbarConfig"
+            [tableConfigBtns]="_dataButtonConfig"
+            [dataSource]="_dataSource$"
+            (handleSearch)="handleSearch($event)"
+            (rowClick)="handleRowClick($event)"
+            (tableEvent)="handleTableEvent($event)"
+            (pageSwitch)="handlePageSwitch($event)"
+        >
+        </app-datatable>
+    </mat-drawer-content>
+</mat-drawer-container>

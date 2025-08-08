@@ -1,0 +1,60 @@
+<mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent">
+    <!-- Sidebar drawer -->
+    <mat-drawer
+        class="w-80"
+        [mode]="'side'"
+        [opened]="true"
+        [position]="'start'"
+        [disableClose]="true"
+        #sidebarDrawer>
+        <fuse-vertical-navigation
+            [appearance]="'default'"
+            [navigation]="areaLst"
+            [inner]="true"
+            [mode]="'side'"
+            [name]="'sidebar-navigation'"
+            [opened]="true"></fuse-vertical-navigation>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>
+<!--
+
+
+
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    &lt;!&ndash; Main &ndash;&gt;
+    <div class="flex flex-auto overflow-hidden">
+        <div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+            <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
+                <mat-drawer-content class="flex overflow-hidden">
+                    <div
+                        class="relative flex flex-auto flex-col w-full min-w-80 max-w-80 bg-card dark:bg-transparent border-r border-solid overflow-y-auto overscroll-y-contain">
+                        <fuse-vertical-navigation
+                            [appearance]="'default'"
+                            [navigation]="areaLst"
+                            [inner]="true"
+                            [mode]="'side'"
+                            [name]="'sidebar-navigation'"
+                            (appearanceChanged)="appearanceChanged($event)"
+                            (click)="onClick($event)"
+                            (openedChanged)="openedChanged($event)"
+                            [opened]="true"></fuse-vertical-navigation>
+                    </div>
+
+                    <ng-container >
+                        <app-item-list-category class="sm:relative w-full"
+                                                [parentId]="parentId"
+                                                (handleListChange)="handleListChanged($event)"></app-item-list-category>
+                    </ng-container>
+
+                </mat-drawer-content>
+            </mat-drawer-container>
+        </div>
+
+    </div>
+
+</div>
+-->

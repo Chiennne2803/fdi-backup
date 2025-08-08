@@ -1,0 +1,9 @@
+<app-datatable [tableConfig]="_tableStaffConfig"
+               [dataSource]="_dataSource$"
+               [taskbarConfig]="_taskBarConfig"
+               [tableConfigBtns]="_tableBtnConfig"
+               (tableEvent)="handleTableEvent($event)"
+               (rowClick)="handleRowClick($event)"
+               (checkboxItemChange)="checkboxItemChange($event)"
+               (handleSearch)="handleSearch.emit($event)"
+               (pageSwitch)="handlePageSwitch.emit($event)"></app-datatable>

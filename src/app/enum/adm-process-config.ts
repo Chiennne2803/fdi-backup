@@ -1,0 +1,9 @@
+export enum ADM_PROCESS_CONFIG_STATUS {
+    DEACTIVE = 0,
+    ACTIVE = 1,
+}
+
+export const ADM_PROCESS_CONFIG_STATUS_BTN_TEXT_MAP = {
+    [ADM_PROCESS_CONFIG_STATUS.DEACTIVE]: 'Bật tiến trình',
+    [ADM_PROCESS_CONFIG_STATUS.ACTIVE]: 'Tắt tiến trình',
+}

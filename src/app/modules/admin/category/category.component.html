@@ -1,0 +1,61 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+        <div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+            <mat-drawer-container class="flex-auto h-full"
+                                  [hasBackdrop]="false">
+                <mat-drawer-content class="flex overflow-hidden">
+                    <div
+                         class="relative flex flex-auto flex-col w-full min-w-80 max-w-80 bg-card dark:bg-transparent border-r border-solid">
+
+                        <!-- Header -->
+                        <div class="flex flex-col flex-0 py-4 px-4 border-b bg-gray-50 dark:bg-transparent">
+
+                            <!-- Search -->
+                            <div class="flex flex-row gap-2">
+                                <div class="text-2xl font-extrabold tracking-tight mb-3 bx-3">
+                                    Danh mục
+                                </div>
+                                <!--<button mat-flat-button
+                                        [color]="'primary'"
+                                        (click)="updateParentCategories()">
+                                    <mat-icon svgIcon="feather:plus-circle"></mat-icon>
+                                    <span class="ml-2 mr-1">Thêm</span>
+                                </button>-->
+                            </div>
+                        </div>
+
+                        <!-- Categories -->
+                        <div class="flex-auto overflow-y-auto">
+                            <mat-selection-list #shoes
+                                                [multiple]="false"
+                                                (selectionChange)="onSelectionParentCategory($event)">
+                                <mat-list-option *ngFor="let dep of parentCategories"
+                                                 [value]="dep.admCategoriesId">
+                                    <div class="flex flex-row w-full justify-between items-center">
+                                        <span class="truncate"> {{dep.categoriesName}}</span>
+                                        <button mat-icon-button
+                                                class="btn-edit p-0 hidden"
+                                                (click)="updateParentCategories(dep.admCategoriesId)">
+                                            <mat-icon svgIcon="mode_edit"></mat-icon>
+                                        </button>
+                                    </div>
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </div>
+
+                    </div>
+
+                    <ng-container *ngIf="!isShowDetail">
+                        <app-item-list-category class="sm:relative w-full"
+                                                [parentId]="parentId"
+                                                (handleListChange)="handleListChanged($event)"></app-item-list-category>
+                    </ng-container>
+
+                </mat-drawer-content>
+            </mat-drawer-container>
+        </div>
+
+    </div>
+
+</div>

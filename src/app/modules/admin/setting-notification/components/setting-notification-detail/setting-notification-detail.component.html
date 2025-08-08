@@ -1,0 +1,271 @@
+<div class="flex flex-col max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium"
+             *ngIf="!data.spNotificationConfigId">Thêm thông báo/ cảnh báo
+        </div>
+        <div class="text-lg font-medium"
+             *ngIf="data.spNotificationConfigId">Cập nhật thông báo/ cảnh báo
+        </div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="discard()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <ng-container>
+        <form class="flex flex-col flex-auto p-2 overflow-y-auto"
+              [formGroup]="notificationForm">
+            <!-- Info -->
+            <div class="flex flex-col p-4 border rounded-md mb-4">
+                <div class="text-lg font-bold mb-3">Thông tin thông báo/cảnh báo</div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Tên thông báo</mat-label>
+                        <input id="configName"
+                               matInput
+                               trim="blur"
+                               maxlength="100"
+                               formControlName="configName">
+                        <mat-error *ngIf="notificationForm.get('configName').hasError('required')">
+                            {{ 'CHCB001' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="notificationForm.get('configName').hasError('maxlength')">
+                            {{ 'CHCB002' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="notificationForm.get('configName').hasError('pattern')">
+                            {{ 'CHCB036' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Trạng thái</mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option *ngFor="let item of status"
+                                        [value]="item.id">{{ item.label }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="notificationForm.get('status').hasError('required')">
+                            {{ 'DLDM010' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Chức năng </mat-label>
+                        <mat-select formControlName="module">
+                            <mat-option *ngFor="let item of _listModule"
+                                        (onSelectionChange)="onSelect($event, item)"
+                                        [value]="item.id">{{ item.name }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="notificationForm.get('module').hasError('required')">
+                            {{ 'CHCB005' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Sự kiện</mat-label>
+                        <mat-select formControlName="action">
+                            <mat-option *ngFor="let item of _listEvent"
+                                        [value]="item.id">{{ item.name }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="notificationForm.get('action').hasError('required')">
+                            {{ 'CHCB007' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4"
+                     *ngIf="notificationForm?.get('module')?.value === 1 && (notificationForm?.get('action')?.value === 1 )">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Điều kiện áp dụng</mat-label>
+                        <mat-select formControlName="condition">
+                            <mat-option *ngFor="let item of conditions"
+                                        [value]="item.id">{{ item.label }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="notificationForm.get('condition').hasError('required')">
+                            {{ 'CHCB011' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Giá trị(ngày)</mat-label>
+                        <input id="conditionValue"
+                               trim="blur"
+                               matInput
+                               formControlName="conditionValue">
+                        <mat-error *ngIf="notificationForm.get('conditionValue').hasError('required')">
+                            {{ 'CHCB013' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="notificationForm.get('conditionValue').hasError('pattern')">
+                            {{ 'CHCB029' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="notificationForm.get('conditionValue').hasError('maxlength')">
+                            {{ 'CHCB030' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-full">
+                        <mat-label>Tiêu đề thông báo</mat-label>
+                        <input id="title"
+                               trim="blur"
+                               maxlength="120"
+                               matInput
+                               formControlName="title">
+                        <mat-error *ngIf="notificationForm.get('title').hasError('required')">
+                            {{ 'CHCB009' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="notificationForm.get('title').hasError('maxlength')">
+                            {{ 'CHCB031' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="notificationForm.get('title').hasError('pattern')">
+                            {{ 'CHCB037' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-full">
+                        <mat-label>Nội dung thông báo</mat-label>
+                        <textarea id="body"
+                                  trim="blur"
+                                  matInput
+                                  formControlName="body">
+                        </textarea>
+                        <mat-error *ngIf="notificationForm.get('body').hasError('required')">
+                            {{ 'CHCB014' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="notificationForm.get('body').hasError('maxlength')">
+                            {{ 'CHCB032' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row flex-auto overflow-y-auto p-6 pl-1">
+                    <span class="mr-2">Thông báo qua
+                        <span aria-hidden="true"
+                              class="mat-placeholder-required mat-form-field-required-marker ng-tns-c77-15 ng-star-inserted"> *</span>
+                    </span>
+                    <mat-checkbox class="w-1/4"
+                                  labelPosition="after"
+                                  [checked]="data?.sendNotify == 1"
+                                  formControlName="sendNotify">
+                        <mat-label>Thông báo hệ thống</mat-label>
+                    </mat-checkbox>
+                    <mat-checkbox class="w-1/4"
+                                  labelPosition="after"
+                                  [checked]="data?.sendEmail == 1"
+                                  formControlName="sendEmail">
+                        <mat-label>Thông báo email</mat-label>
+                    </mat-checkbox>
+                    <mat-error *ngIf="notificationForm.get('sendEmail').hasError('required')">
+                        {{ 'CHCB015' | transloco }}
+                    </mat-error>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <!--<mat-form-field class="w-1/2">
+                        <mat-label>Thông báo cho</mat-label>
+                        <mat-select formControlName="sendTo">
+                            <mat-option *ngFor="let item of sendTo"
+                                        (onSelectionChange)="onSelectSendTo($event, item)"
+                                        [value]="item.id">{{ item.label }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="notificationForm.get('module').hasError('required')">
+                            {{ 'CHCB017' | transloco }}
+                        </mat-error>
+                    </mat-form-field>-->
+                    <mat-form-field class="w-full">
+                        <mat-label>Thông báo người dùng</mat-label>
+                        <mat-chip-list #taglist
+                                       formControlName="sendToExt">
+                            <mat-chip selected
+                                      *ngFor="let item of _listExtPicked"
+                                      [selectable]="true"
+                                      [removable]="true"
+                                      (removed)="onRemoveExt(item)">
+                                {{item.fullName}}
+                                <mat-icon matChipRemove> cancel
+                                </mat-icon>
+                            </mat-chip>
+                            <input placeholder="Nhập để tìm kiếm"
+                                   [matChipInputFor]="taglist"
+                                   [matAutocomplete]="auto"
+                                   (input)="filterExt($event)"/>
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let item of _filteredListExt"
+                                            [value]="item.admAccountDetailId"
+                                            (onSelectionChange)="onAddExt($event ,item)">
+                                    {{item.fullName}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-chip-list>
+                        <!--<mat-error *ngIf="notificationForm.get('sendToExt').hasError('required')">
+                            Dữ liệu chưa được nhập
+                        </mat-error>-->
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Another Info -->
+            <div class="flex flex-col p-4 border rounded-md">
+                <div class="text-lg font-bold mb-3">Thông tin khác</div>
+
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày tạo</mat-label>
+                        <input id="createdDate"
+                               matInput
+                               formControlName="createdDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người tạo</mat-label>
+                        <input id="createdByName"
+                               matInput
+                               formControlName="createdByName">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày cập nhật</mat-label>
+                        <input id="lastUpdatedDate"
+                               matInput
+                               formControlName="lastUpdatedDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người cập nhật</mat-label>
+                        <input id="lastUpdatedByName"
+                               matInput
+                               formControlName="lastUpdatedByName">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="-ml-2">
+        </div>
+
+        <div class="flex items-center mt-4 sm:mt-0">
+            <!-- Discard -->
+            <button class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    (click)="discard()">
+                Huỷ
+            </button>
+            <!-- Submit -->
+
+            <button *ngIf="!data.spNotificationConfigId && ('SFF_CONFIGURING_ALERTS_INSERT' | permission)"
+                    class="order-first sm:order-last ml-2"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="submit()">
+                Lưu
+            </button>
+            <button *ngIf="data.spNotificationConfigId && ('SFF_CONFIGURING_ALERTS_UPDATE' | permission)"
+                    class="order-first sm:order-last ml-2"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="submit()">
+                Cập nhật
+            </button>
+        </div>
+    </div>
+</div>

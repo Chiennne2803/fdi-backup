@@ -1,0 +1,73 @@
+<div class="flex flex-col max-w-240 md:min-w-160 -m-6" style="max-height: 90vh">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Cập nhật xếp hạng khách hàng</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="closeDialog()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="formGroup">
+        <div class="flex flex-row w-full gap-4">
+            <mat-form-field class="w-1/2">
+                <mat-label>Xếp hạng khách hàng</mat-label>
+                <mat-select formControlName="fsConfCreditId">
+                    <mat-option *ngFor="let item of lstConfCredit"
+                                [value]="item.fsConfCreditId">{{ item.creditCode }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formGroup.get('fsConfCreditId').hasError('required')">
+                    {{ 'QLVV222' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-1/2">
+                <mat-label>Số điểm</mat-label>
+                <input
+                    matInput
+                    maxlength="15"
+                    class="text-left"
+                    formControlName="scores"
+                    id="scores"
+                >
+                <mat-error *ngIf="formGroup.get('scores').hasError('required')">
+                    {{ 'QLVV223' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="flex flex-row w-full gap-4">
+            <mat-form-field class="w-1/2">
+                <mat-label>Ngày cập nhật</mat-label>
+                <input id="createdDate"
+                       matInput
+                       readonly
+                       formControlName="createdDate">
+            </mat-form-field>
+            <mat-form-field class="w-1/2">
+                <mat-label>Người cập nhật</mat-label>
+                <input id="createdByName"
+                       matInput
+                       readonly
+                       formControlName="createdByName">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <!-- Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-end mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="flex items-center mt-4 sm:mt-0">
+            <button mat-stroked-button mat-dialog-close> Đóng </button>
+            <button
+                mat-flat-button
+                color="primary"
+                class="ml-2"
+                *ngIf=" 'SFF_RANK_INSERT' | permission"
+                (click)="onSubmit()"
+            >
+                Xác nhận
+            </button>
+        </div>
+    </div>
+</div>

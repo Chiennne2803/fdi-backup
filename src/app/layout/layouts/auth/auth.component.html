@@ -1,0 +1,12 @@
+<div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 h-screen">
+  <div
+    class="overflow-auto md:flex md:items-start md:justify-end w-full sm:w-auto md:h-full md:w-[58%] py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none  md:shadow-none bg-card">
+    <div class="w-full max-w-[580px] sm:w-[580px] mx-auto sm:mx-0 h-full">
+      <router-outlet *ngIf="true"></router-outlet>
+    </div>
+  </div>
+
+  <div class="hidden md:block w-[42%] h-screen overflow-hidden">
+    <img src="assets/images/images/bg-login.jpg" alt="Background Login" class="w-full h-full object-center" />
+  </div>
+</div>

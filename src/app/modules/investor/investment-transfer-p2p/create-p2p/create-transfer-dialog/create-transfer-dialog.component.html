@@ -1,0 +1,146 @@
+<div class="flex flex-col max-w-240 md:min-w-160 -m-6" style="max-height: 90vh">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium uppercase ">Tạo giao dịch chuyển nhượng</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="closeDialog()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto p-6 sm:p-4 overflow-y-auto" [formGroup]="formGroup">
+        <fuse-card class="flex flex-col mb-5 p-5" style="overflow: unset">
+            <article class="prose mb-4">
+                <h4 class="capitalize">Thông tin hồ sơ</h4>
+            </article>
+            <div class="grid grid-cols-2 gap-4">
+                <mat-form-field>
+                    <mat-label>Số hồ sơ huy động vốn</mat-label>
+                    <mat-select formControlName="fsLoanProfilesId" (selectionChange)="onChangeSelect($event, 'loanProfile')">
+                        <input (keyup)="onKey($event.target)"
+                               style="height: 40px; width: 100%"
+                               autofocus>
+                        <mat-option *ngIf="loanProfileSelectionFilter.length === 0">Không có dữ liệu</mat-option>
+                        <mat-option
+                            *ngFor="let loanProfile of loanProfileSelectionFilter"
+                            [value]="loanProfile"
+                        >
+                            {{ loanProfile }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('fsLoanProfilesId')">
+                        {{ 'INVP30001' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Giao dịch đầu tư</mat-label>
+                    <mat-select
+                        formControlName="transCode"
+                        (selectionChange)="onChangeSelect($event, 'transInvestor')" >
+                        <input
+                            class="input-search-mat-select"
+                            (keydown)="$event.stopPropagation(); onKeyTransInvestor($event.target)"
+                            #mySearch
+                        >
+                        {{ mySearch?.focus() }}
+                        <mat-option *ngIf="transInvestorSelectionFilter?.length === 0">Không có dữ liệu</mat-option>
+                        <mat-option
+                            *ngFor="let card of transInvestorSelectionFilter"
+                            [value]="card" >
+                            {{ card.investorCode }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('transCode')">
+                        {{ 'INVP30015' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <table class="min-w-full text-left text-sm font-light  rounded-xl" >
+                <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
+                <tr>
+                    <th scope="col" class="px-6 py-4">Bên huy động vốn</th>
+                    <th scope="col" class="px-6 py-4">Số tiền đầu tư(VNĐ)</th>
+                    <th scope="col" class="px-6 py-4">Số tiền có thể chuyển nhượng (VNĐ)</th>
+                    <th scope="col" class="px-6 py-4">Kỳ hạn(ngày)</th>
+                    <th scope="col" class="px-6 py-4">Ngày đầu tư</th>
+                    <th scope="col" class="px-6 py-4">Ngày đáo hạn</th>
+                </tr>
+                </thead>
+                <tbody class=" text-gray-700 uppercase my-2 ">
+                <tr class="border-b dark:border-neutral-500 font-bold text-lg uppercase">
+                    <td class=" px-6 py-4 font-medium">{{ transInvestorData?.lenderName }}</td>
+                    <td class=" px-6 py-4">{{ transInvestorData?.amount | currencyFormatPipe: 10 }}</td>
+                    <td class=" px-6 py-4">{{ transInvestorData?.transferableAmount | currencyFormatPipe: 10 }}</td>
+                    <td class=" px-6 py-4">{{ transInvestorData?.investorTime }}</td>
+                    <td class=" px-6 py-4">{{ transInvestorData?.investorTimeStart || '' | datetimeformat : 'DD/MM/YYY' }}</td>
+                    <td class=" px-6 py-4">{{ transInvestorData?.investorTimeExpried | datetimeformat : 'DD/MM/YYYY' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </fuse-card>
+        <fuse-card class="flex flex-col p-5" style="overflow: unset">
+            <article class="prose mb-4">
+                <h4 class="capitalize">Thông tin bán</h4>
+            </article>
+            <div class="grid grid-cols-2 gap-5">
+                <mat-form-field class="w-full">
+                    <mat-label>Số tiền đầu tư chuyển nhượng (VNĐ) </mat-label>
+                    <input
+                        matInput
+                        currencyMask autocomplete="off"
+                        formControlName="transferAmount"
+                        [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                        [placeholder]="'Nhập số tiền chuyển nhượng...'"
+                        id="transferAmount"
+                        maxlength="15"
+                    >
+                    <mat-error *ngIf="isInvalidTransferAmount()">
+                        {{ isInvalidTransferAmount() | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <mat-label>Số tiền chuyển nhượng (VNĐ)</mat-label>
+                    <input
+                        matInput
+                        currencyMask autocomplete="off"
+                        [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                        formControlName="saleAmount"
+                        [placeholder]="'Nhập số tiền chuyển nhượng...'"
+                        id="saleAmount"
+                        maxlength="15"
+                    >
+                    <mat-error *ngIf="isInvalidSaleAmount()">
+                        {{ isInvalidSaleAmount() | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-full">
+                    <mat-label>Phí chuyển nhượng (VNĐ)</mat-label>
+                    <input
+                        matInput
+                        currencyMask autocomplete="off"
+                        maxlength="15"
+                        [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                        formControlName="feeP2P"
+                    >
+                </mat-form-field>
+            </div>
+        </fuse-card>
+    </div>
+
+    <!-- Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="flex items-center mt-4 sm:mt-0">
+            <button
+                mat-flat-button
+                color="warn"
+                class="ml-2"
+                (click)="onSubmit()"
+            >
+                Xác nhận
+            </button>
+        </div>
+    </div>
+</div>

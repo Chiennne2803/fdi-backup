@@ -1,0 +1,156 @@
+<div class="flex flex-col max-w-240 md:min-w-160 -m-6">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="flex items-center justify-center gap-2 text-lg font-medium">
+            <mat-icon class="icon-size-5 text-white" matPrefix [svgIcon]="'feather:search'"></mat-icon>
+            Tìm kiếm nâng cao
+        </div>
+        <button mat-icon-button>
+            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'" (click)="close()"></mat-icon>
+        </button>
+    </div>
+    <div [formGroup]="searchGroup" class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+        *ngIf="data.searchConfig.config.length > 0">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div *ngFor="let item of data.searchConfig.config; let i = index" class="w-full">
+                <!-- ::::::::::::::::::::::::::::::::::INPUT:::::::::::::::::::::::::::::::::::::::: -->
+                <mat-form-field *ngIf="item.type === 'input'" floatLabel="always" class="w-full">
+                    <mat-label class="lbl-input-search">{{item.name}}</mat-label>
+                    <input *ngIf="item.format === 'number';else elseInputFrom" [placeholder]="item.name + '...'"
+                        matInput currencyMask autocomplete="off" maxlength="15" class="text-left"
+                        [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                        [formControlName]="item.id" trim="blur" autocomplete="off">
+                    <ng-template #elseInputFrom>
+                        <input matInput [placeholder]="item.name + '...'" [formControlName]="item.id"
+                            [type]="item.format" autocomplete="off" trim="blur">
+                    </ng-template>
+                    <mat-error *ngIf="searchGroup.get(item.id).hasError('required')">
+                        {{ item.requiredMsg | transloco }}
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- ::::::::::::::::::::::::::::::::::DATETIME:::::::::::::::::::::::::::::::::::::::: -->
+                <mat-form-field *ngIf="item.type === 'date'" floatLabel="always" class="w-full">
+                    <mat-label class="lbl-input-search">{{item.name}}</mat-label>
+                    <input matInput [placeholder]="item.name + '...'" autocomplete="off" [formControlName]="item.id"
+                        [matDatepicker]="dp">
+                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp></mat-datepicker>
+                    <mat-error *ngIf="searchGroup.get(item.id).hasError('required')">
+                        {{ item.requiredMsg | transloco }}
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- ::::::::::::::::::::::::::::::::::SELECT:::::::::::::::::::::::::::::::::::::::: -->
+                <mat-form-field *ngIf="item.type === 'select'" floatLabel="always" class="w-full">
+                    <mat-label class="lbl-input-search">{{item.name}}</mat-label>
+                    <mat-select [placeholder]="'Chọn ' + item.name" [formControlName]="item.id"
+                        [multiple]="item.isMulti">
+                        <mat-option *ngFor="let op of item.dataFrom" [value]="op.value">{{op.label}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="searchGroup.get(item.id).hasError('required')">
+                        {{ item.requiredMsg | transloco }}
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- ::::::::::::::::::::::::::::::::::CHECKBOX:::::::::::::::::::::::::::::::::::::::: -->
+                <mat-checkbox *ngIf="item.type === 'checkbox'" class="example-margin" [formControlName]="item.id"
+                    [value]="item.value">{{ item.name }}</mat-checkbox>
+
+                <!-- ::::::::::::::::::::::::::::::::::FROM_TO_INPUT:::::::::::::::::::::::::::::::::::::::: -->
+                <div class="w-full grid grid-cols-2 grid-rows-2 gap-5 mb-12 " style="max-height: 30px !important;"
+                    *ngIf="item.type === 'input-from-to'">
+                    <mat-label class="col-span-2 ">{{item.name}} <font *ngIf="item.required" style="color: red">*</font>
+                    </mat-label>
+                    <mat-form-field floatLabel="always">
+                        <input *ngIf="item.format === 'number';else elseInputFrom" matInput currencyMask
+                            autocomplete="off" maxlength="15" class="text-left"
+                            [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                            [formControlName]="item.id.concat('From')" placeholder="Từ">
+                        <ng-template #elseInputFrom>
+                            <input matInput [type]="item.format" [formControlName]="item.id.concat('From')"
+                                placeholder="Từ" autocomplete="off">
+                        </ng-template>
+                        <mat-error *ngIf="searchGroup.get(item.id.concat('From')).hasError('required')">
+                            {{ item.requiredMsg | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field floatLabel="always">
+                        <input *ngIf="item.format === 'number';else elseInputTo" matInput currencyMask
+                            autocomplete="off" maxlength="15" class="text-left"
+                            [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                            [formControlName]="item.id.concat('To')" placeholder="Đến">
+                        <ng-template #elseInputTo>
+                            <input matInput [type]="item.format" [formControlName]="item.id.concat('To')"
+                                placeholder="Đến" autocomplete="off">
+                        </ng-template>
+                        <mat-error *ngIf="searchGroup.get(item.id.concat('To')).hasError('required')">
+                            {{ item.requiredMsg | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- ::::::::::::::::::::::::::::::::::FROM_TO_SELECT:::::::::::::::::::::::::::::::::::::::: -->
+                <div class="w-full grid grid-cols-2 gap-5" *ngIf="item.type === 'select-from-to'">
+                    <mat-form-field floatLabel="always">
+                        <mat-label class="lbl-input-search">{{item.name}}</mat-label>
+                        <mat-select [placeholder]="'Chọn ' + item.name" [formControlName]="item.id.concat('From')">
+                            <mat-option *ngFor="let op of item.dataFrom" [value]="op.value">{{op.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="searchGroup.get(item.id.concat('From')).hasError('required')">
+                            {{ item.requiredMsg | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field floatLabel="always">
+                        <mat-label class="lbl-input-search"></mat-label>
+                        <mat-select [formControlName]="item.id.concat('To')">
+                            <mat-option *ngFor="let op of item.dataTo" [value]="op.value">{{op.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="searchGroup.get(item.id.concat('To')).hasError('required')">
+                            {{ item.requiredMsg | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- ::::::::::::::::::::::::::::::::::FROM_TO_DATETIME:::::::::::::::::::::::::::::::::::::::: -->
+                <div class="w-full grid grid-cols-2 gap-5" *ngIf="item.type === 'date-from-to'">
+                    <mat-form-field floatLabel="always">
+                        <mat-label class="lbl-input-search">{{item.name}}</mat-label>
+                        <input matInput autocomplete="off" [min]="groupDate[item.id.concat('FromMin')]"
+                            [max]="groupDate[item.id.concat('FromMax')]" [formControlName]="item.id.concat('From')"
+                            [placeholder]="'Từ ngày'"
+                            (ngModelChange)="onSetMinMaxDateFromTo(item.id.concat('To'), 'valueFrom', $event)" inputMask
+                            maskType="datetime" [matDatepicker]="dpFrom">
+                        <mat-datepicker-toggle matSuffix [for]="dpFrom"></mat-datepicker-toggle>
+                        <mat-datepicker #dpFrom></mat-datepicker>
+                        <mat-error *ngIf="getErrorDate(item.id.concat('From'))">
+                            {{getErrorDate(item.id.concat('From'))}}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="pt-6" floatLabel="always">
+                        <!--                        <mat-label class="lbl-input-search"></mat-label>-->
+                        <input matInput autocomplete="off" [min]="groupDate[item.id.concat('ToMin')]"
+                            [max]="groupDate[item.id.concat('ToMax')]" [placeholder]="'Đến ngày'"
+                            (ngModelChange)="onSetMinMaxDateFromTo(item.id.concat('From'), 'valueTo', $event)" inputMask
+                            maskType="datetime" [formControlName]="item.id.concat('To')" [matDatepicker]="dpTo">
+                        <mat-datepicker-toggle matSuffix [for]="dpTo"></mat-datepicker-toggle>
+                        <mat-datepicker #dpTo></mat-datepicker>
+                        <mat-error *ngIf="getErrorDate(item.id.concat('To'))">
+                            {{getErrorDate(item.id.concat('To'))}}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <mat-dialog-actions class="flex items-center justify-center gap-3" *ngIf="data.searchConfig.config.length > 0">
+            <button mat-stroked-button (click)="onBtnClearClk()">
+                <span class="clear">
+                    Nhập lại
+                </span>
+            </button>
+            <button mat-raised-button color="primary" [disabled]="isSearchGroupDirty()" (click)="onBtnSearchClk()">
+                Tìm kiếm
+            </button>
+        </mat-dialog-actions>
+    </div>
+</div>

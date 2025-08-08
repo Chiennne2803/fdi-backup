@@ -1,0 +1,32 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer
+        class="w-full md:w-12/12 dark:bg-gray-900"
+        [mode]="'side'"
+        [opened]="true"
+        [position]="'end'"
+        [disableClose]="true"
+        #matDrawer>
+        <account-manager *ngIf="!screenMode"></account-manager>
+
+<!--        INVESTOR-->
+        <profile-detail-company *ngIf="screenMode == 'company-info'"></profile-detail-company>
+        <profile-representative *ngIf="screenMode == 'representative'"></profile-representative>
+        <close-account *ngIf="screenMode == 'close-account'"></close-account>
+        <profile-detail *ngIf="screenMode == 'detail'"></profile-detail>
+
+<!--        BORROWER-->
+<!--        <profile-representative *ngIf="screenMode == 'representative'"></profile-representative>-->
+        <biggest-capital-contributor *ngIf="screenMode == 'biggest-capital-contributor'"></biggest-capital-contributor>
+        <economic-info *ngIf="screenMode == 'economic-info'"></economic-info>
+        <legal-documents *ngIf="screenMode == 'legal-documents'"></legal-documents>
+        <financial-documents *ngIf="screenMode == 'financial-documents'"></financial-documents>
+        <business-activity *ngIf="screenMode == 'business-activity'"></business-activity>
+        <profile-contact-info *ngIf="screenMode == 'contact-information'"></profile-contact-info>
+        <labor-contract *ngIf="screenMode == 'labor-contract'"></labor-contract>
+        <rental-contract *ngIf="screenMode == 'rental-contract'"></rental-contract>
+        <other-income *ngIf="screenMode == 'other-income'"></other-income>
+        <other-valuable-papers *ngIf="screenMode == 'other-valuable-papers'"></other-valuable-papers>
+    </mat-drawer>
+
+</mat-drawer-container>
+

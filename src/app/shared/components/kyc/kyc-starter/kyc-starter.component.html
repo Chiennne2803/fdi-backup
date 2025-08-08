@@ -1,0 +1,24 @@
+<div class="flex flex-col flex-auto min-h-0 relative z-10 bg-white w-screen h-full">
+    <div class="flex flex-col flex-2 items-center justify-between kyc-first-page prose max-w-none">
+        <h2 class="prose-headings:h2 text-slate-500  mt-15 text-[30px]">
+            Chúc mừng bạn đã đăng ký thành công tài khoản!</h2>
+        <h2 class="prose-headings:h2    text-[30px] text-blue-500 mb-30">
+            Để tiếp tục sử dụng dịch vụ. Vui lòng thực hiện các bước cung cấp thông tin định danh tài khoản.</h2>
+        <div class="flex justify-center ">
+            <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-5"
+                mat-raised-button
+                (click)="onClickStartedBtn()"
+            >
+                Bắt đầu
+            </button>
+            <button
+                mat-raised-button
+                color="warn"
+                (click)="onClickContactCustomerService()"
+            >
+                Liên hệ CSKH
+            </button>
+        </div>
+    </div>
+</div>

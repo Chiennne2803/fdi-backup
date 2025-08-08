@@ -1,0 +1,209 @@
+<mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent">
+
+    <mat-drawer-content class="flex flex-col">
+        <div class="flex flex-col w-full p-5">
+            <ng-container  *ngIf="(disbursementManagement | async) as disbursementManagementData">
+                <div class="relative w-full px-5">
+                    <div class="flex items-center justify-between w-full mx-auto py-2">
+                        <article class="prose break-words">
+                            <h3>
+                                Thông tin chi tiết yêu cầu giải ngân
+                            </h3>
+                        </article>
+                        <div class="flex items-center justify-end">
+                            <button (click)="onClose()"
+                                    mat-stroked-button>
+                                Đóng
+                            </button>
+                            <a @fadeInRight
+                               *ngIf="disbursementManagementData.fsCardDown.status === 1 && ('SFF_DISBURSEMENT_TRANSACTION_UPDATE' | permission)"
+                               (click)="signProcess(disbursementManagementData.fsCardDown)"
+                               mat-flat-button
+                               color="primary"
+                               class="ml-5"
+                               [matTooltip]="'Trình ký'">
+                                Trình ký
+                            </a>
+                            <a @fadeInRight
+                               *ngIf="disbursementManagementData.fsCardDown.status === 2 && ('SFF_DISBURSEMENT_TRANSACTION_UPDATE' | permission)"
+                               (click)="approve(disbursementManagementData.fsCardDown)"
+                               mat-flat-button
+                               color="primary"
+                               class="ml-5"
+                               [matTooltip]="'Xử lý'">
+                                Xử lý
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <ng-container>
+                    <div class="grid grid-cols-4 gap-5 p-5 ">
+                        <article class="prose break-words">
+                            <p>Hồ sơ cần giải ngân: <br>
+                                <b>{{ disbursementManagementData.fsCardDown.fsLoanProfilesId }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Mã yêu cầu giải ngân: <br> <b>{{ disbursementManagementData.fsCardDown.transCode }}</b>
+                            </p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Bên huy động vốn: <br>
+                                <b>{{ disbursementManagementData.fsLoanProfiles.admAccountName }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Kỳ hạn vay: <br>
+                                <b>{{ disbursementManagementData.fsLoanProfiles.loanTimeCycle }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Số tiền huy động: <br>
+                                <b>{{ (disbursementManagementData.fsLoanProfiles.amount - disbursementManagementData.fsLoanProfiles.remainingAmount) | currencyFormatPipe: 10 }} VND</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Trạng thái: <br> <b>{{ disbursementManagementData.fsCardDown.statusName }}</b></p>
+                        </article>
+                    </div>
+                    <div class="grid grid-cols-1 gap-5 p-5 pt-0 ">
+                        <div class="font-bold text-lg pt-2">Thông tin giải ngân</div>
+                        <div class="grid grid-cols-1 p-5 pt-0">
+                            <table class="min-w-full text-left text-sm font-light  rounded-xl w-full">
+                                <thead
+                                    class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
+                                <tr>
+                                    <th scope="col" class="px-6 py-2">Tổng tiền giải ngân (VNĐ)</th>
+                                    <th scope="col" class="px-6 py-2">Tổng lãi phải trả (VNĐ)</th>
+                                    <th scope="col" class="px-6 py-2">Phí kết nối huy động vốn (VNĐ)</th>
+                                    <th scope="col" class="px-6 py-2">Tổng tiền thực nhận (VNĐ)</th>
+                                </tr>
+
+                                </thead>
+                                <tbody class=" text-gray-700 uppercase my-2 ">
+                                <tr class="border-b dark:border-neutral-500 font-bold text-lg uppercase">
+                                    <td class=" px-6 py-2">{{ disbursementManagementData.fsCardDown.amount  | currencyFormatPipe: 10}}</td>
+                                    <td class=" px-6 py-2">{{ disbursementManagementData.fsCardDown.amountInteresAtimate  | currencyFormatPipe: 10 }}</td>
+                                    <td class=" px-6 py-2">{{ disbursementManagementData.fsCardDown.fee  | currencyFormatPipe: 10 }}</td>
+                                    <td class=" px-6 py-2">{{ disbursementManagementData.fsCardDown.amountRecive  | currencyFormatPipe: 10 }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-5 p-5 pt-0">
+                        <div class="font-bold text-lg pt-2">Thông tin giải ngân</div>
+                        <div class="grid grid-cols-4 gap-5 px-5 ">
+                            <article class="prose break-words">
+                                <p>Người thụ hưởng <br> <b>{{ disbursementManagementData.fsCardDown.accName }}</b>
+                                </p>
+                            </article>
+                            <article class="prose break-words">
+                                <p>Số tài khoản <br>
+                                    <b>{{ disbursementManagementData.fsCardDown.accNo }}</b></p>
+                            </article>
+                            <article class="prose break-words">
+                                <p>Ngân hàng <br> <b>{{ disbursementManagementData.fsCardDown.bankName }}</b></p>
+                            </article>
+                            <article class="prose break-words">
+                                <p>Chi nhánh <br> <b>{{ disbursementManagementData.fsCardDown.branchName }}</b></p>
+                            </article>
+                            <ng-container *ngIf="disbursementManagementData.fsCardDown.status == 1">
+                                <article class="prose break-words">
+                                    <p>Người tạo: <br> <b>{{ disbursementManagementData.fsCardDown.createdByName }}</b>
+                                    </p>
+                                </article>
+                                <article class="prose break-words">
+                                    <p>Ngày tạo: <br>
+                                        <b>{{ disbursementManagementData.fsCardDown.createdDate | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</b>
+                                    </p>
+                                </article>
+                            </ng-container>
+                            <ng-container *ngIf="disbursementManagementData.fsCardDown.status !== 1">
+                                <article class="prose break-words">
+                                    <p>Người trình ký: <br>
+                                        <b>{{ disbursementManagementData.fsCardDown.assignToName }}</b></p>
+                                </article>
+                                <article class="prose break-words">
+                                    <p>Ngày trình ký: <br>
+                                        <b>{{ disbursementManagementData.fsCardDown.assignDate | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</b>
+                                    </p>
+                                </article>
+                                <article class="prose col-span-2 break-words">
+                                    <p>Nội dung trình ký: <br>
+                                        <b>{{ disbursementManagementData.fsCardDown.assignComment }}</b>
+                                    </p>
+                                </article>
+
+                                <article class="prose break-words">
+                                    <p>Người xử lý: <br>
+                                        <b>{{ disbursementManagementData.fsCardDown.approvalByName }}</b></p>
+                                </article>
+                                <article class="prose break-words">
+                                    <p>Ngày xử lý: <br>
+                                        <b>{{ disbursementManagementData.fsCardDown.approvalDate | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</b>
+                                    </p>
+                                </article>
+                                <article class="prose col-span-2 break-words">
+                                    <p>Nội dung xử lý: <br>
+                                        <b>{{ disbursementManagementData.fsCardDown.approvalComment }}</b>
+                                    </p>
+                                </article>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-5 p-5 ">
+                        <div class="font-bold text-lg pt-2">Danh sách các khoản đầu tư thực hiện giải ngân</div>
+                        <div class="grid grid-cols-1 p-5 pt-0">
+                            <table mat-table [dataSource]="disbursementManagementData.investors"
+                                   *ngIf="disbursementManagementData.investors.length > 0">
+                                <ng-container matColumnDef="index">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <div class="cell-overflow table-header">STT</div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element; let j = index">
+                                        <div class="cell-overflow"> {{j + 1}} </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="admAccountIdInvestorName">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <div class="cell-overflow table-header">Khách hàng</div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <div class="cell-overflow">{{ element.admAccountIdInvestorName }}</div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="amount">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <div class="cell-overflow table-header">Số tiền đầu tư (VNĐ)</div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <div class="cell-overflow">{{ element.amount | currencyFormatPipe : 10 }}</div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="interestAtimate">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <div class="cell-overflow table-header">Lãi phải trả (VNĐ)</div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <div
+                                            class="cell-overflow">{{ element.interesAtimate | currencyFormatPipe : 10 }}</div>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row
+                                    class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800"
+                                    *matHeaderRowDef="['index', 'admAccountIdInvestorName', 'amount', 'interestAtimate']"></tr>
+                                <tr mat-row
+                                    *matRowDef="let row; columns: ['index', 'admAccountIdInvestorName', 'amount', 'interestAtimate'];"
+                                    class="text-gray-700 uppercase my-2 hover:bg-accent-50 hover:cursor-pointer"></tr>
+                            </table>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

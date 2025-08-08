@@ -1,0 +1,98 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-scroll">
+    <!-- Main -->
+    <div class="absolute flex flex-col w-full bg-card dark:bg-transparent">
+        <div class="w-full sticky top-0 bg-white flex flex-row justify-center h-20 items-center border-b border-solid"
+             style="z-index: 3">
+            <div class="text-2xl font-extrabold tracking-tight uppercase">
+                Chi tiết yêu cầu thanh toán hoa hồng
+            </div>
+            <div class="absolute right-7 flex flex-row">
+                <button class="ml-auto sm:ml-0"
+                        mat-stroked-button
+                        (click)="discard()">
+                    Quay lại
+                </button>
+                <!-- Submit -->
+
+                <button class="order-first sm:order-last ml-2"
+                        mat-flat-button
+                        *ngIf="detail?.status === 2"
+                        [color]="'primary'"
+                        (click)="submit()">
+                    Xử lý
+                </button>
+            </div>
+        </div>
+        <div class="w-full flex flex-col p-8 gap-4 overflow-hidden" *ngIf="detail">
+            <div class="flex flex-col gap-6">
+                <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Mã yêu cầu</mat-label>
+                        <b>{{ detail.transCode }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Tài khoản ví điều chuyển</mat-label>
+                        <b>{{ detail.fromWallet }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Tổng số tiền giao dịch (VNĐ)</mat-label>
+                        <b>{{ detail.amount | currencyFormatPipe: 3 }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Tổng tiền thuế TNCN (VNĐ)</mat-label>
+                        <b>{{ detail.feeTax | currencyFormatPipe: 3 }}</b>
+                    </div>
+                </div>
+                <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Người lập
+                        </mat-label>
+                        <b>{{ detail.createdByName }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Ngày lập</mat-label>
+                        <b>{{ detail.createdDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Nội dung trình ký</mat-label>
+                        <b>{{ detail.assignComment }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4"></div>
+                </div>
+                <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Người xử lý
+                        </mat-label>
+                        <b>{{ detail.approvalByName }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Ngày xử lý</mat-label>
+                        <b>{{ detail.approvalDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Nội dung xử lý</mat-label>
+                        <b>{{ detail.approvalComment }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Trạng thái</mat-label>
+                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold " style="width: 50% !important;"
+                             [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': detail?.status === 1,
+                                                        'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': detail?.status === 3,
+                                                        'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': detail?.status === 4,
+                                                        'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': detail?.status === 2}"
+                        ><b>{{ detail.statusName }}</b></div>
+                    </div>
+
+                </div>
+                <div class="w-1/4 flex flex-col gap-4"></div>
+            </div>
+
+            <div class="w-full flex flex-col">
+                <div class="text-lg font-bold mb-3">Danh sách giao dịch điều chuyển</div>
+                <app-datatable class="sm:relative w-full"
+                               [dataSource]="_dataSource"
+                               [tableConfig]="_tableConfig"></app-datatable>
+            </div>
+        </div>
+    </div>
+</div>

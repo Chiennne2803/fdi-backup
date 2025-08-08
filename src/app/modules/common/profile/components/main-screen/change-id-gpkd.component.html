@@ -1,0 +1,31 @@
+<div class="border-b relative p-4 flex items-center justify-between bg-white">
+    <h3 class="leading-tight text-2xl mt-0 uppercase font-bold">
+        {{ titlePage }}
+    </h3>
+    <div class="flex">
+        <button
+            *ngIf="authService.authenticatedUser.type === 1"
+            mat-flat-button
+            color="primary"
+            (click)="changeIdentification()"
+        >
+            Thay đổi CCCD / Hộ Chiếu
+        </button>
+        <button mat-raised-button
+                class="mr-5"
+                *ngIf="authService.authenticatedUser.accountType === 2 && authService.authenticatedUser.type === 2"
+                color="primary"
+                (click)="downloadBCCTTemplate()">
+            Tải file mẫu BCTC
+        </button>
+        <button
+            *ngIf="authService.authenticatedUser.type === 2"
+            mat-flat-button
+            color="primary"
+            (click)="changeBusinessLicense()"
+        >
+            Thay đổi GPKD
+        </button>
+    </div>
+</div>
+

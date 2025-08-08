@@ -1,0 +1,14 @@
+::ng-deep .mat-tab-group .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels .mat-tab-label.mat-tab-label-active {
+    background-color: #fff !important;
+    border-radius: 0 !important;
+    border-bottom: 2px solid var(--fuse-primary);
+}
+
+::ng-deep .mat-tab-body {
+    min-height: 80vh;
+}
+
+::ng-deep .mat-tab-group .mat-tab-header .mat-tab-label-container .mat-tab-list  .mat-tab-labels .mat-tab-label:not(.mat-tab-disabled) {
+    color: #1E293B !important;
+    font-weight: bold;
+}

@@ -1,0 +1,322 @@
+<form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+      [formGroup]="personForm">
+    <div class="flex items-center justify-end text-2xl font-bold uppercase mb-4">
+        Tạo mới nhà đầu tư là cá nhân
+    </div>
+
+    <!-- Info Login -->
+    <div class="flex flex-col p-4 border rounded-md mb-4">
+        <strong class="mb-4 text-xl">Thông tin tài khoản đăng nhập</strong>
+        <div class="grid grid-flow-row-dense grid-cols-5 gap-6 ...">
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Tên tài khoản</mat-label>
+                <input id="accountName"
+                        placeholder="Nhập..."
+                       matInput maxlength="50"
+                       autocomplete="new-username"
+                       trim="blur"
+                       formControlName="accountName">
+                <mat-error *ngIf="personForm.get('accountName').invalid">
+                    {{ getErrorAccount() | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Mật khẩu</mat-label>
+                <input id="passwd"
+                       matInput
+                        placeholder="Nhập..."
+                       type="password"
+                       maxlength="50"
+                       autocomplete="new-password"
+                       formControlName="passwd"
+                       #passwordField>
+                <button mat-icon-button
+                        type="button"
+                        (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                        matSuffix>
+                    <mat-icon class="icon-size-5"
+                              *ngIf="passwordField.type === 'password'"
+                              [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                    <mat-icon class="icon-size-5"
+                              *ngIf="passwordField.type === 'text'"
+                              [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                </button>
+                <mat-error *ngIf="!!getErrorPassword()">
+                    {{ getErrorPassword() | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Số điện thoại</mat-label>
+                <input id="mobile"
+                       maxlength="11"
+                       matInput
+                       placeholder="Nhập..."
+                       inputMask
+                       maskType="number"
+                       formControlName="mobile">
+                <mat-error *ngIf="!!getErrorMobile()">
+                    {{ getErrorMobile() | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Email</mat-label>
+                <input matInput
+                       placeholder="Nhập..."
+                       id="email"
+                       maxlength="100"
+                       formControlName="email">
+                <mat-error *ngIf="personForm.get('email')?.hasError('email')">
+                    {{ 'QLDT031' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="personForm.get('email')?.hasError('maxlength')">
+                    {{ 'QLDT028' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="personForm.get('email')?.hasError('required')">
+                    {{ 'QLDT027' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Nhân viên phụ trách</mat-label>
+                <mat-select formControlName="manageStaff" placeholder="Chọn ...">
+                    <mat-option *ngFor="let item of lstManagerStaff"
+                                [value]="item.admAccountDetailId">{{ item.fullName }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="personForm.get('manageStaff').hasError('required')">
+                    {{ 'QLDT136' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <!-- Info  -->
+    <div class="flex flex-col p-4 border rounded-md mb-4">
+        <strong class="mb-4 text-xl">Thông tin cá nhân</strong>
+
+        <div class="grid grid-flow-row-dense grid-cols-4 gap-6 ...">
+            <div class="row-span-3">
+                <app-dropzone
+                    [hasPreview]="true"
+                    title="Ảnh đại diện"
+                    styleClass="justify-center w-full h-full"
+                    [formGroup]="personForm"
+                    field="avatar"
+                    [maxFile]="1"
+                    accept="image/png, image/jpg, image/jpeg"
+                >
+                </app-dropzone>
+            </div>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Họ và tên</mat-label>
+                <input id="fullname"
+                        placeholder="Nhập..."
+                       matInput
+                       maxlength="50"
+                       trim="blur"
+                       formControlName="fullName">
+                <mat-error *ngIf="personForm.get('fullName')?.hasError('required')">
+                    {{ 'QLDT032' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="personForm.get('fullName')?.hasError('maxlength')">
+                    {{ 'QLDT033' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>MST cá nhân</mat-label>
+                <input id="taxCode"
+                       matInput
+                       inputMask
+                       maskType="number"
+                       maxlength="13"
+                       trim="blur"
+                       formControlName="taxCode"
+                       required="true"
+                       requiredMsg="TKDT051"
+                       placeholder=" Nhập...">
+                <mat-error *ngIf="personForm.get('taxCode')?.hasError('required')">
+                    {{ 'TKDT051' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="personForm.get('taxCode')?.hasError('maxlength')">
+                    {{ 'QLDT052' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Giới tính</mat-label>
+                <mat-select formControlName="gender " placeholder="Chọn ...">
+                    <mat-option *ngFor="let item of genders"
+                                [value]="item.id">{{ item.label }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="personForm.get('gender')?.hasError('required')">
+                    {{ 'QLDT042' | transloco }}
+                </mat-error>
+            </mat-form-field>
+
+            <div class="w-full">
+                <app-date-picker
+                    label="Ngày sinh"
+                    [maxDate]="{'months': -216}"
+                    [validationType]="['upper18']"
+                    [isRequired]="true"
+                    formControlName="dateOfBirth"
+                    requiredMsg="QLDT044"
+                    fomatMsg="QLDT045"
+                >
+                </app-date-picker>
+            </div>
+            <!--<mat-form-field class="">
+                <mat-label>Ngày sinh</mat-label>
+                <input
+                    matInput
+                    autocomplete="off"
+                    [matDatepicker]="datepicker"
+                    [max]="yesterday"
+                    formControlName="dateOfBirth"
+                >
+                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker></mat-datepicker>
+                <mat-error
+                    *ngIf="personForm.get('dateOfBirth').touched && personForm.get('dateOfBirth').hasError('required')">
+                    {{ 'QLDT044' | transloco }}
+                </mat-error>
+                <mat-error
+                    *ngIf="personForm.get('dateOfBirth').touched && personForm.get('dateOfBirth').hasError('matDatepickerParse')">
+                    {{ 'QLDT045' | transloco }}
+                </mat-error>
+                <mat-error
+                    *ngIf="personForm.get('dateOfBirth').touched && personForm.get('dateOfBirth').hasError('matDatepickerMax')">
+                    {{ 'QLDT045' | transloco }}
+                </mat-error>
+            </mat-form-field>-->
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>CCCD/Hộ Chiếu</mat-label>
+                <input id="identification"
+                        placeholder="Nhập..."
+                       matInput
+                       maxlength="12"
+                       trim="blur"
+                       formControlName="identification">
+                <mat-error *ngIf="personForm.get('identification')?.hasError('required')">
+                   {{ 'QLDT034' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="personForm.get('identification')?.hasError('maxlength')">
+                   {{ 'QLDT035' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <div class="w-full">
+                <app-date-picker
+                    label="Ngày cấp"
+                    [maxDate]="{'days': 0}"
+                    formControlName="dateOfIdnumber"
+                    [validationType]="['today']"
+                    [isRequired]="true"
+                    requiredMsg="QLDT037"
+                    fomatMsg="QLDT038"
+                >
+                </app-date-picker>
+            </div>
+            <mat-form-field floatLabel="always" class="w-full col-span-3">
+                <mat-label>Nơi cấp</mat-label>
+                <input id="placeOfIdnumber"
+                       maxlength="100"
+                       placeholder="Nhập..."
+                       matInput
+                       trim="blur"
+                       formControlName="placeOfIdnumber">
+                <mat-error *ngIf="personForm.get('placeOfIdnumber')?.hasError('required')">
+                    {{ 'QLDT040' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="personForm.get('placeOfIdnumber')?.hasError('maxlength')">
+                    {{ 'QLDT041' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full col-span-2">
+                <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
+                <input id="address2"
+                       placeholder="Nhập..."
+                       matInput
+                       formControlName="address2"
+                       readonly
+                       (click)="choseAddress('address2')">
+                <mat-error *ngIf="personForm.get('address2')?.hasError('required')">
+                    {{ 'QLDT049' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full col-span-2">
+                <mat-label>Địa chỉ hiện tại</mat-label>
+                <input #address1
+                       placeholder="Nhập..."   
+                       matInput
+                       readonly
+                       formControlName="address1"
+                       (click)="choseAddress('address1')">
+                <mat-error *ngIf="personForm.get('address1')?.hasError('required')">
+                    {{ 'HSVV154' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <div class="w-full col-span-2">
+                <app-dropzone
+                    inputId="frontPhotoIdentication"
+                    styleClass="max-h-15"
+                    [maxFile]="1"
+                    topTitle="Ảnh CCCD/Hộ Chiếu mặt trước"
+                    title="Tải lên"
+                    [formGroup]="personForm"
+                    [maxFileSize]="5"
+                    accept="image/png, image/jpg, image/jpeg"
+                    field="frontPhotoIdentication"
+                    [isRequired]="true"
+                    requiredMsg="QLDT053"
+                    typeMsg="QLDT054"
+                    sizeMsg="QLDT055"
+                ></app-dropzone>
+            </div>
+            <div class="w-full col-span-2">
+                <app-dropzone
+                    inputId="backsitePhotoIdentication"
+                    styleClass="max-h-15"
+                    [maxFile]="1"
+                    topTitle="Ảnh CCCD/Hộ Chiếu mặt sau"
+                    title="Tải lên"
+                    [formGroup]="personForm"
+                    [maxFileSize]="5"
+                    field="backsitePhotoIdentication"
+                    accept="image/png, image/jpg, image/jpeg"
+                    [isRequired]="true"
+                    requiredMsg="QLDT057"
+                    typeMsg="QLDT058"
+                    sizeMsg="QLDT059"
+                ></app-dropzone>
+            </div>
+        </div>
+    </div>
+
+    <!-- Another Info -->
+    <div class="flex flex-col p-4 border rounded-md">
+        <strong class="mb-4 text-xl">Thông tin khác</strong>
+        <div class="flex flex-row w-full gap-6">
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Ngày tạo</mat-label>
+                <input id="createdDate"
+                       matInput
+                       formControlName="createdDate">
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Người tạo</mat-label>
+                <input id="createdByName"
+                       matInput
+                       formControlName="createdByName">
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Ngày cập nhật</mat-label>
+                <input id="lastUpdatedDate"
+                       matInput
+                       formControlName="lastUpdatedDate">
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Người cập nhật</mat-label>
+                <input id="lastUpdatedByName"
+                       matInput
+                       formControlName="lastUpdatedByName">
+            </mat-form-field>
+        </div>
+    </div>
+</form>

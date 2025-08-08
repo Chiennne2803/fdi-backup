@@ -1,0 +1,551 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-scroll">
+    <!-- Main -->
+    <div class="absolute flex flex-col overflow-hidden w-full p-8 bg-card bg-gray-100 dark:bg-gray-700">
+        <fuse-card class="flex flex-col  pb-4 dark:bg-w"
+                   style="background-color: white !important;">
+            <div class="relative w-full px-5">
+                <div class="flex items-center justify-between w-full mx-auto py-2">
+                    <article class="prose break-words">
+                        <h3>
+                            Quản lý giải ngân và hoàn trả
+                        </h3>
+                    </article>
+                    <div class="flex items-center justify-end p-3">
+                        <ng-container >
+                            <ng-container *ngIf="!isEdit; else elseTemplate">
+                                <button class="order-first sm:order-last ml-2"
+                                        mat-flat-button
+                                        *ngIf="'SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE' | permission"
+                                        [color]="'primary'"
+                                        (click)="isEdit = true">
+                                    Cập nhật
+                                </button>
+                            </ng-container>
+                            <ng-template #elseTemplate>
+                                <div class="flex items-center mt-4 sm:mt-0">
+                                    <!-- Discard -->
+                                    <button class="ml-auto sm:ml-0"
+                                            mat-stroked-button
+                                            (click)="discard()">
+                                        Đóng
+                                    </button>
+                                    <!-- Submit -->
+                                    <button class="order-first sm:order-last ml-2"
+                                            mat-flat-button
+                                            *ngIf="'SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE' | permission"
+                                            [color]="'primary'"
+                                            (click)="submit()">
+                                        Lưu
+                                    </button>
+                                </div>
+                            </ng-template>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 px-8 " *ngIf="detail && !isEdit">
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Giới hạn cho huy động vốn:</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Số tiền cho huy động vốn tối thiểu (VNĐ):</mat-label>
+                            <b>{{detail.minLoan | currencyFormatPipe: 3}}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Số tiền cho huy động vốn tối đa (VNĐ):</mat-label>
+                            <b>{{detail.maxLoan | currencyFormatPipe: 3}}</b>
+                        </div>
+                    </div>
+                </fuse-card>
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Giải ngân và Hoàn trả:</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Tỉ lệ phạt quá hạn áp dụng cho gốc (%)</mat-label>
+                            <b>{{ detail.rateCapitalPenalty }}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Tỉ lệ phạt quá hạn áp dụng cho lãi (%)</mat-label>
+                            <b>{{ detail.rateFeePenalty }}</b>
+                        </div>
+                    </div>
+                </fuse-card>
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Phí:</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Phí hàng tháng (VNĐ)</mat-label>
+                            <b>{{ detail.percentFee  | currencyFormatPipe: 3}}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Thuế đầu tư cho NĐT cá nhân (%)</mat-label>
+                            <b>{{ detail.percentTax }}</b>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Thuế đầu tư cho NĐT doanh nghiệp (%)</mat-label>
+                            <b>{{ detail.percentTaxCompany  | currencyFormatPipe: 3}}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Thuế hoa hồng cho NĐT cá nhân (%)</mat-label>
+                            <b>{{ detail.percentTaxBonus }}</b>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Thuế hoa hồng cho NĐT doanh nghiệp (%)</mat-label>
+                            <b>{{ detail.percentTaxBonusCompany  | currencyFormatPipe: 3}}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Phí chuyển nhượng (VNĐ)</mat-label>
+                            <b>{{ detail.percentTranfer  | currencyFormatPipe: 3}}</b>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Phí đầu tư (%)</mat-label>
+                            <b>{{ detail.investFee }}</b>
+                        </div>
+                    </div>
+                </fuse-card>
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Tham số cấu hình:</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Thời gian hiệu lực cấu hình đầu tư tự động (Giờ)</mat-label>
+                            <b>{{ detail.autoInvestExpiration}}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Thời gian hoàn tiền đầu tư tự động (giờ)</mat-label>
+                            <b>{{ detail.refundExpiration }}</b>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Thời gian hiệu lực giao dịch chuyển nhượng (Giờ) </mat-label>
+                            <b>{{ detail.p2PExpiration}}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Tỷ lệ dừng gọi vốn (%)</mat-label>
+                            <b>{{ detail.stopCapital }}</b>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Khoảng thời gian tạo giao dịch chuyển nhượng (Ngày) </mat-label>
+                            <b>{{ detail.p2PRemainingDays}}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Tài khoản bỏ qua check số tiền đầu tư tối thiểu</mat-label>
+                            <b>{{ detail.accByPassMinInvest }}</b>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Số tiền cho phép bỏ qua để xoá nợ (VNĐ) </mat-label>
+                            <b>{{ detail.amountBypassDebt | currencyFormatPipe: 10 }}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                        </div>
+                    </div>
+                </fuse-card>
+
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Thông tin khác</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Người tạo</mat-label>
+                            <b>{{ detail.createdByName }}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Ngày tạo</mat-label>
+                            <b>{{ detail.createdDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Người cập nhật</mat-label>
+                            <b>{{ detail.lastUpdatedByName }}</b>
+                        </div>
+                        <div class="w-1/2 flex flex-col gap-4">
+                            <mat-label>Ngày cập nhật</mat-label>
+                            <b>{{ detail.lastUpdatedDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                        </div>
+                    </div>
+                </fuse-card>
+            </div>
+
+            <div class="flex flex-col gap-4 px-8" *ngIf="isEdit" [formGroup]="refundForm">
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Giới hạn cho huy động vốn:</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Số tiền cho huy động vốn tối thiểu (VNĐ):</mat-label>
+                            <input id="minLoan"
+                                   [placeholder]="'0'"
+                                   currencyMask autocomplete="off"
+                                   [maxlength]="15"
+                                   class="text-left"
+                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                   matInput
+                                   formControlName="minLoan">
+                            <mat-error *ngIf="refundForm.get('minLoan').hasError('required')">
+                                {{ 'SPTD046' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('minLoan').hasError('maxlength')">
+                                {{ 'SPTD047' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('minLoan').hasError('min')">
+                                {{ 'SPTD113' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Số tiền cho huy động vốn tối đa (VNĐ):</mat-label>
+                            <input id="maxLoan"
+                                   [placeholder]="'0'"
+                                   currencyMask autocomplete="off"
+                                   [maxlength]="15"
+                                   class="text-left"
+                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                   matInput
+                                   formControlName="maxLoan">
+                            <mat-error *ngIf="refundForm.get('maxLoan').hasError('required')">
+                                {{ 'SPTD050' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('maxLoan').hasError('maxlength')">
+                                {{ 'SPTD051' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('maxLoan').hasError('min')">
+                                {{ 'SPTD114' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </fuse-card>
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Giải ngân và hoàn trả:</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Tỉ lệ phạt quá hạn áp dụng cho gốc (%)</mat-label>
+                            <input id="rateCapitalPenalty"
+                                   maxlength="15"
+                                   matInput
+                                   formControlName="rateCapitalPenalty">
+                            <mat-error *ngIf="refundForm.get('rateCapitalPenalty').hasError('required')">
+                                {{ 'SPTD052' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('rateCapitalPenalty').hasError('min')">
+                                {{ 'SPTD131' | transloco }}
+                            </mat-error>
+                           <!-- <mat-error *ngIf="refundForm.get('rateCapitalPenalty').hasError('maxlength')">
+                                {{ 'SPTD053' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('rateCapitalPenalty').hasError('max')">
+                                {{ 'SPTD054' | transloco }}
+                            </mat-error>-->
+                        </mat-form-field>
+
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Tỉ lệ phạt quá hạn áp dụng cho lãi (%)</mat-label>
+                            <input id="rateFeePenalty"
+                                   maxlength="15"
+                                   matInput
+                                   formControlName="rateFeePenalty">
+                            <mat-error *ngIf="refundForm.get('rateFeePenalty').hasError('required')">
+                                {{ 'SPTD055' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('rateFeePenalty').hasError('min')">
+                                {{ 'SPTD132' | transloco }}
+                            </mat-error>
+                           <!-- <mat-error *ngIf="refundForm.get('rateFeePenalty').hasError('maxlength')">
+                                {{ 'SPTD056' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('rateFeePenalty').hasError('max')">
+                                {{ 'SPTD057' | transloco }}
+                            </mat-error>-->
+                        </mat-form-field>
+                    </div>
+                </fuse-card>
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Phí:</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Phí hàng tháng (VNĐ)</mat-label>
+                            <input id="percentFee"
+                                   [placeholder]="'0'"
+                                   currencyMask autocomplete="off"
+                                   [maxlength]="15"
+                                   class="text-left"
+                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                   matInput
+                                   formControlName="percentFee">
+                            <mat-error *ngIf="refundForm.get('percentFee').hasError('required')">
+                                {{ 'SPTD058' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('percentFee').hasError('maxlength')">
+                                {{ 'SPTD059' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Thuế đầu tư cho NĐT cá nhân (%)</mat-label>
+                            <input id="percentTax"
+                                   maxlength="15"
+                                   inputMask type="number"
+                                   matInput
+                                   formControlName="percentTax">
+                            <mat-error *ngIf="refundForm.get('percentTax').hasError('required')">
+                                {{ 'SPTD060' | transloco }}
+                            </mat-error>
+                           <!-- <mat-error *ngIf="refundForm.get('percentTax').hasError('max')">
+                                {{ 'SPTD062' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('percentTax').hasError('maxlength')">
+                                {{ 'SPTD061' | transloco }}
+                            </mat-error>-->
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Thuế đầu tư cho NĐT doanh nghiệp (%)</mat-label>
+                            <input id="percentTaxCompany"
+                                   inputMask type="number"
+                                   matInput
+                                   formControlName="percentTaxCompany">
+                            <mat-error *ngIf="refundForm.get('percentTaxCompany').hasError('required')">
+                                {{ 'SPTD143' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Thuế hoa hồng cho NĐT cá nhân (%)</mat-label>
+                            <input id="percentTaxBonus"
+                                   inputMask type="number"
+                                   matInput
+                                   formControlName="percentTaxBonus">
+                            <mat-error *ngIf="refundForm.get('percentTaxBonus').hasError('required')">
+                                {{ 'SPTD145' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Thuế hoa hồng cho NĐT doanh nghiệp (%)</mat-label>
+                            <input id="percentTaxBonusCompany"
+                                   inputMask type="number"
+                                   matInput
+                                   formControlName="percentTaxBonusCompany">
+                            <mat-error *ngIf="refundForm.get('percentTaxBonusCompany').hasError('required')">
+                                {{ 'SPTD147' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Phí chuyển nhượng (VNĐ)</mat-label>
+                            <input id="percentTranfer"
+                                   matInput
+                                   formControlName="percentTranfer"
+                                   [placeholder]="'0'"
+                                   currencyMask autocomplete="off"
+                                   [maxlength]="15"
+                                   class="text-left"
+                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                            >
+                            <mat-error *ngIf="refundForm.get('percentTranfer').hasError('required')">
+                                {{ 'SPTD063' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('percentTranfer').hasError('maxlength')">
+                                {{ 'SPTD064' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Phí đầu tư (%)</mat-label>
+                            <input id="investFee"
+                                   maxlength="15"
+                                   matInput
+                                   formControlName="investFee">
+                            <mat-error *ngIf="refundForm.get('investFee').hasError('required')">
+                                {{ 'SPTD065' | transloco }}
+                            </mat-error>
+<!--                            <mat-error *ngIf="refundForm.get('investFee').hasError('maxlength')">-->
+<!--                                {{ 'SPTD066' | transloco }}-->
+<!--                            </mat-error>-->
+<!--                            <mat-error *ngIf="refundForm.get('investFee').hasError('max')">-->
+<!--                                {{ 'SPTD067' | transloco }}-->
+<!--                            </mat-error>-->
+                        </mat-form-field>
+                    </div>
+                </fuse-card>
+
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Tham số cấu hình:</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Thời gian hiệu lực cấu hình đầu tư tự động (Giờ)</mat-label>
+                            <input id="autoInvestExpiration"
+                                   [maxlength]="15"
+                                   [min]="1"
+                                   matInput
+                                   formControlName="autoInvestExpiration">
+                            <mat-error *ngIf="refundForm.get('autoInvestExpiration').hasError('required')">
+                                {{ 'SPTD068' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('autoInvestExpiration').hasError('maxlength')">
+                                {{ 'SPTD069' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('autoInvestExpiration').hasError('min')">
+                                {{ 'SPTD117' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Thời gian hoàn tiền đầu tư tự động (giờ)</mat-label>
+                            <input id="refundExpiration"
+                                   [maxlength]="15"
+                                   [min]="1"
+                                   matInput
+                                   formControlName="refundExpiration">
+                            <mat-error *ngIf="refundForm.get('refundExpiration').hasError('required')">
+                                {{ 'SPTD070' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('refundExpiration').hasError('maxlength')">
+                                {{ 'SPTD071' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('refundExpiration').hasError('min')">
+                                {{ 'SPTD118' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Thời gian hiệu lực giao dịch chuyển nhượng (Giờ)</mat-label>
+                            <input id="p2PExpiration"
+                                   [maxlength]="15"
+                                   [min]="1"
+                                   matInput
+                                   formControlName="p2PExpiration"
+                            >
+                            <mat-error *ngIf="refundForm.get('p2PExpiration').hasError('required')">
+                                {{ 'SPTD072' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('p2PExpiration').hasError('maxlength')">
+                                {{ 'SPTD107' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('p2PExpiration').hasError('min')">
+                                {{ 'SPTD119' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Tỷ lệ dừng gọi vốn (%)</mat-label>
+                            <input id="stopCapital"
+                                   maxlength="15"
+                                   matInput
+                                   formControlName="stopCapital">
+                            <mat-error *ngIf="refundForm.get('stopCapital').hasError('required')">
+                                {{ 'SPTD073' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('stopCapital').hasError('min')">
+                                {{ 'SPTD120' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('stopCapital').hasError('max')">
+                                {{ 'SPTD074' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Khoảng thời gian tạo giao dịch chuyển nhượng (Ngày)</mat-label>
+                            <input id="p2PRemainingDays"
+                                   [maxlength]="15"
+                                   [min]="1"
+                                   matInput
+                                   formControlName="p2PRemainingDays"
+                            >
+                            <mat-error *ngIf="refundForm.get('p2PRemainingDays').hasError('required')">
+                                {{ 'SPTD141' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="refundForm.get('p2PRemainingDays').hasError('min')">
+                                {{ 'SPTD139' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Tài khoản bỏ qua check số tiền đầu tư tối thiểu</mat-label>
+                            <input id="accByPassMinInvest"
+                                   maxlength="15"
+                                   matInput
+                                   formControlName="accByPassMinInvest">
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Số tiền cho phép bỏ qua để xoá nợ (VNĐ)</mat-label>
+                            <input id="amountBypassDebt"
+                                   maxlength="15"
+                                   matInput
+                                   currencyMask autocomplete="off"
+                                   maxlength="15"
+                                   class="text-left"
+                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                   formControlName="amountBypassDebt">
+                        </mat-form-field>
+                    </div>
+                </fuse-card>
+
+                <fuse-card class="flex flex-col p-2 shadow-lg">
+                    <article class="prose">
+                        <h4>Thông tin khác</h4>
+                    </article>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Người tạo</mat-label>
+                            <input id="createdByName"
+                                   matInput
+                                   readonly
+                                   formControlName="createdByName">
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Ngày tạo</mat-label>
+                            <input id="createdDate"
+                                   matInput
+                                   readonly
+                                   formControlName="createdDate">
+                        </mat-form-field>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 p-5">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Người cập nhật</mat-label>
+                            <input id="lastUpdatedByName"
+                                   matInput
+                                   readonly
+                                   formControlName="lastUpdatedByName">
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Ngày cập nhật</mat-label>
+                            <input id="lastUpdatedDate"
+                                   matInput
+                                   readonly
+                                   formControlName="lastUpdatedDate">
+                        </mat-form-field>
+                    </div>
+                </fuse-card>
+                <!-- ACTION -->
+            </div>
+        </fuse-card>
+    </div>
+</div>

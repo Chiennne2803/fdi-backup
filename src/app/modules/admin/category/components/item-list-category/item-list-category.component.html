@@ -1,0 +1,9 @@
+<app-datatable [tableConfig]="_tableCateogyConfig"
+               [taskbarConfig]="_taskBarConfig"
+               [tableConfigBtns]="_tableBtnConfig"
+               [dataSource]="_dataSource$"
+               (checkboxItemChange)="checkboxItemChange($event)"
+               (rowClick)="handleRowClick($event)"
+               (tableEvent)="handleTableEvent($event)"
+               (handleSearch)="handleSearch($event)"
+               (pageSwitch)="handlePageSwitch($event)"></app-datatable>

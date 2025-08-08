@@ -1,0 +1,62 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+        <div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+            <mat-drawer-container class="flex-auto h-full"
+                                  [hasBackdrop]="false">
+                <mat-drawer-content class="flex overflow-hidden">
+                    <div
+                         class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-64 lg:max-w-64 bg-card dark:bg-transparent border-r border-solid">
+
+                        <!-- Header -->
+                       <!-- <div class="flex flex-col flex-0 py-4 px-4 border-b bg-gray-50 dark:bg-transparent">
+                            <div class="text-2xl font-extrabold tracking-tight mb-3">
+                            Yêu cầu điều chuyển tiền ví
+                            </div>
+                        </div>-->
+
+                        <!-- COMMISSION LIST -->
+                        <div class="flex-auto overflow-y-auto">
+                            <mat-selection-list [multiple]="false"
+                                                (selectionChange)="onSelectionChange($event)">
+                                <mat-list-option class="h-16"
+                                                 *ngFor="let item of listTransfer"
+                                                 [selected]="selectedCard === item"
+                                                 [value]="item">
+                                    <div class="flex flex-row w-full justify-between items-center">
+                                        <span>{{item.label}}</span>
+                                    </div>
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </div>
+
+                    </div>
+                    <mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+                        <mat-drawer class="w-full md:w-12/12 dark:bg-gray-900"
+                                    [mode]="'side'"
+                                    [opened]="false"
+                                    [position]="'end'"
+                                    [disableClose]="true"
+                                    #matDrawer>
+                            <app-transfer-detail (handleCloseDetailPanel)="handleCloseDetailPanel($event)"
+                                                 [requestId]="detailId"
+                                                 [_tableConfig]="_tableConfigDetail"></app-transfer-detail>
+                        </mat-drawer>
+                        <mat-drawer-content class="flex flex-col">
+                            <app-datatable [dataSource]="_dataSource"
+                                           [tableConfig]="_tableConfig"
+                                           [taskbarConfig]="_taskBarConfig"
+                                           [tableConfigBtns]="_btnConfig"
+                                           (tableEvent)="handleTableEvent($event)"
+                                           (handleSearch)="handleSearch($event)"
+                                           (pageSwitch)="handlePageSwitch($event)"
+                                           (rowClick)="handleRowClick($event)"></app-datatable>
+                        </mat-drawer-content>
+                    </mat-drawer-container>
+                </mat-drawer-content>
+            </mat-drawer-container>
+        </div>
+
+    </div>
+
+</div>

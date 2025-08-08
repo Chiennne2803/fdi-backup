@@ -1,0 +1,39 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer-content class="flex flex-col overflow-hidden">
+        <ng-container>
+            <div class="relative w-full px-5">
+                <div class="flex items-center justify-between w-full mx-auto py-2">
+                    <article class="w-2/4 prose break-words">
+                        <h3>
+                            Thông báo
+                        </h3>
+                    </article>
+                    <div class="flex items-center justify-end">
+                        <button (click)="onClose()"
+                                mat-stroked-button>
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="spNotificationDTO">
+                <div class="p-5 flex flex-col overflow-y-auto border-solid border-b">
+                    <div class="py-5">
+                        <div class="w-full flex gap-5 p-5   ">
+                            <article class="w-full prose break-words">
+                                <b>{{spNotificationDTO.title}}</b>
+                                <br/>
+                                {{spNotificationDTO.createdDate | datetimeformat : 'DD/MM/YYYY HH:mm:ss'  }}
+                            </article>
+                        </div>
+                    </div>
+                    <div class="py-5">
+                        <article class="w-full prose p-5 break-words whitespace-pre-line">
+                            {{spNotificationDTO.body}}
+                        </article>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </mat-drawer-content>
+</mat-drawer-container>

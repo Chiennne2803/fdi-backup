@@ -1,0 +1,21 @@
+<mat-form-field floatLabel="always" class="w-full overflow-hidden custom-datepicker"
+                [class]="styleFormFieldClass">
+       <mat-label *ngIf="label">{{ label }}</mat-label>
+       <input matInput
+              [placeholder]="'Nhập...'"
+              [formControl]="control"
+              autocomplete="off"
+              [matDatepicker]="datepicker!"
+              [max]="max"
+              [min]="min"
+              [required]="isRequired"
+              inputMask
+              maskType="datetime">
+       <mat-datepicker-toggle matSuffix
+                              [for]="datepicker"></mat-datepicker-toggle>
+       <mat-datepicker #datepicker></mat-datepicker>
+       <mat-error *ngIf="getValidatorErrors()"
+                  class="min-h-[18px] leading-[18px]">
+              {{ getValidatorErrors() | transloco }}
+       </mat-error>
+</mat-form-field>

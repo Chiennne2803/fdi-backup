@@ -1,0 +1,22 @@
+<div class="w-full h-full">
+    <div class="w-full pb-4 border-b mb-4">
+        <h1 class="text-2xl font-bold">Danh sách tính năng</h1>
+    </div>
+    <mat-expansion-panel class="mb-5" *ngFor="let item of lstData" [expanded]="item.status != 0">
+        <mat-expansion-panel-header>
+            <mat-panel-title class="flex flex-row gap-6 items-center">
+                <p class="text-lg font-bold">{{item.note}}</p>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="grid grid-cols-4 gap-4">
+            <ng-container *ngFor="let feature of item.lstFeature">
+                <mat-slide-toggle
+                    (change)="onOffFeature($event, feature)"
+                    color="primary"
+                    [checked]="feature.status == 1">
+                    {{feature.note}}
+                </mat-slide-toggle>
+            </ng-container>
+        </div>
+    </mat-expansion-panel>
+</div>

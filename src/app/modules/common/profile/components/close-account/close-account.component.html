@@ -1,0 +1,45 @@
+<change-id-gpkd></change-id-gpkd>
+<div class="sm:absolute flex flex-col flex-auto min-w-0 bg-gray-100 p-5 h-full"
+     [ngStyle]="{width: '-webkit-fill-available'}">
+    <fuse-card class="p-5 flex flex-col" *ngIf="prepare">
+        <div class="w-full">
+            <article class="prose">
+                <h4 class="mb-5">Để đóng được tài khoản, tài khoản của bạn phải đủ các điều kiện sau:</h4>
+                <div class="flex flex-row gap-6 items-center">
+                    <p>1. Không có hồ sơ nào đang đầu tư hoặc đang chờ phê duyệt.</p>
+                    <mat-icon
+                        [class]="prepare.investing ? 'text-green-700' : 'text-red-700'"
+                        style="font-size: 35px; margin-bottom: 10px">
+                        {{ prepare.investing ? 'check' : 'close'}}
+                    </mat-icon>
+                </div>
+                <div class="flex flex-row gap-6 items-center">
+                    <p>2. Không có lệnh nạp tiền/rút tiền đang chờ xử lý.</p>
+                    <mat-icon
+                        [class]="prepare.transaction ? 'text-green-700' : 'text-red-700'"
+                        style="font-size: 35px; margin-bottom: 10px">
+                        {{ prepare.transaction ? 'check' : 'close'}}
+                    </mat-icon>
+                </div>
+                <div class="flex flex-row gap-6 items-center">
+                    <p>3. Số dư trong tài khoản ≤ 50.000 VND</p>
+                    <mat-icon
+                        [class]="prepare.accountBalance ? 'text-green-700' : 'text-red-700'"
+                        style="font-size: 35px; margin-bottom: 10px">
+                        {{ prepare.accountBalance ? 'check' : 'close'}}
+                    </mat-icon>
+                </div>
+                <p class="text-red-700">Chú ý: Tài khoản sau khi bị đóng sẽ không thể khôi phục lại</p>
+            </article>
+        </div>
+        <div class="flex justify-center mt-5">
+            <a
+                [disabled]="disableSubmit"
+                color="primary"
+                mat-flat-button
+                (click)="onSubmit()">
+                Xác nhận
+            </a>
+        </div>
+    </fuse-card>
+</div>

@@ -1,0 +1,71 @@
+<div class="relative">
+    <mat-icon mat-dialog-close
+              class="cursor-pointer absolute right-0 top-[4px] hover:text-gray-900">
+        close
+    </mat-icon>
+    <h2 mat-dialog-title
+        class="text-center">Nhập địa chỉ</h2>
+    <div mat-dialog-content
+         [formGroup]="formGroup">
+        <mat-form-field class="w-full">
+            <mat-label>Tỉnh / thành phố</mat-label>
+            <mat-select formControlName="province"
+                        [required]="true"
+                        (selectionChange)="onChangeProvince()">
+                <mat-option *ngFor="let province of provinces"
+                            [value]="province">
+                    {{ province.categoriesName }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="provinceFormControl.invalid">{{ message.form.errors.required }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Quận / Huyện</mat-label>
+            <mat-select (selectionChange)="loadCommune()"
+                        [required]="true"
+                        formControlName="district">
+                <mat-option *ngFor="let district of districts"
+                            [value]="district">
+                    {{ district.categoriesName }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="districtFormControl.invalid">{{ message.form.errors.required }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Xã / Phường</mat-label>
+            <mat-select [required]="true" formControlName="commune">
+                <mat-option *ngFor="let commune of communes"
+                            [value]="commune.categoriesName">
+                    {{ commune.categoriesName }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="communeFormControl.invalid">{{ message.form.errors.required }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Địa chỉ chi tiết</mat-label>
+            <input matInput
+                   formControlName="street"
+                   trim="blur"
+                   inputMask
+                   [required]="true"
+                   autocomplete="off"
+                   maskType="address-detail">
+            <mat-error *ngIf="streetAddressFormControl.invalid">{{ message.form.errors.required }}</mat-error>
+        </mat-form-field>
+    </div>
+    <mat-dialog-actions align="center">
+        <button mat-flat-button
+                (click)="resetForm()">
+            Nhập lại
+        </button>
+        <button mat-flat-button
+                color="primary"
+                (click)="onSubmit()"
+                cdkFocusInitial>
+            Xác nhận
+        </button>
+    </mat-dialog-actions>
+</div>

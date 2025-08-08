@@ -1,0 +1,25 @@
+<div mat-dialog-title>
+    <div class="flex justify-between">
+        <h2>Chuyển xử lý hồ sơ</h2>
+        <a
+            mat-dialog-close
+            mat-icon-button>
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </a>
+    </div>
+</div>
+<mat-dialog-content [formGroup]="formGroup">
+    <mat-form-field class="w-full" floatLabel="always">
+        <mat-label>Người xử lý</mat-label>
+        <mat-select placeholder="Chọn người xử lý" formControlName="approvalBy">
+            <mat-option *ngFor="let item of data.lstApprovedByProcess1"
+                        [value]="item.admAccountDetailId">{{ item.fullName }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('approvalBy').hasError('required')">
+            {{ 'QLHS001' | transloco }}
+        </mat-error>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="onClickSubmit()">Xác nhận</button>
+</mat-dialog-actions>

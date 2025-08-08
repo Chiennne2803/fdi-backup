@@ -1,0 +1,71 @@
+<div mat-dialog-title>
+    <div class="flex justify-end">
+        <a mat-dialog-close
+           mat-icon-button>
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </a>
+    </div>
+    <div class="flex justify-center">
+        <h2>{{this.data && this.data.title ? this.data.title : ''}}</h2>
+    </div>
+</div>
+<div [formGroup]="rechargeRequestForm">
+    <mat-dialog-content>
+        <mat-form-field class="w-full"  *ngIf="this.data.status === 2 || this.data.status === 6">
+            <mat-label>Tìm khoản yêu cầu nạp tiền</mat-label>
+            <mat-select formControlName="transCode"
+                        #accType>
+                <input (keyup)="onKey($event.target)"
+                       style="height: 40px; width: 100%"
+                       autofocus>
+                <mat-option *ngIf="listTopupWaits.length === 0"
+                            (click)="accType.close()">None</mat-option>
+
+                <mat-option *ngFor="let lstTopupWait of listTopupWaits"
+                            [value]="lstTopupWait.fsTopupCode"
+                            (click)="accType.close()">{{lstTopupWait.fsTopupCode}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="rechargeRequestForm.get('transCode').hasError('required')">
+               {{ 'GDNT001' | transloco }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-full" *ngIf="this.data.status === 3">
+            <mat-label>Mã yêu cầu nạp tiền: </mat-label>
+            <input matInput
+                   class="text-left"
+                   formControlName="transCodeStr">
+        </mat-form-field>
+
+        <mat-form-field class="w-full"
+                        *ngIf="this.data.status === 6 || this.data.status === 3">
+            <mat-label>Số tiền: </mat-label>
+            <input id="amount"
+                   placeholder="Số tiền..."
+                   [maxlength]="15"
+                   matInput
+                   currencyMask autocomplete="off"
+                   class="text-left"
+                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                   formControlName="amount">
+            <mat-error *ngIf="rechargeRequestForm?.get('amount').hasError('required')">
+                {{ 'GDNT005' | transloco }}
+            </mat-error>
+            <mat-error
+                       *ngIf="!rechargeRequestForm?.get('amount').hasError('required') && rechargeRequestForm?.get('amount').hasError('min')">
+                {{ 'GDNT004' | transloco }}
+            </mat-error>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <a (click)="close()"
+           class="ml-auto sm:ml-0"
+           mat-stroked-button
+           [matTooltip]="'Đóng'">
+            Đóng
+        </a>
+        <button mat-flat-button
+                color="primary"
+                *ngIf="'SFF_RECHARGE_TRANSACTION_APPROVE' | permission"
+                (click)="submit()">Xác nhận</button>
+    </mat-dialog-actions>
+</div>

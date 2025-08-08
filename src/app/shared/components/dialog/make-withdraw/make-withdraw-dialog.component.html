@@ -1,0 +1,92 @@
+<div mat-dialog-title class="max-w-180 w-180">
+    <div class="flex justify-between">
+        <h2>Lập yêu cầu rút tiền</h2>
+        <a
+            mat-dialog-close
+            mat-icon-button>
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </a>
+    </div>
+    <div>
+        <fuse-alert
+            class="mt-8 -mb-4"
+            *ngIf="showAlert"
+            [appearance]="'outline'"
+            [showIcon]="false"
+            [type]="alert.type"
+            [@shake]="alert.type === 'error'"
+        >
+            {{alert.message}}
+        </fuse-alert>
+    </div>
+</div>
+<mat-divider class="my-5"></mat-divider>
+<mat-dialog-content>
+    <div class="flex flex-col flex-auto overflow-hidden sm:overflow-y-auto">
+        <article class="prose break-words">
+            <p>Số dư khả dụng(VNĐ): <br> <b style="font-size: 2.7rem; color: orange">{{ (data.withdrawDetail ? data.withdrawDetail.weu : 0) | currencyFormatPipe : 10 }}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Mã giao dịch: <br> <b>{{ data.withdrawDetail ? data.withdrawDetail.transCode : '' }}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Người thụ hưởng: <br> <b>{{ data.withdrawDetail ? data.withdrawDetail.accName : '' }}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Ngân hàng: <br> <b>{{ data.withdrawDetail ? data.withdrawDetail.bankName : '' }}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Chi nhánh: <br> <b>{{ data.withdrawDetail ? data.withdrawDetail.branchName : '' }}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Số tài khoản: <br> <b>{{ data.withdrawDetail ? data.withdrawDetail.accNo : '' }}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Phí rút tiền (VNĐ): <br> <b>{{ (data.withdrawDetail ? data.withdrawDetail.fee : 0) | currencyFormatPipe : 10 }}</b></p>
+        </article>
+
+    </div>
+    <form class="grid grid-cols-1" [formGroup]="withdrawForm">
+        <mat-form-field class="flex-auto">
+            <mat-label>Số tiền cần rút (VNĐ):</mat-label>
+            <input
+                matInput
+                [placeholder]="'0'"
+                formControlName="amount"
+                currencyMask autocomplete="off"
+                [maxlength]="15"
+                class="text-left"
+                [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+            >
+            <span class="ml-2" matSuffix>VND</span>
+            <mat-error *ngIf="withdrawForm.get('amount').hasError('required')">
+                {{ 'COIV80026' | transloco }}
+            </mat-error>
+            <mat-error *ngIf="withdrawForm.get('amount').hasError('min')">
+                {{ 'COIV80010' | transloco }}
+            </mat-error>
+            <mat-error *ngIf="withdrawForm.get('amount').hasError('maxlength')">
+                {{ 'COIV80006' | transloco }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="flex-auto">
+            <mat-label>Nội dung giao dịch</mat-label>
+            <input
+                matInput
+                disabled
+                [value]="info"
+            >
+        </mat-form-field>
+    </form>
+    <div class="flex flex-col flex-auto overflow-hidden sm:overflow-y-auto">
+        <article class="prose break-words">
+            <p>Người lập: <br> <b>{{ createdByName ? createdByName : '' }}</b></p>
+        </article>
+        <article class="prose break-words">
+            <p>Ngày lập: <br> <b>{{ createdDate  | datetimeformat: 'DD/MM/YYYY' }}</b></p>
+        </article>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-flat-button color="primary" (click)="transWithdrawCash()">Xác nhận</button>
+</mat-dialog-actions>

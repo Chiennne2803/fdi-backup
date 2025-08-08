@@ -1,0 +1,70 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div class="bg-card px-30">
+        <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <!-- Avatar and name -->
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="flex-0 w-16 h-16 rounded-full ">
+                        <img class="w-full h-full object-cover" [src]="avatar">
+                    </div>
+                    <div class="flex flex-col min-w-0 ml-4">
+                        <ng-container>
+                            <div
+                                class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                                Chào mừng bạn trở lại, {{ user.fullName }}!</div>
+                        </ng-container>
+                        <div class="flex items-center">
+                            <!--                            <mat-icon-->
+                            <!--                                class="icon-size-5"-->
+                            <!--                                [svgIcon]="'heroicons_solid:bell'"></mat-icon>-->
+                            <!--                            <div class="ml-1.5 leading-6 truncate text-secondary">Bạn có 1 cảnh báo mới, 3 thông báo mới và 100 công nợ cần thu hồi trong hôm nay</div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative flex self-start pt-2 pb-1 pl-5 pr-4 cursor-pointer  rounded-t-xl border border-b-0 bg-default"
+                matRipple>
+                <div class="flex items-center">
+                    <div class="">
+                        <div class="font-medium leading-6 truncate">Dashboard</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6 ">
+        <div class="w-full max-w-screen-xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- chartCustomerMonthly -->
+                <div class="bg-white shadow p-4 rounded-lg">
+                    <div class="flex flex-col flex-auto">
+                        <p class="font-semibold mb-2">
+                            Số lượng khách hàng theo tháng
+                        </p>
+
+                        <apx-chart class="flex-auto w-full h-80" [series]="chartCustomerMonthly.series"
+                            [chart]="chartCustomerMonthly.chart" [xaxis]="chartCustomerMonthly.xaxis"
+                            [yaxis]="chartCustomerMonthly.yaxis" [dataLabels]="chartCustomerMonthly.dataLabels"
+                            [plotOptions]="chartCustomerMonthly.plotOptions" [legend]="chartCustomerMonthly.legend"
+                            [tooltip]="chartCustomerMonthly.tooltip" [responsive]="chartCustomerMonthly.responsive"
+                            [fill]="chartCustomerMonthly.fill" [colors]="chartCustomerMonthly.colors"
+                            [stroke]="chartCustomerMonthly.stroke" [grid]="chartCustomerMonthly.grid"></apx-chart>
+                    </div>
+                </div>
+
+                <!-- Line Chart -->
+                <div class="bg-white shadow p-4 rounded-lg w-full">
+                    <p class="font-semibold mb-2">Số lượng công việc</p>
+                    <apx-chart [series]="chartTask.series" [chart]="chartTask.chart" [xaxis]="chartTask.xaxis"
+                        [yaxis]="chartTask.yaxis" [dataLabels]="chartTask.dataLabels" [stroke]="chartTask.stroke"
+                        [legend]="chartTask.legend" [tooltip]="chartTask.tooltip" [fill]="chartTask.fill"
+                        [colors]="chartTask.colors" [grid]="chartTask.grid"></apx-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

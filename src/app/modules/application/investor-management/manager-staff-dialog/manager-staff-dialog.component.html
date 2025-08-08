@@ -1,0 +1,26 @@
+<div mat-dialog-title>
+    <div class="flex justify-between">
+        <h2>Nhân viên phụ trách</h2>
+        <a
+            mat-dialog-close
+            mat-icon-button>
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </a>
+    </div>
+</div>
+<mat-dialog-content [formGroup]="formGroup">
+    <mat-form-field class="w-full">
+        <mat-label>Nhân viên phụ trách</mat-label>
+        <mat-select formControlName="managerStaff">
+            <mat-option *ngFor="let item of data.lstManagerStaff"
+                        [value]="item.admAccountDetailId">{{ item.fullName }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('managerStaff').hasError('required')">
+            {{ 'QLDT136' | transloco }}
+        </mat-error>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button class="mr-2" mat-flat-button mat-dialog-close >Hủy</button>
+    <button mat-flat-button color="primary" (click)="onClickSubmit()">Xác nhận</button>
+</mat-dialog-actions>

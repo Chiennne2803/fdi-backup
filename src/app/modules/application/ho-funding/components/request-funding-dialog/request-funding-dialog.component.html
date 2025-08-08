@@ -1,0 +1,196 @@
+<!-- Header -->
+<div mat-dialog-title
+     class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary -m-6">
+    <div class="text-lg font-medium">Lập yêu cầu tiếp quỹ</div>
+    <button mat-icon-button>
+        <mat-icon class="text-current"
+                  [svgIcon]="'heroicons_outline:x'"
+                  (click)="discard()"></mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content>
+    <!-- Compose form -->
+    <form class="flex flex-col flex-auto my-6"
+          [formGroup]="requestFundingForm">
+        <!-- Info -->
+        <div class="flex flex-col p-4">
+            <div class="flex flex-row w-full gap-4">
+                <mat-form-field class="w-1/2">
+                    <mat-label>Loại yêu cầu</mat-label>
+                    <mat-select formControlName="transType"
+                                (selectionChange)="onSelectionChange($event)">
+                        <mat-option *ngFor="let item of transTypes"
+                                    [value]="item.id">{{ item.label }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="requestFundingForm.get('transType').hasError('required')">
+                        {{ 'YCTQ001' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="w-1/2">
+                    <mat-label>Số tiền tiếp quỹ (VNĐ)</mat-label>
+                    <input id="amount"
+                           tabindex="1"
+                           [maxlength]="15"
+                           matInput
+                           currencyMask autocomplete="off"
+                           class="text-left"
+                           [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                           formControlName="amount">
+                    <mat-error *ngIf="requestFundingForm.get('amount').hasError('required')">
+                        {{ 'YCTQ004' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="requestFundingForm.get('amount').hasError('min')">
+                        {{ 'YCTQ003' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="requestFundingForm.get('amount').hasError('maxlength')">
+                        {{ 'YCTQ006' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <ng-container *ngIf="transType === 3;">
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Tài khoản ví tiếp quỹ</mat-label>
+                        <input id="fromWallet"
+                               matInput
+                               readonly
+                               formControlName="fromWallet">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Số dư khả dụng</mat-label>
+                        <input id="availableBalances"
+                               tabindex="1"
+                               [maxlength]="15"
+                               matInput
+                               readonly
+                               currencyMask autocomplete="off"
+                               class="text-left"
+                               [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                               formControlName="availableBalances">
+                    </mat-form-field>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="transType === 3;">
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Tài khoản ví thụ hưởng</mat-label>
+                        <mat-select formControlName="toWallet"
+                                    required="true"
+                                    (selectionChange)="changeToWallet($event)">
+                            <mat-option *ngFor="let item of toWalletType"
+                                        [value]="item.id">{{ item.label }}</mat-option>
+                        </mat-select>
+
+                        <mat-error *ngIf="requestFundingForm.get('toWallet').hasError('required')">
+                            {{ 'YCTQ044' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+
+
+                    <mat-form-field class="w-1/2"  *ngIf="requestFundingForm.get('toWallet').value === 'W_HO_BO';">
+                        <mat-label>Danh sách huy động vốn</mat-label>
+                        <input type="text"
+                               matInput
+                               formControlName="toAdmAccountName"
+                               [matAutocomplete]="autoProvince">
+                        <mat-autocomplete autoActiveFirstOption
+                                          #autoProvince="matAutocomplete"
+                                          (optionSelected)="onOptionProvinceSelected($event)">
+                            <mat-option *ngFor="let option of admAccountDetailDTOS | async"
+                                        [value]="option.admAccountId">
+                                {{option.accountName + ' - ' + (option.fullName || '')}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="requestFundingForm.get('toAdmAccountId').hasError('required')">
+                            {{ 'YCTQ052' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+
+
+                    <!--<mat-form-field class="w-1/2"  *ngIf="requestFundingForm.get('toWallet').value === 'W_HO_BO';">
+                        <mat-label>Danh sách huy động vốn</mat-label>
+                        <mat-select formControlName="toAdmAccountId"
+                                    required="true" >
+                            <mat-option *ngFor="let item of admAccountDetailDTOS"
+                                        [value]="item.admAccountId">{{ item.accountName + ' - ' + item.fullName }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="requestFundingForm.get('toAdmAccountId').hasError('required')">
+                            {{ 'YCTQ052' | transloco }}
+                        </mat-error>
+                    </mat-form-field>-->
+                </div>
+            </ng-container>
+            <div class="flex flex-row w-full gap-4 relative mb-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Ghi chú</mat-label>
+                    <textarea id="note"
+                              matInput
+                              maxlength="100"
+                              trim="blur"
+                              class="text-left w-full"
+                              formControlName="note">
+                    </textarea>
+                </mat-form-field>
+            </div>
+            <div class="grid grid-cols-1 gap-5 pb-4" *ngIf="transType === 2;">
+                <table class="min-w-full text-left text-sm font-light  rounded-xl ">
+                    <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
+                    <tr>
+                        <th scope="col" class="px-6 py-4">Chủ tài khoản</th>
+                        <th scope="col" class="px-6 py-4">Số tài khoản</th>
+                        <th scope="col" class="px-6 py-4">Ngân hàng</th>
+                        <th scope="col" class="px-6 py-4">Chi nhánh</th>
+                    </tr>
+                    </thead>
+                    <tbody class=" text-gray-700 uppercase my-2 ">
+                    <tr class="border-b dark:border-neutral-500 font-bold text-lg uppercase">
+                        <td class=" px-6 py-4">{{ requestFundingForm.get('fullName').value  }}</td>
+                        <td class=" px-6 py-4">{{ requestFundingForm.get('toAccNo').value  }}</td>
+                        <td class=" px-6 py-4">{{ requestFundingForm.get('toBankName').value  }}</td>
+                        <td class=" px-6 py-4">{{ requestFundingForm.get('toBranchName').value  }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="w-full flex flex-row justify-between border-b border-solid pb-2"
+                 *ngIf="transType == 2;">
+                <div class="w-full flex flex-col gap-4">
+                    <mat-label>Nội dung giao dịch</mat-label>
+                    <b>{{ requestFundingForm.get('transInfo').value }}</b>
+                    <span>Chú ý:</span>
+                    <ul>
+                        <li>Chuyển khoản đúng nội dung thanh toán để tránh phát sinh lỗi giao dịch</li>
+                        <li>Chuyển 24/7 nếu khác ngân hàng</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="-ml-2">
+        </div>
+
+        <div class="flex items-center mt-4 sm:mt-0">
+            <!-- Discard -->
+            <button class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    (click)="discard()">
+                Đóng
+            </button>
+            <!-- Submit -->
+
+            <button class="order-first sm:order-last ml-2"
+                    mat-flat-button
+                    *ngIf=" 'SFF_CASH_CURRENCY_FUNDING_INSERT' | permission"
+                    [color]="'primary'"
+                    (click)="submit()">
+                Lập yêu cầu
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

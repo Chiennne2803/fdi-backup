@@ -1,0 +1,32 @@
+<mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent">
+    <!-- Sidebar drawer -->
+    <mat-drawer
+        class="w-60"
+        [mode]="'side'"
+        [opened]="true"
+        [position]="'start'"
+        [disableClose]="true"
+        #sidebarDrawer>
+        <fuse-vertical-navigation
+            [appearance]="'default'"
+            [navigation]="menuData"
+            [inner]="true"
+            [mode]="'side'"
+            [name]="'sidebar-navigation'"
+            [opened]="true"></fuse-vertical-navigation>
+    </mat-drawer>
+    <!-- Detail drawer -->
+    <mat-drawer
+        class="w-9/12"
+        [mode]="'side'"
+        [opened]="false"
+        [position]="'end'"
+        [disableClose]="true"
+        #detailDrawer>
+<!--        <detail-charge-transaction></detail-charge-transaction>-->
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>

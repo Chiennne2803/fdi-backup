@@ -1,0 +1,178 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-scroll">
+    <!-- Main -->
+    <div class="absolute flex flex-col overflow-hidden w-full bg-card dark:bg-transparent">
+        <div class="w-full relative flex flex-row justify-center h-20 items-center border-b border-solid">
+            <div class="text-2xl font-extrabold tracking-tight uppercase">
+                Chi tiết giao dịch tiếp quỹ
+            </div>
+            <div class="absolute right-7 flex flex-row">
+                <button class="ml-auto sm:ml-0"
+                        mat-stroked-button
+                        (click)="discard()">
+                    Quay lại
+                </button>
+                <!-- Submit -->
+
+                <button class="order-first sm:order-last ml-2"
+                        mat-flat-button
+                        *ngIf="detail?.status === 1 && ( 'SFF_CASH_CURRENCY_FUNDING_UPDATE' | permission)"
+                        [color]="'primary'"
+                        (click)="showDialogSign()">
+                    Trình ký
+                </button>
+            </div>
+        </div>
+        <div class="w-full flex flex-col p-16 gap-4"
+             *ngIf="detail">
+            <div class="flex flex-col gap-10">
+                <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Loại yêu cầu</mat-label>
+                        <b>{{ transType[detail.transType] }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Mã yêu cầu</mat-label>
+                        <b>{{ detail.transCode }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Số tiền tiếp quỹ (VNĐ)</mat-label>
+                        <b>{{ detail.amount | currencyFormatPipe: 3}}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Trạng thái</mat-label>
+                        <b>{{ detail.statusName }}</b>
+                    </div>
+                </div>
+                <ng-container *ngIf="detail.transType === '2'; else elseTemplate">
+                    <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Chủ tài khoản</mat-label>
+                            <b>{{ detail.fullName }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Ngân hàng</mat-label>
+                            <b>{{ detail.toBankName }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Chi nhánh</mat-label>
+                            <b>{{ detail.toBranchName }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Số tài khoản</mat-label>
+                            <b>{{ detail.toAccNo }}</b>
+                        </div>
+                    </div>
+                    <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Tài khoản ví thụ hưởng</mat-label>
+                            <b>{{ detail.toWallet }}</b>
+                        </div>
+                    </div>
+                    <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Ghi chú</mat-label>
+                            <b>{{ detail.note}}</b>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-template #elseTemplate>
+                     <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Tài khoản ví tiếp quỹ</mat-label>
+                            <b>{{ detail.fromWallet }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Tài khoản ví thụ hưởng</mat-label>
+                            <b>{{ detail.toWallet }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Bên thụ hưởng</mat-label>
+                            <b>{{ detail.toAdmAccountName }}</b>
+                        </div>
+                         <div class="w-1/4 flex flex-col gap-4">
+                         </div>
+                    </div>
+                    <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Ghi chú</mat-label>
+                            <b>{{ detail.note }}</b>
+                        </div>
+                    </div>
+                </ng-template>
+                <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Người lập </mat-label>
+                        <b>{{ detail.createdByName }}</b>
+                    </div>
+                    <div class="w-1/4 flex flex-col gap-4">
+                        <mat-label>Ngày lập</mat-label>
+                        <b>{{ detail.createdDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                    </div>
+                    <ng-container *ngIf="detail.status !== 1; else updatedTemplate">
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Người xử lý</mat-label>
+                            <b>{{ detail.approvalByName }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Ngày xử lý</mat-label>
+                            <b>{{ detail.approvalDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                        </div>
+                    </ng-container>
+                    <ng-template #updatedTemplate>
+                        <div class="w-1/4 flex flex-col gap-4"></div>
+                        <div class="w-1/4 flex flex-col gap-4"></div>
+                    </ng-template>
+
+                </div>
+
+
+                <div class="w-full flex flex-row justify-between border-b border-solid pb-2"
+                     *ngIf="detail.transType === '2'">
+                    <div class="w-full flex flex-col gap-4">
+                        <mat-label>Nội dung giao dịch</mat-label>
+                        <b>{{ detail.transCode }}</b>
+                        <span>Chú ý:</span>
+                        <ul>
+                            <li>Chuyển khoản đúng nội dung thanh toán để tránh phát sinh lỗi giao dịch</li>
+                            <li>Chuyển 24/7 nếu khác ngân hàng</li>
+                        </ul>
+                    </div>
+                </div>
+                <ng-container *ngIf="detail.transType === '2' && detail.status !== 1">
+                    <b>Thông tin giao dịch tại ngân hàng</b>
+                    <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Số tiền chuyển khoản (VNĐ)</mat-label>
+                            <b>{{ detail.amount  | currencyFormatPipe: 3}}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Nội dung chuyển khoản</mat-label>
+                            <b>{{ detail.transCode }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Ngày giao dịch</mat-label>
+                            <b>{{ detail.createdDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Trạng thái giao dịch</mat-label>
+                            <b>{{ detail.statusName }}</b>
+                        </div>
+                    </div>
+                    <b>Thông tin giao dịch tiền ví</b>
+                    <div class="w-full flex flex-row justify-between border-b border-solid pb-2">
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Tài khoản ví thụ hưởng</mat-label>
+                            <b>{{ detail.toWallet }}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4">
+                            <mat-label>Số tiền nạp (VNĐ)</mat-label>
+                            <b>{{ detail.amount  | currencyFormatPipe: 3}}</b>
+                        </div>
+                        <div class="w-1/4 flex flex-col gap-4"></div>
+                        <div class="w-1/4 flex flex-col gap-4"></div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

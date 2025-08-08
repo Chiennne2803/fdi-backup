@@ -1,0 +1,466 @@
+<div class="sm:absolute flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
+    *ngIf="!tableConfig.isViewDetail" @fadeOutLeft @slideInLeft [ngClass]="fullHeight ? 'sm:inset-0' : ''"
+    [ngStyle]="containerStyle">
+    <div style="height: 100px !important; z-index: 2" *ngIf="tableConfig?.title"
+        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-3 px- md:px-8 border-b">
+        <div class="font-extrabold tracking-tight" *ngIf="!isSearchOpen">
+            <div *ngIf="!hasSelected()" @fadeInTop class="text-2xl font-extrabold tracking-tight title">
+                {{ tableConfig.title }}
+            </div>
+            <div [matTooltip]="tableConfig.title" *ngIf="hasSelected()" @fadeInLeft
+                class="text-1xl font-extrabold tracking-tight">
+                {{ tableConfig.title }}
+            </div>
+            <div class="flex gap-2.5 m-2 fadeInBottom" *ngIf="hasSelected() && tableConfigBtns" @fadeInBottom>
+                <!--
+                                <button mat-button
+                                        *ngIf="tableConfigBtns.isShowDetail"
+                                        [disabled]="disabedBtn()"
+                                        (click)="handleTableAction('edit')">
+                                    <mat-icon svgIcon="feather:edit"
+                                              class="mr-2"></mat-icon>
+                                    <span>Sửa</span>
+                                </button>
+
+                                <button mat-button
+                                        *ngIf="tableConfigBtns.isShowLock"
+                                        [disabled]="disabledBtnLock()"
+                                        (click)="handleTableAction('lock')">
+                                    <mat-icon svgIcon="feather:lock"
+                                              class="mr-2"></mat-icon>
+                                    <span>Khoá</span>
+                                </button>
+                                <button mat-button
+                                        *ngIf="tableConfigBtns.isShowUnlock"
+                                        [disabled]="disabledBtnUnlock()"
+                                        (click)="handleTableAction('unlock')">
+                                    <mat-icon svgIcon="feather:unlock"
+                                              class="mr-2"></mat-icon>
+                                    <span>Mở khoá</span>
+                                </button>
+                                <button mat-button
+                                        *ngIf="tableConfigBtns.isShowExport"
+                                        [disabled]="!selectionModel.hasValue()"
+                                        (click)="handleTableAction('export')">
+                                    <mat-icon svgIcon="feather:file-text"
+                                              class="mr-2"></mat-icon>
+                                    <span>Export</span>
+                                </button>
+                                -->
+                <ng-container *ngIf="tableConfigBtns.commonBtn && tableConfigBtns.commonBtn.length > 0">
+                    <ng-container *ngFor="let btn of tableConfigBtns.commonBtn;">
+                        <button mat-stroked-button [color]="'primary'" *ngIf="(btn.role | permission)"
+                            class="bg-primary-blue-6 !border-primary" [disabled]="disabedBtn(btn.type)"
+                            (click)="handleTableAction(btn.type, btn.fileName)">
+                            <mat-icon *ngIf="btn.type == 'edit'" svgIcon="{{btn.icon ?? 'feather:edit' }}"
+                                class="mr-2 icon-size-4"></mat-icon>
+                            <mat-icon *ngIf="btn.type == 'deleted'" svgIcon="{{btn.icon ?? 'feather:trash-2' }}"
+                                class="mr-2 icon-size-4"></mat-icon>
+                            <mat-icon *ngIf="btn.type == 'lock'" svgIcon="{{btn.icon ?? 'feather:lock' }}"
+                                class="mr-2 icon-size-4"></mat-icon>
+                            <mat-icon *ngIf="btn.type == 'unlock'" svgIcon="{{btn.icon ?? 'feather:unlock' }}"
+                                class="mr-2 icon-size-4"></mat-icon>
+                            <img *ngIf="btn.type == 'export'" src="assets/images/icon/file-down.svg" alt="icon"
+                                class="mr-2 h-4 w-4">
+                            <!-- <mat-icon *ngIf="btn.type == 'export'"  svgIcon="{{btn.icon ?? 'feather:file-text' }}" class="mr-2 icon-size-4"></mat-icon> -->
+                            <mat-icon *ngIf="btn.type == 'sign-process'" svgIcon="{{btn.icon ?? 'feather:send' }}"
+                                class="mr-2 icon-size-4"></mat-icon>
+                            <mat-icon *ngIf="btn.type == 'approve'" svgIcon="{{btn.icon ?? 'feather:edit-3' }}"
+                                class="mr-2 icon-size-4"></mat-icon>
+                            <span *ngIf="btn.label">{{btn.label}}</span>
+                            <span *ngIf="!btn.label">{{btn.type == 'edit' ? 'Sửa' : ''}}</span>
+                            <span *ngIf="!btn.label">{{btn.type == 'deleted' ? 'Xoá' : ''}}</span>
+                            <span *ngIf="!btn.label">{{btn.type == 'lock' ? 'Khoá' : ''}}</span>
+                            <span *ngIf="!btn.label">{{btn.type == 'unlock' ? 'Mở khoá' : ''}}</span>
+                            <span *ngIf="!btn.label">{{btn.type == 'export' ? 'Xuất tài liệu' : ''}}</span>
+                            <span *ngIf="!btn.label">{{btn.type == 'approve' ? 'Phê duyệt' : ''}}</span>
+                            <span *ngIf="!btn.label">{{btn.type == 'sign-process' ? 'Trinh ký' : ''}}</span>
+                        </button>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="tableConfigBtns.otherBtn && tableConfigBtns.otherBtn.length > 0">
+                    <ng-container *ngFor="let btn of tableConfigBtns.otherBtn;">
+                        <button mat-stroked-button [color]="'primary'" class="bg-primary-blue-6 !border-primary"
+                            *ngIf="(btn.role | permission)" [disabled]="!selectionModel.hasValue()"
+                            (click)="onBtnClick(btn.action)">
+                            <!-- <mat-icon [svgIcon]="btn.icon"
+                                      class="mr-2 icon-size-4"></mat-icon> -->
+                            <span>{{ btn.label }}</span>
+                        </button>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+        <!-- Mobile Actions -->
+        <div class="flex shrink-0 items-center sm:mt-0 sm:ml-4 sm-actions" *ngIf="taskbarConfig">
+            <!-- Search -->
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"
+                *ngIf="taskbarConfig.searchBar && isSearchOpen">
+                <button matPrefix>
+                    <mat-icon (click)="onClickSearchIcon(false)" [svgIcon]="'feather:search'"></mat-icon>
+                </button>
+                <input matInput trim="blur" *ngIf=" taskbarConfig.searchBar.searchBarRole | permission"
+                    [(ngModel)]="searchInputControl" placeholder="Tìm kiếm" (input)="onSearchQueryInput($event)"
+                    [autocomplete]="'off'" autoFocus>
+                <button mat-icon-button
+                    *ngIf="taskbarConfig.searchBar.isShowBtnFilter && ( taskbarConfig.searchBar.btnFilterRole | permission)"
+                    matSuffix (click)="onBtnClick('advanced-search')" [disabled]="selectionModel.hasValue()">
+                    <mat-icon svgIcon="heroicons_outline:adjustments"></mat-icon>
+                </button>
+            </mat-form-field>
+            <!-- Button group area -->
+            <div *ngIf="!isSearchOpen">
+                <button mat-icon-button>
+                    <mat-icon (click)="onClickSearchIcon(true)" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                </button>
+                <ng-container *ngFor="let btn of taskbarConfig.otherBtn">
+                    <button *ngIf="btn.isBtn && (btn.role | permission)" mat-icon-button
+                        (click)="onBtnClick(btn.action)">
+                        <mat-icon [svgIcon]="btn.icon"></mat-icon>
+                    </button>
+                    <button *ngIf="btn.isConfigDatatable" class="relative" (click)="showBtnConfig()" mat-icon-button>
+                        <mat-icon [svgIcon]="btn.icon"></mat-icon>
+                    </button>
+                    <div *ngIf="btn.isConfigDatatable && isShowConfig"
+                        class="absolute w-72 top-20 right-7 border bg-slate-200 p-4">
+                        <div class="content-config flex flex-col gap-1">
+                            <ng-container *ngFor="let item of columnDefinition">
+                                <mat-checkbox *ngIf="item.id !== 'selection'" (change)="onItemChecked(item)"
+                                    color="primary" [checked]="item.isShow">{{item.name}}</mat-checkbox>
+                            </ng-container>
+                        </div>
+                        <div class="arrow-up"></div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4 actions" *ngIf="taskbarConfig">
+            <!-- Search -->
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"
+                *ngIf="taskbarConfig.searchBar && !isStatisticalReport()">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'feather:search'"></mat-icon>
+                <input matInput trim="blur" [(ngModel)]="searchInputControl" placeholder="Tìm kiếm"
+                    (input)="onSearchQueryInput($event)" [autocomplete]="'off'">
+                <button mat-icon-button *ngIf="taskbarConfig.searchBar.isShowBtnFilter" matSuffix
+                    (click)="onBtnClick('advanced-search')" [disabled]="selectionModel.hasValue()">
+                    <mat-icon svgIcon="heroicons_outline:adjustments"></mat-icon>
+                </button>
+            </mat-form-field>
+            <button *ngIf="taskbarConfig.searchBar.isShowBtnFilter && isStatisticalReport()" mat-raised-button
+                (click)="onBtnClick('advanced-search')" [disabled]="selectionModel.hasValue()" color="primary">
+                Tìm kiếm nâng cao
+            </button>
+            <!-- Button group area -->
+            <div>
+                <ng-container *ngFor="let btn of taskbarConfig.otherBtn">
+                    <button *ngIf="btn.isBtn && (btn.role | permission)" class="ml-4"
+                        [ngClass]="[btn.buttonType ? btn.buttonType : 'mat-flat-button']" mat-flat-button
+                        [color]="btn.color ? btn.color : 'primary'" (click)="onBtnClick(btn.action)">
+                        <ng-container *ngIf="btn.icon">
+                            <mat-icon [svgIcon]="btn.icon"></mat-icon>
+                        </ng-container>
+                        <span class="ml-2 mr-1" *ngIf="btn.label">{{btn.label}}</span>
+                    </button>
+                    <button *ngIf="btn.isConfigDatatable" class="ml-4 relative" (click)="showBtnConfig()"
+                        mat-icon-button>
+                        <mat-icon [svgIcon]="btn.icon"></mat-icon>
+                    </button>
+                    <div *ngIf="btn.isConfigDatatable && isShowConfig"
+                        class="absolute w-72 top-20 right-7 border bg-slate-200 p-4">
+                        <div class="content-config flex flex-col gap-1">
+                            <ng-container *ngFor="let item of columnDefinition">
+                                <mat-checkbox *ngIf="item.id !== 'selection'" (change)="onItemChecked(item)"
+                                    color="primary" [checked]="item.isShow">{{item.name}}</mat-checkbox>
+                            </ng-container>
+                        </div>
+                        <div class="arrow-up"></div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="displayColumns.length > 0 && (dataSource | async)" [@fadeOutTop]="tableConfig.isViewDetail !== false"
+        [@fadeOutBottom]="tableConfig.isViewDetail === false" class="flex flex-auto overflow-hidden relative">
+        <div class="flex flex-col flex-auto overflow-auto table-container">
+            <table mat-table style="margin-bottom: 100px;" #matTable [dataSource]="(dataSource | async).content"
+                (matSortChange)="handleSort.emit($event)" multiTemplateDataRows>
+                <ng-container *ngFor="let column of columnDefinition" [matColumnDef]="column.id"
+                    [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
+                    <ng-container [ngSwitch]="column.type">
+                        <!-- ::::::::::::::::::::::::::::::::::INDEX:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'index'">
+                            <th *matHeaderCellDef mat-header-cell [class.header-align-center]="column.alignCenter"
+                                [ngStyle]="{ 'padding-left' : '20px',width: '50px', 'min-width': '50px' }">
+                                <div class="cell-overflow table-header">
+                                    {{ column.name }}
+                                </div>
+                            </th>
+                            <td *matCellDef="let row; let j = dataIndex" mat-cell
+                                [class.cell-align-center]="column.alignCenter"
+                                [ngStyle]="{ 'padding-left' : '20px',width: '50px', 'min-width': '50px' }">
+                                <div class="cell-overflow">
+                                    {{
+                                    (j + 1) + ((dataSource | async).size * ((dataSource | async).number))
+                                    }}
+                                </div>
+                            </td>
+                        </div>
+                        <!-- ::::::::::::::::::::::::::::::::::EXPAND COLUMN:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'expand-column'">
+                            <th *matHeaderCellDef mat-header-cell [class.header-align-center]="true"
+                                [ngStyle]="{ 'padding-left' : '20px',width: '50px', 'min-width': '50px' }">
+                                <div class="cell-overflow table-header">
+                                    {{ column.name }}
+                                </div>
+                            </th>
+                            <td *matCellDef="let element; let row; let j = dataIndex" mat-cell
+                                [class.cell-align-center]="true"
+                                [ngStyle]="{ 'padding-left' : '20px',width: '50px', 'min-width': '50px' }">
+                                <div class="cell-overflow flex justify-center items-center">
+                                    <button mat-icon-button aria-label="expand row"
+                                        (click)="onExpandRow($event, element)">
+                                        <mat-icon *ngIf="this.isElementExits(element)">keyboard_arrow_down</mat-icon>
+                                        <mat-icon *ngIf="!this.isElementExits(element)">keyboard_arrow_right</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </div>
+
+                        <!-- ::::::::::::::::::::::::::::::::::TEXT:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'text'">
+                            <th *matHeaderCellDef mat-header-cell [ngStyle]="{
+                                'text-align' :  column.alignRight ? 'right' : 'left',
+                                'padding-left' : column.alignRight ? '20px': '10px',
+                                'width': ((column.weight || 0)*10) + 'px',
+                                'min-width': ((column.weight || 0)*10) + 'px'}">
+                                {{ column.name }}
+                            </th>
+                            <td (click)="handleRowClick(row, j, column)" [ngClass]="column.className"
+                                *matCellDef="let element;let row; let j = dataIndex" mat-cell class="overflow"
+                                [ngStyle]="{
+                                'padding-left' : column.alignRight ? '20px': '10px',
+                                    'text-align' :  column.alignRight ? 'right' : 'left',
+                                    'width': ((column.weight || 0)*10) + 'px',
+                                    'min-width': ((column.weight || 0)*10) + 'px',
+                                    'cursor': (column.viewDetail)?'pointer' : 'default' }"
+                                [class.cell-align-right]="column.alignRight"
+                                [class.cell-align-center]="column.alignCenter">
+                                <span *ngIf="!column.format && !column.viewDetail">
+                                    {{ !utils.getValueByKey(element, column.id) ? '-' :
+                                    utils.getValueByKey(element, column.id)}}
+                                </span>
+                                <span *ngIf="!column.format && column.viewDetail"
+                                    class="hover:cursor-pointer text-link">
+                                    {{ !utils.getValueByKey(element, column.id) ? '-' :
+                                    utils.getValueByKey(element, column.id)}}
+                                </span>
+
+                                <span *ngIf="column && column.format && isNumber(column.format)">
+                                    {{ utils.getValueByKey(element, column.id) | currencyFormatPipe:
+                                    pipeNumber(column.format) }}
+                                </span>
+                                <span *ngIf="column && column.format && isDateTime(column.format)">
+                                    {{ utils.getValueByKey(element, column.id) | datetimeformat:
+                                    column.format.toString() }}
+                                </span>
+                            </td>
+                        </div>
+                        <!-- ::::::::::::::::::::::::::::::::::TEXT TOOL TIP:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'text-tool-tip'">
+                            <th *matHeaderCellDef mat-header-cell [ngStyle]="{
+                                'text-align' :  column.alignRight ? 'right' : 'left',
+                                'padding-left' : column.alignRight ? '20px': '10px',
+                                'width': ((column.weight || 0)*10) + 'px',
+                                'min-width': ((column.weight || 0)*10) + 'px'}">
+                                {{ column.name }}
+                            </th>
+                            <td (click)="handleRowClick(row, j, column)" [ngClass]="column.className"
+                                *matCellDef="let element;let row; let j = dataIndex" mat-cell class="overflow"
+                                [ngStyle]="{
+                                'padding-left' : column.alignRight ? '20px': '10px',
+                                    'text-align' :  column.alignRight ? 'right' : 'left',
+                                    'width': ((column.weight || 0)*10) + 'px',
+                                    'min-width': ((column.weight || 0)*10) + 'px',
+                                    'cursor': (column.viewDetail)?'pointer' : 'default' }"
+                                [class.cell-align-right]="column.alignRight"
+                                [class.cell-align-center]="column.alignCenter">
+                                <span class="text-ellipsis-line-2" *ngIf="!column.format && !column.viewDetail"
+                                    [matTooltip]="!utils.getValueByKey(element, column.id) ? '-' :
+                                    utils.getValueByKey(element, column.id)">
+                                    {{ !utils.getValueByKey(element, column.id) ? '-' :
+                                    utils.getValueByKey(element, column.id)}}
+                                </span>
+                                <span *ngIf="!column.format && column.viewDetail"
+                                    class="hover:cursor-pointer text-link text-ellipsis-line-2" [matTooltip]="!utils.getValueByKey(element, column.id) ? '-' :
+                                    utils.getValueByKey(element, column.id)">
+                                    {{ !utils.getValueByKey(element, column.id) ? '-' :
+                                    utils.getValueByKey(element, column.id)}}
+                                </span>
+
+                                <span class="text-ellipsis-line-2"
+                                    *ngIf="column && column.format && isNumber(column.format)" [matTooltip]="utils.getValueByKey(element, column.id) | currencyFormatPipe:
+                                    pipeNumber(column.format)">
+                                    {{ utils.getValueByKey(element, column.id) | currencyFormatPipe:
+                                    pipeNumber(column.format) }}
+                                </span>
+                                <span class="text-ellipsis-line-2"
+                                    *ngIf="column && column.format && isDateTime(column.format)" [matTooltip]="utils.getValueByKey(element, column.id) | datetimeformat:
+                                    column.format.toString()">
+                                    {{ utils.getValueByKey(element, column.id) | datetimeformat:
+                                    column.format.toString() }}
+                                </span>
+                            </td>
+                        </div>
+                        <!-- ::::::::::::::::::::::::::::::::::STATUS:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'status'">
+                            <th *matHeaderCellDef mat-header-cell
+                                [ngStyle]="{'padding-left' : '5px','width': ((column.weight || 0)*10) + 'px', 'min-width': ((column.weight || 0)*10) + 'px'}">
+                                {{ column.name }}
+                            </th>
+                            <td *matCellDef="let element" mat-cell class="overflow"
+                                [ngStyle]="{ 'padding-left' : '5px','width': ((column.weight || 0)*10) + 'px' , 'min-width': ((column.weight || 0)*10) + 'px'}"
+                                [class.cell-align-right]="column.alignRight"
+                                [class.cell-align-center]="column.alignCenter">
+                                <span>
+                                    {{ column.statusObject[element[column.id]] }}
+                                </span>
+                            </td>
+                        </div>
+                        <!-- ::::::::::::::::::::::::::::::::::SELECT CHECKBOX:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'selection'">
+                            <th *matHeaderCellDef mat-header-cell
+                                [ngStyle]="{'padding-left' : '5px','width': '50px', 'min-width': '50px'}"
+                                [class.cell-align-center]="column.alignCenter">
+                                <mat-checkbox *ngIf="column.showSelectAll" class="checkbox" color="primary"
+                                    (change)="$event ? toggleAllRows($event) : null"
+                                    [checked]="selectionModel.hasValue() && isAllSelected()"
+                                    [indeterminate]="selectionModel.hasValue() && !isAllSelected()">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row"
+                                [ngStyle]="{'padding-left' : '5px','width': '50px', 'min-width': '50px'}"
+                                [class.cell-align-center]="column.alignCenter">
+                                <mat-checkbox class="checkbox" color="primary" (click)="$event.stopPropagation()"
+                                    (change)="$event ? onCheckBoxItemChange(row) : null"
+                                    [checked]="selectionModel.hasValue() && isAllSelected() ? true : isSelectedItem(row)">
+                                </mat-checkbox>
+                            </td>
+                        </div>
+
+                        <!-- ::::::::::::::::::::::::::::::::::BUTTON ACTION:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'button-action'">
+                            <th *matHeaderCellDef mat-header-cell
+                                [ngStyle]="{'width': ((column.weight || 0)*10) + 'px', 'min-width': ((column.weight || 0)*10) + 'px'}">
+                                {{ column.name }}
+                            </th>
+                            <td mat-cell *matCellDef="let row" [ngStyle]="{'width': '50px', 'min-width': '50px'}"
+                                [class.cell-align-center]="column.alignCenter">
+                                <button mat-flat-button [color]="column.format" (click)="onButtonClick(row)">{{
+                                    column.textButton }}</button>
+                            </td>
+                        </div>
+
+                        <!-- ::::::::::::::::::::::::::::::::::checked:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'checked'">
+                            <th *matHeaderCellDef mat-header-cell
+                                [ngStyle]="{'width': ((column.weight || 0)*10) + 'px', 'min-width': ((column.weight || 0)*10) + 'px'}">
+                                {{ column.name }}
+                            </th>
+                            <td mat-cell *matCellDef="let element; let row"
+                                [ngStyle]="{'width': '50px', 'min-width': '50px'}"
+                                [class.cell-align-center]="column.alignCenter">
+                                <mat-checkbox class="checkbox" color="primary" (click)="$event.stopPropagation()"
+                                    [checked]="!utils.getValueByKey(element, column.id) ? false :
+                                              utils.getValueByKey(element, column.id) === 1 ? true : false"
+                                    [disabled]="true">
+                                </mat-checkbox>
+                            </td>
+                        </div>
+                        <!-- ::::::::::::::::::::::::::::::::::TextColor:::::::::::::::::::::::::::::::::::::::: -->
+                        <div *ngSwitchCase="'text-color'">
+                            <th *matHeaderCellDef mat-header-cell
+                                [ngStyle]="{'padding-left' : '5px','width': ((column.weight || 0)*10) + 'px', 'min-width': ((column.weight || 0)*10) + 'px'}">
+                                {{ column.name }}
+                            </th>
+                            <td *matCellDef="let element" mat-cell class="overflow"
+                                [ngStyle]="{ 'padding-left' : '5px','width': ((column.weight || 0)*10) + 'px' , 'min-width': ((column.weight || 0)*10) + 'px'}"
+                                [class.cell-align-right]="column.alignRight"
+                                [class.cell-align-center]="column.alignCenter">
+                                <span [ngStyle]="{'color': column.statusObject[element[column.mapId]]}">
+                                    {{ element[column.id] }}
+                                </span>
+                            </td>
+                        </div>
+
+                        <!-- ::::::::::::::::::::::::::::::::::footer:::::::::::::::::::::::::::::::::::::::: -->
+                        <ng-container *ngIf="tableConfig.showFooter">
+                            <ng-container *ngIf="column.type == 'selection'">
+                                <td mat-footer-cell *matFooterCellDef>
+                                    {{column.id}}
+                                </td>
+                            </ng-container>
+                            <ng-container *ngIf="column.type == 'index'">
+                                <td mat-footer-cell *matFooterCellDef>
+                                    {{column.id}}
+                                </td>
+                            </ng-container>
+                            <ng-container *ngIf="column.type !== 'index' && column.type !== 'selection'">
+                                <td mat-footer-cell *matFooterCellDef>
+                                    {{column.id}}
+                                </td>
+                            </ng-container>
+                        </ng-container>
+
+                    </ng-container>
+
+                </ng-container>
+                <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element; let j = dataIndex" [attr.colspan]="displayColumns.length">
+                        <div class="element-detail"
+                            [@expandCollapse]="this.isElementExits(element) ? 'expanded' : 'collapsed'">
+                            <ng-container *ngTemplateOutlet="tableChild; context: { $implicit: element }">
+
+                            </ng-container>
+                        </div>
+                    </td>
+                </ng-container>
+                <tr mat-header-row class="bg-primary-grayNeutral-5" *matHeaderRowDef="displayColumns; sticky: true">
+                </tr>
+                <ng-container *ngIf="tableConfig.showFooter">
+                    <tr mat-footer-row *matFooterRowDef="footerColumns" class="example-first-footer-row font-bold"></tr>
+                </ng-container>
+                <tr mat-row class="hover:bg-accent-50 element-row" [ngStyle]="styleObject(selectedRowIndex, idx)"
+                    [class.expanded-row]="this.isElementExits(element)"
+                    *matRowDef="let element; let row; columns: displayColumns; let idx = index"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+            </table>
+            <ng-template #noItems>
+                <div class="p-8 border-t text-4xl font-semibold tracking-tight text-center" #noDataRef>
+                    <ng-content select="[noDataMessage]"></ng-content>
+                </div>
+                <div *ngIf="noDataRef.children.length === 0">
+                    No data found!
+                </div>
+            </ng-template>
+            <mat-paginator
+                class="sm:absolute sm:inset-x-0 {{ tableConfig.displayScollX ?'sm:bottom-2' : 'sm:bottom-0'}} border-b sm:border-t sm:border-b-0 z-10 bg-white dark:bg-transparent"
+                [pageSizeOptions]="pageSizeOptions" [length]="(dataSource | async).totalElements"
+                [pageIndex]="(dataSource | async).number" [pageSize]="(dataSource | async).size"
+                [showFirstLastButtons]="true" (page)="pageSwitch.emit($event)">
+            </mat-paginator>
+        </div>
+        <ng-container class="w-full bg-red">
+            <div class="absolute bottom-3 left-4 d-flex z-999 ">
+                <div class="text-xl font-extrabold text-primary">
+                    <ul *ngFor="let footer of footerTable;">
+                        <li>
+                            {{ footer.label }} {{ footer.value | number }} {{ footer.type }}
+                            <p *ngIf="footer.note !== ''" class="text-sm italic text-slate-500">{{footer.note}}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

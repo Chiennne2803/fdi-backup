@@ -1,0 +1,263 @@
+<div class="w-full h-full">
+    <mat-drawer
+        class="w-full sm:w-100"
+        [mode]="'side'"
+        [opened]="false"
+        [position]="'end'"
+        #fileDrawer>
+        <file-detail
+            [fileDrawer]="fileDrawer"
+            [selectedFile]="selectedFile"
+        ></file-detail>
+    </mat-drawer>
+
+
+    <ng-container *ngIf="data?.admAccountDetailDTO.type === UserType.CA_NHAN">
+        <fuse-card class="flex flex-col px-8 pb-4">
+            <article class=" pt-4">
+                <h4>Thông tin cá nhân</h4>
+            </article>
+            <div class="grid grid-rows-4 grid-cols-4  gap-5 pt-5">
+                <div class="row-span-3 ...">
+                    <div class="w-full h-50 avatar"
+                         [ngStyle]="{
+                                                'background-image':'url('+(avatar && avatar?.contentBase64 ? avatar.contentBase64 : 'assets/images/avatars/defaut-avatar-man.png') +')',
+                                                'background-size':     'contain',
+                                                'background-repeat':   'no-repeat',
+                                                'background-position': 'center center',
+                                                'border': '1px solid #ccc',
+                                                'border-radius': '25px'
+                                             }"></div>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>Họ và tên: <br> <b>{{ data?.admAccountDetailDTO.fullName }}</b></p>
+                    </article>
+                </div>
+
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>SĐT liên hệ: <br> <b>{{ data?.admAccountDetailDTO.mobile }}</b></p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>Email: <br> <b>{{ data?.admAccountDetailDTO.email }}</b></p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>CCCD/Hộ chiếu: <br> <b>{{ data?.admAccountDetailDTO.identification }}</b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>Ngày cấp: <br>
+                            <b>{{ data?.admAccountDetailDTO.dateOfIdnumber | datetimeformat : 'DD/MM/YYYY' }}</b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>Nơi cấp: <br> <b>{{ data?.admAccountDetailDTO.placeOfIdnumber }}</b></p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>Giới tính: <br> <b>{{ data?.admAccountDetailDTO.genderName }}</b></p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>Ngày sinh: <br>
+                            <b>{{ data?.admAccountDetailDTO.dateOfBirth | datetimeformat : 'DD/MM/YYYY' }}</b>
+                        </p>
+                    </article>
+                </div>
+
+                <div class="col-span-1 ...">
+                    <article class=" break-words">
+                        <p>MST cá nhân: <br> <b>{{ data?.admAccountDetailDTO.taxCode }}</b>
+                        </p>
+                    </article>
+                </div>
+                
+                <div class="col-span-2 ...">
+                    <article class=" break-words">
+                        <p>Địa chỉ thường trú: <br> <b>{{ data?.admAccountDetailDTO.address2 }}</b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-2 ...">
+                    <article class=" break-words">
+                        <p>Địa chỉ hiện tạ<input type="text">: <br>
+                            <b>{{ data?.admAccountDetailDTO.address1 }}</b>
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </fuse-card>
+    </ng-container>
+
+
+    <ng-container *ngIf="data?.admAccountDetailDTO.type === UserType.DOANH_NGHIEP">
+        <fuse-card class="flex flex-col px-8 pb-4">
+            <article class="prose pt-4">
+                <h4>Thông tin doanh nghiệp</h4>
+            </article>
+            <div class="grid grid-cols-4 gap-5 pt-5">
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>Bên huy động vốn: <br> <b>{{ data?.admAccountDetailDTO.fullName }}</b></p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>Lĩnh vực hoạt động: <br>
+                            <b>{{ data?.admAccountDetailDTO.admCategoriesName }}</b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>MST doanh nghiệp: <br> <b>{{ data?.admAccountDetailDTO.businessCode }}</b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>SĐT liên hệ: <br> <b>{{ data?.admAccountDetailDTO.landline }}</b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>Số GPKD: <br> <b>{{ data?.admAccountDetailDTO.businessLicense }}</b></p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>Ngày cấp phép: <br>
+                            <b>{{ data?.admAccountDetailDTO.businessLicenseDate | datetimeformat : 'DD/MM/YYYY' }}</b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>Nơi cấp: <br>
+                            <b>{{ data?.admAccountDetailDTO.placeOfBusinessLicense }}</b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>Email: <br> <b>{{ data?.admAccountDetailDTO.email }}</b></p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words truncate"
+                             [matTooltip]="data?.admAccountDetailDTO.facebook">
+                        <p>Trang Facebook: <br> <b><a target="_blank"
+                                                      [href]="data?.admAccountDetailDTO.facebook">{{ data?.admAccountDetailDTO.facebook }}</a></b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words truncate"
+                             [matTooltip]="data?.admAccountDetailDTO.website">
+                        <p>Website: <br> <b><a target="_blank"
+                                               [href]="data?.admAccountDetailDTO.website">{{ data?.admAccountDetailDTO.website }}</a></b>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>Địa chỉ(theo GPKD): <br> <b>{{ data?.admAccountDetailDTO.address3 }}</b></p>
+                    </article>
+                </div>
+                <div class="col-span-1 ...">
+                    <article class="prose break-words">
+                        <p>Địa chỉ hoạt động: <br> <b>{{ data?.admAccountDetailDTO.address2 }}</b>
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </fuse-card>
+
+        <fuse-card class="flex flex-col flex-auto w-full border-b p-8 h-screen">
+            <article class="prose">
+                <h4>Thông tin người đại diện</h4>
+            </article>
+            <div class="grid grid-cols-4 gap-5 pt-5">
+                <div class="row-span-3 pr-5">
+                    <div class="w-full h-50 avatar"
+                         [ngStyle]="{
+                                                'background-image':'url('+(deputyAvatar && deputyAvatar?.contentBase64 ? deputyAvatar.contentBase64 : 'assets/images/avatars/defaut-avatar-man.png') +')',
+                                                'background-size':     'contain',
+                                                'background-repeat':   'no-repeat',
+                                                'background-position': 'center center',
+                                                'border': '1px solid #ccc',
+                                                'border-radius': '25px'
+                                             }"></div>
+                </div>
+                <article class="prose break-words">
+                    <p>Họ và tên: <br>
+                        <b>{{ data?.admDeputyContactDTO?.fullName }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>CCCD/Hộ chiếu: <br>
+                        <b>{{ data?.admDeputyContactDTO?.identification }}</b>
+                    </p>
+                </article>
+                <article class="prose break-words">
+                    <p>Ngày cấp: <br>
+                        <b>{{ data?.admDeputyContactDTO?.idDate | datetimeformat : 'DD/MM/YYYY' }}</b>
+                    </p>
+                </article>
+                <article class="prose break-words">
+                    <p>Nơi cấp: <br>
+                        <b>{{ data?.admDeputyContactDTO?.idAddress }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Giới tính: <br>
+                        <b>{{ data?.admDeputyContactDTO?.genderName }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Ngày sinh: <br>
+                        <b>{{ data?.admDeputyContactDTO?.dateOfBirth | datetimeformat : 'DD/MM/YYYY' }}</b>
+                    </p>
+                </article>
+                <article class="prose break-words">
+                    <p>SĐT liên hệ: <br>
+                        <b>{{ data?.admDeputyContactDTO?.mobile }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Email: <br>
+                        <b>{{ data?.admDeputyContactDTO?.email }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>MST cá nhân: <br>
+                        <b>{{ data?.admDeputyContactDTO?.taxCode }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Chức vụ: <br>
+                        <b>{{ data?.admDeputyContactDTO?.positionCompany }}</b>
+                    </p>
+                </article>
+
+            </div>
+            <div class="grid grid-cols-2 gap-5">
+                
+                <article class="prose break-words">
+                    <p>Địa chỉ thường trú: <br>
+                        <b>{{ data?.admDeputyContactDTO?.address2 }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Địa chỉ hiện tại: <br>
+                        <b>{{ data?.admDeputyContactDTO?.address1 }}</b></p>
+                </article>
+            </div>
+        </fuse-card>
+    </ng-container>
+</div>

@@ -1,0 +1,78 @@
+<!-- Loading bar -->
+<fuse-loading-bar></fuse-loading-bar>
+
+<!-- Navigation -->
+<fuse-vertical-navigation
+    class=" bg-primary text-white print:hidden"
+    [appearance]="'compact'"
+    [mode]="isScreenSmall ? 'over' : 'side'"
+    [name]="'mainNavigation'"
+    [navigation]="navigationByRole"
+    *ngIf="userInfo.status === 2"
+    [opened]="!isScreenSmall">
+    <!-- Navigation header hook -->
+    <ng-container fuseVerticalNavigationContentHeader>
+        <!-- Logo -->
+        <a [routerLink]="['/']" class="flex items-center justify-center h-20 mt-3 mb-4">
+            <img src="assets/images/logo/logo-text-white.svg"  class="w-12">
+        </a>
+    </ng-container>
+</fuse-vertical-navigation>
+
+<!-- Wrapper -->
+<div class="flex flex-col flex-auto w-full min-w-0">
+
+    <!-- Header -->
+    <div class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow bg-primary-orange-1 print:hidden">
+        <!-- Navigation toggle button -->
+        <button
+            mat-icon-button
+            (click)="toggleNavigation('mainNavigation')">
+            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+        </button>
+        <!-- Components -->
+        <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
+<!--            <languages></languages>-->
+            <!-- <fuse-fullscreen class="hidden md:block"></fuse-fullscreen> -->
+<!--            <search [appearance]="'bar'"></search>-->
+<!--            <shortcuts></shortcuts>-->
+<!--            <messages></messages>-->
+            <notifications></notifications>
+<!--            <button-->
+<!--                class="lg:hidden"-->
+<!--                mat-icon-button-->
+<!--                (click)="quickChat.toggle()">-->
+<!--                <mat-icon [svgIcon]="'heroicons_outline:chat-alt-2'"></mat-icon>-->
+<!--            </button>-->
+            <user></user>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto">
+        <div class=" fixed w-150 top-5 right-15"
+             style="z-index: 1001">
+            <fuse-alert *ngFor="let noti of lstNotify;"
+                        class="pb-2"
+                        [appearance]="'outline'"
+                        [dismissible]="true"
+                        [dismissed]="false"
+                        [name]="noti.idMessage"
+                        [type]="noti.type">
+                {{noti.message | transloco}}
+            </fuse-alert>
+        </div>
+        <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
+             Otherwise, layout changes won't be registered and the view won't be updated! -->
+        <router-outlet *ngIf="true"></router-outlet>
+    </div>
+
+    <!-- Footer -->
+<!--    <div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">-->
+<!--        <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>-->
+<!--    </div>-->
+
+</div>
+
+<!-- Quick chat -->
+<!--<quick-chat #quickChat="quickChat"></quick-chat>-->

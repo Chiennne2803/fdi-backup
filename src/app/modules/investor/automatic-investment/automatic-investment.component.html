@@ -1,0 +1,15 @@
+<div class="flex flex-col">
+    <app-automatic-investment-header></app-automatic-investment-header>
+    <app-datatable [containerStyle]="{width: '100%', height: 'calc(100vh - 337px)'}"
+                   [fullHeight]="false"
+                   [tableConfig]="tableConfig"
+                   [taskbarConfig]="taskBarConfig"
+                   [tableConfigBtns]="tableBtnConfig"
+                   (checkboxItemChange)="checkBoxItemChange($event)"
+                   [dataSource]="dataSource$"
+                   (pageSwitch)="handlePageSwitch($event)"
+                   (handleSearch)="handleSearch($event)"
+                   (tableEvent)="handleTableEvent($event)"
+                   (rowClick)="handleRowClick($event)">
+    </app-datatable>
+</div>

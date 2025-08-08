@@ -1,0 +1,11 @@
+<div class="flex flex-col flex-auto w-full">
+    <app-datatable
+        [tableConfig]="tableConfig"
+        [dataSource]="dataSource$"
+        [tableConfigBtns]="_btnConfig"
+        [taskbarConfig]="taskBarConfig"
+        (handleSearch)="handleSearch($event)"
+        (tableEvent)="handleTableEvent($event)"
+        (pageSwitch)="handlePageSwitch($event)"
+    ></app-datatable>
+</div>

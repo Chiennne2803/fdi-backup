@@ -1,0 +1,210 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer-content class="flex flex-col overflow-hidden">
+        <ng-container>
+            <div class="relative w-full px-5">
+                <div class="flex items-center justify-between w-full mx-auto py-2">
+                    <article class="w-2/4 prose break-words">
+                        <h3>
+                            Chi tiết giao dịch tiếp quỹ
+                        </h3>
+                    </article>
+                    <div class="flex items-center justify-end" *ngIf="!statusError">
+                        <button (click)="onClose()"
+                                mat-stroked-button>
+                            Đóng
+                        </button>
+                        <button  @fadeInRight
+                                 *ngIf="(detail?.status == 2) && ('SFF_PROCESSING_FUNDING_APPROVE' | permission)"
+                                (click)="onClickApprove()"
+                                mat-flat-button
+                                color="primary"
+                                class="ml-5">
+                            Xử lý
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-end" *ngIf="statusError == 1">
+                        <button (click)="onClose()"
+                                mat-stroked-button>
+                            Đóng
+                        </button>
+                        <button  @fadeInRight
+                                 *ngIf="(statusError)
+                                 && ('SFF_PROCESSING_FUNDING_APPROVE' | permission)"
+                                 (click)="resolveErrorDialog()"
+                                 mat-flat-button
+                                 color="primary"
+                                 class="ml-5">
+                            Xử lý
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-end" *ngIf="statusError == 2">
+                        <button (click)="cancelEdit()"
+                                mat-stroked-button>
+                            Huỷ
+                        </button>
+                        <button  @fadeInRight
+                                 *ngIf="(statusError)
+                                 && ('SFF_PROCESSING_FUNDING_APPROVE' | permission)"
+                                 (click)="saveResolveError()"
+                                 mat-flat-button
+                                 color="primary"
+                                 class="ml-5">
+                            Lưu
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ng-container>
+                <div class="p-5 flex flex-col overflow-y-auto"
+                     *ngIf="detail">
+                    <div class="py-5">
+                        <h3 class="font-semibold">Thông tin yêu cầu tiếp quỹ</h3>
+                        <div class="w-full flex gap-5 p-5 pb-2 border-b border-solid ">
+                            <article class="w-1/4 prose break-words">
+                                <p>Loại yêu cầu <br>
+                                    <b>{{ transType[detail.transType] }}</b>
+                                </p>
+                            </article>
+                            <article class="w-1/4 prose break-words">
+                                <p>Mã yêu cầu <br> <b>{{ detail.transCode }}</b></p>
+                            </article>
+                            <article class="w-1/4 prose break-words">
+                                <p>Số tiền tiếp quỹ (VNĐ) <br> <b>{{ detail.amount | currencyFormatPipe: 3 }}</b></p>
+                            </article>
+                            <article class="w-1/4 prose break-words">
+                                <p>Trạng thái<br> <b>{{ detail.statusName }}</b></p>
+                            </article>
+                        </div>
+                        <ng-container *ngIf="isCash; else electronTemplate">
+                            <div class="w-full flex gap-5 p-5 pb-2 border-b border-solid ">
+                                <article class="w-1/4 prose break-words">
+                                    <p>Tài khoản hưởng thụ <br>
+                                         <b>{{ detail.fullName }}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                    <p>Số tài khoản hưởng thụ <br>
+                                        <b>{{ detail.toAccNo }}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                    <p>Ngân hàng hưởng thụ<br>
+                                        <b>{{ detail.toBankName }}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                    <p>Chi nhánh<br>
+                                        <b>{{ detail.toBranchName }}</b>
+                                    </p>
+                                </article>
+                            </div>
+                            <div class="w-full flex gap-5 p-5 pb-2 border-b border-solid ">
+                                <article class="w-1/4 prose break-words">
+                                    <p>Tài khoản ví thụ hưởng<br>
+                                        <b>{{ detail.toWallet }}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                    <p>Nội dung chuyển khoản<br>
+                                        <b>{{ detail.transCode }}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                   <!-- <p>Trạng thái giao dịch<br>
+                                        <b>{{ detail.statusName }}</b>
+                                    </p>-->
+                                </article>
+                                <article class="w-1/4 prose break-words"></article>
+                            </div>
+                        </ng-container>
+                        <ng-template #electronTemplate>
+                            <div class="w-full flex gap-5 p-5 pb-2 border-b border-solid ">
+                                <article class="w-1/4 prose break-words">
+                                    <p>Tài khoản ví tiếp quỹ<br>
+                                        <b>{{ detail.fromWallet }}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                    <p>Tài khoản ví thụ hưởng<br>
+                                        <b>{{ detail.toWallet }}</b>
+                                    </p>
+                                </article>
+                                <div class="w-1/4 flex flex-col gap-4">
+                                    <mat-label>Bên thụ hưởng</mat-label>
+                                    <b>{{ detail.toAdmAccountName }}</b>
+                                </div>
+                                <article class="w-1/4 prose break-words"></article>
+                            </div>
+                        </ng-template>
+                        <div class="w-full flex gap-5 p-5 pb-2 border-b border-solid">
+                            <div class="w-1/4 flex flex-col gap-4">
+                                <mat-label>Ghi chú</mat-label>
+                                <b>{{ detail.note }}</b>
+                            </div>
+                        </div>
+                        <div class="w-full flex gap-5 p-5 pb-2 border-b border-solid">
+                            <article class="w-1/4 prose break-words">
+                                <p>Người lập<br>
+                                    <b>{{ detail.createdByName }}</b>
+                                </p>
+                            </article>
+                            <article class="w-1/4 prose break-words">
+                                <p>Ngày lập<br>
+                                    <b>{{ detail.createdDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                                </p>
+                            </article>
+                            <article class="w-1/4 prose break-words">
+                                <p>Người xử lý<br>
+                                    <b>{{ detail.approvalByName}}</b>
+                                </p>
+                            </article>
+                            <article class="w-1/4 prose break-words">
+                                <p>Ngày xử lý<br>
+                                    <b>{{ detail.approvalDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                                </p>
+                            </article>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="isCash">
+                        <div class="py-5">
+                            <h3 class="font-semibold">Thông tin giao dịch tại ngân hàng</h3>
+                            <div class="w-full flex gap-5 p-5 pb-2 border-b border-solid ">
+                                <article class="w-1/4 prose break-words">
+                                    <p>Số tiền chuyển khoản (VNĐ)<br><b>{{ detail?.topupMailTransferDTO?.amount | currencyFormatPipe: 3 }}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                    <p>Nội dung chuyển khoản<br> <b>{{ detail?.topupMailTransferDTO?.info }}</b></p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                    <p>Ngày giao dịch<br> <b>{{ detail?.topupMailTransferDTO?.transDate | datetimeformat: 'DD/MM/YYYY' }}</b>
+                                    </p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+<!--                                    <p>Trạng thái giao dịch<br> <b>{{ detail?.topupMailTransferDTO?.statusName }}</b></p>-->
+                                </article>
+                            </div>
+                        </div>
+                        <div class="py-5">
+                            <h3 class="font-semibold">Thông tin giao dịch tiền ví</h3>
+                            <div class="w-full flex gap-5 p-5">
+                                <article class="w-1/4 prose break-words">
+                                    <p>Tài khoản ví thụ hưởng<br><b>{{ detail.toWallet }}</b></p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                    <p>Số tiền nạp (VNĐ)<br> <b>{{ detail.amount | currencyFormatPipe: 3 }}</b></p>
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                </article>
+                                <article class="w-1/4 prose break-words">
+                                </article>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </div>
+            </ng-container>
+        </ng-container>
+    </mat-drawer-content>
+</mat-drawer-container>

@@ -1,0 +1,96 @@
+<div class="flex flex-col max-w-240 w-180 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">THÔNG TIN CHI TIẾT YÊU CẦU RÚT TIỀN</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="close()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <ng-container>
+        <div class="grid grid-cols-1 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Mã giao dịch: <br> <b>{{ data ? data.baseData.transCode : '' }}</b></p>
+            </article>
+        </div>
+        <div class="grid grid-cols-2 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Số tiền cần rút (VNĐ): <br> <b>{{ (data ? data.baseData.amount : 0) | currencyFormatPipe : 10 }}</b>
+                </p>
+            </article>
+            <article class="prose break-words">
+                <p>Phí rút tiền (VNĐ): <br>
+                    <b>{{ (data ? data.baseData.fee : 0) | currencyFormatPipe : 10 }}</b></p>
+            </article>
+        </div>
+        <div class="grid grid-cols-2 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Số tài khoản: <br> <b>{{ data ? data.baseData.accNo : '' }}</b></p>
+            </article>
+            <article class="prose break-words">
+                <p>Tên tài khoản thụ hưởng: <br> <b>{{ data ? data.baseData.accName : '' }}</b></p>
+            </article>
+        </div>
+        <div class="grid grid-cols-1 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Ngân hàng: <br> <b>{{ data ? data.baseData.bankName : '' }}</b></p>
+            </article>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Chi nhánh: <br> <b>{{ data ? data.baseData.branchName : '' }}</b></p>
+            </article>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Nội dung giao dịch: <br> <b>{{ data ? data.baseData.info : '' }}</b></p>
+            </article>
+        </div>
+        <div class="grid grid-cols-2 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Trạng thái: <br> <b>{{ data ? data.baseData.statusName : '' }}</b></p>
+            </article>
+            <article class="prose break-words">
+                <p>Ghi chú (Nội dung xử lý): <br> <b> {{ data ? data.baseData.approvalComment : '' }}</b></p>
+            </article>
+        </div>
+        <div class="grid grid-cols-2 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Người lập yêu cầu: <br> <b>{{ data ? data.baseData.createdByName : '' }}</b></p>
+            </article>
+            <article class="prose break-words">
+                <p>Ngày lập: <br>
+                    <b>{{ data?.baseData?.createdDate | datetimeformat: 'DD/MM/YYYY HH:mm:ss' }}</b></p>
+            </article>
+        </div>
+        <div *ngIf="data.baseData.status === 1 || data.baseData.status === 2" class="grid grid-cols-2 gap-5 p-3">
+            <article class="prose break-words">
+                <p>Người xử lý: <br> <b>{{ data?.baseData?.approvalByName}}</b></p>
+            </article>
+            <article class="prose break-words">
+                <p>Ngày xử lý: <br>
+                    <b>{{ data?.baseData?.approvalDate | datetimeformat: 'DD/MM/YYYY HH:mm:ss' }}</b></p>
+            </article>
+        </div>
+    </ng-container>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="-ml-2">
+        </div>
+        <div>
+            <a
+                (click)="close()"
+                class="ml-auto sm:ml-0"
+                mat-stroked-button
+                [matTooltip]="'Đóng'">
+                Đóng
+            </a>
+        </div>
+    </div>
+</div>

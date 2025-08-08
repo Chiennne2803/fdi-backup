@@ -1,0 +1,181 @@
+<div class="flex flex-col max-w-240 md:min-w-160 -m-6" style="max-height: 90vh">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium ">LẬP YÊU CẦU HOÀN TRẢ NHÀ ĐẦU TƯ</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="closeDialog()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto add-refund">
+        <fuse-card class="flex flex-col p-4 mb-4" style="overflow: unset">
+            <h4 class="capitalize pose mb-4 font-bold">thông tin thanh toán</h4>
+            <div class="grid grid-cols-3 gap-4" [formGroup]="formGroup">
+                <mat-form-field>
+                    <mat-label>Hồ sơ huy động vốn</mat-label>
+                    <mat-select
+                        formControlName="fsLoanProfilesId"
+                        (selectionChange)="onChangeSelect($event, 'loanProfile')"
+                    >
+                        <mat-option
+                            *ngFor="let loanProfile of (loanProfiles$ | async)"
+                            [value]="loanProfile.fsLoanProfilesId"
+                        >
+                            {{ loanProfile.fsLoanProfilesId }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('fsLoanProfilesId')">
+                        {{ message.form.errors.required }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Đợt giải ngân</mat-label>
+                    <input matInput type="text" class="hidden" formControlName="transCode">
+                    <mat-select
+                        (selectionChange)="onChangeSelect($event, 'cardDown')"
+                    >
+                        <mat-option
+                            *ngFor="let card of lstCardDowns"
+                            [value]="card"
+                        >
+                            {{ card.transCode }} {{ card.processDate | date: 'dd/MM/YY HH:mm:ss' }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('transCode')">
+                        {{ message.form.errors.required }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Chọn khoản đầu tư cần hoàn trả</mat-label>
+                    <input matInput type="text" class="hidden" formControlName="fsCardDownId">
+                    <mat-select
+                        multiple
+                        (selectionChange)="onChangeSelect($event, 'cardDownInvestor')"
+                    >
+                        <mat-option
+                            *ngFor="let card of lstCardDownsInvestor"
+                            [value]="card"
+                        >
+                            {{ card.admAccountIdInvestorName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('fsCardDownId')">
+                        {{ message.form.errors.required }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Nội dung</mat-label>
+                    <input type="text" maxlength="100" matInput formControlName="transComment">
+                </mat-form-field>
+
+                <article class="prose break-words">
+                    <p class="mb-2 mt-0 text-sm">Trạng thái:</p>
+                    <b>Soạn thảo</b>
+                </article>
+
+                <article class="prose break-words">
+                    <p class="mb-2 mt-0 text-sm">Nguời lập:</p>
+                    <b>{{ user.fullName }}</b>
+                </article>
+
+                <article class="prose break-words">
+                    <p class="mb-2 mt-0 text-sm">Ngày lập:</p>
+                    <b>{{ currentDate | date : 'dd/MM/YYYY, HH:mm:ss' }}</b>
+                </article>
+            </div>
+            <article class="prose mb-4 mt-4">
+                <h3 class="capitalize">Danh Sách Hoàn Trả Tiền Đầu Tư Cho Nhà Đầu Tư:</h3>
+            </article>
+            <ng-container *ngIf="(dataTable$ | async).length > 0 else noData">
+                <table
+                    mat-table
+                    class="overflow-x-auto"
+                    [dataSource]="dataTable$ | async"
+                >
+                    <ng-container matColumnDef="no">
+                        <th mat-header-cell *matHeaderCellDef> STT </th>
+                        <td mat-cell *matCellDef="let element = index"> {{element + 1}} </td>
+                        <td mat-footer-cell *matFooterCellDef class="font-bold"> Tổng </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdByName">
+                        <th mat-header-cell *matHeaderCellDef> Nhà đầu tư </th>
+                        <td mat-cell *matCellDef="let element"> {{element.createdByName}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amountCapital">
+                        <th mat-header-cell *matHeaderCellDef> Gốc phải trả(VNĐ) </th>
+                        <td mat-cell *matCellDef="let element"> {{element.amountCapital.toFixed(0) | currencyFormatPipe : 10}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="interest">
+                        <th mat-header-cell *matHeaderCellDef> Lãi phải trả(VNĐ) </th>
+                        <td mat-cell *matCellDef="let element"> {{element.interest.toFixed(0) | currencyFormatPipe : 10}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="perTax">
+                        <th mat-header-cell *matHeaderCellDef> Thuế TNCN(VNĐ) </th>
+                        <td mat-cell *matCellDef="let element"> {{element.perTax.toFixed(0) | currencyFormatPipe : 10}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fee">
+                        <th mat-header-cell *matHeaderCellDef> Phí đầu tư(VNĐ) </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fee.toFixed(0) | currencyFormatPipe : 10}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Tổng tiền cần trả </th>
+                        <td mat-cell *matCellDef="let element"> {{element.amount.toFixed(0) | currencyFormatPipe : 10}} </td>
+                        <td mat-footer-cell *matFooterCellDef>{{ getTotal() | currencyFormatPipe : 10 }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="createdDate">
+                        <th mat-header-cell *matHeaderCellDef> Ngày hoàn trả </th>
+                        <td mat-cell *matCellDef="let element"> {{element.exprieDate | date: 'dd/MM/YYYY'}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="displayedColumns" class="font-bold"></tr>
+                </table>
+            </ng-container>
+            <ng-template #noData>
+                <div class="p-4 sm:p-8 text-xl border-t tracking-tight text-center">
+                    <span>Không có dữ liệu</span>
+                </div>
+            </ng-template>
+        </fuse-card>
+    </div>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="flex items-center mt-4 sm:mt-0">
+            <!-- Discard -->
+            <button
+                mat-stroked-button
+                (click)="closeDialog()"
+            >
+                Đóng
+            </button>
+            <button
+                class="ml-2"
+                mat-flat-button
+                color="warn"
+                (click)="onSubmit()"
+            >
+                Lập yêu cầu
+            </button>
+        </div>
+    </div>
+</div>

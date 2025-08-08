@@ -1,0 +1,21 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer class="w-full md:w-12/12 dark:bg-gray-900"
+                [mode]="'side'"
+                [opened]="false"
+                [position]="'end'"
+                [disableClose]="true"
+                #matDrawer>
+        <detail-decentralization (handleCloseDetailPanel)="handleCloseDetailPanel($event)"></detail-decentralization>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <app-datatable [dataSource]="_dataSource"
+                       [tableConfig]="_tableConfig"
+                       [taskbarConfig]="_taskBarConfig"
+                       [tableConfigBtns]="_btnConfig"
+                       (checkboxItemChange)="checkboxItemChange($event)"
+                       (tableEvent)="handleTableEvent($event)"
+                       (rowClick)="handleRowClick($event)"
+                       (handleSearch)="handleSearch($event)"
+                       (pageSwitch)="handlePageSwitch($event)"></app-datatable>
+    </mat-drawer-content>
+</mat-drawer-container>

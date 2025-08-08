@@ -1,0 +1,60 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8">
+        <div class="text-2xl font-medium">Thay đổi Số điện thoại</div>
+        <button mat-icon-button>
+            <mat-icon class=""
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="discard()"
+            ></mat-icon>
+        </button>
+    </div>
+    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+        [formGroup]="changeMobile">
+        <mat-form-field
+            @fadeOutLeft
+            @slideInLeft
+            *ngIf="changeMobileStep == 0">
+            <mat-label>Số điện thoại cũ</mat-label>
+            <input id="mobile"
+                   readonly
+                matInput
+                formControlName="mobile">
+            <button mat-flat-button
+                    (click)="verifyContactInfo()"
+                    color="primary" >
+                <mat-icon svgIcon="feather:edit"
+                          class="mr-2"></mat-icon>
+                <span>Gửi OTP</span>
+            </button>
+        </mat-form-field>
+        <mat-form-field
+            @fadeOutLeft
+            @slideInLeft
+            *ngIf="changeMobileStep == 1">
+            <mat-label>Số điện thoại mới</mat-label>
+            <input id="newMobile"
+                   matInput
+                   inputMask
+                   maskType="number"
+                   maxlength="11"
+                   formControlName="mobile">
+            <button mat-flat-button
+                    (click)="changeContactInfo()"
+                    color="primary" >
+                <mat-icon svgIcon="feather:edit"
+                          class="mr-2"></mat-icon>
+                <span>Gửi OTP</span>
+            </button>
+            <mat-error *ngIf="changeMobile.get('mobile').touched && changeMobile.get('mobile').hasError('required')">
+                {{ 'QLNV013' | transloco }}
+            </mat-error>
+            <mat-error *ngIf="changeMobile.get('mobile').touched
+             && (changeMobile.get('mobile').hasError('minlength')
+              || changeMobile.get('mobile').hasError('maxlength')
+              || changeMobile.get('mobile').hasError('forbiddenPhoneNumber'))">
+                {{ 'QLNV014' | transloco }}
+            </mat-error>
+        </mat-form-field>
+
+    </form>
+</div>

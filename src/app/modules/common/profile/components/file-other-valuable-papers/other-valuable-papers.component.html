@@ -1,0 +1,39 @@
+<mat-drawer-container class="relative flex h-full min-w-0 md:w-full ">
+    <mat-drawer
+        class="w-full sm:w-100"
+        [mode]="'side'"
+        [opened]="false"
+        [position]="'end'"
+        #fileDrawer>
+        <file-detail
+            containerClass="relative"
+            backgroundClass="min-h-[250px]"
+            [fileDrawer]="fileDrawer"
+            [selectedFile]="selectedFile"
+            [replaceBtnV2]="true"
+            (handleReplaceFile)="onReplaceFile($event)"
+        ></file-detail>
+    </mat-drawer>
+
+    <mat-drawer-content class="flex-auto bg-gray-100">
+        <change-id-gpkd></change-id-gpkd>
+        <fuse-card class="flex flex-col p-4 m-2 max-h-full overflow-y-auto">
+            <div class="flex justify-end ">
+                <button mat-flat-button color="primary" (click)="clickUploadFile()">Tải lên</button>
+            </div>
+            <ng-container *ngIf="otherValuablePaperFiles else noData">
+                <div class="flex flex-wrap">
+                    <file-ui
+                        *ngFor="let file of otherValuablePaperFiles"
+                        [file]="file"
+                        (click)="onClickFile(file)"
+                    ></file-ui>
+                </div>
+            </ng-container>
+            <ng-template #noData>
+                <h4 class="uppercase text-center text-2xl">Không có dữ liệu</h4>
+            </ng-template>
+
+        </fuse-card>
+    </mat-drawer-content>
+</mat-drawer-container>

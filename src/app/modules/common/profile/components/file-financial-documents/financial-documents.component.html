@@ -1,0 +1,40 @@
+<mat-drawer-container class="relative flex h-full min-w-0 md:w-full">
+    <mat-drawer
+        class="w-full sm:w-100"
+        [mode]="'side'"
+        [opened]="false"
+        [position]="'end'"
+        #fileDrawer>
+        <file-detail
+            containerClass="relative"
+            backgroundClass="min-h-[250px]"
+            [fileDrawer]="fileDrawer"
+            [selectedFile]="selectedFile"
+            [replaceBtnV2]="true"
+            (handleReplaceFile)="onReplaceFile($event)"
+        ></file-detail>
+    </mat-drawer>
+
+    <mat-drawer-content class="flex-auto ">
+        <change-id-gpkd></change-id-gpkd>
+        <fuse-card class="flex flex-col p-6 m-5 max-h-full my-5" *ngFor="let c of lstConfig ">
+            <div class="flex justify-between">
+                <div class="text-1xl font-semibold leading-tight">
+                    {{c.title}}
+                </div>
+                <div class="flex justify-end ">
+                    <button mat-flat-button color="primary" (click)="clickUploadFinancialDocuments(c.config, c.key)">Tải lên</button>
+                </div>
+            </div>
+            <ng-container >
+                <div class="flex flex-wrap">
+                    <file-ui
+                        *ngFor="let file of c.lstFile"
+                        [file]="file"
+                        (click)="viewDetailFile(file, c.key)"
+                    ></file-ui>
+                </div>
+            </ng-container>
+        </fuse-card>
+    </mat-drawer-content>
+</mat-drawer-container>

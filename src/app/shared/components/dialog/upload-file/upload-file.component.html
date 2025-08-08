@@ -1,0 +1,45 @@
+<div class="flex flex-col max-w-240 md:min-w-160 sm:min-w-120 -m-6 h-full overflow-hidden" style="max-height: 90vh">
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">{{ data?.title }}</div>
+        <button mat-icon-button>
+            <mat-icon
+                mat-dialog-close
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"
+            ></mat-icon>
+        </button>
+    </div>
+    <div class="flex flex-col flex-auto overflow-y-auto">
+        <div
+            *ngFor="let config of data.config"
+            class="flex w-full px-8 mt-5">
+            <!-- File -->
+            <app-dropzone
+                class="w-full"
+                [multiple]="config.multiple ?? true"
+                [maxFile]="config.maxFile"
+                [topTitle]="config.topTitle"
+                previewClass="max-w-fit w-full"
+                title="{{ config.type && config.type === 'file' ? 'Tải file lên' : 'Tải ảnh lên' }}"
+                [formGroup]="this.data.formGroup"
+                [styleClass]="config.styleInput ? config.styleInput : 'h-12 mt-[3px]'"
+                [field]="config.field"
+                [accept]="config.accept"
+                [maxFileSize]="config.maxFileSize"
+            ></app-dropzone>
+        </div>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-center mt-5 sm:mb-6 pr-8 sm:pr-8">
+        <button class="ml-auto sm:ml-0"
+                mat-stroked-button
+                (click)="cancel()">
+            Đóng
+        </button>
+        <button class="ml-2"
+                mat-flat-button
+                (click)="save()"
+                color="primary">
+            Lưu
+        </button>
+    </div>
+</div>

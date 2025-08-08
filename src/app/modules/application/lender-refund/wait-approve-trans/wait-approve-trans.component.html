@@ -1,0 +1,27 @@
+<mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer
+        class="w-full md:w-12/12 dark:bg-gray-900"
+        [mode]="'side'"
+        [opened]="false"
+        [position]="'end'"
+        [disableClose]="true"
+        #matDrawer>
+        <app-detail-right-side
+            [isConfirmScreen]="true"
+            (handleCloseDetailPanel)="handleCloseDetailPanel()"
+        ></app-detail-right-side>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <app-datatable
+            [tableConfig]="_tableConfig"
+            [taskbarConfig]="_taskbarConfig"
+            [tableConfigBtns]="_tableBtnConfig"
+            [dataSource]="dataSource$"
+            (rowClick)="handleRowClick($event)"
+            (pageSwitch)="handlePageSwitch($event)"
+            (tableEvent)="handleTableEvent($event)"
+            (handleSearch)="handleSearch($event)"
+        ></app-datatable>
+    </mat-drawer-content>
+</mat-drawer-container>

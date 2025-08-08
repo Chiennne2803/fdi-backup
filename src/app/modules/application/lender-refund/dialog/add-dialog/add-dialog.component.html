@@ -1,0 +1,148 @@
+<!--
+<div class="flex flex-col max-w-240 md:min-w-160 -m-6" style="max-height: 90vh">
+    &lt;!&ndash; Header &ndash;&gt;
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Lập yêu cầu thanh toán khoản huy động</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="closeDialog()"></mat-icon>
+        </button>
+    </div>
+
+    &lt;!&ndash; Content &ndash;&gt;
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto">
+        <fuse-card class="flex flex-col mb-5 p-5" style="overflow: unset">
+            <h4 class="capitalize pose mb-4 font-bold">thông tin hồ sơ</h4>
+            <div class="grid grid-cols-2 gap-4" [formGroup]="formGroup">
+                <mat-form-field>
+                    <mat-label>Số hồ sơ huy động</mat-label>
+                    <mat-select formControlName="fsLoanProfilesId" (selectionChange)="onChangeSelect($event, 'loanProfile')">
+                        <mat-option
+                            *ngFor="let loanProfile of (loanProfileSelection$ | async)"
+                            [value]="loanProfile.fsLoanProfilesId"
+                        >
+                            {{ loanProfile.fsLoanProfilesId }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('fsLoanProfilesId')">
+                        {{ message.form.errors.required }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Đợt giải ngân</mat-label>
+                    <mat-select
+                        formControlName="transCode"
+                        (selectionChange)="onChangeSelect($event, 'cardDown')"
+                    >
+                        <mat-option
+                            *ngFor="let card of lstCardDowns"
+                            [value]="card.fsCardDownId"
+                        >
+                            {{ card.transCode }} {{ card.processDate | date: 'dd/MM/YY HH:mm:ss' }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('transCode')">
+                        {{ message.form.errors.required }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Kỳ thanh toán</mat-label>
+                    <mat-select
+                        formControlName="periodName"
+                        (selectionChange)="onChangeSelect($event, 'transpayPeriod')"
+                    >
+                        <mat-option
+                            *ngFor="let transpayPeriod of lstTranspayPeriod"
+                            [value]="transpayPeriod.fsTranspayPeriodId"
+                        >
+                            {{ transpayPeriod.periodName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('periodName')">
+                        {{ message.form.errors.required }}
+                    </mat-error>
+                </mat-form-field>
+                <article class="prose break-words">
+                    <p>Số tiền phải thanh toán(VNĐ):<br> <b>{{ transpayPeriodDetail?.amount || 0 | currencyFormatPipe: 10 }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Số tiền đã thanh toán(VNĐ):<br> <b>{{ transpayPeriodDetail?.paidAmount || 0 | currencyFormatPipe: 10 }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Số tiền thanh toán(VNĐ):<br> <b>{{ transpayPeriodDetail?.amount | currencyFormatPipe: 10 }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Ngày phải hoàn trả: <br> <b>{{ transpayPeriodDetail?.expirDate | date : 'dd/MM/YYYY, HH:mm:ss' }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Tiền phạt(VNĐ):<br> <b>{{ transpayPeriodDetail?.expireRate | currencyFormatPipe: 10 }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Mã giao dịch: <br> <b>{{ transpayPeriodDetail?.transCode }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Tổng tiền thanh toán(VNĐ):<br> <b>{{ transpayPeriodDetail?.amount + transpayPeriodDetail?.expireRate | currencyFormatPipe: 10 }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Người lập: <br> <b *ngIf="!isEmptyDetail()">{{ user.fullName }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Ngày lập: <br>
+                        <b *ngIf="!isEmptyDetail()">{{ currentDate | date : 'dd/MM/YYYY, HH:mm:ss' }}</b>
+                    </p>
+                </article>
+                <article class="prose break-words">
+                    <p>Tên tài khoản ngân hàng thụ hưởng:<br> <b>{{ transpayPeriodDetail?.accName }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Tên ngân hàng thụ hưởng:<br> <b>{{ transpayPeriodDetail?.bankName }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Chi nhánh:<br> <b>{{ transpayPeriodDetail?.branchName }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Số tài khoản thụ hưởng:<br> <b>{{ transpayPeriodDetail?.accNo }}</b></p>
+                </article>
+            </div>
+        </fuse-card>
+        <fuse-card class="flex flex-col p-5" style="overflow: unset">
+            <article class="prose mb-4">
+                <p>Nội dung thanh toán khoản huy động</p>
+            </article>
+            <article class="prose mb-4">
+                <b>{{ transpayPeriodDetail?.transCode }}</b>
+            </article>
+            <article class="prose break-words">
+                <p class="mb-0">Chú ý:</p>
+                <ul class="list-disc mt-0">
+                    <li>Chuyển khoản đúng nội dung giao dịch để tránh phát sinh lỗi nạp tiền đầu tư</li>
+                    <li>Chuyển 24/7 nếu khác ngân hàng</li>
+                </ul>
+            </article>
+        </fuse-card>
+    </div>
+
+    &lt;!&ndash; Action &ndash;&gt;
+    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="flex items-center mt-4 sm:mt-0">
+            <button
+                mat-stroked-button
+                (click)="closeDialog()"
+            >
+                Đóng
+            </button>
+            <button
+                mat-flat-button
+                color="warn"
+                class="ml-2"
+                (click)="onSubmit()"
+            >
+                Lập yêu cầu
+            </button>
+        </div>
+    </div>
+</div>
+-->

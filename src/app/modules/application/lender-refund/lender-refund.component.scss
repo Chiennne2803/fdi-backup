@@ -1,0 +1,10 @@
+::ng-deep .custom-table {
+    justify-content: flex-end;
+    .mat-table {
+        overflow: auto;
+        display: grid;
+        @media only screen and (min-width: 1441px) {
+            display: inline-table;
+        }
+    }
+}

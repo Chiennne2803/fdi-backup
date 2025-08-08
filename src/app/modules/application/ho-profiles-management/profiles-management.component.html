@@ -1,0 +1,60 @@
+<!-- <mat-drawer-container
+    class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer
+        class="w-60"
+        [mode]="drawerMode"
+        [opened]="true"
+        [opened]="drawerOpened"
+        [position]="'start'"
+        [disableClose]="true"
+        #sidebarDrawer>
+        <fuse-vertical-navigation
+            [navigation]="menuData"
+            [inner]="true"
+            [mode]="'side'"
+            [name]="'sidebar-navigation'"
+            (click)="onClick($event)"
+            [opened]="true"></fuse-vertical-navigation>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container> -->
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <mat-drawer-container class="flex-auto h-full">
+
+        <!-- Drawer -->
+        <mat-drawer
+            class="flex w-60 min-w-60"
+            [autoFocus]="false"
+            [position]="'start'"
+            [disableClose]="true"   
+            [mode]="drawerMode"
+            [opened]="drawerOpened"
+            #sidebarDrawer>
+            <fuse-vertical-navigation
+                [navigation]="menuData"
+                [inner]="true"
+                [mode]="'side'"
+                [name]="'docs-core-features-navigation'"
+                [opened]="true"></fuse-vertical-navigation>
+        </mat-drawer>
+
+        <!-- Drawer content -->
+        <mat-drawer-content
+            class="flex flex-col"
+            fuseScrollReset>
+
+            <!-- Main -->
+            <div class="flex-auto">
+                <router-outlet></router-outlet>
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>
+
+

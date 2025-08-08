@@ -1,0 +1,421 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer-content class="flex flex-col">
+        <div class="flex flex-col w-full p-5">
+            <ng-container>
+                <div class="relative w-full px-5">
+                    <div class="flex items-center justify-between w-full mx-auto py-2">
+                        <article class="prose break-words">
+                            <h3 class="uppercase">
+                                Chi tiết giao dịch hoàn trả tiền cho nhà đầu tư
+                            </h3>
+                        </article>
+                        <div class="flex items-center justify-end">
+                            <button
+                                (click)="onClickClose()"
+                                mat-stroked-button
+                                matTooltip="Đóng"
+                            >
+                                Đóng
+                            </button>
+                            <ng-container>
+                                <button
+                                    *ngIf="!isCreate && fsTranspayInvestorDTO?.status == 2 && ( 'SFF_TRANSPAY_INVESTOR_TRANSACTION_UPDATE' | permission)"
+                                    class="ml-2"
+                                    mat-flat-button
+                                    color="warn"
+                                    matTooltip="Xử lý"
+                                    (click)="onClickProcess()"
+                                >
+                                    Xử lý
+                                </button>
+                            </ng-container>
+                            <ng-container>
+                                <button
+                                    class="ml-2"
+                                    *ngIf="!isCreate && fsTranspayInvestorDTO?.status == 1 && ( 'SFF_TRANSPAY_INVESTOR_TRANSACTION_UPDATE' | permission)"
+                                    mat-flat-button
+                                    color="warn"
+                                    matTooltip="Trình ký"
+                                    (click)="doSign()"
+                                >
+                                    Trình ký
+                                </button>
+                            </ng-container>
+                            <ng-container>
+                                <button class="order-first sm:order-last ml-2"
+                                        mat-flat-button
+                                        *ngIf="isCreate"
+                                        [color]="'primary'"
+                                        (click)="onClickSave()">
+                                    Lập yêu cầu
+                                </button>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="isCreate">
+                    <form [formGroup]="formGroup">
+                        <div class="grid grid-cols-4 gap-4 bg-gray-50 h-full p-5 "
+                             style="min-height: 720px !important;">
+                            <fuse-card class="h-full col-span-2 overflow-y-auto" cdkScrollable>
+                                <div class="w-screen p-5">
+                                    <div class="font-bold text-lg pb-5 ">Thông tin hồ sơ thanh toán</div>
+                                    <div class="grid grid-cols-2 w-full gap-3">
+                                        <mat-form-field>
+                                            <mat-label>Hồ sơ huy động vốn</mat-label>
+                                            <mat-select formControlName="fsLoanProfilesId" fi
+                                                        (selectionChange)="onChangeSelect($event, 'loanProfile')">
+                                                <input
+                                                    class="input-search-mat-select"
+                                                    (keydown)="$event.stopPropagation(); onKey($event.target)"
+                                                    #mySearch
+                                                >
+                                                {{ mySearch?.focus() }}
+                                                <mat-option *ngIf="lstLoanProfileFilter?.length === 0">Không có dữ liệu</mat-option>
+                                                <mat-option
+                                                    *ngFor="let loanProfile of lstLoanProfileFilter"
+                                                    [value]="loanProfile.fsLoanProfilesId"
+                                                >
+                                                    {{ loanProfile.fsLoanProfilesId }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="formGroup.get('fsLoanProfilesId').hasError('required')">
+                                                {{ 'XLGD001' | transloco }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field>
+                                            <mat-label>Đợt giải ngân</mat-label>
+                                            <mat-select formControlName="fsCardDownId"
+                                                        (selectionChange)="onChangeSelect($event, 'cardDown')">
+                                                <mat-option
+                                                    *ngFor="let card of lstCardDowns"
+                                                    [value]="card.fsCardDownId"
+                                                >
+                                                    {{ card.transCode }}
+                                                </mat-option>
+                                                <mat-error *ngIf="formGroup.get('fsCardDownId').hasError('required')">
+                                                    {{ 'XLGD003' | transloco }}
+                                                </mat-error>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field>
+                                            <mat-label>Mã yêu cầu hoàn trả</mat-label>
+                                            <mat-select formControlName="fsTranspayReqId"
+                                                        (selectionChange)="onChangeSelect($event, 'transpayReq')">
+                                                <mat-option
+                                                    *ngFor="let transpayReq of lstTranspayReq"
+                                                    [value]="transpayReq.fsTranspayReqId"
+                                                >
+                                                    {{ transpayReq.transCode }}
+                                                </mat-option>
+                                                <mat-error
+                                                    *ngIf="formGroup.get('fsTranspayReqId').hasError('required')">
+                                                    {{ 'XLGD003' | transloco }}
+                                                </mat-error>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field>
+                                            <mat-label>Hình thức hoàn trả khách hàng</mat-label>
+                                            <mat-select formControlName="payType"
+                                                        (selectionChange)="onChangeSelect($event, 'payType')"
+                                            >
+                                                <mat-option *ngFor="let item of payTypes"
+                                                            [value]="item.id">{{ item.label }}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="formGroup.get('payType').hasError('required')">
+                                                {{ 'XLGD030' | transloco }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field class="col-span-2">
+                                            <mat-label>Nội dung</mat-label>
+                                            <textarea id="info"
+                                                      matInput
+                                                      trim="blur"
+                                                      maxlength="150"
+                                                      formControlName="info"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="grid grid-cols-4 w-full gap-3 pb-5">
+                                        <article class="prose break-words">
+                                            <p>Gốc còn lại phải trả(VNĐ):
+                                                <br><b>{{formGroup.get('transpayReqPrincipal').value | currencyFormatPipe: 10 }}</b>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Lãi còn lại phải trả(VNĐ):
+                                                <br><b>{{formGroup.get('transpayReqInterest').value | currencyFormatPipe: 10 }}</b>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Gốc hoàn trả(VNĐ):    
+                                                <br><b>{{formGroup.get('amount').value | currencyFormatPipe: 10 }}</b>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Lãi hoàn trả(VNĐ):
+                                                <br><b>{{formGroup.get('interest').value | currencyFormatPipe: 10 }}</b>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Ngày lập <br><b>{{formGroup.get('createdDate').value }}</b>
+                                        </article>
+                                        <article class="prose break-words">
+                                            <p>Người lập <br><b>{{formGroup.get('createdByName').value}}</b>
+                                        </article>
+                                    </div>
+                                    <div class="grid grid-cols-1 pb-5">
+                                        <div class="font-bold text-lg pb-5">Danh sách hoàn trả tiền đầu tư cho khách hàng</div>
+                                        <div class="grid grid-cols-1 ">
+                                            <mat-table [dataSource]="lstTranspayInvestorDetail.controls" class="w-full grid overflow-auto">
+
+                                                <ng-container matColumnDef="admAccountIdInvestorName">
+                                                    <mat-header-cell *matHeaderCellDef> Khách hàng </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> {{element.get('admAccountIdInvestorName').value}} </mat-cell>
+                                                </ng-container>
+
+                                                <!-- amount Column -->
+                                                <ng-container matColumnDef="amount">
+                                                    <mat-header-cell *matHeaderCellDef> Gốc phải trả </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element;" [formGroup]="element">
+                                                        <mat-form-field appearance="standard" class=" min-w-50 mx-0 ">
+                                                            <input id="amount"
+                                                                   [placeholder]="'0'"
+                                                                   currencyMask autocomplete="off"
+                                                                   [maxlength]="15"
+                                                                   class="text-left"
+                                                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                                                   matInput
+                                                                   (blur)="onChangeSelect($event, 'payType')"
+                                                                   formControlName="amount">
+                                                        </mat-form-field>
+                                                    </mat-cell>
+                                                </ng-container>
+                                                <!-- interest Column -->
+                                                <ng-container matColumnDef="interest">
+                                                    <mat-header-cell *matHeaderCellDef> Lãi phải trả </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element;" [formGroup]="element">
+                                                        <mat-form-field appearance="standard" class=" min-w-50 mx-0 ">
+                                                            <input id="interest"
+                                                                   [placeholder]="'0'"
+                                                                   currencyMask autocomplete="off"
+                                                                   [maxlength]="15"
+                                                                   class="text-left"
+                                                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                                                   matInput
+                                                                   (blur)="onChangeSelect($event, 'payType')"
+                                                                   formControlName="interest">
+                                                        </mat-form-field>
+                                                    </mat-cell>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="total">
+                                                    <mat-header-cell *matHeaderCellDef> Tổng tiền hoàn trả </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> {{(element.get('amount').value + element.get('interest').value)  | currencyFormatPipe: 10 }} </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="perTax">
+                                                    <mat-header-cell *matHeaderCellDef> Thuế TNCN</mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> {{element.get('perTax').value  | currencyFormatPipe: 10 }} </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="fee">
+                                                    <mat-header-cell *matHeaderCellDef> Phí đầu tư thành công </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> {{element.get('fee').value  | currencyFormatPipe: 10 }} </mat-cell>
+                                                </ng-container>
+                                                <ng-container matColumnDef="createdDate">
+                                                    <mat-header-cell *matHeaderCellDef> Ngày hoàn trả </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> {{element.get('createdDate').value | datetimeformat: 'DD/MM/YYYY' }} </mat-cell>
+                                                </ng-container>
+
+                                                <mat-header-row *matHeaderRowDef="['admAccountIdInvestorName', 'amount', 'interest', 'total', 'perTax', 'fee', 'createdDate']"></mat-header-row>
+                                                <mat-row *matRowDef="let row; columns: ['admAccountIdInvestorName', 'amount', 'interest', 'total', 'perTax', 'fee', 'createdDate'];"></mat-row>
+                                            </mat-table>
+                                            <div class="grid grid-cols-2 pt-5">
+                                            </div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fuse-card>
+                            <fuse-card class=" h-full col-span-2 overflow-y-auto" cdkScrollable>
+                                <div class="grid grid-cols-1 w-full gap-4 p-5 max-h-15">
+                                    <div class="font-bold text-lg pb-5 ">Danh sách khách hàng</div>
+
+                                    <div class="grid grid-cols-1 p-5 pt-0 ">
+                                        <table mat-table [dataSource]="dataSource" class="w-full">
+                                            <ng-container matColumnDef="fullName">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <div class="cell-overflow table-header">
+                                                        Khách hàng
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <div class="cell-overflow">
+                                                        {{ element.fullName }}
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="amount">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <div class="cell-overflow table-header">
+                                                        Số tiền đầu tư
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <div class="cell-overflow">
+                                                        {{ element.amount | currencyFormatPipe: 10 }}
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="interestAtimate">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <div class="cell-overflow table-header">
+                                                        Lãi dự kiến
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <div class="cell-overflow">
+                                                        {{ element.interestAtimate | currencyFormatPipe: 10 }}
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="investorTimeStart">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <div class="cell-overflow table-header">
+                                                        Ngày đầu tư
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <div class="cell-overflow">
+                                                        {{ element.investorTimeStart  | datetimeformat : 'DD/MM/YYYY'  }}
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="investorTimeExpried">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <div class="cell-overflow table-header">
+                                                        Ngày hoàn trả
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <div class="cell-overflow">
+                                                        {{ element.investorTimeExpried | datetimeformat : 'DD/MM/YYYY' }}
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row
+                                                *matHeaderRowDef="['fullName', 'amount', 'interestAtimate', 'investorTimeStart', 'investorTimeExpried']"></tr>
+                                            <tr mat-row
+                                                *matRowDef="let row; columns: ['fullName','amount','interestAtimate','investorTimeStart','investorTimeExpried'];"
+                                                class="hover:bg-accent-50 hover:cursor-pointer"></tr>
+                                        </table>
+                                        <mat-paginator #paginator
+                                                       [pageSizeOptions]="pageSizeOptions"
+                                                       [length]="lengthRecords"
+                                                       [pageSize]="pageSize"
+                                                       [showFirstLastButtons]="true">
+                                        </mat-paginator>
+                                    </div>
+                                    <div class="grid grid-cols-1 p-5"></div>
+                                </div>
+                            </fuse-card>
+                        </div>
+                    </form>
+                </ng-container>
+                <ng-container *ngIf="!isCreate && fsTranspayInvestorDTO">
+                    <div class="grid grid-cols-4 gap-5 p-5 ">
+                        <article class="prose break-words">
+                            <p>Mã yêu cầu <br> <b>{{ fsTranspayInvestorDTO.transCode }}</b>
+                            </p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Hồ sơ huy động vốn <br>
+                                <b>{{ fsTranspayInvestorDTO.fsLoanProfilesId }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Đợt giải ngân <br> <b>{{ fsTranspayInvestorDTO.fsCardDownCode }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Yêu cầu hoàn trả khoản vay <br> <b>{{ fsTranspayInvestorDTO.fsTranspayReqCode }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Hình thức hoàn trả NĐT <br> <b>{{ fsTranspayInvestorDTO.payType == 1 ? 'Tự động phân bổ' : 'Nhân viên phân bổ' }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Nội dung <br> <b>{{ fsTranspayInvestorDTO.info }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Ngày lập <br> <b>{{ fsTranspayInvestorDTO.createdDate | datetimeformat: 'DD/MM/YYYY'  }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Người lập <br> <b>{{ fsTranspayInvestorDTO.createdByName }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Gốc đã thanh toán (VNĐ)<br> <b>{{ fsTranspayInvestorDTO.transpayReqPrincipal | currencyFormatPipe : 10}}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Lãi đã thanh toán (VNĐ)<br> <b>{{ fsTranspayInvestorDTO.transpayReqInterest | currencyFormatPipe : 10}}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Gốc hoàn trả NĐT (VNĐ)<br> <b>{{ fsTranspayInvestorDTO.amount | currencyFormatPipe : 10}}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Lãi hoàn trả NĐT (VNĐ)<br> <b>{{ fsTranspayInvestorDTO.interest | currencyFormatPipe : 10}}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Người xử lý <br> <b>{{ fsTranspayInvestorDTO.approvalByName }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Ngày xử lý <br> <b>{{ fsTranspayInvestorDTO.approvalDate | datetimeformat: 'DD/MM/YYYY'  }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Trạng thái <br> <b>{{ fsTranspayInvestorDTO.statusName }}</b></p>
+                        </article>
+                    </div>
+                    <div class="grid grid-cols-1 pb-5">
+                        <div class="font-bold text-lg pb-5">Danh sách hoàn trả tiền đầu tư cho nhà đầu tư
+                        </div>
+                        <div class="grid grid-cols-1 ">
+                            <mat-table [dataSource]="lstTranspayInvestorDetail.controls" class="w-full">
+
+                                <ng-container matColumnDef="admAccountIdInvestorName">
+                                    <mat-header-cell *matHeaderCellDef> Nhà đầu tư </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.get('admAccountIdInvestorName').value}} </mat-cell>
+                                </ng-container>
+
+                                <!-- amount Column -->
+                                <ng-container matColumnDef="amount">
+                                    <mat-header-cell *matHeaderCellDef> Gốc phải trả (VNĐ)</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.get('amount').value | currencyFormatPipe: 10 }} </mat-cell>
+                                </ng-container>
+                                <!-- interest Column -->
+                                <ng-container matColumnDef="interest">
+                                    <mat-header-cell *matHeaderCellDef> Lãi phải trả (VNĐ)</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.get('interest').value | currencyFormatPipe: 10 }} </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="total">
+                                    <mat-header-cell *matHeaderCellDef> Tổng tiền hoàn trả </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{(element.get('amount').value + element.get('interest').value)  | currencyFormatPipe: 10 }} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="perTax">
+                                    <mat-header-cell *matHeaderCellDef> Thuế TNCN (VNĐ)</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.get('perTax').value  | currencyFormatPipe: 10 }} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="fee">
+                                    <mat-header-cell *matHeaderCellDef> Phí đầu tư (VNĐ)</mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.get('fee').value  | currencyFormatPipe: 10 }} </mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="createdDate">
+                                    <mat-header-cell *matHeaderCellDef> Ngày hoàn trả </mat-header-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.get('createdDate').value | datetimeformat: 'DD/MM/YYYY' }} </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="['admAccountIdInvestorName', 'amount', 'interest', 'total', 'perTax', 'fee', 'createdDate']"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: ['admAccountIdInvestorName', 'amount', 'interest', 'total', 'perTax', 'fee', 'createdDate'];"></mat-row>
+                            </mat-table>
+                            <div class="grid grid-cols-2 pt-5">
+                            </div>
+                            <div></div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

@@ -1,0 +1,233 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <!-- CONTENT GOES HERE -->
+        <div class="border-2 border-d border-gray-300 rounded-2xl">
+            <div class="prose prose-sm min-w-full">
+                <h2 class="mt-5 text-center">Tạo hồ sơ huy động</h2>
+            </div>
+
+            <form class="flex flex-col mt-4 px-8 pt-5 bg-card shadow rounded overflow-hidden"  [formGroup]="loanProfileForm">
+                <div class="grid grid-cols-3 gap-3">
+
+                    <mat-form-field class="flex-auto gt-xs:pr-3 mx-8">
+                        <mat-label>Hình thức huy động vốn</mat-label>
+                        <mat-select [placeholder]="'Hình thức huy động vốn'"
+                                    id="raisingCapital"
+                                    formControlName="raisingCapital"
+                                    ngForm
+                                    (selectionChange)="getLstRank()"
+                        >
+                            <mat-option [value]="1">Có bảo đảm</mat-option>
+                            <mat-option [value]="2">Tín chấp</mat-option>
+                        </mat-select>
+                        <mat-error
+                            *ngIf="loanProfileForm.get('raisingCapital').hasError('required')">
+                            {{ 'THSV001' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto gt-xs:pr-3 mx-8">
+                        <mat-label>Mục đích</mat-label>
+                        <mat-select
+                            [placeholder]="'Mục đích'"
+                            id="reasons"
+                            formControlName="reasons"
+                        >
+                            <mat-option [value]="lstReason.admCategoriesId"
+                                        *ngFor="let lstReason of _lstReasons | async">{{lstReason.categoriesName}}</mat-option>
+                        </mat-select>
+                        <mat-error
+                            *ngIf="loanProfileForm.get('reasons').hasError('required')">
+                            {{ 'THSV018' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="flex-auto ">
+                        <p>Số tiền thực nhận sau phí (VNĐ)<br>
+                            <b class="mt-5 text-5xl font-semibold tracking-tight">{{ loanProfileForm.get('feePlus').value | currencyFormatPipe: 3 }}</b></p>
+                    </div>
+
+                    <mat-form-field class="flex-auto gt-xs:pr-3 mx-8">
+                        <mat-label>Hình thức bảo đảm</mat-label>
+                        <mat-select [placeholder]="'Hình thức bảo đảm'"
+                                    id="collateralType"
+                                    formControlName="collateralType"
+                                    ngForm
+                        >
+                            <mat-option [value]="lstCollateral.admCategoriesId"
+                                        *ngFor="let lstCollateral of _lstCollateralType | async">{{lstCollateral.categoriesName}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="loanProfileForm.get('collateralType').hasError('required')">
+                            {{ 'THSV016' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto gt-xs:pr-3 mx-8">
+                        <mat-label>Kỳ hạn(ngày) </mat-label>
+                        <mat-select [placeholder]="'Kỳ hạn(ngày)'"
+                                    id="fsConfRateId"
+                                    formControlName="fsConfRateId"
+                                    (selectionChange)="getLstRank()"
+                        >
+                            <mat-option [value]="confRate.fsConfRateId"
+                                        *ngFor="let confRate of _confRates | async">{{confRate.tenor}}</mat-option>
+                        </mat-select>
+                        <mat-error
+                            *ngIf="loanProfileForm.get('fsConfRateId').hasError('required')">
+                            {{ 'THSV011' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="flex-auto ">
+                        <p>Tiền lãi (VNĐ)<br>
+                            <b class="mt-5 text-5xl font-semibold tracking-tight">{{ loanProfileForm.get('interest').value | currencyFormatPipe: 3 }}</b></p>
+                    </div>
+
+                    <mat-form-field class="flex-auto gt-xs:pr-3 mx-8">
+                        <mat-label>Lãi suất(%/năm)</mat-label>
+                        <mat-select
+                            [placeholder]="'Tỷ lệ lãi suất'"
+                            id="rate"
+                            (ngModelChange)="getAmountData('rate')"
+                            formControlName="rate">
+                            <mat-option [value]="rate.value"
+                                        *ngFor="let rate of _lstRates | async">{{rate.value}}</mat-option>
+                        </mat-select>
+                        <span class="ml-2" matSuffix>%/năm</span>
+                        <mat-error *ngIf="loanProfileForm.get('rate').hasError('required')">
+                            {{ 'THSV013' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto mx-8">
+                        <mat-label>Số tiền cần huy động</mat-label>
+                        <input
+                            matInput
+                            currencyMask autocomplete="off"
+                            class="text-left"
+                            [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                            formControlName="amount"
+                            (ngModelChange)="getAmountData('amount')"
+                            [maxLength]="15"
+                            [placeholder]="'Số tiền cần huy động'">
+                        <span class="ml-2" matSuffix>VND</span>
+                        <mat-error
+                            *ngIf="loanProfileForm.get('amount').hasError('required')">
+                            {{ 'THSV003' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="loanProfileForm.get('amount').hasError('min')">
+                            {{ 'THSV005' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="loanProfileForm.get('amount').hasError('maxlength')">
+                            {{ 'THSV006' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="flex-auto ">
+                        <p>Tổng số tiền cần hoàn trả (VNĐ)<br>
+                            <b class="mt-5 text-5xl font-semibold tracking-tight">{{ loanProfileForm.get('totalAmount').value | currencyFormatPipe: 3 }}</b></p>
+                    </div>
+
+
+                    <app-date-picker
+                        class="mx-8"
+                        [minDate]="{'days': 0}"
+                        styleFormFieldClass="col-span-1 "
+                        label="Thời điểm dự kiến huy động"
+                        formControlName="expectedTime"
+                        fomatMsg="THSV043"
+                        minMsg="THSV023"
+                    ></app-date-picker>
+
+                    <mat-form-field
+                        class="fuse-mat-textarea row-span-2 mx-8">
+                        <mat-label>Chi tiết</mat-label>
+                        <textarea
+                            style="min-height: 130px !important;"
+                            styleClass="min-h-160"
+                            matInput
+                            formControlName="info"
+                            maxlength="500"
+                            id="info"
+                            [placeholder]="'Chi tiết *'"></textarea>
+                        <mat-error
+                            *ngIf="loanProfileForm.get('info').hasError('required')">
+                            {{ 'THSV021' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="flex-auto my-8 ">
+                        <mat-checkbox formControlName="isTrusted" [color]="'primary'">
+                            <div [class]="submitted && loanProfileForm.get('isTrusted').hasError('required') ? 'text-red-700' : ''">
+                                Bằng việc xin vay vốn, bạn đã đồng ý với <a class="text-primary underline"
+                                                                                    href="javascript:void(0)"
+                                                                                    (click)="download('downloadCapitalFinancingContract')">Hợp
+                                đồng tài trợ vốn .</a>
+                                Để được hỗ trợ, vui lòng liên hệ đường dây nóng <a
+                                class="text-primary underline" href="tel:19003185">1900 3185</a>
+                            </div>
+                        </mat-checkbox>
+                    </div>
+
+                    <div class="flex-auto  mx-8">
+                        <app-dropzone
+                            [multiple]="true"
+                            [isRequired]="false"
+                            styleClass="max-h-12"
+                            topTitle="Tài liệu đính kèm"
+                            title="Tải tệp lên"
+                            [maxFile]="10"
+                            [maxFileSize]="10"
+                            [formGroup]="loanProfileForm"
+                            [removeValue]="isRemoved"
+                            [accept]="accept"
+                            field="finDocumentsId"
+                            sizeMsg="CHBM013"
+                            typeMsg=""
+                        ></app-dropzone>
+<!--                        <p class="text-secondary my-6">-->
+<!--                            Thỏa thuận giữa bên vay và bên cho vay. <a class="text-primary underline" href="javascript:void(0)" (click)="download('downloadContractBorrowerLender')">Tải xuống</a>-->
+<!--                        </p>-->
+                    </div>
+                    <!--<div class="col-span-2"  *ngIf="authService.authenticatedUser.type === userType.COMPANY">
+                        <app-dropzone
+                            styleClass="max-h-15"
+                            topTitle="Báo cáo tài chính"
+                            title="Tải tệp lên"
+                            [formGroup]="loanProfileForm"
+                            [maxFile]="1"
+                            [removeValue]="isRemoved"
+                            field="financialStatement"
+                        ></app-dropzone>
+                    </div>-->
+
+<!--                    <div class="flex-auto"></div>-->
+                    <div class="flex-auto text-right items-end">
+
+
+                        <button mat-stroked-button class="my-5" type="button" (click)="onClearForm()">
+                            Nhập lại
+                        </button>
+                        <button
+                            class="px-6 ml-3"
+                            mat-flat-button
+                            type="submit"
+                            *ngIf="'LENDER_LOAN_PROFILE_CREATE_LOAN_PROFILE' | permission"
+                            (click)="onSubmit()"
+                            [color]="'primary'">
+                            Gửi xét duyệt
+                        </button>
+                    </div>
+                </div>
+                <!--<div class="grid grid-cols-2 gap-5" *ngIf="authService.authenticatedUser.type === userType.COMPANY">
+                    <div><a class="text-primary underline" href="javascript:void(0)" (click)="download('downloadTemplateFinancialReport')">Tải file mẫu</a></div>
+                </div>-->
+                <div class="flex justify-between items-end">
+
+                </div>
+                <div class="flex items-center justify-end border-t -mx-8 mt-8 px-8 py-5 bg-gray-50 dark:bg-gray-700">
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,157 @@
+<div class="flex flex-col max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium"
+             *ngIf="!data">Thêm phòng ban</div>
+        <div class="text-lg font-medium"
+             *ngIf="data">Sửa phòng ban</div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="discard()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <ng-container>
+        <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+              [formGroup]="departmentForm">
+            <!-- Info -->
+            <div class="flex flex-col p-4 border rounded-md mb-4">
+                <div class="text-lg font-bold mb-3">Thông tin Phòng ban</div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Mã phòng ban</mat-label>
+                        <input id="admDepartmentsCode"
+                               matInput
+                               trim="blur"
+                               [disabled]="isUpdate"
+                               [readonly]="isUpdate"
+                               formControlName="admDepartmentsCode">
+                        <mat-error *ngIf="departmentForm.get('admDepartmentsCode').hasError('required')">
+                            {{ 'QLPB001' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="departmentForm.get('admDepartmentsCode').hasError('maxlength')">
+                            {{ 'QLPB002' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="departmentForm.get('admDepartmentsCode').hasError('pattern')">
+                            {{ 'QLPB016' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Tên phòng ban</mat-label>
+                        <input id="departmentName"
+                               matInput
+                               trim="blur"
+                               formControlName="departmentName">
+                        <mat-error *ngIf="departmentForm.get('departmentName').hasError('required')">
+                            {{ 'QLPB004' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="departmentForm.get('departmentName').hasError('maxlength')">
+                            {{ 'QLPB005' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row">
+                    <mat-form-field class="w-1/2 pr-2">
+                        <mat-label>Trưởng phòng ban</mat-label>
+                        <input type="text"
+                               matInput
+                               formControlName="admAccountName"
+                               [matAutocomplete]="auto">
+                        <mat-autocomplete autoActiveFirstOption
+                                          #auto="matAutocomplete"
+                                          (optionSelected)="onOptionSelected($event)">
+                            <mat-option *ngFor="let option of headOffices | async"
+                                        [value]="option.admAccountId">
+                                {{option.fullName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <!--<mat-form-field class="w-1/2 pr-2">
+                        <mat-label>Trưởng đơn vị</mat-label>
+                        <mat-select formControlName="admAccountId">
+                            <mat-option *ngFor="let item of all_HeadOffices"
+                                        [value]="item.admAccountId">{{ item.fullName }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>-->
+                    <mat-form-field class="w-1/2" *ngIf="isUpdate">
+                        <mat-label>Số nhân viên</mat-label>
+                        <input id="countStaff"
+                               matInput
+                               inputMask
+                               maskType="number"
+                               readonly
+                               formControlName="countStaff">
+                    </mat-form-field>
+                </div>
+
+            </div>
+
+            <!-- Another Info -->
+            <div class="flex flex-col p-4 border rounded-md">
+                <div class="text-lg font-bold mb-3">Thông tin khác</div>
+
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày tạo</mat-label>
+                        <input id="createdDate"
+                               matInput
+                               formControlName="createdDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người tạo</mat-label>
+                        <input id="createdByName"
+                               matInput
+                               formControlName="createdByName">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày cập nhật</mat-label>
+                        <input id="lastUpdatedDate"
+                               matInput
+                               formControlName="lastUpdatedDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người cập nhật</mat-label>
+                        <input id="lastUpdatedByName"
+                               matInput
+                               formControlName="lastUpdatedByName">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 pr-8 sm:pr-8">
+        <div class="-ml-2">
+        </div>
+
+        <div class="flex items-center mt-4 sm:mt-0">
+            <!-- Discard -->
+            <button class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    (click)="discard()">
+                Huỷ
+            </button>
+            <!-- Submit -->
+
+            <button *ngIf="!isUpdate && ('SFF_DEPARTMENT_INSERT' | permission)"
+                    class="order-first sm:order-last ml-2"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="submitUpdateOrCreate()">
+                Lưu
+            </button>
+            <button *ngIf="isUpdate  && ('SFF_DEPARTMENT_UPDATE' | permission)"
+                    class="order-first sm:order-last ml-2"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="submitUpdateOrCreate()">
+                Cập nhật
+            </button>
+        </div>
+    </div>
+</div>

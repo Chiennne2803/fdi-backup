@@ -1,0 +1,78 @@
+<div class="flex flex-row gap-4 w-full p-6 place-content-center" >
+    <div class="w-1/4">
+        <fuse-card class="flex flex-col  w-full h-full p-6 filter-info text-white" style="background: linear-gradient(106.46deg, #2854F2 18.36%, #394EE4 27.43%, #6641C1 42.73%, #BA219D 65.37%, #FF6C0E 92.94%);">
+            <div class="flex justify-between">
+                <div class="text-2xl font-semibold leading-tight">Số dư khả dụng (VNĐ)</div>
+            </div>
+            <div class="mt-3 text-3xl"><strong>{{ wControlEu?.wautoInvest | currencyFormatPipe : 10 }}</strong></div>
+            <div class="mt-3 text-1xl">{{ fullName }}</div>
+            <div class="flex justify-end pt-2 text-2xl ">
+                <button
+                    mat-button
+                    class="text-2xl"
+                    *ngIf=" 'INVESTOR_AUTO_AUTO_DEPOSIT' | permission"
+                    (click)="onClickRecharge()">
+                    <mat-icon class="cursor-pointer text-white "
+                              [ngClass]="'icon-size-10'" svgIcon="add_to_photos"></mat-icon>
+                    <span>Nạp tiền</span>
+                </button>
+            </div>
+        </fuse-card>
+    </div>
+    <div class="w-3/4" >
+        <fuse-card class="flex flex-col w-full p-6 filter-info" >
+
+                <article class="prose">
+                    <h3>Đặt lệnh đầu tư tự động</h3>
+                </article>
+                <mat-label>Vui lòng xác định thời gian đầu tư và số tiền đầu tư</mat-label>
+            <form [formGroup]="autoInvestForm" #form="ngForm">
+                <div class="flex flex-row gap-4 w-full mt-5">
+                    <div class="w-2/3">
+                        <mat-form-field class="w-full">
+                            <mat-label>Thời gian đầu tư</mat-label>
+                            <mat-select formControlName="investmentTime">
+                                <mat-option *ngFor="let item of this.listInvestmentTime"
+                                            [value]="item">{{ item }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="autoInvestForm.get('investmentTime')?.hasError('required')">
+                                {{'INVA10001' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="w-2/3">
+                        <mat-form-field class="w-full">
+                            <mat-label>Số tiền đầu tư</mat-label>
+                            <input id="investmentAmount"
+                                   matInput
+                                   currencyMask autocomplete="off"
+                                   maxlength="15"
+                                   class="text-left"
+                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                   formControlName="investmentAmount">
+                            <mat-error *ngIf="autoInvestForm.get('investmentAmount')?.hasError('required')">
+                                {{ 'INVA10003' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="autoInvestForm.get('investmentAmount').hasError('min')">
+                                Số tiền nhập không hợp lệ
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex w-1/4  pt-7">
+                        <button
+                            *ngIf=" 'INVESTOR_AUTO_AUTO_INVEST' | permission"
+                            class="order-first sm:order-last ml-2"
+                            mat-flat-button
+                            type="button"
+                            [color]="'primary'"
+                            (click)="onSubmit()"
+                        >
+                            Xác nhận
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </fuse-card>
+    </div>
+</div>

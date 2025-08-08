@@ -1,0 +1,337 @@
+<div class="sm:absolute flex flex-col flex-auto min-w-0 bg-card dark:bg-transparent"
+     @fadeOutLeft
+     @fadeInLeft
+     [ngStyle]="{width: '-webkit-fill-available'}">
+    <div
+        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-3 px-6 md:px-8 border-b">
+        <div class="text-xl font-extrabold tracking-tight">
+            Thông tin tài khoản nhân viên
+        </div>
+    </div>
+    <ng-container *ngIf="(screenMode === 0 || screenMode === 1) else viewTemplate">
+        <div class="grid grid-flow-row-dense grid-cols-4 gap-6 m-6 ..." [formGroup]="staffDetailForm">
+            <div class="row-span-3 ">
+                <img [src]="avatar"
+                     alt=""
+                     style="object-fit: contain!important;"
+                     class="p-4 rounded-md max-h-80"
+                     (click)="avatarPerson.click()">
+                <input #avatarPerson
+                       type="file"
+                       name="img"
+                       (change)="onFileInput(avatarPerson.files)"
+                       class="hidden"
+                       accept="image/png, image/jpg, image/jpeg"/>
+            </div>
+            <mat-form-field class="w-full">
+                <mat-label>Tên tài khoản</mat-label>
+                <input id="accountName"
+                       matInput
+                       trim="blur"
+                       minlength="6"
+                       maxlength="50"
+                       formControlName="accountName">
+                <mat-error *ngIf="staffDetailForm.get('accountName').invalid">
+                    {{ getErrorAccount() | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>Mật khẩu</mat-label>
+                <input id="passwd"
+                       matInput
+                       trim="blur"
+                       maxlength="50"
+                       type="password"
+                       formControlName="passwd"
+                       #passwordField>
+                <button mat-icon-button
+                        type="button"
+                        (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                        matSuffix>
+                    <mat-icon class="icon-size-5"
+                              *ngIf="passwordField.type === 'password'"
+                              [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                    <mat-icon class="icon-size-5"
+                              *ngIf="passwordField.type === 'text'"
+                              [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                </button>
+                <mat-error *ngIf="staffDetailForm.get('passwd').invalid">
+                    {{ getErrorPassword() | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>Họ và tên</mat-label>
+                <input id="fullName"
+                       matInput
+                       trim="blur"
+                       formControlName="fullName">
+                <mat-error *ngIf="staffDetailForm.get('fullName').hasError('required')">
+                    {{ 'QLNV009' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="staffDetailForm.get('fullName').hasError('maxlength')">
+                    {{ 'QLNV010' | transloco }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+                <mat-label>Giới tính</mat-label>
+                <mat-select formControlName="gender">
+                    <mat-option *ngFor="let item of genders"
+                                [value]="item.id">{{ item.label }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="staffDetailForm.get('gender').hasError('required')">
+                    {{ 'QLNV011' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>Số điện thoại</mat-label>
+                <input id="mobile"
+                       matInput
+                       inputMask
+                       maskType="number"
+                       maxlength="11"
+                       (input)="onMobileInput($event)"
+                       formControlName="mobile">
+                <mat-error *ngIf="staffDetailForm.get('mobile').invalid">
+                    {{ getErrorMobile() | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <app-date-picker
+                label="Ngày sinh"
+                [maxDate]="{'days': 0}"
+                formControlName="dateOfBirth"
+                [isRequired]="true"
+                requiredMsg="QLNV015"
+                fomatMsg="QLNV016"
+                maxMsg="QLNV017"
+            >
+            </app-date-picker>
+
+            <mat-form-field class="w-full">
+                <mat-label>Email</mat-label>
+                <input id="email"
+                       matInput
+                       trim="blur"
+                       formControlName="email">
+                <mat-error *ngIf="staffDetailForm.get('email').hasError('required')">
+                    {{ 'QLNV018' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="staffDetailForm.get('email').hasError('maxlength')">
+                    {{ 'QLNV019' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="staffDetailForm.get('email')?.hasError('email')">
+                    {{ 'QLNV043' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>Phòng ban</mat-label>
+                <mat-select formControlName="admDepartmentsId">
+                    <mat-option *ngFor="let item of departments"
+                                [value]="item.id">{{ item.label }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="staffDetailForm.get('admDepartmentsId').hasError('required')">
+                    {{ 'QLNV020' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>Chức vụ</mat-label>
+                <mat-select formControlName="admCategoriesId">
+                    <mat-option *ngFor="let item of positions"
+                                [value]="item.id">{{ item.label }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="staffDetailForm.get('admCategoriesId').hasError('required')">
+                    {{ 'QLNV048' | transloco }}
+                </mat-error>
+            </mat-form-field>
+
+            <div class="flex flex-col ">
+                <mat-form-field class="w-full">
+                    <mat-label>Nhóm quyền</mat-label>
+                    <mat-select formControlName="admGroupRoleId">
+                        <mat-option *ngFor="let item of roles"
+                                    [value]="item.id">{{ item.label }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="staffDetailForm.get('admGroupRoleId').hasError('required')">
+                        {{ 'QLNV049' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-col ">
+                <mat-form-field class="w-full">
+                    <mat-label>Vai trò</mat-label>
+                    <mat-select formControlName="role">
+                        <mat-option *ngFor="let item of adminRoles"
+                                    [value]="item.id">{{ item.label }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="staffDetailForm.get('role').hasError('required')">
+                        {{ 'QLNV050' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-col ">
+                <app-date-picker
+                    label="Thời gian hiệu lực từ ngày"
+                    [minDate]="{'days': 0}"
+                    [maxDateTime]="staffDetailForm.value.expirationDate"
+                    formControlName="efectiveDate"
+                    [isRequired]="true"
+                    requiredMsg="QLNV024"
+                    fomatMsg="QLNV027"
+                    minMsg="QLNV025"
+                >
+                </app-date-picker>
+            </div>
+            <div class="flex flex-col ">
+                <app-date-picker
+                    label="Thời gian hiệu lực đến ngày"
+                    [minDateTime]="staffDetailForm.value.efectiveDate"
+                    formControlName="expirationDate"
+                    [isRequired]="false"
+                    fomatMsg="QLDT038"
+                    minMsg="QLNV026"
+                >
+                </app-date-picker>
+            </div>
+            <div class="flex flex-col col-span-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Ghi chú</mat-label>
+                    <textarea id="note"
+                              matInput
+                              trim="blur"
+                              maxlength="100"
+                              formControlName="note"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-container>
+    <div class="flex flex-row justify-end flex-auto overflow-hidden gap-4 px-8 mb-6 mt-6">
+        <button class="fuse-mat-button-large w-48"
+                mat-stroked-button
+                (click)="back()">
+            Huỷ
+        </button>
+        <button *ngIf="screenMode === 2"
+                class="fuse-mat-button-large w-48"
+                mat-flat-button
+                [color]="'primary'"
+                (click)="edit()">
+            <span>Cập nhật</span>
+        </button>
+        <ng-container *ngIf="screenMode === 0">
+            <button class="fuse-mat-button-large w-48"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="doCreate()">
+                <span>Lưu</span>
+            </button>
+        </ng-container>
+        <ng-container *ngIf="screenMode === 1">
+            <button class="fuse-mat-button-large w-48"
+                    mat-flat-button
+                    [color]="'primary'"
+                    (click)="doUpdate()">
+                <span>Lưu</span>
+            </button>
+        </ng-container>
+    </div>
+</div>
+<ng-template #viewTemplate>
+    <div class="flex flex-col flex-auto mt-4 gap-3" *ngIf="staffDetail">
+        <div class="flex flex-row flex-auto gap-8 px-8 h-72 max-h-72">
+            <div class="w-1/4 h-3">
+                <div class="flex flex-col justify-center w-full bg-zinc-100 rounded-md h-72 max-h-72">
+                    <img [src]="avatar"
+                         alt=""
+                         style="object-fit: contain!important;"
+                         class="p-4 rounded-md max-h-full max-w-full">
+                    <div class="flex justify-center w-full pb-2">
+                    </div>
+                </div>
+            </div>
+            <div class="w-3/4 flex flex-col">
+                <div class="flex flex-row flex-auto border-b-2">
+                    <div class="flex flex-col w-1/3 gap-6">
+                        <mat-label>Tên tài khoản</mat-label>
+                        <strong>{{staffDetail.accountName}}</strong>
+                    </div>
+                    <div class="flex flex-col w-1/3 gap-6">
+                            <div class="flex flex-col w-1/3 gap-4 mb-7">
+                                <mat-label>Mật khẩu</mat-label>
+                                <button class="fuse-mat-button-large w-48 btn-change-pass"
+                                        mat-stroked-button
+                                        (click)="changePassword()">
+                                    Đổi mật khẩu
+                                </button>
+                            </div>
+                    </div>
+                    <div class="flex flex-col w-1/3 gap-6">
+                        <mat-label>Họ và tên</mat-label>
+                        <strong>{{staffDetail.fullName}}</strong>
+                    </div>
+                </div>
+                <div class="flex flex-row flex-auto pt-3 border-b-2">
+                    <div class="flex flex-col w-1/3 gap-6">
+                        <mat-label>Giới tính</mat-label>
+                        <strong>{{staffDetail.genderName}}</strong>
+                    </div>
+                    <div class="flex flex-col w-1/3 gap-6">
+                        <mat-label>Số điện thoại</mat-label>
+                        <strong>{{staffDetail.mobile}}</strong>
+                    </div>
+                    <div class="flex flex-col w-1/3 gap-6">
+                        <mat-label>Ngày sinh</mat-label>
+                        <strong>
+                            {{staffDetail.dateOfBirth | datetimeformat: 'DD/MM/YYYY'}}
+                        </strong>
+                    </div>
+                </div>
+                <div class="flex flex-row flex-auto pt-3 border-b-2">
+                    <div class="flex flex-col w-1/3 gap-6">
+                        <mat-label>Email</mat-label>
+                        <strong>{{staffDetail.email}}</strong>
+                    </div>
+                    <div class="flex flex-col w-1/3 gap-6">
+                        <mat-label>Phòng ban</mat-label>
+                        <strong>{{staffDetail.admDepartmentsName}}</strong>
+                    </div>
+                    <div class="flex flex-col w-1/3 gap-6">
+                        <mat-label>Chức vụ</mat-label>
+                        <strong>{{staffDetail.admCategoriesName}}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-row flex-auto overflow-hidden gap-8 px-8 mt-2 border-b-2 pb-3">
+            <div class="flex flex-col w-1/4 gap-6">
+                <mat-label>Nhóm quyền</mat-label>
+                <strong>{{staffDetail.admGroupRoleName}}</strong>
+            </div>
+            <div class="flex flex-col w-1/4 gap-6">
+                <mat-label>Vai trò</mat-label>
+                <strong>{{staffDetail.roleName}}</strong>
+            </div>
+            <div class="flex flex-col w-1/4 gap-6">
+                <mat-label>Thời gian hiệu lực từ ngày</mat-label>
+                <strong>{{ staffDetail.efectiveDate| datetimeformat: 'DD/MM/YYYY'}}</strong>
+            </div>
+            <div class="flex flex-col w-1/4 gap-6">
+                <mat-label>Thời gian hiệu lực đến ngày</mat-label>
+                <strong>{{ staffDetail.expirationDate| datetimeformat: 'DD/MM/YYYY'}}</strong>
+            </div>
+        </div>
+        <div class="flex flex-row flex-auto overflow-hidden gap-8 px-8 mt-2 border-b-2 pb-3">
+            <div class="flex flex-col w-full gap-6">
+                <mat-label>Ghi chú</mat-label>
+                <strong>{{staffDetail.note}}</strong>
+            </div>
+        </div>
+       <!-- <div class="flex flex-col flex-auto overflow-hidden gap-4 px-8 my-10 border-b-2 pb-3">
+            <mat-label>Deny IP list</mat-label>
+            {{staffDetail.denyIps}}
+        </div>
+        <div class="flex flex-col flex-auto sm:mb-10 overflow-hidden gap-4 px-8 border-b-2 pb-3">
+            <mat-label>Allow IP list</mat-label>
+            {{staffDetail.allowIps}}
+        </div>-->
+    </div>
+</ng-template>

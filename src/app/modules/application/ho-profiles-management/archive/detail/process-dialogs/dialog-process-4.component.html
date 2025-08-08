@@ -1,0 +1,83 @@
+<!--Nhân viên thẩm định rà soát hồ sơ-->
+<div mat-dialog-title>
+    <div class="flex justify-between">
+        <h2>Kết quả rà soát hồ sơ vay</h2>
+        <a
+            mat-dialog-close
+            mat-icon-button>
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </a>
+    </div>
+</div>
+<mat-dialog-content [formGroup]="formGroup">
+    <div class="grid grid-cols-3 gap-5">
+        <mat-form-field class="w-full">
+            <mat-label>Người rà soát</mat-label>
+            <input
+                matInput
+                formControlName="createdByName"
+            >
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Ngày rà soát</mat-label>
+            <input
+                matInput
+                formControlName="createdDate"
+            >
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Kết quả rà soát</mat-label>
+            <mat-select formControlName="status">
+                <mat-option [value]="0">Từ chối</mat-option>
+                <mat-option [value]="1">Phê duyệt</mat-option>
+                <mat-option [value]="2">Làm lại</mat-option>
+            </mat-select>
+            <mat-error *ngIf="formGroup.get('status').hasError('required')">
+               {{ 'QLHS004' | transloco }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="w-full pb-4" >
+        <mat-label>Báo cáo đánh giá hồ sơ huy động vốn <font *ngIf="isRq === true" style="color: red">*</font></mat-label>
+        <app-dropzone
+            [multiple]="true"
+            styleClass="max-h-15"
+            title="Tải lên báo cáo đánh giá hồ sơ huy động vốn"
+            [formGroup]="formGroup"
+            [maxFile]="5"
+            [isRequired]="isRq"
+            maxFileSize="10"
+           accept="application/pdf"
+            field="finDocumentsId"
+            sizeMsg="QLHS015"
+            typeMsg="QLHS016"
+        ></app-dropzone>
+    </div>
+    <div class="w-full pb-4" *ngIf="formGroup.get('financialStatement')">
+        <mat-label>Báo cáo tài chính đánh giá nội bộ <font *ngIf="isRq === true" style="color: red">*</font></mat-label>
+        <app-dropzone
+            [multiple]="false"
+            styleClass="max-h-15"
+            title="Tải lên báo cáo tài chính"
+            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            [formGroup]="formGroup"
+            field="financialStatement"
+            [isRequired]="isRq"
+            requiredMsg="QLHS009"
+            typeMsg="QLHS008"
+            sizeMsg="QLHS007"
+        ></app-dropzone>
+    </div>
+    <mat-form-field class="w-full mt-3">
+        <mat-label>Nội dung rà soát hồ sơ</mat-label>
+        <textarea matInput formControlName="content"></textarea>
+        <mat-error *ngIf="formGroup.get('content').hasError('required')">
+            Dữ liệu chưa được nhập
+        </mat-error>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" (click)="onClickSubmit()">Xác nhận</button>
+</mat-dialog-actions>

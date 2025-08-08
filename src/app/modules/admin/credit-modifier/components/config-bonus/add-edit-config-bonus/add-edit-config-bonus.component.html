@@ -1,0 +1,294 @@
+<div class="flex flex-col  md:min-w-160 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div mat-dialog-title
+         class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium"
+             *ngIf="data">
+            Cập nhật hoa hồng
+        </div>
+        <div class="text-lg font-medium"
+             *ngIf="!data">
+            Thêm mới hoa hồng
+        </div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="back()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <ng-container>
+        <form [formGroup]="configBonusForm">
+            <div class="flex flex-col flex-auto px-6 pt-4  rounded-md">
+                <div class="text-lg font-bold">Thông tin hoa hồng</div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Giao dịch hưởng hoa hồng</mat-label>
+                        <mat-select formControlName="transType"
+                                    [required]="true"
+                        >
+                            <mat-option *ngFor="let item of lstTransType"
+                                        [value]="item.admCategoriesId">{{ item.value }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="configBonusForm.get('transType').hasError('required')">
+                            {{ 'SPTD031' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Hình thức tính hoa hồng</mat-label>
+                        <mat-select formControlName="calcMethod"
+                                    [required]="true"
+                        >
+                            <mat-option *ngFor="let item of lstCalcMethod"
+                                        [value]="item.admCategoriesId">{{ item.value }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="configBonusForm.get('calcMethod').hasError('required')">
+                            {{ 'SPTD027' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Điều kiện áp dụng</mat-label>
+                        <mat-select formControlName="conditionsBy">
+                            <mat-option *ngFor="let item of lstConditionsBy"
+                                        [value]="item.admCategoriesId">{{ item.value }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="configBonusForm.get('conditionsBy').hasError('required')">
+                            {{ 'SPTD028' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2" *ngIf="calcMethod.value === 1">
+                        <mat-label>Số tiền(VNĐ)</mat-label>
+                        <input id="amount"
+                               [maxlength]="15" [required]="true"
+                               matInput
+                               currencyMask autocomplete="off"
+                               class="text-left"
+                               [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                               formControlName="amount">
+                        <mat-error
+                            *ngIf=" configBonusForm.get('amount').hasError('required')">
+                            {{ 'SPTD029' | transloco }}
+                        </mat-error>
+                        <mat-error
+                            *ngIf=" configBonusForm.get('amount').hasError('maxlength')">
+                            {{ 'SPTD030' | transloco }}
+                        </mat-error>
+                        <mat-error
+                            *ngIf=" configBonusForm.get('amount').hasError('min')">
+                            {{ 'SPTD111' | transloco }}
+                        </mat-error>
+
+                        <!--<input id="amount"
+                               matInput
+                               currencyMask autocomplete="off"
+                               class="text-left"
+                               [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                               formControlName="amount">
+                        <mat-error *ngIf="configBonusForm.get('amount').hasError('required')">
+                            Dữ liệu chưa được nhập
+                        </mat-error>-->
+                    </mat-form-field>
+
+                    <mat-form-field class="w-1/2" *ngIf="calcMethod.value === 2">
+                        <mat-label>Tỉ lệ hoa hồng(%)</mat-label>
+                        <input id="bonusRate"
+                               type="number"
+                               required="true"
+                               matInput
+                               formControlName="bonusRate">
+                        <mat-error *ngIf="configBonusForm.get('bonusRate').hasError('required')">
+                            {{ 'SPTD032' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="configBonusForm.get('bonusRate').hasError('maxlength')">
+                            {{ 'SPTD033' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="configBonusForm.get('bonusRate').hasError('max')">
+                            {{ 'SPTD034' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="configBonusForm.get('bonusRate').hasError('nonNegativeDecimal')">
+                            {{ 'SPTD128' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="flex flex-row w-1/2 gap-3
+                    {{configBonusForm.get('startDateBonus').errors
+                    || configBonusForm.get('endDateBonus').errors ? 'mb-20' : '' }}" *ngIf="conditionsBy.value === 2 ">
+                        <div class="grid grid-rows-2 grid-flow-col gap-4" style="max-height: 32px !important;">
+                            <div class="col-span-2 ">
+                                <mat-label>Khoảng thời gian tính hoa hồng</mat-label>
+                            </div>
+                            <app-date-picker
+                                class="w-full"
+                                style="min-width: 216px !important;"
+                                label=""
+                                formControlName="startDateBonus"
+                                requiredMsg="SPTD035"
+                                fomatMsg="SPTD036"
+                                maxMsg="SPTD135"
+                                minMsg="SPTD135"
+                                [minDateTime]="configBonusForm.get('startDateActive').value"
+                                [maxDateTime]="configBonusForm.get('endDateActive').value"
+                                [isRequired]="true"
+                            >
+                            </app-date-picker>
+                            <app-date-picker
+                                class="w-full"
+                                style="min-width: 216px !important;"
+                                label=""
+                                formControlName="endDateBonus"
+                                requiredMsg="SPTD037"
+                                fomatMsg="SPTD038"
+                                maxMsg="SPTD135"
+                                minMsg="SPTD135"
+                                [minDateTime]="configBonusForm.get('startDateActive').value"
+                                [maxDateTime]="configBonusForm.get('endDateActive').value"
+                                [isRequired]="true"
+                            >
+                            </app-date-picker>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full gap-4" *ngIf="scrMode == 'add'">
+                    <app-date-picker
+                        class="w-1/2"
+                        label="Ngày hiệu lực"
+                        formControlName="startDateActive"
+                        requiredMsg="SPTD040"
+                        fomatMsg="SPTD041"
+                        minMsg="SPTD108"
+                        maxMsg="SPTD044"
+                        [minDate]="{day : 0}"
+                        [maxDateTime]="configBonusForm.get('endDateActive').value"
+                        [isRequired]="true"
+                    >
+                    </app-date-picker>
+                    <app-date-picker
+                        class="w-1/2"
+                        label="Ngày hết hiệu lực"
+                        formControlName="endDateActive"
+                        requiredMsg="SPTD042"
+                        fomatMsg="SPTD043"
+                        [isRequired]="true"
+                        minMsg="SPTD109"
+                        [minDate]="{day : 0}"
+                    >
+                    </app-date-picker>
+                </div>
+                <div class="flex flex-row w-full gap-4" *ngIf="scrMode == 'edit'">
+                    <app-date-picker
+                        class="w-1/2"
+                        label="Ngày hiệu lực"
+                        formControlName="startDateActive"
+                        requiredMsg="SPTD040"
+                        fomatMsg="SPTD041"
+                        minMsg="SPTD108"
+                        maxMsg="SPTD044"
+                        [minDate]="{day : 0}"
+                        [maxDateTime]="configBonusForm.get('endDateActive').value"
+                        [isRequired]="true"
+                    >
+                    </app-date-picker>
+                    <app-date-picker
+                        class="w-1/2"
+                        label="Ngày hết hiệu lực"
+                        formControlName="endDateActive"
+                        requiredMsg="SPTD042"
+                        fomatMsg="SPTD043"
+                        [isRequired]="true"
+                        minMsg="SPTD109"
+                        [minDate]="{day : 0}"
+                    >
+                    </app-date-picker>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Trạng thái</mat-label>
+                        <mat-select formControlName="status" [required]="true">
+                            <mat-option *ngFor="let item of lstStatus"
+                                        [value]="item.admCategoriesId">{{ item.value }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="configBonusForm.get('status').hasError('required')">
+                            {{ 'SPTD098' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="flex flex-col flex-auto overflow-hidden px-6 pt-4  rounded-md">
+                <div class="text-lg font-bold">Thông tin khác</div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày tạo</mat-label>
+                        <input id="createdDate"
+                               matInput
+                               readonly
+                               formControlName="createdDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người tạo</mat-label>
+                        <input id="createdByName"
+                               matInput
+                               readonly
+                               formControlName="createdByName">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày cập nhật</mat-label>
+                        <input id="lastUpdatedDate"
+                               matInput
+                               readonly
+                               formControlName="lastUpdatedDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người cập nhật</mat-label>
+                        <input id="lastUpdatedByName"
+                               matInput
+                               readonly
+                               formControlName="lastUpdatedByName">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-end mb-4 sm:mb-6 pr-8 sm:pr-8 mb-8">
+        <div class="flex items-center mt-4 sm:mt-0 gap-4">
+            <ng-container *ngIf="data; else btnTemplate">
+                <button class="fuse-mat-button-large w-48"
+                        mat-stroked-button
+                        (click)="back()">
+                    Đóng
+                </button>
+                <button
+                        *ngIf="('SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE' | permission)"
+                        class="fuse-mat-button-large w-48"
+                        mat-flat-button
+                        [color]="'primary'"
+                        (click)="submit()">
+                    <span>Lưu</span>
+                </button>
+            </ng-container>
+            <ng-template #btnTemplate>
+                <button class="fuse-mat-button-large w-48"
+                        mat-stroked-button
+                        (click)="back()">
+                    Đóng
+                </button>
+                <button class="fuse-mat-button-large w-48"
+                        *ngIf="('SFF_CUSTOM_CREDIT_PRODUCTS_INSERT' | permission)"
+                        mat-flat-button
+                        [color]="'primary'"
+                        (click)="submit()">
+                    <span>Lưu</span>
+                </button>
+            </ng-template>
+        </div>
+    </div>
+</div>

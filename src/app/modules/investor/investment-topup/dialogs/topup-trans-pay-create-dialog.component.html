@@ -1,0 +1,51 @@
+<div class="max-w-180">
+    <div mat-dialog-title>
+        <div class="flex justify-between">
+            <h2>Nạp tiền đầu tư</h2>
+            <a
+                mat-dialog-close
+                mat-icon-button>
+                <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+            </a>
+        </div>
+    </div>
+    <mat-dialog-content>
+        <div>
+            <div>Người nhận:</div>
+            <div class="text-xl font-medium">{{topUp?.accName}}</div>
+        </div>
+        <div class="mt-2">
+            <div>Ngân hàng:</div>
+            <div class="text-xl font-medium">{{topUp?.bankName}}</div>
+        </div>
+        <div class="mt-2">
+            <div>Chi nhánh:</div>
+            <div class="text-xl font-medium">{{topUp?.branchName}}</div>
+        </div>
+        <div class="mt-2">
+            <div>Số tài khoản:</div>
+            <div class="text-xl font-medium">{{topUp?.accNo}}
+                <mat-icon class="cursor-pointer" (click)="coppy(topUp?.accNo)" svgIcon="mat_solid:content_copy"></mat-icon>
+            </div>
+        </div>
+        <div class="mt-2">
+            <div>Nội dung giao dịch:</div>
+            <div class="text-xl font-medium">{{topUp?.info}}
+                <mat-icon class="cursor-pointer" (click)="coppy(topUp?.info)" svgIcon="mat_solid:content_copy"></mat-icon>
+            </div>
+        </div>
+        <div class="mt-2 text-red-600">
+            <div>Chú ý:</div>
+            <div>• Chuyển khoản đúng nội dung giao dịch để tránh phát sinh lỗi nạp tiền đầu tư</div>
+            <div>• Chuyển 24/7 nếu khác ngân hàng</div>
+        </div>
+    </mat-dialog-content>
+    <div class="flex flex-col mt-5 sm:items-center justify-center pr-8 sm:pr-8">
+        <button class="order-first sm:order-last ml-2"
+                mat-flat-button mat-dialog-close
+                [color]="'primary'" (click)="topUpAction()">
+            Xác nhận
+        </button>
+    </div>
+</div>
+

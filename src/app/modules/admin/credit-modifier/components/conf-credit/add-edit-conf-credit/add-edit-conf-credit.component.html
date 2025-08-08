@@ -1,0 +1,227 @@
+<div class="flex flex-col  md:min-w-160 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div mat-dialog-title
+         class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium"
+             *ngIf="data">
+            Thông tin hạn mức xếp hạng tín dụng
+        </div>
+        <div class="text-lg font-medium"
+             *ngIf="!data">
+            Thêm mới hạn mức xếp hạng tín dụng
+        </div>
+        <button mat-icon-button>
+            <mat-icon class="text-current"
+                      [svgIcon]="'heroicons_outline:x'"
+                      (click)="back()"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <ng-container *ngIf="isEditable; else viewTemplate">
+        <form class="flex flex-col flex-auto sm:p-2 overflow-y-auto gap-8"
+              [formGroup]="creditRankForm">
+            <div class="flex flex-col flex-auto gap-8 px-6 pt-4 border rounded-md">
+                <div class="text-lg font-bold">Thông tin hạn mức xếp hạng tín dụng</div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Xếp hạng khách hàng</mat-label>
+                        <input id="creditCode"
+                               matInput
+                               trim="blur"
+                               maxlength="10"
+                               formControlName="creditCode">
+                        <mat-error *ngIf="creditRankForm.get('creditCode').hasError('required')">
+                            {{ 'SPTD001' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="creditRankForm.get('creditCode').hasError('maxlength')">
+                            {{ 'SPTD002' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Điểm tối thiểu</mat-label>
+                        <input id="minValue"
+                               inputMask
+                               maskType="number"
+                               maxlength="15"
+                               min="0"
+                               matInput
+                               formControlName="minValue">
+                        <mat-error *ngIf="creditRankForm.get('minValue').hasError('required')">
+                           {{ 'SPTD004' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="creditRankForm.get('minValue').hasError('maxlength')">
+                            {{ 'SPTD005' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="creditRankForm.get('minValue').hasError('min')">
+                            {{ 'SPTD125' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="creditRankForm.get('minValue').hasError('duplicate')">
+                            {{ 'SPTD124' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Điểm tối đa</mat-label>
+                        <input id="maxValue"
+                               inputMask
+                               maskType="number"
+                               maxlength="15"
+                               min="0"
+                               matInput
+                               formControlName="maxValue">
+                        <mat-error *ngIf="creditRankForm.get('maxValue').hasError('required')">
+                            {{ 'SPTD007' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="creditRankForm.get('maxValue').hasError('maxlength')">
+                            {{ 'SPTD008' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="creditRankForm.get('maxValue').hasError('min')">
+                            {{ 'SPTD126' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="creditRankForm.get('maxValue').hasError('duplicate')">
+                            {{ 'SPTD124' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+            </div>
+
+            <div class="flex flex-col flex-auto overflow-hidden gap-8 px-6 pt-4 border rounded-md">
+                <div class="text-lg font-bold">Thông tin khác</div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày tạo</mat-label>
+                        <input id="createdDate"
+                               matInput
+                               readonly
+                               formControlName="createdDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người tạo</mat-label>
+                        <input id="createdByName"
+                               matInput
+                               readonly
+                               formControlName="createdByName">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày cập nhật</mat-label>
+                        <input id="lastUpdatedDate"
+                               matInput
+                               readonly
+                               formControlName="lastUpdatedDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người cập nhật</mat-label>
+                        <input id="lastUpdatedByName"
+                               matInput
+                               readonly
+                               formControlName="lastUpdatedByName">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-end mb-4 sm:mb-6 pr-8 sm:pr-8 mb-8">
+        <div class="flex items-center mt-4 sm:mt-0 gap-4">
+            <ng-container *ngIf="data; else btnTemplate">
+                <button class="fuse-mat-button-large w-48"
+                        mat-stroked-button
+                        (click)="back()">
+                    Đóng
+                </button>
+                <button *ngIf="!isEditable  && ('SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE' | permission)"
+                        class="fuse-mat-button-large w-48"
+                        mat-flat-button
+                        [color]="'primary'"
+                        (click)="isEditable = true">
+                    <span>Cập nhật</span>
+                </button>
+                <button *ngIf="isEditable && ('SFF_CUSTOM_CREDIT_PRODUCTS_INSERT' | permission)"
+                        class="fuse-mat-button-large w-48"
+                        mat-flat-button
+                        [color]="'primary'"
+                        (click)="submit()">
+                    <span>Lưu</span>
+                </button>
+            </ng-container>
+            <ng-template #btnTemplate>
+                <button class="fuse-mat-button-large w-48"
+                        mat-stroked-button
+                        (click)="back()">
+                    Đóng
+                </button>
+                <button class="fuse-mat-button-large w-48"
+                        mat-flat-button
+                        *ngIf="('SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE' | permission)"
+                        [color]="'primary'"
+                        (click)="submitAndReset()">
+                    <span>Lưu và thêm</span>
+                </button>
+                <button class="fuse-mat-button-large w-48"
+                        *ngIf="('SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE' | permission)"
+                        mat-flat-button
+                        [color]="'primary'"
+                        (click)="submit()">
+                    <span>Lưu và đóng</span>
+                </button>
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<ng-template #viewTemplate>
+    <div class="flex flex-col flex-auto mt-4 gap-3"
+         *ngIf="detailCredit">
+        <div class="flex flex-col flex-auto overflow-hidden gap-8 m-8 p-4 border rounded-md">
+            <div class="text-lg font-bold">Thông tin hạn mức xếp hạng tín dụng</div>
+            <div class="flex flex-row w-full gap-4 border-b border-solid ">
+                <div class="w-1/2 flex flex-col gap-4">
+                    <mat-label>Xếp hạng khách hàng</mat-label>
+                    <strong>{{detailCredit.creditCode}}</strong>
+                </div>
+                <div class="w-1/2 flex flex-col gap-4">
+                    <mat-label>Điểm tối thiểu</mat-label>
+                    <strong>{{detailCredit.minValue}}</strong>
+                </div>
+            </div>
+            <div class="flex flex-row w-full gap-4 border-b border-solid ">
+                <div class="w-1/2 flex flex-col gap-4">
+                    <mat-label>Điểm tối đa</mat-label>
+                    <strong>{{detailCredit.maxValue}}</strong>
+                </div>
+                <div class="w-1/2 flex flex-col gap-4">
+                    <mat-label>Phân định mặc định</mat-label>
+                    <strong>{{!detailCredit.type ? 'Không' : 'Có'}}</strong>
+                </div>
+            </div>
+
+            <div class="text-lg font-bold">Thông tin khác:</div>
+            <div class="flex flex-row w-full gap-4 border-b border-solid ">
+                <div class="w-1/2 flex flex-col gap-4">
+                    <mat-label>Ngày tạo</mat-label>
+                    <strong>{{detailCredit.createdDate | datetimeformat: 'DD/MM/YYYY' }}</strong>
+                </div>
+                <div class="w-1/2 flex flex-col gap-4">
+                    <mat-label>Người tạo</mat-label>
+                    <strong>{{detailCredit.createdByName}}</strong>
+                </div>
+            </div>
+            <div class="flex flex-row w-full gap-4 border-b border-solid ">
+                <div class="w-1/2 flex flex-col gap-4">
+                    <mat-label>Ngày cập nhật</mat-label>
+                    <strong>{{detailCredit.lastUpdatedDate | datetimeformat: 'DD/MM/YYYY' }}</strong>
+                </div>
+                <div class="w-1/2 flex flex-col gap-4">
+                    <mat-label>Người cập nhật</mat-label>
+                    <strong>{{detailCredit.lastUpdatedByName}}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

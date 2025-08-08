@@ -1,0 +1,326 @@
+<div cdkScrollable class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto">
+
+  <div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center space-x-2">
+        <img src="assets/images/logo/logo-auth.svg" alt="LinkFiin" class="h-8">
+        <!-- <span class="text-2xl font-bold text-orange-500">LINKFIIN</span> -->
+      </div>
+
+      <!-- Menu -->
+      <nav class="hidden md:flex space-x-6 font-semibold ">
+        <a class="text-orange-600">Trang chủ</a>
+        <a class="text-black hover:text-blue-600">Về chúng tôi</a>
+        <div class="relative group">
+          <button class="text-black hover:text-blue-600 flex items-center gap-1">
+            Dịch vụ
+            <svg class="w-3 h-3 mt-[1px]" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <!-- Dropdown -->
+          <div class="absolute left-0 mt-2 w-40 bg-white border shadow-lg rounded hidden group-hover:block z-10">
+            <a class="block px-4 py-2  hover:bg-gray-100">Dịch vụ A</a>
+            <a class="block px-4 py-2  hover:bg-gray-100">Dịch vụ B</a>
+          </div>
+        </div>
+        <a class="text-black hover:text-blue-600">Gói huy động vốn</a>
+        <a class="text-black hover:text-blue-600">Cơ hội đầu tư</a>
+        <a class="text-black hover:text-blue-600">Tin tức</a>
+        <a class="text-black hover:text-blue-600">Liên hệ</a>
+      </nav>
+
+      <!-- Search box -->
+      <div class="relative hidden md:block">
+        <input type="text" placeholder="Tìm kiếm ..."
+          class="border border-gray-300 rounded-md py-1.5 px-3 pr-8  focus:outline-none focus:ring-2 focus:ring-primary">
+        <mat-icon svgIcon="heroicons_outline:magnifying-glass"></mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative bg-white">
+    <section>
+      <img src="assets/images/banner/bg-home.jpg" alt="LINKFIIN">
+    </section>
+    <section class="px-12 pb-12 flex justify-center md:absolute md:left-0 md:right-0  md:bottom-[-213px]" >
+      <div class="shadow max-w-7xl mx-auto p-6">
+        <!-- Tabs -->
+        <div class="flex border-b mb-4">
+          <button class="px-6 py-2 font-semibold rounded-t-xl" [ngClass]="{
+        'bg-orange-500 text-white': activeTab === 'invest',
+        'text-orange-500 bg-white': activeTab !== 'invest'
+      }" (click)="activeTab = 'invest'">
+            Đầu tư ngay
+          </button>
+          <button class="px-6 py-2 font-semibold rounded-t-xl" [ngClass]="{
+        'bg-orange-500 text-white': activeTab === 'fundraise',
+        'text-orange-500 bg-white': activeTab !== 'fundraise'
+      }" (click)="activeTab = 'fundraise'">
+            Huy động vốn
+          </button>
+        </div>
+
+        <!-- Nội dung -->
+        <div class="text-blue-600 font-bold text-lg mb-6">
+          Chọn số tiền và thời gian bạn muốn {{
+          activeTab === 'invest' ? 'đầu tư' : 'huy động'
+          }}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center text-start">
+          <!-- Cột 1 -->
+          <div class="col-span-1">
+            <p class="text-blue-600 font-semibold mb-1">Số tiền {{ activeTab === 'invest' ? 'đầu tư' : 'huy động' }}</p>
+            <h2 class="text-2xl font-bold text-blue-700 mt-1">
+              {{ amount | number }} VNĐ
+            </h2>
+            <input type="range" min="50000000" max="10000000000" step="1000000" [(ngModel)]="amount"
+              class="w-full h-2 rounded-lg appearance-none cursor-pointer" [ngStyle]="{
+            'background': getRangeGradient(amount, 50000000, 10000000000)
+          }" />
+          </div>
+
+          <!-- Cột 2 -->
+          <div class="col-span-1">
+            <p class="text-blue-600 font-semibold mb-1">Thời gian {{ activeTab === 'invest' ? 'đầu tư' : 'huy động' }}
+            </p>
+            <h2 class="text-2xl font-bold text-blue-700 mt-1">
+              {{ duration }} ngày
+            </h2>
+            <input type="range" min="0" max="90" step="1" [(ngModel)]="duration"
+              class="w-full h-2 rounded-lg appearance-none cursor-pointer" [ngStyle]="{
+            'background': getRangeGradient(duration, 0, 90)
+          }" />
+          </div>
+
+          <!-- Cột 3 -->
+          <div class="col-span-1 md:col-span-1">
+            <h2 class="text-2xl font-bold text-blue-700">
+              {{ totalReturn | number }} VNĐ
+            </h2>
+            <p class="text-md text-blue-500 mt-1">
+              Tổng số tiền nhận lại với lãi suất lên đến 14%
+            </p>
+          </div>
+
+          <!-- Cột 4 -->
+          <div class="col-span-1 flex justify-center">
+            <button
+              class="px-6 py-2 mt-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-500 text-white font-semibold">
+              NHẬN {{ activeTab === 'invest' ? 'ĐẦU TƯ' : 'HUY ĐỘNG' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="bg-white pb-12 md:pt-48">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-2xl md:text-3xl font-bold text-primary mb-10">
+        TIỆN ÍCH NỔI BẬT
+      </h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 place-items-center">
+        <div *ngFor="let item of features" class="flex flex-col items-center text-center space-y-2">
+          <!-- Item -->
+          <div class="flex flex-col items-center text-center space-y-2">
+            <img [src]="item.icon" alt="icon" class="w-30 h-30">
+            <p class="text-primary font-semibold leading-tight" [innerHTML]="item.title"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-2xl uppercase md:text-3xl font-bold text-primary mb-10">
+        KẾT NỐI AN TOÀN
+      </h2>
+    </div>
+    <img src="assets/images/banner/banner-home-1.png" alt="LINKFIIN" class="max-w-full w-full">
+  </section>
+  <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-2xl uppercase md:text-3xl font-bold text-primary mb-10">
+        TẠI SAO HÀNG NGHÌN KHÁCH HÀNG CHỌN LINKFIIN?
+      </h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div *ngFor="let item of reasons"
+          class="bg-[#0d46f3] text-white flex items-center justify-between px-4 py-3 rounded-xl shadow-md hover:bg-blue-800 transition-all">
+          <div class="flex items-center space-x-3">
+            <!-- <div class="text-2xl">{{ item.icon }}</div> -->
+            <img [src]="item.icon" class="h-6 w-6" alt="icon">
+            <div>
+              <h3 class="font-semibold text-xl">{{ item.title }}</h3>
+              <p class="text-base text-white">{{ item.description }}</p>
+            </div>
+          </div>
+          <mat-icon class="text-xl font-bold text-white" svgIcon="heroicons_outline:chevron-right"></mat-icon>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-2xl uppercase md:text-3xl font-bold text-primary mb-10">
+        Cơ hội đột phá
+      </h2>
+    </div>
+    <img src="assets/images/banner/banner-home-2.png" alt="LINKFIIN" class="max-w-full w-full">
+  </section>
+  <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-xl md:text-3xl font-bold text-blue-600 mb-2">
+        CÁC LĨNH VỰC VÀ DỰ ÁN KÊU GỌI ĐẦU TƯ
+      </h2>
+      <p class="text-center text-gray-600 mb-10">
+        Chọn ngay gói vay phù hợp với nhu cầu và khả năng tài chính
+      </p>
+
+      <div class="flex justify-center items-center gap-6 overflow-x-auto scrollbar-hide">
+        <div *ngFor="let project of projects1" class="min-w-[300px] bg-white rounded-xl shadow-md flex-shrink-0">
+          <img [src]="project.image" alt="project" class="w-full h-60 object-cover rounded-t-xl" />
+          <div class="bg-blue-600 text-white text-center font-semibold py-4 rounded-b-xl">
+            {{ project.title }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-2xl uppercase md:text-3xl font-bold text-primary mb-10">
+        Nâng tầm thương hiệu
+      </h2>
+    </div>
+    <img src="assets/images/banner/banner-home-3.png" alt="LINKFIIN" class="max-w-full w-full">
+  </section>
+  <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-xl md:text-3xl font-bold text-blue-600 mb-2">
+        P2P LEDING: XU HƯỚNG TÀI CHÍNH
+      </h2>
+      <p class="text-center text-gray-600 mb-10">
+        Chọn ngay gói vay phù hợp với nhu cầu và khả năng tài chính
+      </p>
+
+      <div class="flex justify-center items-center gap-6 overflow-x-auto scrollbar-hide">
+        <div *ngFor="let project of projects2" class="min-w-[300px] bg-white rounded-xl shadow-md flex-shrink-0">
+          <img [src]="project.image" alt="project" class="w-full h-60 object-cover rounded-t-xl" />
+          <div class="bg-blue-600 text-white text-center font-semibold py-4 rounded-b-xl">
+            {{ project.title }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-2xl uppercase md:text-3xl font-bold text-primary mb-10">
+        Giá trị bền vững
+      </h2>
+    </div>
+    <img src="assets/images/banner/banner-home-4.png" alt="LINKFIIN" class="max-w-full w-full">
+  </section>
+  <section class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-center text-2xl md:text-3xl font-bold text-primary mb-10">
+        KHÁCH HÀNG ĐÁNH GIÁ
+      </h2>
+
+      <div class="flex gap-6 justify-start overflow-x-auto pb-4 scrollbar-hide">
+        <div *ngFor="let item of testimonials" class="min-w-[320px] bg-white rounded-2xl shadow-md p-6 flex-shrink-0">
+          <img [src]="item.avatar" alt="avatar" class="w-24 h-24 object-cover rounded-xl mb-4" />
+
+          <div class="flex justify-start mb-2">
+            <ng-container *ngFor="let star of [].constructor(item.stars)">
+              <mat-icon class="text-yellow-400" svgIcon="heroicons_solid:star"></mat-icon>
+            </ng-container>
+          </div>
+
+          <h3 class="text-start font-bold text-blue-600 text-lg">
+            {{ item.name }}
+          </h3>
+          <p class="text-start text-gray-600 text-sm mb-4">
+            {{ item.title }}
+          </p>
+
+          <h4 class="text-blue-600 font-semibold mb-1">Nhận xét</h4>
+          <p class="text-gray-700 whitespace-pre-line text-sm">
+            {{ item.comment }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="bg-white text-black py-12">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
+      <!-- Cột 1 -->
+      <div>
+        <div class="flex justify-start items-start mb-3">
+          <img src="assets/images/logo/logo-auth.svg" alt="logo" class="h-6" />
+          <!-- <span class="text-xl font-bold text-orange-500">LINKFIIN</span> -->
+        </div>
+        <p class="text-sm text-black">
+          CÔNG TY TNHH CÔNG NGHỆ KẾT NỐI ĐẦU TƯ VÀ TÀI CHÍNH LINKFIIN
+        </p>
+        <div class="mt-4">
+          <h4 class="text-primary font-bold mb-1">Địa chỉ</h4>
+          <p class="text-sm text-black mb-1">
+            <strong>Hồ Chí Minh:</strong> LV1.00.24, Thủ Thiêm Lakeview 1, 19 Tố
+            Hữu, P.Thủ Thiêm, TP Thủ Đức, TP.HCM
+          </p>
+          <p class="text-sm text-black">
+            <strong>Hà Nội:</strong> C-TT3-6, Khu nhà ở Him Lam, Phường Vạn Phúc,
+            TP.Hà Nội
+          </p>
+        </div>
+        <div class="mt-4">
+          <h4 class="text-primary font-bold mb-1">Hotline</h4>
+          <p class="text-black text-sm">19003185</p>
+        </div>
+        <div class="mt-2">
+          <h4 class="text-primary font-bold mb-1">Email</h4>
+          <p class="text-black text-sm">{{'fdifintech@gmail.com'}}</p>
+        </div>
+      </div>
+
+      <!-- Cột 2 -->
+      <div>
+        <h4 class="text-primary font-bold mb-3">Website</h4>
+        <ul class="space-y-2 text-black text-sm">
+          <li><a>www.linkfiin.vn</a></li>
+          <li><a>www.myfiin.vn</a></li>
+        </ul>
+      </div>
+
+      <!-- Cột 3 -->
+      <div>
+        <h4 class="text-primary font-bold mb-3">Giải đáp</h4>
+        <ul class="space-y-2 text-black text-sm">
+          <li><a>Chính sách bảo mật</a></li>
+          <li><a>Điều khoản sử dụng</a></li>
+          <li><a>Câu hỏi thường gặp</a></li>
+        </ul>
+      </div>
+
+      <!-- Cột 4 -->
+      <div>
+        <h4 class="text-primary font-bold mb-3">Kết nối với chúng tôi</h4>
+        <div class="flex gap-4">
+          <a><img src="assets/images/ui/media/Facebook.svg" class="w-10" /></a>
+          <a><img src="assets/images/ui/media/Instagram.svg" class="w-10" /></a>
+          <a><img src="assets/images/ui/media/Zalo.svg" class="w-10" /></a>
+          <a><img src="assets/images/ui/media/Youtube.svg" class="w-10" /></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>

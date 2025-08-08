@@ -1,0 +1,54 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent p-8">
+    <mat-drawer-content class="flex flex-col">
+        <mat-tab-group (selectedTabChange)="tabChanged($event)">
+            <mat-tab *ngFor="let tab of tabs" [label]="tab.label">
+                <ng-container [ngSwitch]="tab.id">
+                    <ng-container *ngSwitchCase="1">
+                        <app-process-list
+                            (onUpdateStatusSuccess)="onStatusUpdated()"
+                            [lstProcess]="lstSystem"
+                            [classUnique]="{tabId: tab.id, activeTab}"
+                        >
+                        </app-process-list>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="2" >
+                        <div class="w-full h-full">
+                            <div class="flex flex-col gap-4">
+                                <div class="flex flex-col gap-3">
+                                    <h3 class="text-lg font-bold">Đồng bộ dữ liệu hệ thống cache</h3>
+                                    <button class="fuse-mat-button-md w-48"
+                                            mat-flat-button
+                                            [color]="'primary'"
+                                            (click)="onCacheSys()"
+                                    >
+                                        <span>Đồng bộ dữ liệu</span>
+                                    </button>
+                                </div>
+                                <div class="flex flex-col gap-3">
+                                    <h3 class="text-lg font-bold">Đồng bộ cấu hình tạo File/Hợp đồng tự động</h3>
+                                    <button class="fuse-mat-button-md w-48"
+                                            mat-flat-button
+                                            [color]="'primary'"
+                                            (click)="onFileSys()"
+                                    >
+                                        <span>Đồng bộ dữ liệu</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                        <app-process-list
+                            (onUpdateStatusSuccess)="onStatusUpdated()"
+                            [lstProcess]="lstApplication"
+                            [classUnique]="{tabId: tab.id, activeTab}"
+                        >
+                        </app-process-list>
+                    </ng-container>
+                </ng-container>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-drawer-content>
+</mat-drawer-container>
+
+

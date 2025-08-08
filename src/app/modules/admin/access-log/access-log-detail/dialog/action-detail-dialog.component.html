@@ -1,0 +1,16 @@
+<div class="relative">
+    <a
+        mat-dialog-close
+        mat-icon-button
+        class="absolute right-0 top-[4px]"
+    >
+        <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </a>
+    <app-datatable
+        [containerStyle]="{height: 'calc(100vh - 30px)'}"
+        [fullHeight]="true"
+        [tableConfig]="tableTransConfig"
+        [dataSource]="dataSource$"
+        (pageSwitch)="handlePageSwitch($event)"
+    ></app-datatable>
+</div>

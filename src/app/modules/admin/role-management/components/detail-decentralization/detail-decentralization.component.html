@@ -1,0 +1,148 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent p-8">
+    <mat-drawer-content class="flex flex-col">
+        <div class="w-full px-5 sticky top-0 bg-white"
+             style="z-index: 3">
+            <div class="flex items-center justify-between w-full mx-auto py-2 border-b border-solid">
+                <article class="w-2/4 prose break-words">
+                    <h3>
+                        Thông tin nhóm quyền
+                    </h3>
+                </article>
+                <div class="flex items-center justify-end">
+                    <button (click)="onClose()"
+                            [disabled]="disabled"
+                            mat-stroked-button>
+                        Huỷ
+                    </button>
+                    <button  @fadeInRight
+                             *ngIf="('SFF_DECENTRALIZED_UPDATE' | permission)"
+                             (click)="onSubmit()"
+                             [disabled]="disabled"
+                            mat-flat-button
+                            color="primary"
+                            class="ml-5">
+                        Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="p-5 flex flex-col gap-4"
+             [formGroup]="roleForm">
+            <div class="flex flex-col flex-auto w-full  ">
+                <div class="flex flex-row w-full gap-4 ">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Tên nhóm quyền</mat-label>
+                        <input id="groupRoleName"
+                               matInput
+                               trim="blur"
+                               maxlength="50"
+                               formControlName="groupRoleName">
+                        <mat-error *ngIf="roleForm.get('groupRoleName').hasError('required')">
+                            {{ 'QLPQ001' | transloco }}
+                        </mat-error>
+                        <mat-error *ngIf="roleForm.get('groupRoleName').hasError('maxlength')">
+                            {{ 'QLPQ002' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="flex flex-row w-1/2 gap-3">
+                        <mat-form-field class="w-1/2">
+                            <mat-label>Thời gian hiệu lực</mat-label>
+                            <input id="timeStart"
+                                   matInput
+                                   formControlName="timeStart"
+                                   [min]="minTimeStart"
+                                   [matDatepicker]="pickerTimeStart">
+                            <mat-datepicker-toggle matSuffix [for]="pickerTimeStart"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerTimeStart></mat-datepicker>
+                            <mat-error *ngIf="getValidatorErrors('timeStart')" class="min-h-[18px] leading-[18px]">
+                                {{ getValidatorErrors('timeStart') | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="w-1/2">
+                            <mat-label></mat-label>
+                            <input id="timeEnd"
+                                   matInput
+                                   [matDatepicker]="timeEnd"
+                                   formControlName="timeEnd">
+                            <mat-datepicker-toggle matSuffix [for]="timeEnd"></mat-datepicker-toggle>
+                            <mat-datepicker #timeEnd disabled="false"></mat-datepicker>
+                            <!--<mat-error *ngIf="getValidatorErrors2('timeEnd')" class="min-h-[18px] leading-[18px]">
+                                {{ getValidatorErrors2('timeEnd') | transloco }}
+                            </mat-error>-->
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-full">
+                        <mat-label>Ghi chú</mat-label>
+                        <textarea id="info"
+                                  matInput
+                                  maxlength="500"
+                                  trim="blur"
+                                  [rows]="3"
+                                  formControlName="info"></textarea>
+                        <mat-error *ngIf="roleForm.get('info').hasError('required')">
+                            {{ 'QLPQ009' | transloco }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-tab-group #matTabGroup>
+                <mat-tab label="Quyền Modules">
+                    <modules-decentralization #moduleDecentralization
+                                              [disabled]="disabled"
+                                              [roles]="roles"></modules-decentralization>
+                </mat-tab>
+                <mat-tab label="Quyền nâng cao" >
+                    <advanced-decentralization
+                        [disabled]="disabled"
+                        [lstAdvancedTabs]="lstAdvancedTabs"
+                    ></advanced-decentralization>
+                </mat-tab>
+                <mat-tab label="Báo cáo" >
+                    <report-decentralization
+                        [disabled]="disabled"
+                        [lstModuleReportNdt]="lstModuleReportNdt"
+                        [lstModuleReportHdv]="lstModuleReportHdv"
+                        [lstModuleReportAcc]="lstModuleReportAcc"
+                    ></report-decentralization>
+                </mat-tab>
+            </mat-tab-group>
+
+            <!--<fuse-card class="flex flex-col flex-auto w-full border-b p-8 ">
+                <strong class="mb-6 text-lg">
+                    Thông tin khác
+                </strong>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày tạo</mat-label>
+                        <input id="createdDate"
+                               matInput
+                               formControlName="createdDate">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người tạo</mat-label>
+                        <input id="createdByName"
+                               matInput
+                               formControlName="createdByName">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-row w-full gap-4">
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Ngày cập nhật</mat-label>
+                        <input id="lastUpdatedByName"
+                               matInput
+                               formControlName="lastUpdatedByName">
+                    </mat-form-field>
+                    <mat-form-field class="w-1/2">
+                        <mat-label>Người cập nhật</mat-label>
+                        <input id="lastUpdatedDate"
+                               matInput
+                               formControlName="lastUpdatedDate">
+                    </mat-form-field>
+                </div>
+            </fuse-card>-->
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>
