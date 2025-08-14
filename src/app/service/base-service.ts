@@ -57,6 +57,7 @@ export class BaseService extends HttpService {
 
     protected searchDataLazyLoad(path: string, condition: any, notShowMsg?: boolean): Observable<BaseResponse> {
         const payload = this.buildBodyParams(condition);
+        // console.log(payload)
         return this.post(this.url + '/' + path, payload).pipe(
             tap((res) => {
                 if (res == undefined || res.content == undefined || res.content.length <= 0) {
@@ -127,7 +128,7 @@ export class BaseService extends HttpService {
                         condition.payload[k] = input[k];
                     }
                     if ((k == 'createdDate' || k == 'lastUpdatedDate') && input[k]) {
-                        if (typeof input[k].toString().toLowerCase() == 'string') {
+                        if (typeof input[k] === 'string') {
                             condition.payload[k] = undefined;
                         }
                     }

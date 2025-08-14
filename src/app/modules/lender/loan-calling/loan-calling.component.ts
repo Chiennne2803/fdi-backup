@@ -13,7 +13,7 @@ import {
     DropListSearch, FromToSearch, IDropList,
     InputSearch
 } from "../../../shared/components/group-search/search-config.models";
-import {TABLE_LOAN_CONFIG, TASK_BAR_CONFIG} from "./loan-calling.config";
+import {TABLE_BUTTON_ACTION, TABLE_LOAN_CONFIG, TASK_BAR_CONFIG} from "./loan-calling.config";
 
 @Component({
     selector: 'borrower-loan-calling',
@@ -22,8 +22,9 @@ import {TABLE_LOAN_CONFIG, TASK_BAR_CONFIG} from "./loan-calling.config";
 })
 export class LoanCallingComponent implements OnInit {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
-    public _tableLoanConfig = { ...TABLE_LOAN_CONFIG, title: 'Hồ sơ đang huy động' };
+    public _tableLoanConfig = TABLE_LOAN_CONFIG;
     public _taskbarConfig = TASK_BAR_CONFIG;
+    public _btnConfig = TABLE_BUTTON_ACTION;
     public _dataSource$: Observable<BaseResponse>;
     private searchPayload: BaseRequest = new BaseRequest();
     private _dataSearchDialog: object;
@@ -113,7 +114,7 @@ export class LoanCallingComponent implements OnInit {
                     this._loanProfilesService.doSearch({
                         ...response.form.value,
                         ...this.searchPayload,
-                        createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined,
+                        // createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined,
                     }).subscribe();
                 }
                 this._dataSearchDialog = response.form.value;

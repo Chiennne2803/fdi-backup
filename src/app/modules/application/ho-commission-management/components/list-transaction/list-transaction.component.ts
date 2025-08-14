@@ -151,7 +151,7 @@ export class ListTransactionComponent implements OnInit {
                     this.searchPayload= {
                         ...this.searchPayload,
                         ...response.form.value,
-                        createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined,
+                        // createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined,
                     };
                     this._manageBonusReqService.getListTransaction(this.searchPayload).subscribe();
                 }

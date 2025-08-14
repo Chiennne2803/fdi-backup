@@ -56,10 +56,12 @@
                     <date-picker-year-only
                         label="BCTC năm liền kề"
                         formControlName="financeLastTime"
+                        [maxYear]="maxYear"
                     ></date-picker-year-only>
                     <date-picker-year-only
                         label="BCTC năm gần nhất"
                         formControlName="financeTime"
+                        [maxYear]="maxYear"
                     ></date-picker-year-only>
                 </ng-container>
                 <ng-template #fieldsReadOnly>

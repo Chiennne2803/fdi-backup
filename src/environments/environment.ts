@@ -29,7 +29,7 @@ export const environment = {
     applicationService: `${baseHost}/catalog/truongtien/api`,
     logoutUrl: `${baseHost}/catalog/vsa/v1/token/revoke`,
 
-    pageSizeOptions: [2, 10, 25, 50, 100],
+    pageSizeOptions: [10, 25, 50, 100],
     defaultPageSize: 10,
     firebaseConfig : {
         apiKey: "AIzaSyBQySwi4aoBW2og9PfXonTmYo057QI63aw",

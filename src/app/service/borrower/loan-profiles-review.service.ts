@@ -50,6 +50,7 @@ export class LoanProfilesReviewService extends BaseService {
      */
     doSearch(payload: FsLoanProfilesDTO = new FsLoanProfilesDTO()):
         Observable<BaseResponse> {
+            // console.log(payload)
         return this.searchDataLazyLoad('search', payload);
     }
 

@@ -125,7 +125,7 @@ export class KycDetailComponent implements OnInit, OnDestroy {
             this._kycService.kycPayLoad.subscribe(
                 (payload) => {
                     this.kycPayload = payload;
-                    console.log(payload)
+                    // console.log(payload)
                     this._kycService.createDynamicForm(this.kycPayload, this.prepareLoadingPageFormArray);
                 }
             )

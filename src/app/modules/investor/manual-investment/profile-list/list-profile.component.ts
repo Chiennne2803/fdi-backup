@@ -113,7 +113,7 @@ export class ListProfileComponent implements OnInit, OnDestroy {
                     config: [
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ', null, false),
                         new InputSearch('createdByName', 'Bên huy động vốn', null, false),
-                        new InputSearch('identification', 'Số chứng nhận', null, false),
+                        new InputSearch('identification', 'Số GPKD', null, false),
                         new FromToSearch('amount', 'Số tiền cần huy động (VNĐ)', null, 'number'),
                         new DropListSearch('loanTimeCycle', 'Kỳ hạn(ngày)', this.listInvestmentTime.map(item => ({
                             label: item.toString(),
@@ -136,7 +136,7 @@ export class ListProfileComponent implements OnInit, OnDestroy {
                     this._investorService.getAllLoanActiveProfile({
                         ...response.form.value,
                         ...this.searchPayload,
-                        createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined
+                        // createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined
                     }).subscribe();
                 }
                 this._dataSearchDialog = response.form.value;

@@ -1,19 +1,19 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {ProfileService} from '../../../../../service/common-service';
-import {map, Subscription, tap} from 'rxjs';
-import {AdmCategoriesDTO, AdmDeputyContactDTO} from '../../../../../models/admin';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { ProfileService } from '../../../../../service/common-service';
+import { map, Subscription, tap } from 'rxjs';
+import { AdmCategoriesDTO, AdmDeputyContactDTO } from '../../../../../models/admin';
 import _ from 'lodash';
-import {AccountModel} from '../../../../../models/service/FsAccountBankDTO.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {APP_TEXT} from '../../../../../shared/constants';
-import {AddressKycDialogComponent} from '../../../../../shared/components/dialog/address-dialog/address-dialog.component';
-import {IAddressData} from '../../../../../shared/models/address.model';
-import {MatDialog} from '@angular/material/dialog';
+import { AccountModel } from '../../../../../models/service/FsAccountBankDTO.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { APP_TEXT } from '../../../../../shared/constants';
+import { AddressKycDialogComponent } from '../../../../../shared/components/dialog/address-dialog/address-dialog.component';
+import { IAddressData } from '../../../../../shared/models/address.model';
+import { MatDialog } from '@angular/material/dialog';
 import moment from 'moment';
-import {DialogService} from '../../../../../service/common-service/dialog.service';
-import {FuseAlertService} from '../../../../../../@fuse/components/alert';
-import {DeputyType} from '../../../../../enum';
-import {forbiddenPhoneNumberValidator} from "../../../../../shared/validator/forbidden";
+import { DialogService } from '../../../../../service/common-service/dialog.service';
+import { FuseAlertService } from '../../../../../../@fuse/components/alert';
+import { DeputyType } from '../../../../../enum';
+import { forbiddenPhoneNumberValidator } from "../../../../../shared/validator/forbidden";
 
 @Component({
     selector: 'biggest-capital-contributor',
@@ -44,15 +44,19 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
             this._profileService.profilePrepare$.pipe(
                 map(res => _.cloneDeep(res)),
                 tap((acc: AccountModel) => {
-                    if ( acc && acc.capitalContributors ) {
-                        // Filter contact to get type = 2 and sort by alphabet
+                    if (acc && acc.capitalContributors) {
+                        // Lọc và sắp xếp
                         acc.capitalContributors = _.filter(acc.capitalContributors, ['type', DeputyType.CAPITAL_CONTRIBUTOR]);
-                        acc.capitalContributors = _.sortBy(acc.capitalContributors,c => c.fullName.toLowerCase());
+                        acc.capitalContributors = _.sortBy(acc.capitalContributors, c => (c.fullName ? c.fullName.toLowerCase() : ''));
+
+                        // Gán data
                         this.contactInfoData = acc.capitalContributors;
                         this.fixedContactInfoData = acc.capitalContributors;
                         this.contactSelected = acc.capitalContributors[0];
+                        this.genders = acc.sex;
+
+                        console.log('Genders:', this.genders);
                     }
-                    this.genders = [...acc.sex];
                 })
             ).subscribe()
         );
@@ -70,8 +74,8 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
 
     searchContact(event: Event): void {
         const value = (event.target as HTMLInputElement).value;
-        if ( this.fixedContactInfoData ) {
-            if ( value ) {
+        if (this.fixedContactInfoData) {
+            if (value) {
                 this.contactInfoData = this.fixedContactInfoData.filter(
                     c => c.fullName.toLowerCase().includes(value.toLowerCase().trim())
                 );
@@ -83,7 +87,7 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
     }
 
     initFormToEditing(title: string, contact?: AdmDeputyContactDTO): void {
-        if ( !contact ) {
+        if (!contact) {
             this.contactSelected = null;
         }
         this.isEditing = true;
@@ -95,7 +99,7 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
             dateOfBirth: this._fb.control(contact?.dateOfBirth ? new Date(contact?.dateOfBirth) : '', Validators.required),
             gender: this._fb.control(Number(contact?.gender) || '', Validators.required),
             identification: this._fb.control(contact?.identification || '', Validators.required),
-            mobile: this._fb.control(contact?.mobile || '', [Validators.required,  forbiddenPhoneNumberValidator()]),
+            mobile: this._fb.control(contact?.mobile || '', [Validators.required, forbiddenPhoneNumberValidator()]),
             email: this._fb.control(contact?.email || '', [Validators.required, Validators.email]),
             address2: this._fb.control(contact?.address2 || '', Validators.required),
             positionCompany: this._fb.control(contact?.positionCompany || '', Validators.required)
@@ -104,16 +108,16 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
 
     onSubmit(): void {
         this.contactForm.markAllAsTouched();
-        if ( this.contactForm.valid ) {
+        if (this.contactForm.valid) {
             const dialogSubmit = this._dialogService.openConfirmDialog('Xác nhận lưu dữ liệu');
             dialogSubmit.afterClosed().subscribe((action) => {
-                if ( action === 'confirmed' ) {
+                if (action === 'confirmed') {
                     this._profileService.updateDeputyContact({
                         ...this.contactForm.value,
                         dateOfBirth: new Date(this.contactForm.get('dateOfBirth').value).getTime(),
                     }).subscribe(
                         (response) => {
-                            if ( response.errorCode === '0' ) {
+                            if (response.errorCode === '0') {
                                 this._fuseAlertService.showMessageSuccess('Dữ liệu đã được lưu thành công');
                                 this._profileService.getPrepareLoadingPage().subscribe(() => this.backToViewOnly());
                             }
@@ -142,7 +146,7 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
     }
 
     cancelEditing(): void {
-        if ( this.contactForm.dirty ) {
+        if (this.contactForm.dirty) {
             const dialog = this._dialogService.openConfirmDialog('Dữ liệu thao tác trên màn hình sẽ bị mất, xác nhận thực hiện');
             dialog.afterClosed().subscribe((res) => {
                 if (res === 'confirmed') {

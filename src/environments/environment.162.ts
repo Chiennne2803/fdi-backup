@@ -38,7 +38,7 @@ export const environment = {
     encryptKey: 'ZmRpQGVuY3J5cHRrZXlAMDMwMzIwMjU=',
 
     production: false,
-    appName: 'BES - LENDING',
+    appName: 'LINKFIIN',
     serverUrlnotVsa: `${baseHost}/catalog`,
     serverUrl: `${baseHost}/catalog/vsa/service`,
     applicationService: `${baseHost}/catalog/truongtien/api`,

@@ -876,6 +876,7 @@ export const horizontalBorrowerNavigation: FuseNavigationItem[] = [
         icon: 'mat_outline:rv_hookup',
         link: '/borrower/loan-calling',
         code: 'LENDER_LOAN_PROFILE_APPROVED_ADVANCED_SEARCH' +
+            ',LENDER_LOAN_PROFILE_APPROVED_EXPORT_PROFILES' +
             ',LENDER_LOAN_PROFILE_APPROVED_USE_CAPITAL_PACKAGE' +
             ',LENDER_LOAN_PROFILE_APPROVED_PROCESS_INVESTMENT' +
             ',LENDER_LOAN_PROFILE_APPROVED_AUTO_APPROVE' +

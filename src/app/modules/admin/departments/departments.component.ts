@@ -127,7 +127,7 @@ export class DepartmentsComponent implements OnInit {
                     this._departmentsService.doSearch({
                         ...response.form.value,
                         ...this.searchPayload,
-                        createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined,
+                        // createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined,
                     }).subscribe();
                 }
                 this._dataSearchDialog = response.form.value;

@@ -113,9 +113,11 @@ export class GroupSearchComponent implements OnInit {
     public onBtnSearchClk(): void {
         this.searchGroup.markAllAsTouched();
         if (this.searchGroup.valid) {
+            // console.log(this.searchGroup.value)
             this.btnSearchClicked.emit({action: 'search', form: this.searchGroup});
         }
     }
+
 
     public onBtnClearClk(): void {
         this.searchGroup.reset();

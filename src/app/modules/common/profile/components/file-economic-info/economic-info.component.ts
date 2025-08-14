@@ -27,6 +27,8 @@ export class EconomicInfoComponent implements OnInit, OnDestroy, AfterViewInit {
     bctcCodeList: AdmCategoriesDTO[];
     bcltList: AdmCategoriesDTO[];
     message = APP_TEXT;
+    maxYear = { years: 0 };
+    
 
     constructor(
         private _fb: FormBuilder,

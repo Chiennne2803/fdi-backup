@@ -165,10 +165,15 @@
                                 <article class="prose">
                                     <h4>Thông tin cá nhân</h4>
                                 </article>
-                                <div class="grid grid-rows-4 grid-cols-4  gap-5 pb-5">
+                                <div class="grid grid-rows-4 grid-cols-4 mt-4 gap-5 pb-5">
                                     <div class="row-span-3 pr-5">
                                         <div *ngIf="avatar" class="w-full h-50 avatar"
                                              [ngStyle]="{'background-image':'url('+avatar.contentBase64+')'}"></div>
+                                             <div *ngIf="!avatar"
+                                                class="w-full h-50 rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 bg-center bg-contain bg-no-repeat"
+                                                [ngStyle]="{
+                                            'background-image': 'url(assets/images/icon/user-avatar.svg)'
+                                            }"></div>
                                     </div>
                                     <div class="col-span-1 ...">
                                         <article class="prose break-words">
@@ -270,10 +275,16 @@
                                 <article class="prose">
                                     <h4>Thông tin doanh nghiệp</h4>
                                 </article>
-                                <div class="grid grid-rows-4 grid-cols-4  gap-5 pb-5">
+                                <div class="grid grid-rows-4 grid-cols-4 mt-4 gap-5 pb-5">
                                     <div class="row-span-3 pr-5">
                                         <div *ngIf="avatar" class="w-full h-50 avatar"
-                                             [ngStyle]="{'background-image':'url('+avatar.contentBase64+')'}"></div>
+                                             [ngStyle]="{'background-image':'url('+avatar.contentBase64+')'}">
+                                            </div>
+                                            <div *ngIf="!avatar"
+                                                class="w-full h-50 rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 bg-center bg-contain bg-no-repeat"
+                                                [ngStyle]="{
+                                            'background-image': 'url(assets/images/icon/user-avatar.svg)'
+                                            }"></div>
                                     </div>
                                     <div class="col-span-1 ...">
                                         <article class="prose break-words">

@@ -158,7 +158,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
         {value: 3, name: 'Trả gốc + Lãi trong hạn + Lãi quá hạn'}
     ];
     public taxChoices: [{ name: string; value: number }, { name: string; value: number }, { name: string; value: number }] = [
-        {value: 1, name: 'BESLENDING'},
+        {value: 1, name: 'LinkFiin'},
         {value: 2, name: 'Bên huy động'},
         {value: 3, name: 'Nhà đầu tư'}
     ];

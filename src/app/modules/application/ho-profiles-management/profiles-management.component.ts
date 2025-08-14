@@ -13,7 +13,7 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
     encapsulation: ViewEncapsulation.None
 })
 export class ProfilesManagementComponent implements OnInit, OnDestroy {
-    @ViewChild('sidebarDrawer', { static: true }) sidebarDrawer: MatDrawer;
+    @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     menuData: FuseNavigationItem[];
     reception: FuseNavigationItem;
     review: FuseNavigationItem;

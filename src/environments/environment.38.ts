@@ -26,7 +26,7 @@ export const environment = {
     clientSecret: 'ZmRpQGNsaWVudFNlY3JldEAwMzAzMjAyNQ==', //fdi@clientSecret@03032025
 
     production: false,
-    appName: 'BES - LENDING',
+    appName: 'LINKFIIN',
     serverUrlnotVsa: `${baseHost}/catalog`,
     serverUrl: `${baseHost}/catalog/vsa/service`,
     // loginUrl: `${baseHost}/catalog/vsa/v1/oauth/token`,

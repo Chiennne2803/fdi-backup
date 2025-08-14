@@ -13,7 +13,7 @@ export const TABLE_LOAN_CONFIG: ITableConfig = {
         new TextColumn('createdDate', 'Ngày lập', 10, false, 'DD/MM/YYYY HH:mm:ss'),
         new TextColumn('statusName', 'Trạng thái', 10),
     ],
-    title: 'Hồ sơ đang xem xét',isViewDetail: false
+    title: 'Hồ sơ đang huy động',isViewDetail: false
 };
 
 export const TASK_BAR_CONFIG: TaskBarConfig = {

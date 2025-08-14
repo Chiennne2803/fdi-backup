@@ -1,4 +1,4 @@
-<div class="flex flex-col max-w-240 md:min-w-160 -m-6">
+<div class="-m-6 flex max-h-screen max-w-240 flex-col md:min-w-160">
     <!-- Header -->
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="flex items-center justify-center gap-2 text-lg font-medium">
@@ -9,9 +9,9 @@
             <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'" (click)="close()"></mat-icon>
         </button>
     </div>
-    <div [formGroup]="searchGroup" class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+    <div [formGroup]="searchGroup" class="flex flex-auto flex-col overflow-y-auto p-6 sm:p-8"
         *ngIf="data.searchConfig.config.length > 0">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div *ngFor="let item of data.searchConfig.config; let i = index" class="w-full">
                 <!-- ::::::::::::::::::::::::::::::::::INPUT:::::::::::::::::::::::::::::::::::::::: -->
                 <mat-form-field *ngIf="item.type === 'input'" floatLabel="always" class="w-full">

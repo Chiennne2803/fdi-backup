@@ -85,7 +85,7 @@
         </div> -->
 
     <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="smsOtpForm">
-        <fuse-alert class="mt-4 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false" [type]="alert.type"
+        <fuse-alert class="mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false" [type]="alert.type"
             [@shake]="alert.type === 'error'">
             {{alert.message}}
         </fuse-alert>

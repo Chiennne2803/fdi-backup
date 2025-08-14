@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {SelectionModel} from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterViewChecked,
     AfterViewInit,
@@ -14,27 +14,27 @@ import {
     SimpleChanges,
     ViewChild
 } from '@angular/core';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {MatTable} from '@angular/material/table';
-import {BaseRequest, BaseResponse} from 'app/models/base';
-import {IDisplayColumn} from 'app/shared/models/datatable/display-column.model';
-import {ButtonTableEvent, IFooterTable, ITableConfig} from 'app/shared/models/datatable/table-config.model';
-import {DataTableButtonConfig, TaskBarConfig} from 'app/shared/models/datatable/task-bar.model';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTable } from '@angular/material/table';
+import { BaseRequest, BaseResponse } from 'app/models/base';
+import { IDisplayColumn } from 'app/shared/models/datatable/display-column.model';
+import { ButtonTableEvent, IFooterTable, ITableConfig } from 'app/shared/models/datatable/table-config.model';
+import { DataTableButtonConfig, TaskBarConfig } from 'app/shared/models/datatable/task-bar.model';
 
-import {fuseAnimations} from '@fuse/animations';
-import {TableConfigDTO} from 'app/models/TableConfigDTO.model';
-import {CommonService} from 'app/service/common-service/common.service';
-import {environment} from 'environments/environment';
+import { fuseAnimations } from '@fuse/animations';
+import { TableConfigDTO } from 'app/models/TableConfigDTO.model';
+import { CommonService } from 'app/service/common-service/common.service';
+import { environment } from 'environments/environment';
 import * as FileSaver from 'file-saver';
-import {cloneDeep, each, find, isEqual, uniqBy} from 'lodash';
-import {debounceTime, distinctUntilChanged, Observable, Subject, Subscription} from 'rxjs';
+import { cloneDeep, each, find, isEqual, uniqBy } from 'lodash';
+import { debounceTime, distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
 import * as XLSX from 'xlsx';
-import {DataTableUtils} from '../datatable.utils';
-import {DateTimeformatPipe} from "../pipe/date-time-format.pipe";
-import {CurrencyFormatPipe} from "../pipe/string-format.pipe";
-import {AuthService} from "../../../core/auth/auth.service";
+import { DataTableUtils } from '../datatable.utils';
+import { DateTimeformatPipe } from "../pipe/date-time-format.pipe";
+import { CurrencyFormatPipe } from "../pipe/string-format.pipe";
+import { AuthService } from "../../../core/auth/auth.service";
 import * as _ from 'lodash'
-import {HashMap} from "@ngneat/transloco";
+import { HashMap } from "@ngneat/transloco";
 
 @Component({
     selector: 'app-datatable[dataSource]',
@@ -44,6 +44,8 @@ import {HashMap} from "@ngneat/transloco";
 })
 export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewChecked, OnDestroy, OnInit {
     // #region Decorator
+    @Input() toggleDrawerFn!: () => void;
+
     @Input() public tableConfig!: ITableConfig;
     @Input() public containerStyle: object = {
         width: '-webkit-fill-available'
@@ -121,6 +123,11 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
             .subscribe(event => this.handleSearch.emit(event));
     }
 
+    callToggleDrawer(): void {
+        if (this.toggleDrawerFn) {
+            this.toggleDrawerFn();
+        }
+    }
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['dataSource'] && changes['dataSource'].currentValue) {
             this.data = changes['dataSource'].currentValue;
@@ -131,7 +138,7 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
                     this.selectionModel = new SelectionModel<any>(true, []);
                     this.tableConfig.isViewDetail = false;
                     if (!this.isListener) {
-                        setTimeout(()=> {
+                        setTimeout(() => {
                             const slider = document.querySelector('.table-container thead[role="rowgroup"] tr');
                             const body = document.querySelector('.table-container');
                             let isDown = false;
@@ -281,7 +288,7 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
         const dataExport: any[] = [];
         for (let idx = 0; idx < jsonData.length; idx++) {
             const objectData = jsonData[idx];
-            const cellData = {no: idx + 1};
+            const cellData = { no: idx + 1 };
             header.forEach(x => {
                 if (x != 'no') {
                     cellData[x] = undefined
@@ -297,7 +304,7 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
                     } else {
                         cellData[property] = objectData[property];
                     }
-                    if(configColume.type == 'status' && configColume.statusObject) {
+                    if (configColume.type == 'status' && configColume.statusObject) {
                         cellData[property] = configColume.statusObject[objectData[property]];
                     }
                 } else {
@@ -335,7 +342,7 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
             }
         }
         const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        this.saveExcelFile(excelBuffer, fileName  + '_' + new Date().getTime());
+        this.saveExcelFile(excelBuffer, fileName + '_' + new Date().getTime());
     }
 
     public removeVietnameseTones(str) {
@@ -592,7 +599,7 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
     onExpandRow(e: MouseEvent, element: any): void {
         let exist = false;
         for (let i = 0; i < this.expandedElement.length; i++) {
-            if(_.isEqual(element, this.expandedElement[i])) {
+            if (_.isEqual(element, this.expandedElement[i])) {
                 exist = true;
                 this.expandedElement.splice(i, 1);
                 break;
@@ -609,7 +616,7 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
 
     isElementExits(element: any): boolean {
         for (let i = 0; i < this.expandedElement.length; i++) {
-            if(_.isEqual(element, this.expandedElement[i])) {
+            if (_.isEqual(element, this.expandedElement[i])) {
                 return true
             }
         }

@@ -2,10 +2,15 @@
     *ngIf="!tableConfig.isViewDetail" @fadeOutLeft @slideInLeft [ngClass]="fullHeight ? 'sm:inset-0' : ''"
     [ngStyle]="containerStyle">
     <div style="height: 100px !important; z-index: 2" *ngIf="tableConfig?.title"
-        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-3 px- md:px-8 border-b">
+        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-3 px-3 md:px-8 border-b">
         <div class="font-extrabold tracking-tight" *ngIf="!isSearchOpen">
-            <div *ngIf="!hasSelected()" @fadeInTop class="text-2xl font-extrabold tracking-tight title">
-                {{ tableConfig.title }}
+            <div class="flex items-center justify-center gap-2">
+                <button (click)="callToggleDrawer()" class="block md:hidden" mat-icon-button>
+                    <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+                </button>
+                <div *ngIf="!hasSelected()" @fadeInTop class="text-2xl font-extrabold tracking-tight title">
+                    {{ tableConfig.title }}
+                </div>
             </div>
             <div [matTooltip]="tableConfig.title" *ngIf="hasSelected()" @fadeInLeft
                 class="text-1xl font-extrabold tracking-tight">
@@ -50,7 +55,7 @@
                 <ng-container *ngIf="tableConfigBtns.commonBtn && tableConfigBtns.commonBtn.length > 0">
                     <ng-container *ngFor="let btn of tableConfigBtns.commonBtn;">
                         <button mat-stroked-button [color]="'primary'" *ngIf="(btn.role | permission)"
-                            class="bg-primary-blue-6 !border-primary" [disabled]="disabedBtn(btn.type)"
+                            class="bg-primary-blue-6 !border-none" [disabled]="disabedBtn(btn.type)"
                             (click)="handleTableAction(btn.type, btn.fileName)">
                             <mat-icon *ngIf="btn.type == 'edit'" svgIcon="{{btn.icon ?? 'feather:edit' }}"
                                 class="mr-2 icon-size-4"></mat-icon>
@@ -80,7 +85,7 @@
                 </ng-container>
                 <ng-container *ngIf="tableConfigBtns.otherBtn && tableConfigBtns.otherBtn.length > 0">
                     <ng-container *ngFor="let btn of tableConfigBtns.otherBtn;">
-                        <button mat-stroked-button [color]="'primary'" class="bg-primary-blue-6 !border-primary"
+                        <button mat-stroked-button [color]="'primary'" class="bg-primary-blue-6 !border-none"
                             *ngIf="(btn.role | permission)" [disabled]="!selectionModel.hasValue()"
                             (click)="onBtnClick(btn.action)">
                             <!-- <mat-icon [svgIcon]="btn.icon"

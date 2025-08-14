@@ -80,7 +80,7 @@ export class ProfilesReceptionComponent implements OnInit {
     toggleDrawer(): void
     {
         // Toggle the drawer
-        this._profilesManagementComponent.sidebarDrawer.toggle();
+        this._profilesManagementComponent.matDrawer.toggle();
     }
 
     ngOnInit(): void {

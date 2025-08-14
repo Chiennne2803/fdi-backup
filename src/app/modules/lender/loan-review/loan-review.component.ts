@@ -44,6 +44,7 @@ export class LoanReviewComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
         this._dataSource$ = this._loanProfilesReviewService.lazyLoad;
         this._loanProfilesReviewService.setDrawer(this.matDrawer);
         this._loanProfilesReviewService.getPrepareLoadingPage().subscribe((res) => {
@@ -112,13 +113,14 @@ export class LoanReviewComponent implements OnInit {
         });
         dialogRef.componentInstance.btnSearchClicked.subscribe(
             (response) => {
+                // console.log(response)
                 if (response.action === 'reset') {
                     this._loanProfilesReviewService.doSearch(this.searchPayload).subscribe();
                 } else if (response.action === 'search') {
                     this._loanProfilesReviewService.doSearch({
                         ...response.form.value,
                         ...this.searchPayload,
-                        createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined,
+                        // createdDate: response.form.value.createdDate ? new Date(response.form.value.createdDate).getTime() : undefined,
                     }).subscribe();
                 }
                 this._dataSearchDialog = response.form.value;

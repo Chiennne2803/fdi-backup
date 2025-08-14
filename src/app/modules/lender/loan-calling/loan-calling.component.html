@@ -2,7 +2,7 @@
     class="flex-auto h-full bg-card dark:bg-transparent">
     <!-- Drawer -->
     <mat-drawer
-        class="w-full md:w-12/12 dark:bg-gray-900"
+        class="w-full md:w-12/12"
         [mode]="'side'"
         [opened]="false"
         [position]="'end'"
@@ -15,6 +15,7 @@
             [containerStyle]="{width: '100%'}"
             [tableConfig]="_tableLoanConfig"
             [taskbarConfig]="_taskbarConfig"
+            [tableConfigBtns]="_btnConfig"
             [dataSource]="_dataSource$"
             (handleSearch)="handleSearch($event)"
             (tableEvent)="handleTableEvent($event)"

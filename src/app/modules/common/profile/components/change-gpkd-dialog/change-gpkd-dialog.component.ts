@@ -66,7 +66,7 @@ export class ChangeGpkdDialogComponent implements OnInit {
                                     'Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất tạo hồ sơ huy động!',
                                 complete: () => {
                                     dialogRef.close();
-                                    this._fuseAlertService.showMessageSuccess('Thay đổi thành công');
+                                    this._fuseAlertService.showMessageSuccess('Gửi yêu cầu thay đổi thành công');
                                     this._matDialogRef.close();
                                     this._profileService.getPrepareLoadingPage().subscribe();
                                 },
