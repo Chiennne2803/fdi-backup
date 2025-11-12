@@ -1,37 +1,35 @@
 <mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent overflow-hidden">
     <mat-drawer-content class="flex flex-col">
-        <div class="flex flex-col w-full p-5">
+        <div class="flex flex-col w-full p-3 sm:p-5">
             <ng-container>
-                <div class="relative w-full px-5">
-                    <div class="flex items-center justify-between w-full mx-auto py-2">
-                        <article class="prose break-words">
-                            <h3 class="">
+                <div class="relative w-full px-2 sm:px-5">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full mx-auto py-2 gap-3">
+                        <article class="prose break-words w-full sm:w-auto">
+                            <h3 class="text-lg sm:text-xl">
                                 {{isCreateRq ? 'Lập yêu cầu thanh toán' : 'Chi tiết yêu cầu thanh toán khoản huy động'}}
                             </h3>
                         </article>
-                        <div class="flex items-center justify-end"
+                        
+                        <!-- Desktop buttons -->
+                        <div class="hidden sm:flex items-center justify-end"
                              *ngIf="!isPrepareSave && !isCreateRq"
-                             @slideInRight
-                        >
+                             @slideInRight>
                             <ng-container>
-                            <button
-                                *ngIf="isTimeOutTrans() && ( 'SFF_REFUND_TRANSACTION_UPDATE' | permission) && (fsTranspayReqDTO?.status == 6)"
-                                (click)="onCancelRequest()"
-                                mat-stroked-button
-                                matTooltip="Hủy yêu cầu"
-                            >
-                                Hủy yêu cầu
-                            </button>
-                                </ng-container>
+                                <button
+                                    *ngIf="isTimeOutTrans() && ( 'SFF_REFUND_TRANSACTION_UPDATE' | permission) && (fsTranspayReqDTO?.status == 6)"
+                                    (click)="onCancelRequest()"
+                                    mat-stroked-button
+                                    matTooltip="Hủy yêu cầu">
+                                    Hủy yêu cầu
+                                </button>
+                            </ng-container>
                             <ng-container>
-                             <button
-                                 class="ml-2"
-                                (click)="onClickClose()"
-                                mat-stroked-button
-                                matTooltip="Đóng"
-                            >
-                                Đóng
-                             </button>
+                                <button class="ml-2"
+                                    (click)="onClickClose()"
+                                    mat-stroked-button
+                                    matTooltip="Đóng">
+                                    Đóng
+                                </button>
                             </ng-container>
                             <ng-container>
                                 <button
@@ -40,8 +38,7 @@
                                     (click)="onClickProcess()"
                                     mat-flat-button
                                     color="primary"
-                                    matTooltip="Xử lý"
-                                >
+                                    matTooltip="Xử lý">
                                     Xử lý
                                 </button>
                             </ng-container>
@@ -52,468 +49,479 @@
                                     (click)="onClickProcess()"
                                     mat-flat-button
                                     color="primary"
-                                    matTooltip="Xử lý"
-                                >
+                                    matTooltip="Xử lý">
                                     Phê duyệt
                                 </button>
                             </ng-container>
                         </div>
-                        <div class="flex items-center justify-end"
+
+                        <!-- Mobile buttons - Fixed bottom -->
+                        <div class="flex sm:hidden w-full flex-wrap gap-2 fixed bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-200 shadow-lg z-50"
+                             *ngIf="!isPrepareSave && !isCreateRq"
+                             @slideInRight>
+                            <button
+                                *ngIf="isTimeOutTrans() && ( 'SFF_REFUND_TRANSACTION_UPDATE' | permission) && (fsTranspayReqDTO?.status == 6)"
+                                (click)="onCancelRequest()"
+                                mat-stroked-button
+                                class="flex-1 min-w-[120px]">
+                                Hủy yêu cầu
+                            </button>
+                            <button
+                                (click)="onClickClose()"
+                                mat-stroked-button
+                                class="flex-1 min-w-[120px]">
+                                Đóng
+                            </button>
+                            <button
+                                *ngIf="!isPrepareSave && isDetailErrorScreen && ( 'SFF_REFUND_TRANSACTION_UPDATE' | permission)"
+                                (click)="onClickProcess()"
+                                mat-flat-button
+                                color="primary"
+                                class="flex-1 min-w-[120px]">
+                                Xử lý
+                            </button>
+                            <button
+                                *ngIf="(fsTranspayReqDTO?.status == 3) && ( 'SFF_REFUND_TRANSACTION_APPROVE' | permission)"
+                                (click)="onClickProcess()"
+                                mat-flat-button
+                                color="primary"
+                                class="flex-1 min-w-[120px]">
+                                Phê duyệt
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end w-full sm:w-auto gap-2"
                              *ngIf="isPrepareSave"
-                             @slideInRight
-                        >
+                             @slideInRight>
                             <button
                                 (click)="cancelSave()"
                                 mat-stroked-button
-                                matTooltip="Đóng"
-                            >
+                                class="w-full sm:w-auto"
+                                matTooltip="Đóng">
                                 Huỷ
                             </button>
                             <ng-container>
                                 <button
                                     *ngIf="( 'SFF_REFUND_TRANSACTION_UPDATE' | permission)"
-                                    class="ml-2 bg-primary text-white"
+                                    class="bg-primary text-white w-full sm:w-auto"
                                     (click)="onClickSave()"
                                     mat-flat-button
-                                    matTooltip="Lưu"
-                                >
+                                    matTooltip="Lưu">
                                     Lưu
                                 </button>
                             </ng-container>
                         </div>
-                        <div class="flex items-center justify-end"
+
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end w-full sm:w-auto gap-2"
                              *ngIf="isCreateRq"
                              @fadeOutLeft
-                             @slideInLeft
-                        >
+                             @slideInLeft>
                             <button
                                 (click)="onClickClose()"
                                 mat-stroked-button
-                                matTooltip="Đóng"
-                            >
+                                class="w-full sm:w-auto"
+                                matTooltip="Đóng">
                                 Đóng
                             </button>
                             <ng-container>
                                 <button
-                                    class="ml-2 bg-primary text-white"
+                                    class="bg-primary text-white w-full sm:w-auto"
                                     (click)="createTranspayReq()"
                                     mat-flat-button
-                                    matTooltip="Lưu"
-                                >
+                                    matTooltip="Lưu">
                                     Lưu
                                 </button>
                             </ng-container>
                         </div>
                     </div>
                 </div>
+                
                 <ng-container>
                     <form [formGroup]="formGroup">
-                        <div class="grid grid-cols-4 gap-4 h-full py-5">
-                            <div class="border border-primary-grayLight-2 rounded-lg p-5">
-                                <!-- <div class="w-screen p-5"> -->
-                                    <div *ngIf="fsTranspayReqId || isDetailErrorScreen"
-                                         class="w-full">
-                                        <div class="grid grid-cols-1 gap-4 pt-0">
-                                            <article class="prose break-words">
-                                                <div class="font-bold text-lg ">Thông tin thanh toán</div>
-                                            </article>
-
-                                            <article class="prose break-words">
-                                                <p>Hồ sơ huy động vốn <br>
-                                                    <b> {{fsTranspayReqDTO?.fsLoanProfilesId}} </b>
-                                                </p>
-                                            </article>
-<!--                                            <article class="prose break-words">-->
-<!--                                                <p>Bên huy động vốn <br>-->
-<!--                                                    <b> {{fsTranspayReqDTO?.admAccountName}} </b>-->
-<!--                                                </p>-->
-<!--                                            </article>-->
-                                            <article class="prose break-words">
-                                                <p>Đợt giải ngân <br><b>{{fsTranspayReqDTO?.fsCardDownCode}}</b>
-                                            </article>
-                                            <article class="prose break-words">
-                                                <p>Hình thức thanh toán <br><b>{{fsTranspayReqDTO?.payType == 1 ? 'Thanh toán toàn phần' : 'Thanh toán 1 phần'}}</b>
-                                            </article>
-                                            <article class="prose break-words">
-                                                <p>Số tiền thanh toán (VND) <br><b>{{fsTranspayReqDTO?.paidAmount | currencyFormatPipe: 10}}</b>
-                                            </article>
-                                            <ng-container *ngIf="fsTranspayReqDTO?.payType != 2">
-                                                <article class="prose break-words">
-                                                    <p>Giảm trừ gốc (VND) <br><b>{{fsTranspayReqDTO?.originalDeduction | currencyFormatPipe: 10}}</b>
-                                                </article>
-                                                <article class="prose break-words">
-                                                    <p>Giảm trừ lãi (VND) <br><b>{{fsTranspayReqDTO?.interestDeduction | currencyFormatPipe: 10}}</b>
-                                                </article>
-                                            </ng-container>
-                                            <article class="prose break-words">
-                                                <p>Trạng thái yêu cầu  <br><b>{{fsTranspayReqDTO?.statusName}}</b>
-                                            </article>
-                                            <article class="prose break-words" *ngIf="fsTranspayReqDTO?.status == 4 || fsTranspayReqDTO?.status == 5">
-                                                <p>Nội dung phê duyệt  <br><b>{{fsTranspayReqDTO?.approvalComment}}</b>
-                                            </article>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="!fsTranspayReqId && !isDetailErrorScreen"
-                                         class="grid grid-cols-1 w-full gap-4">
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 h-full py-3 sm:py-5">
+                            <!-- Thông tin thanh toán -->
+                            <div class="border border-primary-grayLight-2 rounded-lg p-3 sm:p-5 order-1">
+                                <div *ngIf="fsTranspayReqId || isDetailErrorScreen" class="w-full">
+                                    <div class="grid grid-cols-1 gap-3 sm:gap-4 pt-0">
                                         <article class="prose break-words">
-                                            <div class="font-bold text-lg ">Thông tin thanh toán</div>
+                                            <div class="font-bold text-base sm:text-lg">Thông tin thanh toán</div>
                                         </article>
-                                        <mat-form-field floatLabel="always">
-                                            <mat-label>Hồ sơ huy động vốn</mat-label>
-                                            <input type="text"
-                                                   matInput
-                                                   placeholder="Nhập hồ sơ huy động vốn..."
-                                                   formControlName="fsLoanProfilesId"
-                                                   [matAutocomplete]="auto">
-                                            <mat-autocomplete autoActiveFirstOption
-                                                              #auto="matAutocomplete"
-                                                              (optionSelected)="onOptionSelected($event, 'loanProfile')">
-                                                <mat-option *ngFor="let option of lstLoanProfileFilter | async"
-                                                            [value]="option.fsLoanProfilesId">
-                                                    {{option.fsLoanProfilesId}}
-                                                </mat-option>
-                                            </mat-autocomplete>
-                                            <mat-error *ngIf="formGroup.get('fsLoanProfilesId').hasError('required')">
-                                                {{ 'XLGD001' | transloco }}
-                                            </mat-error>
-                                        </mat-form-field>
-<!--                                        <mat-form-field floatLabel="always">-->
-<!--                                            <mat-label>Bên huy động vốn</mat-label>-->
-<!--                                            <input-->
-<!--                                                   matInput-->
-<!--                                                   readonly-->
-<!--                                                   formControlName="nameLoanProfiles">-->
-<!--                                        </mat-form-field>-->
-                                        <mat-form-field floatLabel="always">
-                                            <mat-label>Đợt giải ngân</mat-label>
-                                            <mat-select placeholder="Chọn đợt giải ngân" formControlName="fsCardDownId"
-                                                        (selectionChange)="onChangeSelect($event, 'cardDown')">
-                                                <mat-option
-                                                    *ngFor="let card of lstCardDowns"
-                                                    [value]="card.fsCardDownId"
-                                                >
-                                                    {{ card.transCode }} {{ card.approvalDate | datetimeformat: 'DD/MM/YYYY HH:mm:ss' }}
-                                                </mat-option>
-                                            </mat-select>
-                                            <mat-error *ngIf="formGroup.get('fsCardDownId').hasError('required')">
-                                                {{ 'XLGD003' | transloco }}
-                                            </mat-error>
-                                        </mat-form-field>
-                                        <mat-form-field floatLabel="always">
-                                            <mat-label>Hình thức thanh toán</mat-label>
-                                            <mat-select placeholder="Chọn hình thức thanh toán" formControlName="payType"
-                                                        (selectionChange)="onChangeSelect($event, 'payType')"
-                                            >
-                                                <mat-option *ngFor="let item of payTypes"
-                                                            [value]="item.id">{{ item.label }}</mat-option>
-                                            </mat-select>
-                                            <mat-error *ngIf="formGroup.get('payType').hasError('required')">
-                                                {{ 'XLGD030' | transloco }}
-                                            </mat-error>
-                                        </mat-form-field>
-                                        <mat-form-field floatLabel="always">
-                                            <mat-label>Số tiền thanh toán (VND)</mat-label>
+
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Hồ sơ huy động vốn</p>
+                                            <p class="font-bold break-all">{{fsTranspayReqDTO?.fsLoanProfilesId}}</p>
+                                        </article>
+
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Đợt giải ngân</p>
+                                            <p class="font-bold">{{fsTranspayReqDTO?.fsCardDownCode}}</p>
+                                        </article>
+
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Hình thức thanh toán</p>
+                                            <p class="font-bold">{{fsTranspayReqDTO?.payType == 1 ? 'Thanh toán toàn phần' : 'Thanh toán 1 phần'}}</p>
+                                        </article>
+
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Số tiền thanh toán (VND)</p>
+                                            <p class="font-bold">{{fsTranspayReqDTO?.paidAmount | currencyFormatPipe: 10}}</p>
+                                        </article>
+
+                                        <ng-container *ngIf="fsTranspayReqDTO?.payType != 2">
+                                            <article class="prose break-words text-sm sm:text-base">
+                                                <p class="mb-1">Giảm trừ gốc (VND)</p>
+                                                <p class="font-bold">{{fsTranspayReqDTO?.originalDeduction | currencyFormatPipe: 10}}</p>
+                                            </article>
+                                            <article class="prose break-words text-sm sm:text-base">
+                                                <p class="mb-1">Giảm trừ lãi (VND)</p>
+                                                <p class="font-bold">{{fsTranspayReqDTO?.interestDeduction | currencyFormatPipe: 10}}</p>
+                                            </article>
+                                        </ng-container>
+
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Trạng thái yêu cầu</p>
+                                            <p class="font-bold">{{fsTranspayReqDTO?.statusName}}</p>
+                                        </article>
+
+                                        <article class="prose break-words text-sm sm:text-base" *ngIf="fsTranspayReqDTO?.status == 4 || fsTranspayReqDTO?.status == 5">
+                                            <p class="mb-1">Nội dung phê duyệt</p>
+                                            <p class="font-bold">{{fsTranspayReqDTO?.approvalComment}}</p>
+                                        </article>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="!fsTranspayReqId && !isDetailErrorScreen" class="grid grid-cols-1 w-full gap-3 sm:gap-4">
+                                    <article class="prose break-words">
+                                        <div class="font-bold text-base sm:text-lg">Thông tin thanh toán</div>
+                                    </article>
+                                    
+                                    <mat-form-field floatLabel="always" class="w-full">
+                                        <mat-label>Hồ sơ huy động vốn</mat-label>
+                                        <input type="text"
+                                               matInput
+                                               placeholder="Nhập hồ sơ huy động vốn..."
+                                               formControlName="fsLoanProfilesId"
+                                               [matAutocomplete]="auto">
+                                        <mat-autocomplete autoActiveFirstOption
+                                                          #auto="matAutocomplete"
+                                                          (optionSelected)="onOptionSelected($event, 'loanProfile')">
+                                            <mat-option *ngFor="let option of lstLoanProfileFilter | async"
+                                                        [value]="option.fsLoanProfilesId">
+                                                {{option.fsLoanProfilesId}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="formGroup.get('fsLoanProfilesId').hasError('required')">
+                                            {{ 'XLGD001' | transloco }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field floatLabel="always" class="w-full">
+                                        <mat-label>Đợt giải ngân</mat-label>
+                                        <mat-select placeholder="Chọn đợt giải ngân" formControlName="fsCardDownId"
+                                                    (selectionChange)="onChangeSelect($event, 'cardDown')">
+                                            <mat-option
+                                                *ngFor="let card of lstCardDowns"
+                                                [value]="card.fsCardDownId">
+                                                {{ card.transCode }} {{ card.approvalDate | datetimeformat: 'DD/MM/YYYY HH:mm:ss' }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="formGroup.get('fsCardDownId').hasError('required')">
+                                            {{ 'XLGD003' | transloco }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field floatLabel="always" class="w-full">
+                                        <mat-label>Hình thức thanh toán</mat-label>
+                                        <mat-select placeholder="Chọn hình thức thanh toán" formControlName="payType"
+                                                    (selectionChange)="onChangeSelect($event, 'payType')">
+                                            <mat-option *ngFor="let item of payTypes"
+                                                        [value]="item.id">{{ item.label }}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="formGroup.get('payType').hasError('required')">
+                                            {{ 'XLGD030' | transloco }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field floatLabel="always" class="w-full">
+                                        <mat-label>Số tiền thanh toán (VND)</mat-label>
+                                        <input matInput
+                                               placeholder="Nhập..."
+                                               [disabled]="formGroup.get('payType').value !== 2"
+                                               (blur)="onChangeSelect($event, 'amount')"
+                                               currencyMask autocomplete="off"
+                                               maxlength="15"
+                                               class="text-left"
+                                               [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                               formControlName="paidAmount">
+                                        <mat-error *ngIf="formGroup.get('paidAmount').hasError('required')">
+                                            {{ 'HSGV035' | transloco }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <ng-container *ngIf="formGroup.get('payType').value !== 2">
+                                        <mat-form-field floatLabel="always" class="w-full">
+                                            <mat-label>Giảm trừ gốc (VND)</mat-label>
                                             <input matInput
-                                                    placeholder="Nhập..."
-                                                   [disabled]="formGroup.get('payType').value !== 2"
-                                                   (blur)="onChangeSelect($event, 'amount')"
+                                                   placeholder="Nhập..."
+                                                   (ngModelChange)="onChangeSelect($event, 'amount')"
                                                    currencyMask autocomplete="off"
                                                    maxlength="15"
                                                    class="text-left"
                                                    [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
-                                                   formControlName="paidAmount">
-                                            <mat-error *ngIf="formGroup.get('paidAmount').hasError('required')">
-                                                {{ 'HSGV035' | transloco }}
-                                            </mat-error>
-                                            <mat-error *ngIf="formGroup.get('paidAmount').hasError('maxlength')">
-                                                {{ 'HSGV036' | transloco }}
-                                            </mat-error>
-                                            <mat-error *ngIf="formGroup.get('paidAmount').hasError('min')">
-                                                {{ 'HSGV042' | transloco }}
-                                            </mat-error>
+                                                   formControlName="originalDeduction">
                                         </mat-form-field>
-                                        <ng-container *ngIf="formGroup.get('payType').value !== 2">
-                                            <mat-form-field floatLabel="always">
-                                                <mat-label>Giảm trừ gốc (VND)</mat-label>
-                                                <input matInput
-                                                        placeholder="Nhập..."
-                                                       (ngModelChange)="onChangeSelect($event, 'amount')"
-                                                       currencyMask autocomplete="off"
-                                                       maxlength="15"
-                                                       class="text-left"
-                                                       [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
-                                                       id="originalDeduction"
-                                                       formControlName="originalDeduction">
-                                                <mat-error *ngIf="formGroup.get('originalDeduction').hasError('maxlength')">
-                                                    {{ 'XLGD031' | transloco }}
-                                                </mat-error>
-                                                <mat-error *ngIf="formGroup.get('originalDeduction').hasError('min')">
-                                                    {{ 'XLGD033' | transloco }}
-                                                </mat-error>
-                                            </mat-form-field>
-                                            <mat-form-field floatLabel="always">
-                                                <mat-label>Giảm trừ lãi (VND)</mat-label>
-                                                <input matInput
-                                                        placeholder="Nhập..."
-                                                       (keypress)="onChangeSelect($event, 'amount')"
-                                                       currencyMask autocomplete="off"
-                                                       maxlength="15"
-                                                       class="text-left"
-                                                       [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
-                                                       id="interestDeduction"
-                                                       formControlName="interestDeduction">
-                                                <mat-error *ngIf="formGroup.get('interestDeduction').hasError('maxlength')">
-                                                    {{ 'XLGD032' | transloco }}
-                                                </mat-error>
-                                                <mat-error *ngIf="formGroup.get('interestDeduction').hasError('min')">
-                                                    {{ 'XLGD034' | transloco }}
-                                                </mat-error>
-                                            </mat-form-field>
-                                        </ng-container>
-                                    </div>
-                                <!-- </div> -->
-                            </div>
-                            <div class="border border-primary-grayLight-2 rounded-lg p-5 col-span-2 overflow-y-auto" cdkScrollable>
-                                <div class="grid grid-cols-1 w-full gap-4 max-h-15">
-                                    <div class="grid grid-cols-1 ">
-                                        <div class="font-bold text-lg pb-5">Thông tin bên huy động</div>
-                                        <div class="grid grid-cols-1 pt-0">
-                                            <table class="min-w-full text-left text-sm font-light border rounded-xl w-full">
-                                                <thead
-                                                    class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
-                                                <tr>
-                                                    <th scope="col" class="px-6 py-2">Bên huy động vốn</th>
-                                                    <th scope="col" class="px-6 py-2">Kỳ hạn(ngày)</th>
-                                                    <th scope="col" class="px-6 py-2">Lãi suất(%/năm)</th>
-                                                </tr>
 
+                                        <mat-form-field floatLabel="always" class="w-full">
+                                            <mat-label>Giảm trừ lãi (VND)</mat-label>
+                                            <input matInput
+                                                   placeholder="Nhập..."
+                                                   (keypress)="onChangeSelect($event, 'amount')"
+                                                   currencyMask autocomplete="off"
+                                                   maxlength="15"
+                                                   class="text-left"
+                                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                                   formControlName="interestDeduction">
+                                        </mat-form-field>
+                                    </ng-container>
+                                </div>
+                            </div>
+
+                            <!-- Thông tin bên huy động và giao dịch -->
+                            <div class="border border-primary-grayLight-2 rounded-lg p-3 sm:p-5 lg:col-span-2 overflow-y-auto order-3 lg:order-2" cdkScrollable>
+                                <div class="grid grid-cols-1 w-full gap-3 sm:gap-4">
+                                    <div class="grid grid-cols-1">
+                                        <div class="font-bold text-base sm:text-lg pb-3 sm:pb-5">Thông tin bên huy động</div>
+                                        <div class="overflow-x-auto -mx-3 sm:mx-0">
+                                            <table class="min-w-full text-left text-xs sm:text-sm font-light border rounded-xl">
+                                                <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
+                                                    <tr>
+                                                        <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Bên huy động vốn</th>
+                                                        <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Kỳ hạn(ngày)</th>
+                                                        <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Lãi suất(%/năm)</th>
+                                                    </tr>
                                                 </thead>
-                                                <tbody class=" text-gray-700  my-2 ">
-                                                <tr class="border-b dark:border-neutral-500 font-bold text-lg ">
-                                                    <td class=" px-6 py-2">{{ formGroup.get('admAccountName').value }}</td>
-                                                    <td class=" px-6 py-2">{{ formGroup.get('loanTimeCycle').value   | currencyFormatPipe: 10 }}</td>
-                                                    <td class=" px-6 py-2">{{ formGroup.get('rate').value   | currencyFormatPipe: 10 }}</td>
-                                                </tr>
+                                                <tbody class="text-gray-700 my-2">
+                                                    <tr class="border-b dark:border-neutral-500 font-bold text-sm sm:text-base">
+                                                        <td class="px-2 sm:px-6 py-2">{{ formGroup.get('admAccountName').value }}</td>
+                                                        <td class="px-2 sm:px-6 py-2">{{ formGroup.get('loanTimeCycle').value | currencyFormatPipe: 10 }}</td>
+                                                        <td class="px-2 sm:px-6 py-2">{{ formGroup.get('rate').value | currencyFormatPipe: 10 }}</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="font-bold text-lg">Dư nợ đầu kỳ</div>
-                                    <div class="grid grid-cols-2 pt-5">
-                                        <article class="prose break-words">
-                                            <p>Mã giao dịch <br> <b> {{formGroup.get('transCode').value}} </b>
-                                            </p>
+
+                                    <div class="font-bold text-base sm:text-lg pt-3 sm:pt-5">Dư nợ đầu kỳ</div>
+                                    
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Mã giao dịch</p>
+                                            <p class="font-bold break-all">{{formGroup.get('transCode').value}}</p>
                                         </article>
-                                        <article class="prose break-words">
-                                            <p>Ngày phải thanh toán <br>
-                                                <b>{{formGroup.get('expirDate').value | datetimeformat: 'DD/MM/YYYY'}}</b>
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Ngày phải thanh toán</p>
+                                            <p class="font-bold">{{formGroup.get('expirDate').value | datetimeformat: 'DD/MM/YYYY'}}</p>
                                         </article>
                                     </div>
-                                    <div class="grid grid-cols-1 pt-5">
-                                        <table class="min-w-full text-left text-sm font-light border rounded-xl w-full ">
-                                            <thead
-                                                class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
-                                            <tr>
-                                                <th scope="col" class="px-6 py-2">Dư nợ gốc đầu kỳ (VND)</th>
-                                                <th scope="col" class="px-6 py-2">Dư nợ lãi đầu kỳ (VND)</th>
-                                                <th scope="col" class="px-6 py-2">Gốc đã trả (VND)</th>
-                                                <th scope="col" class="px-6 py-2">Lãi đã trả (VND)</th>
-                                            </tr>
 
+                                    <div class="overflow-x-auto -mx-3 sm:mx-0">
+                                        <table class="min-w-full text-left text-xs sm:text-sm font-light border rounded-xl">
+                                            <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
+                                                <tr>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Dư nợ gốc đầu kỳ (VND)</th>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Dư nợ lãi đầu kỳ (VND)</th>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Gốc đã trả (VND)</th>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Lãi đã trả (VND)</th>
+                                                </tr>
                                             </thead>
-                                            <tbody class=" text-gray-700  my-2 ">
-                                            <tr class="border-b dark:border-neutral-500 font-bold text-lg ">
-                                                <td class=" px-6 py-2">{{ formGroup.get('principalBalancePeriod').value  | currencyFormatPipe: 10}}</td>
-                                                <td class=" px-6 py-2">{{ formGroup.get('interestBalancePeriod').value  | currencyFormatPipe: 10 }}</td>
-                                                <td class=" px-6 py-2">{{ formGroup.get('principalPaidPeriod').value  | currencyFormatPipe: 10 }}</td>
-                                                <td class=" px-6 py-2">{{ formGroup.get('interestPaidPeriod').value  | currencyFormatPipe: 10 }}</td>
-                                            </tr>
+                                            <tbody class="text-gray-700 my-2">
+                                                <tr class="border-b dark:border-neutral-500 font-bold text-sm sm:text-base">
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('principalBalancePeriod').value | currencyFormatPipe: 10}}</td>
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('interestBalancePeriod').value | currencyFormatPipe: 10 }}</td>
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('principalPaidPeriod').value | currencyFormatPipe: 10 }}</td>
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('interestPaidPeriod').value | currencyFormatPipe: 10 }}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="grid grid-cols-1 ">
-                                        <div class="font-bold text-lg pb-5">Thông tin giao dịch</div>
-                                        <div class="grid grid-cols-1 pt-0">
-<!--                                            <article class="prose break-words pb-5">-->
-<!--                                                <p>Tổng tiền thanh toán (chưa bao gồm thuế):-->
-<!--                                                    <b> {{formGroup.get('paidAmount').value  | currencyFormatPipe: 10}} </b>-->
-<!--                                                </p>-->
-<!--                                            </article>-->
-                                            <table class="min-w-full text-left text-sm font-light border rounded-xl w-full">
-                                                <thead
-                                                    class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
-                                                <tr>
-                                                    <th scope="col" class="px-6 py-2">Dư nợ gốc thanh toán (VND)</th>
-                                                    <th scope="col" class="px-6 py-2">Dư nợ lãi thanh toán (VND)</th>
-                                                    <th scope="col" class="px-6 py-2">Thuế TNCN của khách hàng (VND)</th>
-                                                </tr>
 
-                                                </thead>
-                                                <tbody class=" text-gray-700  my-2 ">
-                                                <tr class="border-b dark:border-neutral-500 font-bold text-lg ">
-                                                    <td class=" px-6 py-2">{{ formGroup.get('principalAmountDue').value  | currencyFormatPipe: 10}}</td>
-                                                    <td class=" px-6 py-2">{{ formGroup.get('interestAmountDue').value  | currencyFormatPipe: 10 }}</td>
-                                                    <td class=" px-6 py-2">{{ formGroup.get('amountTax').value  | currencyFormatPipe: 10 }}</td>
+                                    <div class="font-bold text-base sm:text-lg pt-3 sm:pt-5">Thông tin giao dịch</div>
+                                    
+                                    <div class="overflow-x-auto -mx-3 sm:mx-0">
+                                        <table class="min-w-full text-left text-xs sm:text-sm font-light border rounded-xl">
+                                            <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
+                                                <tr>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Dư nợ gốc thanh toán (VND)</th>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Dư nợ lãi thanh toán (VND)</th>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Thuế TNCN (VND)</th>
                                                 </tr>
-                                                </tbody>
-                                            </table>
-                                            <div class="grid grid-cols-2 pt-5">
-                                                <article class="prose break-words">
-                                                    <p>Ngày lập <br>
-                                                        <b>{{formGroup.get('createdDate').value}}</b>
-                                                </article>
-                                                <article class="prose break-words">
-                                                    <p>Người lập <br> <b> {{formGroup.get('createdByName').value}} </b>
-                                                    </p>
-                                                </article>
+                                            </thead>
+                                            <tbody class="text-gray-700 my-2">
+                                                <tr class="border-b dark:border-neutral-500 font-bold text-sm sm:text-base">
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('principalAmountDue').value | currencyFormatPipe: 10}}</td>
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('interestAmountDue').value | currencyFormatPipe: 10 }}</td>
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('amountTax').value | currencyFormatPipe: 10 }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Ngày lập</p>
+                                            <p class="font-bold">{{formGroup.get('createdDate').value}}</p>
+                                        </article>
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Người lập</p>
+                                            <p class="font-bold">{{formGroup.get('createdByName').value}}</p>
+                                        </article>
+                                    </div>
+
+                                    <div class="font-bold text-base sm:text-lg pt-3 sm:pt-5">Dư nợ cuối kỳ</div>
+                                    
+                                    <div class="overflow-x-auto -mx-3 sm:mx-0">
+                                        <table class="min-w-full text-left text-xs sm:text-sm font-light border rounded-xl">
+                                            <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
+                                                <tr>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Dư nợ gốc cuối kỳ (VND)</th>
+                                                    <th scope="col" class="px-2 sm:px-6 py-2 whitespace-nowrap">Dư nợ lãi cuối kỳ (VND)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-gray-700 my-2">
+                                                <tr class="border-b dark:border-neutral-500 font-bold text-sm sm:text-base">
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('principalBalanceEndPeriod').value | currencyFormatPipe: 10}}</td>
+                                                    <td class="px-2 sm:px-6 py-2">{{ formGroup.get('interestBalanceEndPeriod').value | currencyFormatPipe: 10 }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div *ngIf="fsTranspayReqDTO && fsTranspayReqDTO?.topupMailTransferDTO">
+                                        <div class="font-bold text-base sm:text-lg pt-3 sm:pt-5">Thông tin giao dịch tại ngân hàng</div>
+                                        
+                                        <!-- Mobile card view -->
+                                        <div class="block sm:hidden mt-3 border rounded-lg p-3 space-y-3">
+                                            <div>
+                                                <p class="text-xs text-gray-600 mb-1">Nội dung chuyển khoản</p>
+                                                <p class="text-sm font-semibold break-words">{{ fsTranspayReqDTO?.topupMailTransferDTO.info}}</p>
                                             </div>
-                                            <div></div>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <div>
+                                                    <p class="text-xs text-gray-600 mb-1">Số tiền (VND)</p>
+                                                    <p class="text-sm font-semibold">{{ fsTranspayReqDTO?.topupMailTransferDTO.amount | currencyFormatPipe: 10 }}</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs text-gray-600 mb-1">Ngày chuyển</p>
+                                                    <p class="text-sm font-semibold">{{ fsTranspayReqDTO?.topupMailTransferDTO.transDate | date: 'dd/MM/YYYY'}}</p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-gray-600 mb-1">Trạng thái giao dịch</p>
+                                                <p class="text-sm font-semibold">{{ fsTranspayReqDTO?.topupMailTransferDTO.statusName}}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 ">
-                                        <div class="font-bold text-lg pb-5">Dư nợ cuối kỳ</div>
-                                        <div class="grid grid-cols-1 pt-0">
-                                            <table class="min-w-full text-left text-sm font-light border rounded-xl w-full">
-                                                <thead
-                                                    class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
-                                                <tr>
-                                                    <th scope="col" class="px-6 py-2">Dư nợ gốc cuối kỳ (VND)</th>
-                                                    <th scope="col" class="px-6 py-2">Dư nợ lãi cuối kỳ (VND)</th>
-                                                </tr>
-
+                                        
+                                        <!-- Desktop table view -->
+                                        <div class="hidden sm:block overflow-x-auto mt-3">
+                                            <table class="min-w-full text-left text-sm font-light border rounded-xl">
+                                                <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
+                                                    <tr>
+                                                        <th scope="col" class="px-4 py-2">Nội dung CK</th>
+                                                        <th scope="col" class="px-4 py-2">Số tiền (VND)</th>
+                                                        <th scope="col" class="px-4 py-2">Ngày chuyển</th>
+                                                        <th scope="col" class="px-4 py-2">Trạng thái</th>
+                                                    </tr>
                                                 </thead>
-                                                <tbody class=" text-gray-700  my-2 ">
-                                                <tr class="border-b dark:border-neutral-500 font-bold text-lg ">
-                                                    <td class=" px-6 py-2">{{ formGroup.get('principalBalanceEndPeriod').value   | currencyFormatPipe: 10}}</td>
-                                                    <td class=" px-6 py-2">{{ formGroup.get('interestBalanceEndPeriod').value   | currencyFormatPipe: 10 }}</td>
-                                                </tr>
+                                                <tbody class="text-gray-700 my-2">
+                                                    <tr class="border-b dark:border-neutral-500 font-bold text-sm">
+                                                        <td class="px-4 py-2 break-words max-w-xs">{{ fsTranspayReqDTO?.topupMailTransferDTO.info}}</td>
+                                                        <td class="px-4 py-2 whitespace-nowrap">{{ fsTranspayReqDTO?.topupMailTransferDTO.amount | currencyFormatPipe: 10 }}</td>
+                                                        <td class="px-4 py-2 whitespace-nowrap">{{ fsTranspayReqDTO?.topupMailTransferDTO.transDate | date: 'dd/MM/YYYY'}}</td>
+                                                        <td class="px-4 py-2">{{ fsTranspayReqDTO?.topupMailTransferDTO.statusName}}</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-1 "
-                                         *ngIf="fsTranspayReqDTO && fsTranspayReqDTO?.topupMailTransferDTO">
-                                        <div class="font-bold text-lg pb-5">Thông tin giao dịch tại ngân hàng</div>
-                                        <div class="grid grid-cols-1 pt-0">
-                                            <table class="min-w-full text-left text-sm font-light border rounded-xl w-full">
-                                                <thead
-                                                    class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
-                                                <tr>
-                                                    <th scope="col" class="px-2 py-2">Nội dung chuyển khoản</th>
-                                                    <th scope="col" class="px-2 py-2">Số tiền chuyển khoản (VND)</th>
-                                                    <th scope="col" class="px-2 py-2">Ngày chuyển tiền</th>
-                                                    <th scope="col" class="px-2 py-2">Trạng thái giao dịch</th>
-                                                </tr>
 
-                                                </thead>
-                                                <tbody class=" text-gray-700  my-2 ">
-                                                <tr class="border-b dark:border-neutral-500 font-bold text-base break-words ">
-                                                    <td class=" px-2 py-2 max-w-80">{{ fsTranspayReqDTO?.topupMailTransferDTO.info}}</td>
-                                                    <td class=" px-2 py-2 ">{{ fsTranspayReqDTO?.topupMailTransferDTO.amount | currencyFormatPipe: 10 }}</td>
-                                                    <td class=" px-2 py-2 ">{{ fsTranspayReqDTO?.topupMailTransferDTO.transDate | date: 'dd/MM/YYYY'}}</td>
-                                                    <td class=" px-2 py-2 max-w-80">{{ fsTranspayReqDTO?.topupMailTransferDTO.statusName}}</td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 "
-                                         *ngIf="fsTranspayReqDTO && fsTranspayReqDTO?.topupMailTransferDTO">
-                                        <div class="font-bold text-lg pb-0">Thông tin giao dịch tiền ví</div>
-                                        <div class="grid grid-cols-2 pt-2">
-                                            <article class="prose break-words">
-                                                <p>Tài khoản ví <br>
-                                                    <b>W_HO_BO</b>
+                                    <div *ngIf="fsTranspayReqDTO && fsTranspayReqDTO?.topupMailTransferDTO">
+                                        <div class="font-bold text-base sm:text-lg pt-3">Thông tin giao dịch tiền ví</div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-2">
+                                            <article class="prose break-words text-sm sm:text-base">
+                                                <p class="mb-1">Tài khoản ví</p>
+                                                <p class="font-bold">W_HO_BO</p>
                                             </article>
-                                            <article class="prose break-words">
-                                                <p>Số tiền nạp (VND)<br>
-                                                    <b> {{ fsTranspayReqDTO?.topupMailTransferDTO.amount | currencyFormatPipe: 10 }} </b>
-                                                </p>
+                                            <article class="prose break-words text-sm sm:text-base">
+                                                <p class="mb-1">Số tiền nạp (VND)</p>
+                                                <p class="font-bold">{{ fsTranspayReqDTO?.topupMailTransferDTO.amount | currencyFormatPipe: 10 }}</p>
                                             </article>
                                         </div>
                                     </div>
-                                    <!-- <div class="grid grid-cols-1 p-5"></div> -->
                                 </div>
                             </div>
-                            <div class="border border-primary-grayLight-2 rounded-lg p-5">
+
+                            <!-- Thông tin chuyển khoản -->
+                            <div class="border border-primary-grayLight-2 rounded-lg p-3 sm:p-5 order-2 lg:order-3">
                                 <div class="w-full">
-                                    <div class="grid grid-cols-1 w-full gap-4">
-                                        <div class="font-bold text-lg pb-5">Thông tin chuyển khoản</div>
-                                    </div>
-                                    <div class="grid grid-cols-1 w-full gap-4">
-                                        <article class="prose break-words">
-                                            <p>Người thụ hưởng <br> <b>{{ formGroup.get('accName').value }}</b>
-                                            </p>
+                                    <div class="font-bold text-base sm:text-lg pb-3 sm:pb-5">Thông tin chuyển khoản</div>
+                                    
+                                    <div class="grid grid-cols-1 w-full gap-3 sm:gap-4">
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Người thụ hưởng</p>
+                                            <p class="font-bold break-all">{{ formGroup.get('accName').value }}</p>
                                         </article>
-                                        <article class="prose break-words">
-                                            <p>Tên ngân hàng thụ hưởng <br> <b>{{ formGroup.get('bankName').value }}</b>
-                                            </p>
+                                        
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Tên ngân hàng thụ hưởng</p>
+                                            <p class="font-bold break-words">{{ formGroup.get('bankName').value }}</p>
                                         </article>
-                                        <article class="prose break-words">
-                                            <p>Chi nhánh <br> <b>{{ formGroup.get('branchName').value }}</b>
-                                            </p>
+                                        
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Chi nhánh</p>
+                                            <p class="font-bold break-words">{{ formGroup.get('branchName').value }}</p>
                                         </article>
-                                        <article class="prose break-words">
-                                            <p>Số tài khoản thụ hưởng <br> <b>{{ formGroup.get('accNo').value }}</b>
-                                            </p>
+                                        
+                                        <article class="prose break-words text-sm sm:text-base">
+                                            <p class="mb-1">Số tài khoản thụ hưởng</p>
+                                            <p class="font-bold break-all">{{ formGroup.get('accNo').value }}</p>
                                         </article>
-                                        <article class="prose break-words">
+                                        
+                                        <article class="prose break-words text-sm sm:text-base">
                                             <p class="flex flex-col">
-                                                <span>Tổng tiền chuyển khoản</span>
+                                                <span class="mb-1">Tổng tiền chuyển khoản</span>
                                                 <span class="flex items-center justify-between font-bold">
-                                                {{ formGroup.get('paidBankAmount').value | currencyFormatPipe: 10 }}
-                                                <mat-icon
-                                                    class="cursor-pointer text-gray-600"
-                                                    (click)="coppy(formGroup.get('paidBankAmount').value)"
-                                                    svgIcon="mat_solid:content_copy">
-                                                </mat-icon>
+                                                    <span class="break-all mr-2">{{ formGroup.get('paidBankAmount').value | currencyFormatPipe: 10 }}</span>
+                                                    <mat-icon
+                                                        class="cursor-pointer text-gray-600 flex-shrink-0"
+                                                        (click)="coppy(formGroup.get('paidBankAmount').value)"
+                                                        svgIcon="mat_solid:content_copy">
+                                                    </mat-icon>
                                                 </span>
                                             </p>
                                         </article>
 
-                                        <article class="prose break-words pb-2 border-b border-solid">
+                                        <article class="prose break-words pb-2 border-b border-solid text-sm sm:text-base">
                                             <p class="flex flex-col">
-                                                <span>Nội dung giao dịch</span>
+                                                <span class="mb-1">Nội dung giao dịch</span>
                                                 <span class="flex items-center justify-between font-bold">
-                                                {{ formGroup.get('transCode').value }}
-                                                <mat-icon
-                                                    class="cursor-pointer text-gray-600"
-                                                    (click)="coppy(formGroup.get('transCode').value)"
-                                                    svgIcon="mat_solid:content_copy">
-                                                </mat-icon>
+                                                    <span class="break-all mr-2">{{ formGroup.get('transCode').value }}</span>
+                                                    <mat-icon
+                                                        class="cursor-pointer text-gray-600 flex-shrink-0"
+                                                        (click)="coppy(formGroup.get('transCode').value)"
+                                                        svgIcon="mat_solid:content_copy">
+                                                    </mat-icon>
                                                 </span>
                                             </p>
                                         </article>
 
-                                        <div class="w-full text-[#E83E3C]">
-                                            <span>Chú ý:</span>
-                                            <p class="mt-4 font-semibold">
+                                        <div class="w-full text-[#E83E3C] text-xs sm:text-sm">
+                                            <span class="font-semibold">Chú ý:</span>
+                                            <p class="mt-2 font-semibold">
                                                 Chuyển khoản đúng mã thanh toán để tránh phát sinh lỗi giao dịch. Chuyển 24/7 nếu khác ngân hàng.
                                             </p>
-                                           
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- <div class="grid grid-cols-1 gap-5 p-5 pt-0">
-                                     <div class="font-bold text-lg pt-2">Thông tin giải ngân</div>
-                                     <div class="grid grid-cols-1 gap-5 px-5 ">
-                                         <article class="prose break-words">
-                                             <p>Người thụ hưởng <br> <b>{{ formGroup.get('transCode').value }} AAAAAAAAAAA</b>
-                                             </p>
-                                         </article>
-                                         <article class="prose break-words">
-                                             <p>Số tài khoản <br>
-                                                 <b>{{ formGroup.get('transCode').value }} AAAAAAAAAAA</b></p>
-                                         </article>
-                                         <article class="prose break-words">
-                                             <p>Ngân hàng <br> <b>{{ formGroup.get('transCode').value }} AAAAAAAAAAA</b></p>
-                                         </article>
-                                         <article class="prose break-words">
-                                             <p>Chi nhánh <br> <b>{{ formGroup.get('transCode').value }} AAAAAAAAAAA</b></p>
-                                         </article>
-                                     </div>
-                                 </div>-->
                             </div>
                         </div>
                     </form>
