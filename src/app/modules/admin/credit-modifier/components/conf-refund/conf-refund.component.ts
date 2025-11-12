@@ -126,7 +126,7 @@ export class ConfRefundComponent implements OnInit {
             stopCapital: new FormControl(this.detail?.stopCapital, [Validators.required, Validators.max(100), Validators.min(0)]),
 
             p2PRemainingDays: new FormControl(this.detail?.p2PRemainingDays, [Validators.required, Validators.min(1)]),
-            accByPassMinInvest: new FormControl(this.detail?.accByPassMinInvest),
+            accNameByPassMinInvest: new FormControl(this.detail?.accNameByPassMinInvest),
             amountBypassDebt: new FormControl(this.detail?.amountBypassDebt),
 
             createdByName: new FormControl({

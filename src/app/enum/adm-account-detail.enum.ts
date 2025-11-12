@@ -40,7 +40,7 @@ export const USER_TYPE_STATUS_TEXT_MAP = {
 
 
 export const USER_INFO_TYPE_REQ = {
-    [1]: 'CCCD/Hộ Chiếu',
+    [1]: 'CCCD/Hộ chiếu',
     [2]: 'Giấy phép kinh doanh',
 };
 

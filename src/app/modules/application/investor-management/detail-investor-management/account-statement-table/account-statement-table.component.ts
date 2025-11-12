@@ -57,11 +57,11 @@ export class AccountStatementTableComponent implements OnInit {
         let columnDefinition = [
             new CheckboxColumn(),
             new TextColumn('transDate', 'Thời gian giao dịch', 10, false, 'DD/MM/YYYY - HH:mm:ss'),
-            new TextColumn('amount', 'Số tiền giao dịch (VNĐ)', 10, false, 3),
+            new TextColumn('amount', 'Số tiền giao dịch(VND)', 10, false, 3),
             new TextColumn('transTypeName', 'Loại giao dịch', 15),
             new TextColumn('fsLoanProfilesId', ' Số hồ sơ', 10),
             new TextColumn('transCode', 'Mã giao dịch', 10),
-            new TextColumn('availableBalance', 'Số dư khả dụng tại thời điểm (VNĐ)', 10, false, 3),
+            new TextColumn('availableBalance', 'Số dư khả dụng tại thời điểm(VND)', 10, false, 3),
         ]           ;
         this._excelService.exportExcel(columnDefinition,
             [

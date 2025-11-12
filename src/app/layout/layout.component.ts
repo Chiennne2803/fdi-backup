@@ -21,6 +21,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
     scheme: 'dark' | 'light';
     theme: string;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    maintenanceMessage: string | null = null;
+    maintenanceTime: string | null = null;
+
+
 
     /**
      * Constructor
@@ -43,7 +47,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
     /**
      * On init
      */
+
+   
     ngOnInit(): void {
+        
         // Set the theme and scheme based on the configuration
         combineLatest([
             this._fuseConfigService.config$,

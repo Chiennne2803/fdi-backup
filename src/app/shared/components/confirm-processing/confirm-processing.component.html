@@ -1,70 +1,56 @@
-<div mat-dialog-title>
-    <div class="flex justify-center">
-        <h2>{{this.data && this.data.title ? this.data.title : ''}}</h2>
+<div class="flex flex-col -m-6 max-h-screen">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">{{this.data && this.data.title ? this.data.title : ''}}</div>
+        <button [tabIndex]="-1" mat-icon-button mat-dialog-close>
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
     </div>
-</div>
-<div [formGroup]="confirmProcessForm">
-    <mat-dialog-content>
-        <ng-container *ngIf="data.financialStatement">
-            <div class="mb-5">
-                <app-dropzone
-                    [multiple]="true"
-                    styleClass="max-h-15"
-                    title="Báo cáo tài chính và ngân hàng"
-                    [formGroup]="confirmProcessForm"
-                    field="financialStatement"
-                ></app-dropzone>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="data.reportLoanProfileAtt">
-            <div class="mb-5">
-                <app-dropzone
-                    [multiple]="true"
-                    styleClass="max-h-15"
-                    title="Báo cáo đánh giá hồ sơ huy động vốn"
-                    [formGroup]="confirmProcessForm"
-                    field="reportLoanProfileAtt"
-                ></app-dropzone>
-            </div>
-        </ng-container>
-        <mat-label>{{this.data && this.data.subTitle ? this.data.subTitle : ''}}</mat-label>
-        <div class="flex justify-center">
-            <mat-radio-group
-                *ngIf="this.data"
-                aria-labelledby="radio-group-label"
-                class="radio-group"
-                formControlName="status">
-                <mat-radio-button color="primary" class="radio-button" *ngFor="let choice of this.data.choices" [value]="choice.value">
-                    {{choice.name}}
-                </mat-radio-button>
-            </mat-radio-group>
-        </div>
-        <mat-form-field class="w-full">
-            <mat-label>Nội dung xử lý: </mat-label>
-            <input
-                [maxLength]="maxlenNote"
-                placeholder="Nội dung xử lý..."
-                matInput
-                trim="blur"
-                formControlName="approvalComment"
-                id="approvalComment"
-            >
-            <mat-error *ngIf="confirmProcessForm?.get('approvalComment').hasError('required')">
-                {{ 'YCHO002' | transloco }}
-            </mat-error>
-            <mat-error *ngIf="confirmProcessForm?.get('approvalComment').hasError('maxlength')">
-                {{ msgRequireNote | transloco }}
-            </mat-error>
-        </mat-form-field>
-    </mat-dialog-content>
-    <mat-dialog-actions align="center">
-        <a
-            (click)="close()"
-            class="ml-auto sm:ml-0"
-            mat-stroked-button
-            [matTooltip]="'Đóng'">
-            Đóng
-        </a>
-        <button mat-flat-button color="primary" (click)="submit()">Xác nhận</button>
-    </mat-dialog-actions>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="confirmProcessForm">
+        <mat-dialog-content>
+            <ng-container *ngIf="data.financialStatement">
+                <div class="mb-5">
+                    <app-dropzone [multiple]="true" styleClass="h-[48px] mt-[3px]"
+                        title="Báo cáo tài chính và ngân hàng" [formGroup]="confirmProcessForm"
+                        field="financialStatement"></app-dropzone>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="data.reportLoanProfileAtt">
+                <div class="mb-5">
+                    <app-dropzone [multiple]="true" styleClass="h-[48px] mt-[3px]"
+                        title="Báo cáo đánh giá hồ sơ huy động vốn" [formGroup]="confirmProcessForm"
+                        field="reportLoanProfileAtt"></app-dropzone>
+                </div>
+            </ng-container>
+            <mat-label>{{this.data && this.data.subTitle ? this.data.subTitle : ''}}</mat-label>
+            <!-- <div class="flex justify-start"> -->
+                <mat-radio-group *ngIf="this.data" aria-labelledby="radio-group-label" class="flex items-center justify-start gap-2 my-2"
+                    formControlName="status">
+                    <mat-radio-button color="primary" class="radio-button" *ngFor="let choice of this.data.choices"
+                        [value]="choice.value">
+                        {{choice.name}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            <!-- </div> -->
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Nội dung xử lý: </mat-label>
+                <input [maxLength]="maxlenNote" placeholder="Nội dung xử lý..." matInput trim="blur"
+                    formControlName="approvalComment" id="approvalComment">
+                <mat-error *ngIf="confirmProcessForm?.get('approvalComment').hasError('required')">
+                    {{ 'YCHO002' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="confirmProcessForm?.get('approvalComment').hasError('maxlength')">
+                    {{ msgRequireNote | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </mat-dialog-content>
+        <mat-dialog-actions align="center">
+            <a (click)="close()" class="ml-auto sm:ml-0" mat-stroked-button [matTooltip]="'Đóng'">
+                Đóng
+            </a>
+            <button mat-flat-button color="primary" (click)="submit()">Xác nhận</button>
+        </mat-dialog-actions>
+    </div>
 </div>

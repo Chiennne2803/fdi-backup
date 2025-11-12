@@ -139,9 +139,9 @@ this.tableConfig.isViewDetail = false;
                                 label: item.toString(),
                                 value: item,
                             })), null,false),
-                        new FromToSearch('investmentAmount', 'Tổng số tiền đã đặt lệnh đầu tư (VNĐ)', null, 'number'),
-                        new FromToSearch('preMatchingAmount', 'Số tiền đang chờ khớp lệnh (VNĐ)', null, 'number'),
-                        new FromToSearch('matchingAmount', 'Số tiền đã được khớp lệnh (VNĐ)', null, 'number'),
+                        new FromToSearch('investmentAmount', 'Tổng số tiền đã đặt lệnh đầu tư (VND)', null, 'number'),
+                        new FromToSearch('preMatchingAmount', 'Số tiền đang chờ khớp lệnh (VND)', null, 'number'),
+                        new FromToSearch('matchingAmount', 'Số tiền đã được khớp lệnh (VND)', null, 'number'),
                         new DropListSearch('status', 'Trạng thái', [
                             {label: 'Tất cả', value: ''},
                             {label: 'Đang đầu tư', value: 1},

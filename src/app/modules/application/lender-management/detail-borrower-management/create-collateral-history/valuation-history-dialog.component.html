@@ -1,6 +1,6 @@
 <div class="flex flex-col max-w-240 md:min-w-160 -m-6" style="max-height: 90vh">
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium">Định giá tài sản bảo đảm</div>
         <button mat-icon-button>
             <mat-icon class="text-current"
@@ -28,7 +28,7 @@
             >
         </mat-form-field>
         <mat-form-field class="w-full">
-            <mat-label>Giá trị định giá tài sản (VNĐ)</mat-label>
+            <mat-label>Giá trị định giá tài sản (VND)</mat-label>
             <input id="amount"
                    [maxlength]="15" [required]="true"
                    matInput
@@ -60,7 +60,7 @@
             <app-dropzone
                 topTitle="Hồ sơ pháp lý liên quan đến tài sản"
                 title="Tải tệp lên"
-                styleClass="h-12 mt-[3px]"
+                styleClass="h-[48px] mt-[3px]"
                 class="w-full"
                 previewClass="max-w-fit w-full"
                 [formGroup]="formGroup"

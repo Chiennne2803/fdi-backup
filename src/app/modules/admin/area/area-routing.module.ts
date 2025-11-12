@@ -13,13 +13,16 @@ const route: Route[] = [
         },
         children: [
             {
+                data: { title: 'Quản lý Tỉnh/Thành phố' },
                 path: 'province',
                 component: AreaListCategoryComponent,
             },{
+                data: { title: 'Quản lý Quận/Huyện' },
                 path: 'province/:parentCategoriesCode',
                 component: AreaListCategoryComponent,
             },
             {
+                data: { title: 'Quản lý Phường/Xã' },
                 path: 'district/:parentCategoriesCode',
                 component: AreaListCategoryComponent,
             },

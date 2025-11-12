@@ -4,10 +4,17 @@
 <div [class]="styleClass" class="relative w-full h-60 mx-auto">
     <!-- Avatar -->
     <div *ngIf="previewAvatar?.contentBase64" [@zoomIn]
-        class="w-full h-full max-h-[300px] rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 flex items-center justify-center overflow-hidden py-2">
-
-        <img [src]="getSafeImageUrl(previewAvatar.contentBase64)" alt="Avatar"
+        class="w-full h-full max-h-[300px] rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 flex items-center justify-center overflow-hidden py-1.5">
+        <img [matTooltip]="'Click để xem lớn'" (click)="openImagePreview()"
+            [src]="getSafeImageUrl(previewAvatar.contentBase64)" alt="Avatar"
             class="w-[220px] h-auto max-h-full object-contain rounded-md" />
+
+        <button *ngIf="showFileButton" type="button"
+            class="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-white text-black shadow-sm hover:bg-gray-200"
+            (click)="removeAvatar()" [disabled]="disabled" [class.opacity-50]="disabled"
+            [class.cursor-not-allowed]="disabled">
+            ✕
+        </button>
     </div>
 
     <div *ngIf="!previewAvatar?.contentBase64"
@@ -19,12 +26,15 @@
     <!-- Button chọn ảnh -->
     <ng-container *ngIf="showFileButton">
         <button type="button"
-            class="absolute bottom-2 right-2 px-2 py-1 flex items-center gap-1 bg-white text-black rounded shadow-sm"
-            (click)="fileInput.click()">
-            <mat-icon class="text-black icon-size-3.5" svgIcon="heroicons_outline:camera"></mat-icon> Chọn ảnh
+            class="absolute bottom-2 right-2 px-2 py-1 flex items-center gap-1 bg-white text-black rounded shadow-sm hover:bg-gray-200"
+            (click)="!disabled && fileInput.click()" [disabled]="disabled" [class.opacity-50]="disabled"
+            [class.cursor-not-allowed]="disabled">
+            <mat-icon class="text-black icon-size-3.5" svgIcon="heroicons_outline:camera"></mat-icon>
+            Chọn ảnh
         </button>
+
         <input type="file" class="hidden" #fileInput accept="image/png, image/jpg, image/jpeg"
-            (change)="uploadFile($event)" />
+            (change)="uploadFile($event)" [disabled]="disabled" />
     </ng-container>
 
     <!-- Lỗi validate -->

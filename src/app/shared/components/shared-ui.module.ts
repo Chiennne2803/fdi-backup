@@ -33,7 +33,7 @@ import { FuseCardModule } from '../../../@fuse/components/card';
 import { FuseDrawerModule } from '../../../@fuse/components/drawer';
 import { AutoFocusDirective } from '../directives/auto-focus.directive';
 import { InputMaskDirective } from '../directives/input-mask.component';
-import { AddressDialogComponent } from './address-dialog/address-dialog.component';
+// import { AddressDialogComponent } from './address-dialog/address-dialog.component';
 import { AppRadialBarChartComponent } from './app-radial-bar-chart/app-radial-bar-chart.component';
 import { AvatarComponent } from './avatar/avatar.component';
 import { ConfirmProcessingComponent } from './confirm-processing/confirm-processing.component';
@@ -57,20 +57,25 @@ import { KycDetailComponent } from './kyc/kyc-details/kyc-detail.component';
 import { KycFinishComponent } from './kyc/kyc-finish/kyc-finish.component';
 import { KycStarterComponent } from './kyc/kyc-starter/kyc-starter.component';
 import { ModalNotifyComponent } from './modal-notify/modal-notify.component';
-import { OtpConfirmComponent } from './otp-confirm/otp-confirm.component';
 import { OtpSmsConfirmComponent } from './otp-sms-confirm/otp-sms-confirm.component';
 import { DateTimeformat2Pipe, DateTimeformatPipe } from './pipe/date-time-format.pipe';
 import { CurrencyFormatPipe, DecimalFormatPipe, TooltipListPipe } from './pipe/string-format.pipe';
 import { SignRequestDialogComponent } from './sign-request-dialog/sign-request-dialog.component';
 import { StatusDisplayComponent } from './status-display/status-display.component';
 import { getVietNamPaginatorIntl } from './vi-paginator-intl';
-import {TranslocoModule} from "@ngneat/transloco";
-import {PermissionPipe} from "./pipe/permission.pipe";
-import {TrimInputDirective} from "../directives/trim-input.directive";
-import {LowerCaseInputDirective} from "../directives/lower-case-input.directive";
+import { TranslocoModule } from "@ngneat/transloco";
+import { PermissionPipe } from "./pipe/permission.pipe";
+import { TrimInputDirective } from "../directives/trim-input.directive";
+import { LowerCaseInputDirective } from "../directives/lower-case-input.directive";
 import { BalanceCardComponent } from './balance-card/balance-card.component';
-// import { NgOtpInputModule } from 'ng-otp-input';
-// import { SwiperModule } from 'swiper/angular';
+import { FuseScrollbarModule } from "@fuse/directives/scrollbar";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { ImagePreviewDialogComponent } from './file-detail/image-preview-dialog.component';
+import { AvatarPreviewComponent } from './avatar-preview/avatar-preview.component';
+import { NoDataComponent } from './no-data/no-data.component';
+import { PasswordInputComponent } from './password-input/password-input.component';
+import { NgOtpInputModule } from 'ng-otp-input';
+import { CustomPaginatorComponent } from './custom-paginator/custom-paginator.component';
 
 const CUSTOM_PIPE = [
     CurrencyFormatPipe,
@@ -84,9 +89,9 @@ const CUSTOM_PIPE = [
 @NgModule({
     declarations: [
         DatatableComponent,
+        CustomPaginatorComponent,
         ...CUSTOM_PIPE,
         DateTimeformatPipe,
-        OtpConfirmComponent,
         DropzoneComponent,
         OtpSmsConfirmComponent,
         ModalNotifyComponent,
@@ -97,9 +102,10 @@ const CUSTOM_PIPE = [
         OtpEmailComponent,
         KycFinishComponent,
         ModalNotifyComponent,
-        AddressDialogComponent,
+        // AddressDialogComponent,
         ConfirmProcessingComponent,
         FileDetailComponent,
+        ImagePreviewDialogComponent,
         MakeWithdrawDialogsComponent,
         RechargeRequestDialogsComponent,
         RechargeRequestSaveDialogsComponent,
@@ -117,6 +123,9 @@ const CUSTOM_PIPE = [
         LowerCaseInputDirective,
         AutoFocusDirective,
         BalanceCardComponent,
+        AvatarPreviewComponent,
+        NoDataComponent,
+        PasswordInputComponent
     ],
     imports: [
         CommonModule,
@@ -153,13 +162,14 @@ const CUSTOM_PIPE = [
         CurrencyMaskModule,
         NgApexchartsModule,
         TranslocoModule,
-        // SwiperModule,  
-        // NgOtpInputModule
+        FuseScrollbarModule,
+        NgOtpInputModule,
+        MatAutocompleteModule,
     ],
     exports: [
         DatatableComponent,
+        CustomPaginatorComponent,
         ...CUSTOM_PIPE,
-        OtpConfirmComponent,
         DateTimeformatPipe,
         FileComponent,
         DropzoneComponent,
@@ -169,11 +179,12 @@ const CUSTOM_PIPE = [
         ModalNotifyComponent,
         KycStarterComponent,
         KycDetailComponent,
-        AddressDialogComponent,
+        // AddressDialogComponent,
         OtpEmailComponent,
         KycFinishComponent,
         ConfirmProcessingComponent,
         FileDetailComponent,
+        ImagePreviewDialogComponent,
         MakeWithdrawDialogsComponent,
         RechargeRequestDialogsComponent,
         RechargeRequestSaveDialogsComponent,
@@ -191,6 +202,9 @@ const CUSTOM_PIPE = [
         AutoFocusDirective,
         NgxTrimDirectiveModule,
         BalanceCardComponent,
+        AvatarPreviewComponent,
+        NoDataComponent,
+        PasswordInputComponent
     ],
     providers: [
         { provide: MatPaginatorIntl, useValue: getVietNamPaginatorIntl() },

@@ -49,11 +49,11 @@ export class LoanReviewComponent implements OnInit {
         this._loanProfilesReviewService.setDrawer(this.matDrawer);
         this._loanProfilesReviewService.getPrepareLoadingPage().subscribe((res) => {
             if (res.payload.listInvestmentTime != undefined && res.payload.listInvestmentTime.length > 0) {
-                this.listInvestmentTime.push({label: 'Tẩt cả', value: null});
+                this.listInvestmentTime.push({label: 'Tẩt cả', value: ''});
                 res.payload.listInvestmentTime.forEach(x => this.listInvestmentTime.push({label: x, value: x}));
             }
             if (res.payload.lstReasons != undefined && res.payload.lstReasons.length > 0) {
-                this.lstReasons.push({label: 'Tẩt cả', value: null});
+                this.lstReasons.push({label: 'Tẩt cả', value: ''});
                 res.payload.lstReasons.forEach(x => this.lstReasons.push({label: x.categoriesName, value: x.admCategoriesId}));
             }
         });

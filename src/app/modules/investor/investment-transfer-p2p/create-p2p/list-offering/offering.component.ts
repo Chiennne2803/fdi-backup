@@ -66,9 +66,9 @@ export class OfferingComponent implements OnInit {
         switch (event.action) {
             case 'deleted':
                 const dialogConfirm = this._fuseConfirmationService.open({
-                    title: 'Xác nhận hủy giao dịch chào bán?',
+                    title: 'Xác nhận hủy giao dịch chuyển nhượng?',
                     message: 'Đây là hành động vĩnh viễn, giao dịch sẽ không thể khôi phục sau khi huỷ.' +
-                        ' Lập giao dịch chào bán mới nếu bạn muốn tiếp tục chuyển nhượng khoản đầu tư này',
+                        ' Lập giao dịch chuyển nhượng mới nếu bạn muốn tiếp tục chuyển nhượng khoản đầu tư này',
                     actions: {
                         confirm: {
                             label: 'Đồng ý'
@@ -138,11 +138,11 @@ export class OfferingComponent implements OnInit {
                 searchConfig: {
                     config: [
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ', null, false),
-                        new FromToSearch('tranferAmount', 'Số tiền chuyển nhương (VNĐ)', null, 'number'),
+                        new FromToSearch('tranferAmount', 'Số tiền chuyển nhương (VND)', null, 'number'),
                         new DateTimeFromToSearch( 'investorTimeExpried', 'Ngày đáo hạn', null, false),
                         new DropListSearch('loanTimeCycle', 'Kỳ hạn(ngày)', this._dataTenor, null,false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Hoàn thành', value: 2},
                             {label: 'Huỷ chủ động', value: 3},
                             {label: 'Hết hạn niêm yết', value: 4},
@@ -197,7 +197,7 @@ export class OfferingComponent implements OnInit {
                     otpType: 'CANCEL_MUL_TRANS_REQ_P2P_OTP',
                 },
                 title: 'Điền mã xác nhận OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                 complete: () => {
                     dialogRef.close();
                     this._fuseAlertService.showMessageSuccess('Huỷ giao dịch thành công');

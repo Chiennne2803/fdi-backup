@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {FeeTransactionManagementSearchComponent} from '../../modules/application/ho-transaction-fee-management/dialog/search/fee-transaction-management-search.component';
 import {AddDialogComponent} from '../../modules/application/lender-refund/dialog/add-dialog/add-dialog.component';
 import {FuseConfirmationService} from '../../../@fuse/services/confirmation';
 import {FuseConfirmationDialogComponent} from '../../../@fuse/services/confirmation/dialog/dialog.component';
@@ -8,7 +7,7 @@ import {ProcessDialogComponent} from '../../modules/application/lender-refund/di
 import {ConfirmProcessingComponent} from '../../shared/components/confirm-processing/confirm-processing.component';
 import {DocumentSignDialogComponent} from '../../modules/application/investor-refund/dialog/sign/document-sign.component';
 import {AddRefundInvestorComponent} from '../../modules/application/investor-refund/dialog/add/add-refund.component';
-import {FeeTransactionManagementCreateComponent} from '../../modules/application/ho-transaction-fee-management/dialog/create/fee-transaction-management-create.component';
+import { FeeTransactionManagementCreateComponent } from 'app/modules/application/ho-transaction-fee-management/dialog/create/fee-transaction-management-create.component';
 
 @Injectable({
     providedIn: 'root'
@@ -21,15 +20,6 @@ export class DialogService {
     ) {
     }
 
-    openFeeTransactionManagementSearchAdvancedDialog(): MatDialogRef<any> {
-        const dialogRef = this._dialog.open(FeeTransactionManagementSearchComponent, {
-            disableClose: true,
-            width: '800px',
-            data: {},
-        });
-        return dialogRef;
-    }
-
     openFeeTransactionCreate(): MatDialogRef<any> {
         const dialogRef = this._dialog.open(FeeTransactionManagementCreateComponent, {
             disableClose: true,
@@ -38,7 +28,6 @@ export class DialogService {
         });
         return dialogRef;
     }
-
     openMakeRequestLenderRefundDialog(): MatDialogRef<any> {
         const dialogRef = this._dialog.open(AddDialogComponent, {
             disableClose: true,
@@ -57,14 +46,18 @@ export class DialogService {
         return dialogRef;
     }
 
-    openConfirmDialog(message: string, title?: string): MatDialogRef<FuseConfirmationDialogComponent> {
+     openConfirmDialog(message: string, title?: string): MatDialogRef<FuseConfirmationDialogComponent> {
         const cfDialog = this._fuseConfirmDialog.open({
             title: title || 'Xác nhận',
             message: message,
-            dismissible: true,
+            "icon": {
+                "name": "heroicons_outline:exclamation-circle",
+            },
+            dismissible: false,
             actions: {
                 confirm: {
-                    label: 'Đồng ý'
+                    label: 'Đồng ý',
+                    color: 'primary'
                 },
                 cancel: {
                     label: 'Hủy',
@@ -73,6 +66,19 @@ export class DialogService {
         });
         return cfDialog;
     }
+    openConfirmSginDialog(message: string, title?: string): MatDialogRef<FuseConfirmationDialogComponent> {
+    const cfDialog = this._fuseConfirmDialog.open({
+        title: title || 'Thông báo',
+         message: message,
+        icon: { name: 'heroicons_outline:exclamation-circle' },
+        dismissible: false,
+        actions: {
+            confirm: { label: 'Đóng', color: 'primary' },
+            cancel: { show: false }
+        }
+    });
+    return cfDialog;
+}
 
     openWarningDialog(message: string): MatDialogRef<FuseConfirmationDialogComponent> {
         const cfDialog = this._fuseConfirmDialog.open({
@@ -93,7 +99,7 @@ export class DialogService {
 
     openConfirmProcessingDialog(valueDefault?: number, valueReject?: number): MatDialogRef<ConfirmProcessingComponent> {
         const dialog = this._dialog.open(ConfirmProcessingComponent, {
-            width: '450px',
+            // width: '450px',
             disableClose: true,
             data: {
                 title: 'Xác nhận nội dung xử lý?',

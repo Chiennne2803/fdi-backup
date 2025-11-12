@@ -14,9 +14,9 @@ import { ButtonTableEvent } from '../../../../shared/models/datatable/table-conf
 import { TABLE_STATISTICAL_REPORT_INVESTOR_WITHDRAWAL_CONFIG, TASK_BAR_STATISTICAL_REPORT_CONFIG } from "./report-investor-withdraw-cash.config";
 
 @Component({
-  selector: 'app-report-investor-withdraw-cash',
-  templateUrl: './report-investor-withdraw-cash.component.html',
-  styleUrls: ['./report-investor-withdraw-cash.component.scss']
+    selector: 'app-report-investor-withdraw-cash',
+    templateUrl: './report-investor-withdraw-cash.component.html',
+    styleUrls: ['./report-investor-withdraw-cash.component.scss']
 })
 export class ReportInvestorWithdrawCashComponent implements OnInit {
     dataSource$: Observable<BaseResponse>;
@@ -24,13 +24,12 @@ export class ReportInvestorWithdrawCashComponent implements OnInit {
     taskBarConfig = TASK_BAR_STATISTICAL_REPORT_CONFIG;
     _btnConfig = {
         commonBtn: [
-            {type : 'export', role : 'SFF_STATISTIC_EXPORT', fileName : 'Ngay_rut_tien'},
+            { type: 'export', role: 'SFF_STATISTIC_EXPORT', fileName: 'Ngay_rut_tien' },
         ],
     };
 
     private _dataSearchDialog: object;
     private searchPayload: BaseRequest = new BaseRequest();
-    private isFirstLoad = true;
 
     constructor(
         private _reportWithdrawCashService: ReportWithdrawCashService,
@@ -41,11 +40,7 @@ export class ReportInvestorWithdrawCashComponent implements OnInit {
     ngOnInit(): void {
         this.tableConfig.title = 'Báo cáo rút tiền của nhà đầu tư';
         this._reportWithdrawCashService.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
-                this.dataSource$ =  this._reportWithdrawCashService.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
+            this.dataSource$ = this._reportWithdrawCashService.lazyLoad;
         });
 
     }
@@ -76,7 +71,7 @@ export class ReportInvestorWithdrawCashComponent implements OnInit {
                     config: [
                         new InputSearch('admAccountIdRecipientName', 'Tên cá nhân/ Doanh nghiệp', null, false),
                         new InputSearch('admAccountIdRecipient', 'ID khách hàng', null, false),
-                        new DateTimeFromToSearch( 'createdDate', 'Ngày rút tiền', null, false, undefined, undefined,0,true),
+                        new DateTimeFromToSearch('createdDate', 'Ngày rút tiền', null, false, undefined, undefined, 0, true),
                         new FromToSearch('amount', 'Số tiền', null, 'number'),
                     ]
                 },

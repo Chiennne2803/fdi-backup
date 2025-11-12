@@ -1,5 +1,5 @@
-<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent ">
-    <mat-drawer class="w-full md:w-6/12 dark:bg-gray-900"
+<mat-drawer-container class="flex-auto h-full bg-white">
+    <mat-drawer class="w-full md:w-6/12"
                 [mode]="'side'"
                 [opened]="false"
                 [position]="'end'"
@@ -9,13 +9,10 @@
                                  (handleCloseDetailPanel)="handleCloseDetailPanel($event)"></app-account-bank-detail>
     </mat-drawer>
     <mat-drawer-content class="flex flex-col" *ngIf="_dataSource">
-        <div class="sm:absolute flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
-             [ngClass]="'sm:inset-0' "
-        >
+        <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden">
         <div class="flex flex-auto overflow-hidden relative">
             <div class="flex flex-col flex-auto overflow-auto">
-                <table #matTable mat-table [dataSource]="_dataSource">
-
+                <table class="mb-32 sm:mb-18" #matTable mat-table [dataSource]="_dataSource">
                     <!-- Name Column -->
                     <ng-container matColumnDef="title">
                         <th mat-header-cell *matHeaderCellDef> Tiêu đề</th>

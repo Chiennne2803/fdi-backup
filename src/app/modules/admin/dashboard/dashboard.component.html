@@ -1,404 +1,31 @@
-<div class="flex flex-col flex-auto min-w-0">
-
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto p-6 sm:p-8 bg-white" cdkScrollable>
     <!-- Header -->
-    <div class="bg-card px-30">
-        <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
-            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
-                <!-- Avatar and name -->
-                <div class="flex flex-auto items-center min-w-0">
-                    <div class="flex-0 w-16 h-16 rounded-full ">
-                        <img class="w-full h-full object-cover" [src]="avatar">
-                    </div>
-                    <div class="flex flex-col min-w-0 ml-4">
-                        <ng-container>
-                            <div
-                                class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
-                                Chào mừng bạn trở lại, {{ user.fullName }}!</div>
-                        </ng-container>
-                        <!-- <div class="flex items-center">
-                            
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-            <div class="relative flex self-start pt-2 pb-1 pl-5 pr-4 cursor-pointer  rounded-t-xl border border-b-0 bg-default"
-                matRipple>
-                <div class="flex items-center">
-                    <div class="">
-                        <div class="font-medium leading-6 truncate">Dashboard</div>
-                    </div>
-                </div>
-            </div>
+    <div class="flex items-center gap-3 mb-6">
+        <div *ngIf="avatar" class="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+            <img [src]="avatar" alt="avatar" class="object-cover w-full h-full">
+        </div>
+        <div *ngIf="!avatar"
+            style="background: linear-gradient(106.46deg, #2854F2 18.36%, #394EE4 27.43%, #6641C1 42.73%, #BA219D 65.37%, #FF6C0E 92.94%);"
+            class="w-16 h-16 rounded-full text-white flex items-center justify-center text-3xl font-medium">
+            {{ getInitials(user.fullName) }}
+        </div>
+        <div>
+            <p class="text-gray-700 ">
+                Chào mừng bạn trở lại, <br><span class="font-semibold text-xl"> {{ user.fullName }}</span>
+            </p>
         </div>
     </div>
 
     <!-- Main -->
-    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6 ">
-        <div class="w-full max-w-screen-xl mx-auto">
-            <ng-container *ngIf="!dashboardDTO?.tab1 && !dashboardDTO?.tab2 && !dashboardDTO?.tab3">
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <!-- chartCustomer -->
-                    <div class="bg-white shadow p-4 rounded-lg">
-                        <div class="flex flex-col flex-auto">
-                            <p class="font-semibold mb-2">
-                                Biểu đồ tăng trưởng doanh số
-                            </p>
-
-                            <apx-chart class="flex-auto w-full h-max" [series]="chartOptions1.series"
-                                [chart]="chartOptions1.chart" [xaxis]="chartOptions1.xaxis"
-                                [stroke]="chartOptions1.stroke" [title]="chartOptions1.title"
-                                [yaxis]="chartOptions1.yaxis" [plotOptions]="chartOptions1.plotOptions"
-                                [colors]="chartOptions1.colors" [legend]="chartOptions1.legend"
-                                [markers]="chartOptions1.markers"></apx-chart>
-                        </div>
-                    </div>
-
-                    <!-- Line Chart -->
-                    <div class="bg-white shadow p-4 rounded-lg w-full">
-                        <p class="font-semibold mb-2">Biểu đồ tăng trưởng tài khoản</p>
-                        <apx-chart class="flex-auto w-full h-max" [series]="chartCustomer.series"
-                            [chart]="chartCustomer.chart" [xaxis]="chartCustomer.xaxis" [yaxis]="chartCustomer.yaxis"
-                            [dataLabels]="chartCustomer.dataLabels" [plotOptions]="chartCustomer.plotOptions"
-                            [legend]="chartCustomer.legend" [tooltip]="chartCustomer.tooltip"
-                            [responsive]="chartCustomer.responsive" [fill]="chartCustomer.fill"
-                            [colors]="chartCustomer.colors" [stroke]="chartCustomer.stroke"
-                            [grid]="chartCustomer.grid"></apx-chart>
-                    </div>
-                    <!-- Line Chart -->
-                    <div class="bg-white shadow p-4 rounded-lg w-full">
-                        <p class="font-semibold mb-2">Biểu đồ tăng trưởng nhà đầu tư</p>
-                        <apx-chart [series]="chartTask.series" [chart]="chartTask.chart" [xaxis]="chartTask.xaxis"
-                            [yaxis]="chartTask.yaxis" [dataLabels]="chartTask.dataLabels" [stroke]="chartTask.stroke"
-                            [legend]="chartTask.legend" [tooltip]="chartTask.tooltip" [fill]="chartTask.fill"
-                            [colors]="chartTask.colors" [grid]="chartTask.grid"></apx-chart>
-                    </div>
-                    <div class="bg-white shadow p-4 rounded-lg w-full">
-                        <p class="font-semibold mb-2">Biểu đồ tăng trưởng giao dịch</p>
-                        <apx-chart [series]="chartProductTimeSeries.series" [chart]="chartProductTimeSeries.chart"
-                            [xaxis]="chartProductTimeSeries.xaxis" [plotOptions]="chartProductTimeSeries.plotOptions"
-                            [dataLabels]="chartProductTimeSeries.dataLabels" [colors]="chartProductTimeSeries.colors"
-                            [legend]="chartProductTimeSeries.legend" [grid]="chartProductTimeSeries.grid"></apx-chart>
-
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full mt-6 md:mt-8">
-                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Giao dịch nạp tiền</div>
-                        </div>
-                        <div class="flex flex-col flex-auto mt-6 h-44">
-                            <apx-chart class="flex flex-auto items-center justify-center w-full h-full"
-                                [chart]="chartNewVsReturning.chart" [colors]="chartNewVsReturning.colors"
-                                [labels]="chartNewVsReturning.labels" [plotOptions]="chartNewVsReturning.plotOptions"
-                                [series]="chartNewVsReturning.series" [states]="chartNewVsReturning.states"
-                                [tooltip]="chartNewVsReturning.tooltip"></apx-chart>
-                        </div>
-                        <div class="mt-8">
-                            <div class="-my-3 divide-y">
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#1255FB'">
-                                        </div>
-                                        <div class="ml-3">Thành công</div>
-                                    </div>
-                                    <div class="text-right text-secondary">80%</div>
-                                </div>
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#ED7632'">
-                                        </div>
-                                        <div class="ml-3 ">Thất bại</div>
-                                    </div>
-                                    <div class="text-right text-secondary">20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Giao dịch rút tiền</div>
-                        </div>
-                        <div class="flex flex-col flex-auto mt-6 h-44">
-                            <apx-chart class="flex flex-auto items-center justify-center w-full h-full"
-                                [chart]="chartNewVsReturning.chart" [colors]="chartNewVsReturning.colors"
-                                [labels]="chartNewVsReturning.labels" [plotOptions]="chartNewVsReturning.plotOptions"
-                                [series]="chartNewVsReturning.series" [states]="chartNewVsReturning.states"
-                                [tooltip]="chartNewVsReturning.tooltip"></apx-chart>
-                        </div>
-                        <div class="mt-8">
-                            <div class="-my-3 divide-y">
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#1255FB'">
-                                        </div>
-                                        <div class="ml-3">Thành công</div>
-                                    </div>
-                                    <div class="text-right text-secondary">80%</div>
-                                </div>
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#ED7632'">
-                                        </div>
-                                        <div class="ml-3 ">Thất bại</div>
-                                    </div>
-                                    <div class="text-right text-secondary">20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Giao dịch giải ngân</div>
-                        </div>
-                        <div class="flex flex-col flex-auto mt-6 h-44">
-                            <apx-chart class="flex flex-auto items-center justify-center w-full h-full"
-                                [chart]="chartNewVsReturning.chart" [colors]="chartNewVsReturning.colors"
-                                [labels]="chartNewVsReturning.labels" [plotOptions]="chartNewVsReturning.plotOptions"
-                                [series]="chartNewVsReturning.series" [states]="chartNewVsReturning.states"
-                                [tooltip]="chartNewVsReturning.tooltip"></apx-chart>
-                        </div>
-                        <div class="mt-8">
-                            <div class="-my-3 divide-y">
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#1255FB'">
-                                        </div>
-                                        <div class="ml-3">Thành công</div>
-                                    </div>
-                                    <div class="text-right text-secondary">80%</div>
-                                </div>
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#ED7632'">
-                                        </div>
-                                        <div class="ml-3">Thất bại</div>
-                                    </div>
-                                    <div class="text-right text-secondary">20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Giao dịch hoản trả</div>
-                        </div>
-                        <div class="flex flex-col flex-auto mt-6 h-44">
-                            <apx-chart class="flex flex-auto items-center justify-center w-full h-full"
-                                [chart]="chartNewVsReturning.chart" [colors]="chartNewVsReturning.colors"
-                                [labels]="chartNewVsReturning.labels" [plotOptions]="chartNewVsReturning.plotOptions"
-                                [series]="chartNewVsReturning.series" [states]="chartNewVsReturning.states"
-                                [tooltip]="chartNewVsReturning.tooltip"></apx-chart>
-                        </div>
-                        <div class="mt-8">
-                            <div class="-my-3 divide-y">
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#1255FB'">
-                                        </div>
-                                        <div class="ml-3">Thành công</div>
-                                    </div>
-                                    <div class="text-right text-secondary">80%</div>
-                                </div>
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#ED7632'">
-                                        </div>
-                                        <div class="ml-3 ">Thất bại</div>
-                                    </div>
-                                    <div class="text-right text-secondary">20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
-
-            <mat-tab-group class="sm:px-2">
-                <mat-tab label="Biểu đồ" *ngIf="user.accountType == 3 && user.role == 4">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <!-- chartCustomer -->
-                    <div class="bg-white shadow p-4 rounded-lg">
-                        <div class="flex flex-col flex-auto">
-                            <p class="font-semibold mb-2">
-                                Biểu đồ tăng trưởng doanh số
-                            </p>
-
-                            <apx-chart class="flex-auto w-full h-max" [series]="chartOptions1.series"
-                                [chart]="chartOptions1.chart" [xaxis]="chartOptions1.xaxis"
-                                [stroke]="chartOptions1.stroke" [title]="chartOptions1.title"
-                                [yaxis]="chartOptions1.yaxis" [plotOptions]="chartOptions1.plotOptions"
-                                [colors]="chartOptions1.colors" [legend]="chartOptions1.legend"
-                                [markers]="chartOptions1.markers"></apx-chart>
-                        </div>
-                    </div>
-
-                    <!-- Line Chart -->
-                    <div class="bg-white shadow p-4 rounded-lg w-full">
-                        <p class="font-semibold mb-2">Biểu đồ tăng trưởng tài khoản</p>
-                        <apx-chart class="flex-auto w-full h-max" [series]="chartCustomer.series"
-                            [chart]="chartCustomer.chart" [xaxis]="chartCustomer.xaxis" [yaxis]="chartCustomer.yaxis"
-                            [dataLabels]="chartCustomer.dataLabels" [plotOptions]="chartCustomer.plotOptions"
-                            [legend]="chartCustomer.legend" [tooltip]="chartCustomer.tooltip"
-                            [responsive]="chartCustomer.responsive" [fill]="chartCustomer.fill"
-                            [colors]="chartCustomer.colors" [stroke]="chartCustomer.stroke"
-                            [grid]="chartCustomer.grid"></apx-chart>
-                    </div>
-                    <!-- Line Chart -->
-                    <div class="bg-white shadow p-4 rounded-lg w-full">
-                        <p class="font-semibold mb-2">Biểu đồ tăng trưởng nhà đầu tư</p>
-                        <apx-chart [series]="chartTask.series" [chart]="chartTask.chart" [xaxis]="chartTask.xaxis"
-                            [yaxis]="chartTask.yaxis" [dataLabels]="chartTask.dataLabels" [stroke]="chartTask.stroke"
-                            [legend]="chartTask.legend" [tooltip]="chartTask.tooltip" [fill]="chartTask.fill"
-                            [colors]="chartTask.colors" [grid]="chartTask.grid"></apx-chart>
-                    </div>
-                    <div class="bg-white shadow p-4 rounded-lg w-full">
-                        <p class="font-semibold mb-2">Biểu đồ tăng trưởng giao dịch</p>
-                        <apx-chart [series]="chartProductTimeSeries.series" [chart]="chartProductTimeSeries.chart"
-                            [xaxis]="chartProductTimeSeries.xaxis" [plotOptions]="chartProductTimeSeries.plotOptions"
-                            [dataLabels]="chartProductTimeSeries.dataLabels" [colors]="chartProductTimeSeries.colors"
-                            [legend]="chartProductTimeSeries.legend" [grid]="chartProductTimeSeries.grid"></apx-chart>
-
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full mt-6 md:mt-8">
-                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Giao dịch nạp tiền</div>
-                        </div>
-                        <div class="flex flex-col flex-auto mt-6 h-44">
-                            <apx-chart class="flex flex-auto items-center justify-center w-full h-full"
-                                [chart]="chartNewVsReturning.chart" [colors]="chartNewVsReturning.colors"
-                                [labels]="chartNewVsReturning.labels" [plotOptions]="chartNewVsReturning.plotOptions"
-                                [series]="chartNewVsReturning.series" [states]="chartNewVsReturning.states"
-                                [tooltip]="chartNewVsReturning.tooltip"></apx-chart>
-                        </div>
-                        <div class="mt-8">
-                            <div class="-my-3 divide-y">
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#1255FB'">
-                                        </div>
-                                        <div class="ml-3">Thành công</div>
-                                    </div>
-                                    <div class="text-right text-secondary">80%</div>
-                                </div>
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#ED7632'">
-                                        </div>
-                                        <div class="ml-3 ">Thất bại</div>
-                                    </div>
-                                    <div class="text-right text-secondary">20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Giao dịch rút tiền</div>
-                        </div>
-                        <div class="flex flex-col flex-auto mt-6 h-44">
-                            <apx-chart class="flex flex-auto items-center justify-center w-full h-full"
-                                [chart]="chartNewVsReturning.chart" [colors]="chartNewVsReturning.colors"
-                                [labels]="chartNewVsReturning.labels" [plotOptions]="chartNewVsReturning.plotOptions"
-                                [series]="chartNewVsReturning.series" [states]="chartNewVsReturning.states"
-                                [tooltip]="chartNewVsReturning.tooltip"></apx-chart>
-                        </div>
-                        <div class="mt-8">
-                            <div class="-my-3 divide-y">
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#1255FB'">
-                                        </div>
-                                        <div class="ml-3">Thành công</div>
-                                    </div>
-                                    <div class="text-right text-secondary">80%</div>
-                                </div>
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#ED7632'">
-                                        </div>
-                                        <div class="ml-3 ">Thất bại</div>
-                                    </div>
-                                    <div class="text-right text-secondary">20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Giao dịch giải ngân</div>
-                        </div>
-                        <div class="flex flex-col flex-auto mt-6 h-44">
-                            <apx-chart class="flex flex-auto items-center justify-center w-full h-full"
-                                [chart]="chartNewVsReturning.chart" [colors]="chartNewVsReturning.colors"
-                                [labels]="chartNewVsReturning.labels" [plotOptions]="chartNewVsReturning.plotOptions"
-                                [series]="chartNewVsReturning.series" [states]="chartNewVsReturning.states"
-                                [tooltip]="chartNewVsReturning.tooltip"></apx-chart>
-                        </div>
-                        <div class="mt-8">
-                            <div class="-my-3 divide-y">
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#1255FB'">
-                                        </div>
-                                        <div class="ml-3">Thành công</div>
-                                    </div>
-                                    <div class="text-right text-secondary">80%</div>
-                                </div>
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#ED7632'">
-                                        </div>
-                                        <div class="ml-3">Thất bại</div>
-                                    </div>
-                                    <div class="text-right text-secondary">20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-6">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Giao dịch hoản trả</div>
-                        </div>
-                        <div class="flex flex-col flex-auto mt-6 h-44">
-                            <apx-chart class="flex flex-auto items-center justify-center w-full h-full"
-                                [chart]="chartNewVsReturning.chart" [colors]="chartNewVsReturning.colors"
-                                [labels]="chartNewVsReturning.labels" [plotOptions]="chartNewVsReturning.plotOptions"
-                                [series]="chartNewVsReturning.series" [states]="chartNewVsReturning.states"
-                                [tooltip]="chartNewVsReturning.tooltip"></apx-chart>
-                        </div>
-                        <div class="mt-8">
-                            <div class="-my-3 divide-y">
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#1255FB'">
-                                        </div>
-                                        <div class="ml-3">Thành công</div>
-                                    </div>
-                                    <div class="text-right text-secondary">80%</div>
-                                </div>
-                                <div class="grid grid-cols-2 py-3">
-                                    <div class="flex items-center">
-                                        <div class="flex-0 w-2 h-2 rounded-full" [style.backgroundColor]="'#ED7632'">
-                                        </div>
-                                        <div class="ml-3 ">Thất bại</div>
-                                    </div>
-                                    <div class="text-right text-secondary">20%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </mat-tab>
-
+    <div class="flex-auto">
+        <div class="w-full mx-auto">
+            <mat-tab-group>
                 <mat-tab [label]="dashboardDTO.tab1?.tabTitle" *ngIf="dashboardDTO?.tab1">
                     <ng-template matTabContent>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full min-w-0 pb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                             <div style="background: linear-gradient(106.46deg, #2854F2 18.36%, #394EE4 27.43%, #6641C1 42.73%, #BA219D 65.37%, #FF6C0E 92.94%);"
                                 *ngFor="let dashboardPanelDTO of dashboardDTO.tab1.lstDasboad;"
-                                class="relative rounded-xl text-white p-6 flex flex-col flex-auto">
+                                class="relative rounded text-white p-6 flex flex-col flex-auto">
                                 <img src="assets/images/logo/logo-white.svg" alt="logo"
                                     class="absolute top-4 right-4 w-6 h-6" />
 
@@ -426,29 +53,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="flex flex-col flex-auto bg-card shadow rounded-2xl  " *ngFor="let dashboardPanelDTO of dashboardDTO.tab1.lstDasboad;">
-                                <div class="flex flex-col items-center rounded-t-2xl pb-2 pt-2 gradient-tab">
-                                    <div class="text-lg font-medium tracking-tight leading-6 line-clamp-2">{{dashboardPanelDTO.title}}</div>
-                                </div>
-                                <div class="flex flex-col items-center mt-2 pb-5 pt-5">
-                                    <div class="text-2xl sm:text-2xl font-bold tracking-tight leading-none text-blue-500">
-                                        {{ dashboardPanelDTO.mainType == 'currency' ? (dashboardPanelDTO.mainNumber | currencyFormatPipe : 10)  : dashboardPanelDTO.mainNumber}}</div>
-                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">{{dashboardPanelDTO.mainSuffix}}</div>
-                                </div>
-                                <div class="flex flex-col items-center pb-2" *ngIf="dashboardPanelDTO.secondTitle">
-                                    <div class="text-lg font-medium tracking-tight leading-6 line-clamp-2">
-                                        {{dashboardPanelDTO.secondTitle}} : {{ dashboardPanelDTO.secondType == 'currency' ? (dashboardPanelDTO.secondNumber | currencyFormatPipe : 10)  : dashboardPanelDTO.secondNumber}} {{dashboardPanelDTO.secondSuffix}} </div>
-                                </div>
-                            </div> -->
+
                         </div>
                     </ng-template>
                 </mat-tab>
                 <mat-tab [label]="dashboardDTO.tab2?.tabTitle" *ngIf="dashboardDTO?.tab2">
                     <ng-template matTabContent>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full min-w-0 pb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                             <div style="background: linear-gradient(106.46deg, #2854F2 18.36%, #394EE4 27.43%, #6641C1 42.73%, #BA219D 65.37%, #FF6C0E 92.94%);"
                                 *ngFor="let dashboardPanelDTO of dashboardDTO.tab2.lstDasboad;"
-                                class="relative rounded-xl text-white p-6 flex flex-col flex-auto">
+                                class="relative rounded text-white p-6 flex flex-col flex-auto">
                                 <img src="assets/images/logo/logo-white.svg" alt="logo"
                                     class="absolute top-4 right-4 w-6 h-6" />
 
@@ -476,43 +90,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="flex flex-col flex-auto bg-card shadow rounded-2xl  " *ngFor="let dashboardPanelDTO of dashboardDTO.tab2.lstDasboad;">
-                                <div class="flex flex-col items-center rounded-t-2xl pb-2 pt-2 gradient-tab">
-                                    <div class="text-lg font-medium tracking-tight leading-6 line-clamp-2">{{dashboardPanelDTO.title}}</div>
-                                </div>
-                                <div class="flex flex-col items-center mt-2 pb-5 pt-5">
-                                    <div class="text-2xl sm:text-2xl font-bold tracking-tight leading-none text-blue-500">
-                                        {{ dashboardPanelDTO.mainType == 'currency' ? (dashboardPanelDTO.mainNumber | currencyFormatPipe : 10)  : dashboardPanelDTO.mainNumber}}</div>
-                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">{{dashboardPanelDTO.mainSuffix}}</div>
-                                </div>
-                                <div class="flex flex-col items-center pb-2" *ngIf="dashboardPanelDTO.secondTitle">
-                                    <div class="text-lg font-medium tracking-tight leading-6 line-clamp-2">
-                                        {{dashboardPanelDTO.secondTitle}} : {{ dashboardPanelDTO.secondType == 'currency' ? (dashboardPanelDTO.secondNumber | currencyFormatPipe : 10)  : dashboardPanelDTO.secondNumber}} {{dashboardPanelDTO.secondSuffix}} </div>
-                                </div>
-                            </div> -->
+
                         </div>
                     </ng-template>
                 </mat-tab>
                 <mat-tab [label]="dashboardDTO.tab3?.tabTitle" *ngIf="dashboardDTO?.tab3">
                     <ng-template matTabContent>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full min-w-0 pb-6">
-                            <!-- <div class="flex flex-col flex-auto bg-card shadow rounded-2xl  " *ngFor="let dashboardPanelDTO of dashboardDTO.tab3.lstDasboad;">
-                                <div class="flex flex-col items-center rounded-t-2xl pb-2 pt-2 gradient-tab">
-                                    <div class="text-lg font-medium tracking-tight leading-6 line-clamp-2">{{dashboardPanelDTO.title}}</div>
-                                </div>
-                                <div class="flex flex-col items-center mt-2 pb-5 pt-5">
-                                    <div class="text-2xl sm:text-2xl font-bold tracking-tight leading-none text-blue-500">
-                                        {{ dashboardPanelDTO.mainType == 'currency' ? (dashboardPanelDTO.mainNumber | currencyFormatPipe : 10)  : dashboardPanelDTO.mainNumber}}</div>
-                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">{{dashboardPanelDTO.mainSuffix}}</div>
-                                </div>
-                                <div class="flex flex-col items-center pb-2" *ngIf="dashboardPanelDTO.secondTitle">
-                                    <div class="text-lg font-medium tracking-tight leading-6 line-clamp-2">
-                                        {{dashboardPanelDTO.secondTitle}} : {{ dashboardPanelDTO.secondType == 'currency' ? (dashboardPanelDTO.secondNumber | currencyFormatPipe : 10)  : dashboardPanelDTO.secondNumber}} {{dashboardPanelDTO.secondSuffix}} </div>
-                                </div>
-                            </div> -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
                             <div style="background: linear-gradient(106.46deg, #2854F2 18.36%, #394EE4 27.43%, #6641C1 42.73%, #BA219D 65.37%, #FF6C0E 92.94%);"
                                 *ngFor="let dashboardPanelDTO of dashboardDTO.tab3.lstDasboad;"
-                                class="relative rounded-xl text-white p-6 flex flex-col flex-auto">
+                                class="relative rounded text-white p-6 flex flex-col flex-auto">
                                 <img src="assets/images/logo/logo-white.svg" alt="logo"
                                     class="absolute top-4 right-4 w-6 h-6" />
 

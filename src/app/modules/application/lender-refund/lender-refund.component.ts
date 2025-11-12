@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {FuseNavigationItem} from '../../../../@fuse/components/navigation';
 import {MatDrawer} from '@angular/material/sidenav';
 import {ROUTER_CONST} from '../../../shared/constants';
@@ -13,12 +13,25 @@ import {fuseAnimations} from "../../../../@fuse/animations";
 })
 export class LenderRefundComponent implements OnInit {
     @ViewChild('detailDrawer', { static: true }) detailDrawer: MatDrawer;
+    @ViewChild('sidebarDrawer', { static: false }) sidebarDrawer: MatDrawer;
     menuData: FuseNavigationItem[];
     public isShowDetail = false;
+    isMobile = false;
 
     constructor(
         private _reqTransactionService: TranspayReqTransactionService,
-    ) { }
+    ) {
+        this.checkScreenSize();
+    }
+
+    @HostListener('window:resize', [])
+    onResize() {
+        this.checkScreenSize();
+    }
+
+    private checkScreenSize() {
+        this.isMobile = window.innerWidth < 1024; // < 1024px thì coi là mobile/tablet
+    }
 
     ngOnInit(): void {
         this.menuData = [

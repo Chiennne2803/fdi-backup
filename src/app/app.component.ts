@@ -1,55 +1,46 @@
-import { Component } from '@angular/core';
-import { environment } from 'environments/environment';
-import {AngularFireMessaging} from "@angular/fire/compat/messaging";
-import {BehaviorSubject, mergeMapTo} from "rxjs";
-import {FuseAlertService} from "../@fuse/components/alert";
-import {SpNotificationConfigDTO} from "./models/service/SpNotificationConfigDTO.model";
-// import { getMessaging, getToken } from 'firebase/messaging';
+import { Component, OnInit } from '@angular/core';
+import { TitleService } from './core/title/title.service';
+import { FirebaseNotificationService } from './service/common-service/firebase-notification.service';
+import { AuthService } from './core/auth/auth.service';
+import { distinctUntilChanged, filter, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-    /**
-     * Constructor
-     */
-    constructor(private afMessaging: AngularFireMessaging,
-                private _fuseAlertService: FuseAlertService,
-                ) {
-        this.requestPermission();
-
+    constructor(
+        private _titleService: TitleService,
+        private fcmService: FirebaseNotificationService,
+        private _authService: AuthService
+    ) {
+        this._titleService.init();
     }
 
-    requestPermission(): void {
-        /*this.afMessaging.requestPermission.subscribe(res => console.log(res));
-        this.afMessaging.requestToken.pipe(mergeMapTo(this.afMessaging.getToken)).subscribe((token) => {
-            console.log('Token FCM:', token);
-        });
-        this.afMessaging.requestToken.subscribe(
-            (token) => {
-                console.log('Token:', token);
-                // Sử dụng token ở đây hoặc gửi nó đến máy chủ của bạn để sử dụng với FCM
-            },
-            (error) => {
-                console.error('Lỗi khi lấy token:', error);
-            }
-        );*/
-        /*const messaging = getMessaging();
+    ngOnInit() {
+        if (this._authService.authenticatedUser) {
+            this.handleFcmSave();
+        }
 
-        getToken(messaging,
-            { vapidKey: environment.firebaseConfig.vapidKey }).then(
-                (currentToken) => {
-                    if (currentToken) {
-                        console.log('Ahihi. đã có token rầu');
-                        console.log(currentToken);
-                    } else {
-                        console.log('No registration token available. Request permission to generate one.');
-                    }
-                }).catch((err) => {
-                    console.log('An error occurred while retrieving token. ', err);
-                });*/
+        this._authService.userChanged$
+            .pipe(
+                filter(user => !!user),
+                distinctUntilChanged((a, b) => a?.id === b?.id),
+                take(1)
+            )
+            .subscribe(() => {
+                this.handleFcmSave();
+            });
+    }
+
+
+    private async handleFcmSave() {
+        const fcmToken = await this.fcmService.getFcmToken();
+        this.fcmService.saveFcmToken(fcmToken).subscribe({
+            next: (res) => console.log('✅ Lưu FCM & device thành công:', res),
+            error: (err) => console.error('❌ Lỗi khi lưu FCM & device:', err),
+        });
     }
 }

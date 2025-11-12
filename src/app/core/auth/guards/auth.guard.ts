@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivate,
@@ -10,9 +10,9 @@ import {
     UrlSegment,
     UrlTree
 } from '@angular/router';
-import {AuthService} from 'app/core/auth/auth.service';
-import {Observable, of, switchMap} from 'rxjs';
-import {AdmAccountType} from "../../user/user.types";
+import { AuthService } from 'app/core/auth/auth.service';
+import { Observable, of, switchMap } from 'rxjs';
+// import {AdmAccountType} from "../../user/user.types";
 
 @Injectable({
     providedIn: 'root'
@@ -38,7 +38,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
      * @param state
      */
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
+        const redirectUrl = state.url === '/sign-in' ? '/' : state.url;
         return this._check(redirectUrl);
     }
 
@@ -49,7 +49,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
      * @param state
      */
     canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
+        const redirectUrl = state.url === '/sign-in' ? '/' : state.url;
         return this._check(redirectUrl);
     }
 
@@ -74,33 +74,41 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
      * @private
      */
     private _check(redirectURL: string): Observable<boolean> {
-        // Check the authentication status
-        return this._authService.check()
-            .pipe(
-                switchMap((authenticated) => {
+        return this._authService.check().pipe(
+            switchMap((authenticated) => {
+                if (!authenticated) {
+                    this._router.navigate(['sign-in'], { queryParams: { returnUrl: redirectURL } });
+                    return of(false);
+                }
 
-                    // If the user is not authenticated...
-                    if (!authenticated) {
-                        // Redirect to the sign-in page
-                        this._router.navigate(['sign-in'], {queryParams: {returnUrl: redirectURL}});
+                const user = this._authService.authenticatedUser;
 
-                        // Prevent the access
-                        return of(false);
-                    } else if (this._authService.authenticatedUser) {
-                        if (this._authService.authenticatedUser.status === 0) {
-                            //to kyc
-                            return of(true);
-                        }
-                        if (this._authService.authenticatedUser.status === 1
-                            && (!redirectURL.startsWith('/borrower/kyc-success') && !redirectURL.startsWith('/investor/kyc-success') && !redirectURL.startsWith('/kyc-success'))) {
-                            this._router.navigate([this._authService.authenticatedUser.accountType === 1 ? 'investor/kyc-success' : 'borrower/kyc-success']);
-                            return of(true);
-                        }
-                    }
+                // 👇 THÊM KIỂM TRA NÀY
+                if (!user) {
+                    this._authService.signOut(false).subscribe();
+                    return of(false);
+                }
 
-                    // Allow the access
+                // Nếu chưa KYC (status = 0)
+                if (user.status === 0) {
                     return of(true);
-                })
-            );
+                }
+
+                // Nếu đang chờ duyệt KYC (status = 1)
+                if (user.status === 1) {
+                    const successUrl =
+                        user.accountType === 1 ? '/investor/kyc-success' : '/borrower/kyc-success';
+                    if (!redirectURL.startsWith(successUrl)) {
+                        this._router.navigate([successUrl]);
+                        return of(false);
+                    }
+                    return of(true);
+                }
+
+                // Nếu đã duyệt KYC hoặc trạng thái khác
+                return of(true);
+            })
+        );
     }
+
 }

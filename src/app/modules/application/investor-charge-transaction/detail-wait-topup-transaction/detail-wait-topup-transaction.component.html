@@ -1,0 +1,117 @@
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
+    <mat-drawer-content class="flex flex-col">
+        <div class="w-full px-5 space-y-4">
+            <div class="flex items-center justify-between w-full mx-auto pt-3 pb-2">
+                <article class="w-2/4 prose break-words">
+                    <h3 class="flex flex-col sm:flex-row items-center justify-start gap-3">
+                        <span [matTooltip]="'Đóng'" (click)="closeDrawer()"
+                            class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                            <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                                svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                            Quay lại
+                        </span>
+                        Thông Tin Giao Dịch Nạp Tiền
+                    </h3>
+                </article>
+
+                <div class="flex items-center justify-end" *ngIf="!isShowBtnUpdate">
+                    <button class="order-first sm:order-last ml-2" @fadeInRight
+                        *ngIf="detailRecord && ('SFF_TOPUP_TRANSACTION_UPDATE' | permission)" mat-flat-button
+                        color="primary">
+                        Cập nhật
+                    </button>
+                </div>
+                <button *ngIf="!isShowBtnUpdate" class="order-first sm:order-last ml-2" (click)="openDialog()"
+                    mat-flat-button color="primary">
+                    Xử lý
+                </button>
+                <div class="flex items-center justify-end" *ngIf="isShowBtnUpdate">
+                    <a (click)="cancelUpdate()" class="ml-auto sm:ml-0" mat-stroked-button [matTooltip]="'Huỷ'">Huỷ</a>
+                    <button class="order-first sm:order-last ml-2" @fadeInRight (click)="openDialogSubmit()"
+                        mat-flat-button color="primary">
+                        Lưu
+                    </button>
+                </div>
+            </div>
+
+            <!-- <div class="grid grid-cols-4 gap-4 border border-primary-grayLight-2 rounded-lg p-4">
+                <article class="prose break-words">
+                    <p>Mã giao dịch: <br /><b>{{ detailRecord?.fsTopupCode }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Người nhận: <br /><b>{{ detailRecord?.admAccountIdReciveName }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Ngân hàng: <br /><b>{{ detailRecord?.bankName }}</b></p>
+                </article>
+            </div> -->
+
+            <div class="border border-primary-grayLight-2 rounded-lg p-4">
+                <article class="prose">
+                    <h3 class="w-full">Thông Tin Tài Khoản Giao Dịch</h3>
+                </article>
+                <div class="grid grid-cols-4 gap-4">
+                    <article class="prose break-words">
+                        <p>Tên tài khoản: <br /><b>{{ detailRecord?.accName }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Số tài khoản: <br /><b>{{ detailRecord?.accNo }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Chi nhánh: <br /><b>{{ detailRecord?.branchName }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Ngân hàng: <br /><b>{{ detailRecord?.bankName }}</b></p>
+                    </article>
+                    <!-- <article class="prose break-words">
+                        <p>Số tiền giao dịch: <br /><b>{{ detailRecord?.transactionAmount | currencyFormatPipe: 10 }}</b></p>
+                    </article> -->
+                </div>
+            </div>
+
+            <div class="border border-primary-grayLight-2 rounded-lg p-4">
+                <article class="prose">
+                    <h3 class="w-full">Thông Tin Xử Lý</h3>
+                </article>
+                <div class="grid grid-cols-4 gap-4">
+                    <article class="prose break-words">
+                        <p>Người tạo: <br /><b>{{ detailRecord?.admAccountIdReciveName }}</b></p>
+                    </article>
+                    <!-- <article class="prose break-words">
+                        <p>Số tiền nạp: <br /><b>{{ detailRecord?.amount | currencyFormatPipe: 10 }}</b></p>
+                    </article> -->
+                    <article class="prose break-words">
+                        <p>Mã giao dịch: <br /><b>{{ detailRecord?.fsTopupCode }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Thời gian giao dịch: <br /><b>{{ detailRecord?.createdDate | datetimeformat: 'DD/MM/YYYY
+                                HH:mm:ss' }}</b></p>
+                    </article>
+                    <!-- <article class="prose break-words">
+                        <p>Nhân viên phụ trách: <br /><b>{{ detailRecord?.admAccountIdManagerName }}</b></p>
+                    </article> -->
+                </div>
+            </div>
+            <div class="border border-primary-grayLight-2 rounded-lg p-4">
+                <article class="prose">
+                    <h3 class="w-full">Thông Tin giao dịch tiền ví:</h3>
+                </article>
+                <div class="grid grid-cols-4 gap-4">
+                    <article class="prose break-words">
+                        <p>Người thụ hưởng: <br> <b>{{ this.detailRecord ? this.detailRecord.admAccountIdReciveName : ''
+                                }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Số tiền nạp: <br> <b>{{ (this.detailRecord ? this.detailRecord.amount : 0) |
+                                currencyFormatPipe: 10 }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Nhân viên phụ trách: <br>
+                            <b>{{ this.detailRecord ? this.detailRecord.admAccountIdManagerName : ''}}</b>
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

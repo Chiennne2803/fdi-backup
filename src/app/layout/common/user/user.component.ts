@@ -1,20 +1,20 @@
-import {BooleanInput} from '@angular/cdk/coercion';
+import { BooleanInput } from '@angular/cdk/coercion';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Input, OnChanges,
+    Input,
     OnDestroy,
-    OnInit, SimpleChanges,
+    OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import {Router} from '@angular/router';
-import {UserService} from 'app/core/user/user.service';
-import {User, UserAccountStatus} from 'app/core/user/user.types';
-import {Subject, takeUntil, timeout} from 'rxjs';
-import {AuthService} from "../../../core/auth/auth.service";
-import {DateTimeformatPipe} from "../../../shared/components/pipe/date-time-format.pipe";
-import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import { Router } from '@angular/router';
+import { UserService } from 'app/core/user/user.service';
+import { User, UserAccountStatus } from 'app/core/user/user.types';
+import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from "../../../core/auth/auth.service";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { getInitials } from 'app/shared/utils/utils';
 
 @Component({
     selector: 'user',
@@ -31,7 +31,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public accStatus: UserAccountStatus;
-    // public avatar: string | SafeResourceUrl = 'assets/images/avatars/brian-hughes.jpg';
     public avatar: string | SafeResourceUrl = '';
 
     /**
@@ -43,48 +42,41 @@ export class UserComponent implements OnInit, OnDestroy {
         private _userService: UserService,
         private _authService: AuthService,
         private _domSanitizer: DomSanitizer,
-    )
-    {
-        this._authService.loadAvataLocal();
-        this.avatar = this._authService.loadDefaultAvatar();
-        this._authService.getAvata.pipe(takeUntil(this._unsubscribeAll)).subscribe(res => {
-            if (res) {
-                this.avatar = this._domSanitizer.bypassSecurityTrustResourceUrl(res);
+    ) {
+        // Lắng nghe sự thay đổi avatar từ AuthService
+        this._authService.getAvata
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(res => {
+                if (res) {
+                    // Có avatar -> hiển thị ảnh
+                    this.avatar = this._domSanitizer.bypassSecurityTrustResourceUrl(res);
+                } else {
+                    // Không có avatar -> hiển thị null / mặc định
+                    this.avatar = null;
+                }
                 this._changeDetectorRef.markForCheck();
-            } else {
-                this.avatar = this._authService.loadDefaultAvatar();
-                this._authService.loadAvataLocal();
-            }
-        })
+            });
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
+    getInitials(name: string): string {
+        return getInitials(name);
+    }
 
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        // Subscribe to user changes
-        // this._userService.user$
-        //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe((user: User) => {
-        //         // this.user = user;
-
-        //         // Mark for check
-        //         this._changeDetectorRef.markForCheck();
-        //     });
+    ngOnInit(): void {
         this.user = this._authService.authenticatedUser;
         this.accStatus = this._authService.authenticatedUser.status;
+        let avatarlocalStorage = localStorage.getItem('avatar');
+
+        // Sau khi đăng nhập thành công, gọi API tải avatar nếu có
+        if (this.user?.avatar && !avatarlocalStorage) {
+            this._authService.loadAvatar(this.user.avatar); // Tải avatar vào localStorage và cập nhật avatar
+        } else {
+            // Nếu không có avatar, kiểm tra avatar từ localStorage
+            this._authService.loadAvatarFromLocalStorage();
+        }
     }
 
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -94,42 +86,21 @@ export class UserComponent implements OnInit, OnDestroy {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Update the user status
-     *
-     * @param status
-     */
-    updateUserStatus(status: string): void
-    {
-        // Return if user is not available
-        if ( !this.user )
-        {
+    updateUserStatus(status: string): void {
+        if (!this.user) {
             return;
         }
-
-        // Update the user
         this._userService.update({
             ...this.user,
             status
         }).subscribe();
     }
 
-    /**
-     * Sign out
-     */
-    signOut(): void
-    {
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('avatar');
-        localStorage.clear();
-        this._router.navigate(['/sign-out']);
-        window.location.reload();
-        localStorage.setItem('logout-event', JSON.stringify({ key: 'logout' }));
+    signOut(): void {
+        this._authService.signOut(true).subscribe();
     }
 
-    goToProfile(): void
-    {
+    goToProfile(): void {
         this._router.navigate(['page/profile']);
     }
 }

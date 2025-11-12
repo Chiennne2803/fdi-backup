@@ -64,11 +64,11 @@ export class ProfilesReReviewingComponent implements OnInit {
         this._profilesManagementService.setDrawer(this.matDrawer);
         this._profilesManagementService.getPrepareLoadingPage().subscribe((res) => {
             if (res.payload.listInvestmentTime != undefined && res.payload.listInvestmentTime.length > 0) {
-                this.listInvestmentTime.push({label: 'Tẩt cả', value: null});
+                this.listInvestmentTime.push({label: 'Tẩt cả', value: ''});
                 res.payload.listInvestmentTime.forEach(x => this.listInvestmentTime.push({label: x, value: x}));
             }
             if (res.payload.lstReasons != undefined && res.payload.lstReasons.length > 0) {
-                this.lstReasons.push({label: 'Tẩt cả', value: null});
+                this.lstReasons.push({label: 'Tẩt cả', value: ''});
                 res.payload.lstReasons.forEach(x => this.lstReasons.push({label: x.categoriesName, value: x.admCategoriesId}));
             }
         });
@@ -125,7 +125,7 @@ export class ProfilesReReviewingComponent implements OnInit {
                         new InputSearch('fullName', 'Bên huy động vốn', null, false),
                         new DropListSearch('loanTimeCycle', 'Kỳ hạn(ngày)', this.listInvestmentTime, null, false),
                         new DropListSearch('reasons', 'Mục đích huy động vốn', this.lstReasons, null, false),
-                        new FromToSearch('amount', 'Số tiền cần huy động (VNĐ)', null, 'number'),
+                        new FromToSearch('amount', 'Số tiền cần huy động (VND)', null, 'number'),
                     ]
                 },
                 complete: () => {

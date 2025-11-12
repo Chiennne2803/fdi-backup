@@ -8,19 +8,19 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FsCardDownDTO, FsLoanProfilesDTO, FsTranspayReqDTO} from 'app/models/service';
-import {FileService} from 'app/service/common-service';
-import {FuseAlertService} from '../../../../@fuse/components/alert';
-import {LoanProfilesService, LoanProfilesStoreService} from "../../../service/borrower";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {ISelectModel} from "../../../shared/models/select.model";
-import {DateTimeformatPipe} from "../../../shared/components/pipe/date-time-format.pipe";
-import {AuthService} from "../../../core/auth/auth.service";
-import {DialogService} from "../../../service/common-service/dialog.service";
-import {Clipboard} from "@angular/cdk/clipboard";
-import {fuseAnimations} from "../../../../@fuse/animations";
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FsCardDownDTO, FsLoanProfilesDTO, FsTranspayReqDTO } from 'app/models/service';
+import { FileService } from 'app/service/common-service';
+import { FuseAlertService } from '../../../../@fuse/components/alert';
+import { LoanProfilesService, LoanProfilesStoreService } from "../../../service/borrower";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { ISelectModel } from "../../../shared/models/select.model";
+import { DateTimeformatPipe } from "../../../shared/components/pipe/date-time-format.pipe";
+import { AuthService } from "../../../core/auth/auth.service";
+import { DialogService } from "../../../service/common-service/dialog.service";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { fuseAnimations } from "../../../../@fuse/animations";
 
 @Component({
     selector: 'transpay-req',
@@ -31,8 +31,8 @@ import {fuseAnimations} from "../../../../@fuse/animations";
 export class TranspayReqComponent implements OnInit, OnChanges {
 
     public payTypes: Array<ISelectModel> = [
-        {id: 1, label: 'Thanh toán toàn phần'},
-        {id: 2, label: 'Thanh toán 1 phần'},
+        { id: 1, label: 'Thanh toán toàn phần' },
+        { id: 2, label: 'Thanh toán 1 phần' },
     ];
 
     @Input() public fsLoanProfilesDTO: FsLoanProfilesDTO;
@@ -150,9 +150,12 @@ export class TranspayReqComponent implements OnInit, OnChanges {
     }
 
     private initTranspayReq(value: any) {
-        this._loanProfilesService.initTranspayReq(this.formGroup.value).subscribe(res => {
-            if (res) {
+        this._loanProfilesService.initTranspayReq(value).subscribe(res => {
+            // console.log(res)
+            if (Number(res.errorCode) === 0) {
                 this.initForm(res.payload);
+            } else {
+                this._fuseAlertService.showMessageError(res.message)
             }
         });
     }

@@ -1,94 +1,79 @@
-<div mat-dialog-title>
-    <div class="flex justify-between">
-        <h2>Kết quả rà soát hồ sơ vay</h2>
-        <a
-            mat-dialog-close
-            mat-icon-button>
-            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
-        </a>
+<div class="flex flex-col max-h-screen -m-6">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Kết quả rà soát hồ sơ huy động vốn</div>
+        <button mat-icon-button tabindex="-1">
+            <mat-icon mat-dialog-close class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="formGroup">
+        <div class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+            <mat-form-field class="w-full">
+                <mat-label>Người rà soát</mat-label>
+                <input matInput formControlName="createdByName">
+            </mat-form-field>
+
+            <mat-form-field class="w-full">
+                <mat-label>Ngày rà soát</mat-label>
+                <input matInput formControlName="createdDate">
+            </mat-form-field>
+
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Kết quả xử lý</mat-label>
+                <mat-select placeholder="Chọn kết quả xử lý" formControlName="status">
+                    <mat-option [value]="0">Từ chối</mat-option>
+                    <mat-option [value]="1">Phê duyệt</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formGroup.get('status').hasError('required')">
+                    {{ 'QLHS004' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <mat-form-field class="w-full" floatLabel="always">
+            <mat-label>Thông tin về giám đốc (hiểu biết về lĩnh vực kinh doanh, khả năng xoay sở, tầm nhìn và hành động
+                hằng
+                ngày)
+            </mat-label>
+            <textarea placeholder="Nhập nội dung..." matInput formControlName="saleComment"></textarea>
+            <mat-error *ngIf="formGroup.get('saleComment').hasError('required')">
+                {{ 'QLHS010' | transloco }}
+            </mat-error>
+            <mat-error *ngIf="formGroup.get('saleComment').hasError('maxlength')">
+                {{ 'QLHS005' | transloco }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full" floatLabel="always">
+            <mat-label>Các chú ý khác từ việc quan sát doanh nghiệp</mat-label>
+            <textarea placeholder="Nhập nội dung..." matInput formControlName="saleNote"></textarea>
+            <mat-error *ngIf="formGroup.get('saleNote').hasError('required')">
+                {{ 'QLHS011' | transloco }}
+            </mat-error>
+            <mat-error *ngIf="formGroup.get('saleNote').hasError('maxlength')">
+                {{ 'QLHS006' | transloco }}
+            </mat-error>
+        </mat-form-field>
+        <ng-container class="w-full pb-4" *ngIf="formGroup.get('financialStatement')">
+            <mat-label>Báo cáo tài chính đánh giá nội bộ <span *ngIf="isRq === true" style="color: red">*</span>
+            </mat-label>
+            <app-dropzone [multiple]="false" styleClass="h-[48px] mt-[3px]" title="Tải lên báo cáo tài chính"
+                accept="application/VND.ms-excel,application/VND.openxmlformats-officedocument.spreadsheetml.sheet"
+                [formGroup]="formGroup" field="financialStatement" [isRequired]="isRq" maxFileSize="10"
+                requiredMsg="QLHS009" sizeMsg="QLHS007" typeMsg="QLHS008"></app-dropzone>
+        </ng-container>
+        <ng-container *ngIf="formGroup.get('content')">
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Lý do từ chối</mat-label>
+                <textarea placeholder="Nhập nội dung..." matInput formControlName="content"></textarea>
+                <mat-error *ngIf="formGroup.get('content').hasError('required')">
+                    {{ 'QLHS012' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="formGroup.get('content').hasError('maxlength')">
+                    {{ 'QLHS013' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </ng-container>
+    </form>
+    <div class="flex flex-row items-center justify-center mb-4 sm:mb-6">
+        <button mat-flat-button color="primary" (click)="onClickSubmit()">Xác nhận</button>
     </div>
 </div>
-<mat-dialog-content [formGroup]="formGroup">
-    <div class="grid grid-cols-3 gap-5">
-        <mat-form-field class="w-full">
-            <mat-label>Người rà soát</mat-label>
-            <input
-                matInput
-                formControlName="createdByName"
-            >
-        </mat-form-field>
-
-        <mat-form-field class="w-full">
-            <mat-label>Ngày rà soát</mat-label>
-            <input
-                matInput
-                formControlName="createdDate"
-            >
-        </mat-form-field>
-
-        <mat-form-field class="w-full">
-            <mat-label>Kết quả xử lý</mat-label>
-            <mat-select formControlName="status">
-                <mat-option [value]="0">Từ chối</mat-option>
-                <mat-option [value]="1">Phê duyệt</mat-option>
-            </mat-select>
-            <mat-error *ngIf="formGroup.get('status').hasError('required')">
-                {{ 'QLHS004' | transloco }}
-            </mat-error>
-        </mat-form-field>
-    </div>
-    <mat-form-field class="w-full mt-3">
-        <mat-label>Thông tin về giám đốc (hiểu biết về lĩnh vực kinh doanh, khả năng xoay sở, tầm nhìn và hành động hằng
-            ngày)
-        </mat-label>
-        <textarea matInput formControlName="saleComment"></textarea>
-        <mat-error *ngIf="formGroup.get('saleComment').hasError('required')">
-            {{ 'QLHS010' | transloco }}
-        </mat-error>
-        <mat-error *ngIf="formGroup.get('saleComment').hasError('maxlength')">
-            {{ 'QLHS005' | transloco }}
-        </mat-error>
-    </mat-form-field>
-
-    <mat-form-field class="w-full mt-3">
-        <mat-label>Các chú ý khác từ việc quan sát doanh nghiệp</mat-label>
-        <textarea matInput formControlName="saleNote"></textarea>
-        <mat-error *ngIf="formGroup.get('saleNote').hasError('required')">
-           {{ 'QLHS011' | transloco }}
-        </mat-error>
-        <mat-error *ngIf="formGroup.get('saleNote').hasError('maxlength')">
-           {{ 'QLHS006' | transloco }}
-        </mat-error>
-    </mat-form-field>
-    <ng-container class="w-full mt-3" *ngIf="formGroup.get('financialStatement')">
-        <mat-label>Báo cáo tài chính đánh giá nội bộ <font *ngIf="isRq === true" style="color: red">*</font></mat-label>
-        <app-dropzone
-            [multiple]="false"
-            styleClass="max-h-15"
-            title="Tải lên báo cáo tài chính"
-            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            [formGroup]="formGroup"
-            field="financialStatement"
-            [isRequired]="isRq"
-            maxFileSize="10"
-            requiredMsg="QLHS009"
-            sizeMsg="QLHS007"
-            typeMsg="QLHS008"
-        ></app-dropzone>
-    </ng-container>
-    <ng-container *ngIf="formGroup.get('content')">
-        <mat-form-field class="w-full mt-3">
-            <mat-label>Lý do từ chối</mat-label>
-            <textarea matInput formControlName="content"></textarea>
-            <mat-error *ngIf="formGroup.get('content').hasError('required')">
-                {{ 'QLHS012' | transloco }}
-            </mat-error>
-            <mat-error *ngIf="formGroup.get('content').hasError('maxlength')">
-                {{ 'QLHS013' | transloco }}
-            </mat-error>
-        </mat-form-field>
-    </ng-container>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button mat-flat-button color="primary" (click)="onClickSubmit()">Xác nhận</button>
-</mat-dialog-actions>

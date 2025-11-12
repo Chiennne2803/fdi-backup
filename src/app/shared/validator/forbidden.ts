@@ -18,11 +18,18 @@ export const emailValidator = (): ValidatorFn => (control: AbstractControl): { [
     return validEmail ? null : {'invalidEmail': {value: control.value}};
 };
 
-export const forbiddenPasswordValidator = (): ValidatorFn => (control: AbstractControl): { [key: string]: any } => {
-    // const regExp = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/);
-    const regExp = new RegExp(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,30}$/);
-    const forbidden = regExp.test(control.value);
-    return forbidden ? null : {'forbiddenPassword': {value: control.value}};
+export const forbiddenPasswordValidator = (): ValidatorFn => {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    if (!control.value) return null;
+
+    // Regex đồng bộ với BE, bỏ dấu chấm
+    const regExp = new RegExp(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*?])[A-Za-z\d!@#$%^&*?]{8,50}$/
+    );
+
+    const valid = regExp.test(control.value);
+    return valid ? null : { forbiddenPassword: { value: control.value } };
+  };
 };
 
 export const forbiddenPhoneNumberValidator = (): ValidatorFn => (control: AbstractControl): { [key: string]: any } => {

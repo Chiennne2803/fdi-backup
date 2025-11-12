@@ -35,7 +35,6 @@ export class ReportDebtComponent implements OnInit {
 
     private _dataSearchDialog: object;
     private searchPayload: BaseRequest = new BaseRequest();
-    private isFirstLoad = true;
 
     constructor(
         private _dialogService: DialogService,
@@ -46,11 +45,7 @@ export class ReportDebtComponent implements OnInit {
     ngOnInit(): void {
         this.tableConfig.title = 'Báo cáo công nợ';
         this._reportDebtService.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
                 this.dataSource$ =  this._reportDebtService.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
         });
     }
 

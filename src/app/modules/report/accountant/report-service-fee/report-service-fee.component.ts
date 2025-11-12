@@ -1,28 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import {BaseRequest, BaseResponse} from 'app/models/base';
+import { BaseRequest, BaseResponse } from 'app/models/base';
 import { DialogService } from 'app/service/common-service/dialog.service';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import {
     TABLE_STATISTICAL_REPORT_INVESTOR_TOPUP_CONFIG,
     TASK_BAR_STATISTICAL_REPORT_CONFIG
 } from './report-service-fee.config';
-import {ButtonTableEvent} from '../../../../shared/models/datatable/table-config.model';
-import {GroupSearchComponent} from '../../../../shared/components/group-search/group-search.component';
+import { ButtonTableEvent } from '../../../../shared/models/datatable/table-config.model';
+import { GroupSearchComponent } from '../../../../shared/components/group-search/group-search.component';
 import {
     DateTimeFromToSearch, DropListSearch,
     FromToSearch, IDropList,
     InputSearch
 } from '../../../../shared/components/group-search/search-config.models';
-import {MatDialog} from '@angular/material/dialog';
-import {ReportServiceFeeService, ReportTopupRequestService} from '../../../../service';
-import {PageEvent} from '@angular/material/paginator';
-import {FsCardDownDTO, FsLoanProfilesDTO, FsTopupDTO} from "../../../../models/service";
-import {TextColumn} from "../../../../shared/models/datatable/display-column.model";
+import { MatDialog } from '@angular/material/dialog';
+import { ReportServiceFeeService, ReportTopupRequestService } from '../../../../service';
+import { PageEvent } from '@angular/material/paginator';
+import { FsCardDownDTO, FsLoanProfilesDTO, FsTopupDTO } from "../../../../models/service";
+import { TextColumn } from "../../../../shared/models/datatable/display-column.model";
 
 @Component({
-  selector: 'app-report-investor-topup',
-  templateUrl: './report-service-fee.component.html',
-  styleUrls: ['./report-service-fee.component.scss']
+    selector: 'app-report-investor-topup',
+    templateUrl: './report-service-fee.component.html',
+    styleUrls: ['./report-service-fee.component.scss']
 })
 export class ReportServiceFeeComponent implements OnInit {
     dataSource$: Observable<BaseResponse>;
@@ -30,7 +30,7 @@ export class ReportServiceFeeComponent implements OnInit {
     taskBarConfig = TASK_BAR_STATISTICAL_REPORT_CONFIG;
     _btnConfig = {
         commonBtn: [
-            {type : 'export', role : 'SFF_STATISTIC_EXPORT', fileName : 'Bao_cao_thu_phi_dich_vu_ket_noi_thanh_cong'},
+            { type: 'export', role: 'SFF_STATISTIC_EXPORT', fileName: 'Bao_cao_thu_phi_dich_vu_ket_noi_thanh_cong' },
         ],
     };
 
@@ -38,7 +38,6 @@ export class ReportServiceFeeComponent implements OnInit {
     private searchPayload: BaseRequest = new BaseRequest();
     private lstStaff: IDropList[] = [];
     private lstTenor: IDropList[] = [];
-    private isFirstLoad = true;
 
 
     constructor(
@@ -50,22 +49,18 @@ export class ReportServiceFeeComponent implements OnInit {
     ngOnInit(): void {
         this.tableConfig.title = 'Báo cáo thu phí dịch vụ kết nối thành công';
         this._reportServiceFeeService.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
-                this.dataSource$ =  this._reportServiceFeeService.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
+            this.dataSource$ = this._reportServiceFeeService.lazyLoad;
         });
         this._reportServiceFeeService.getPrepareLoadingPage().subscribe(ret => {
             if (ret) {
                 this.lstStaff = [];
                 this.lstTenor = [];
-                this.lstStaff.push({label: 'Tẩt cả', value: null});
+                this.lstStaff.push({ label: 'Tẩt cả', value: '' });
                 ret.payload.lstStaff.forEach(el => this.lstStaff.push({
                     label: el.fullName,
                     value: el.fullName
                 }));
-                this.lstTenor.push({label: 'Tẩt cả', value: null});
+                this.lstTenor.push({ label: 'Tẩt cả', value: '' });
                 ret.payload.lstTenor.forEach(el => this.lstTenor.push({
                     label: el,
                     value: el
@@ -108,7 +103,7 @@ export class ReportServiceFeeComponent implements OnInit {
                 baseData: this._dataSearchDialog,
                 searchConfig: {
                     config: [
-                        new DateTimeFromToSearch( 'loanTimeStart', 'Thời gian bắt đầu huy động', null, false, undefined, undefined),
+                        new DateTimeFromToSearch('loanTimeStart', 'Thời gian bắt đầu huy động', null, false, undefined, undefined),
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ', null, false),
                         new InputSearch('fullName', 'Bên huy động vốn', null, false),
                         new DropListSearch('loanTimeCycle', 'Kỳ hạn', this.lstTenor, null),

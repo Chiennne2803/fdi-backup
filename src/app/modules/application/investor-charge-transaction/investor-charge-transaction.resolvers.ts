@@ -56,3 +56,4 @@ export class SuccessTransaction implements Resolve<any>
         return this._reChargeTransaction.doSearchSuccessTransaction();
     }
 }
+

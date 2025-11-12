@@ -39,6 +39,7 @@ const investedProfileRoutes: Route[] = [
         component: DisbursementManagementComponent,
         children: [
             {
+                data: { title: 'Soạn thảo' },
                 path: '',
                 component: DraftTransactionComponent,
                 resolve: {
@@ -46,6 +47,7 @@ const investedProfileRoutes: Route[] = [
                 },
             },
             {
+                data: { title: 'Chờ xử lý' },
                 path: 'waiting-process-transaction',
                 component: WaitingProcessTransactionComponent,
                 resolve: {
@@ -53,6 +55,7 @@ const investedProfileRoutes: Route[] = [
                 },
             },
             {
+                data: { title: 'Đã xử lý' },
                 path: 'success-transaction',
                 component: SuccessTransactionComponent,
                 resolve: {

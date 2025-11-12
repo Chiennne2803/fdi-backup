@@ -1,7 +1,7 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
-import {FuseAlertService, FuseAlertType} from '@fuse/components/alert';
+import { FuseAlertService, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import {
     forbiddenPasswordValidator,
@@ -11,24 +11,17 @@ import {
     from 'app/shared/validator/forbidden';
 import CryptoJS from 'crypto-js';
 import { environment } from 'environments/environment';
-import {MatDialog} from '@angular/material/dialog';
-import {OtpConfirmComponent} from 'app/shared/components/otp-confirm/otp-confirm.component';
+import { MatDialog } from '@angular/material/dialog';
 import FileSaver from 'file-saver';
-import {FileService} from "../../../service/common-service";
-import {OtpSmsConfirmComponent} from "../../../shared/components/otp-sms-confirm/otp-sms-confirm.component";
-import {random} from "lodash-es";
-import {HttpClient} from "@angular/common/http";
+import { FileService } from "../../../service/common-service";
+import { OtpSmsConfirmComponent } from "../../../shared/components/otp-sms-confirm/otp-sms-confirm.component";
+import { random } from "lodash-es";
 import { Router } from '@angular/router';
 
-enum Steps {
-    form = 1,
-    rules = 2,
-    privacyPolicy = 3,
-    complete = 4,
-}
 @Component({
     selector: 'auth-sign-up',
     templateUrl: './sign-up.component.html',
+    styleUrls: ['./sign-up.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
@@ -37,7 +30,6 @@ export class AuthSignUpComponent implements OnInit {
         type: 'success',
         message: ''
     };
-    public step = Steps.form;
     public signUpForm: FormGroup = new FormGroup({});
     public showAlert: boolean = false;
     public roles = [
@@ -48,7 +40,6 @@ export class AuthSignUpComponent implements OnInit {
         { id: 1, value: 'Cá nhân' },
         { id: 2, value: 'Doanh nghiệp' }
     ];
-    public steps = Steps;
     disableSubmitButton: boolean = true;
     private actionKey = "";
     // htmlContent: any;
@@ -66,6 +57,49 @@ export class AuthSignUpComponent implements OnInit {
         // this.htmlContent = "";
     }
 
+
+    isPassFocused = false;
+    isAccountFocused = false;
+
+
+    // Các rule kiểm tra mật khẩu
+    get hasMinLength() {
+        const v = this.signUpForm.get('passwd')?.value || '';
+        return v.length >= 8 && v.length <= 30;
+    }
+
+    get hasLowerCase() {
+        const v = this.signUpForm.get('passwd')?.value || '';
+        return /[a-z]/.test(v);
+    }
+
+    get hasUpperCase() {
+        const v = this.signUpForm.get('passwd')?.value || '';
+        return /[A-Z]/.test(v);
+    }
+
+    get hasSpecialChar() {
+        const v = this.signUpForm.get('passwd')?.value || '';
+        return /[!@#$%^&*?]/.test(v);
+    }
+
+
+    get accountValue() {
+        return this.signUpForm.get('accountName')?.value || '';
+    }
+
+    get accountLengthValid() {
+        const len = this.accountValue.length;
+        return len >= 6 && len <= 50;
+    }
+
+    get accountCharValid() {
+        return /^[A-Za-z0-9@_.]*$/.test(this.accountValue);
+    }
+
+    get accountNoAccent() {
+        return !/[À-ỹ]/.test(this.accountValue);
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
@@ -76,7 +110,11 @@ export class AuthSignUpComponent implements OnInit {
     ngOnInit(): void {
         this.createForm();
         this.observeFormValue();
-        this.actionKey = "REG" +random(100) + "" + new Date().getMilliseconds();
+        this.actionKey = "REG" + random(100) + "" + new Date().getMilliseconds();
+
+        this.signUpForm.get('accountName')?.valueChanges.subscribe((val) => {
+            this.convertTLowerCase()
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -89,11 +127,11 @@ export class AuthSignUpComponent implements OnInit {
             role: new FormControl(null, [Validators.required]),
             object: new FormControl(null, [Validators.required]),
             accountName: new FormControl(null, [Validators.required, forbiddenUserNameValidator()]),
-            email: new FormControl(null, [ emailValidator()]),
+            email: new FormControl(null, [Validators.required, emailValidator()]),
             mobile: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(11), forbiddenPhoneNumberValidator()]),
-            passwd: new FormControl(null, [Validators.required, forbiddenPasswordValidator()]),
-            codePresenter: new FormControl(null, [Validators.minLength(6), Validators.maxLength(50)]),
-            codeStaff: new FormControl(null, [Validators.minLength(6), Validators.maxLength(50)]),
+            passwd: new FormControl(null, [Validators.required]),
+            codePresenter: new FormControl(null),
+            codeStaff: new FormControl(null),
             agreements: new FormControl(null, [Validators.requiredTrue])
         });
     }
@@ -125,7 +163,7 @@ export class AuthSignUpComponent implements OnInit {
 
         this._authService.signUp({
             payload: {
-                actionKey : this.actionKey,
+                actionKey: this.actionKey,
                 accountName: this.signUpForm.value.accountName,
                 passwd: pwAES,
                 type: this.signUpForm.value.role,
@@ -141,7 +179,6 @@ export class AuthSignUpComponent implements OnInit {
             .subscribe(
                 (response) => {
                     if (response.errorCode === '0') {
-                        // this.openDialog();
                         this.sendOtp('USER_REGISTER', 'Đăng ký thành công');
                     } else {
                         this.showError(response.message);
@@ -151,6 +188,7 @@ export class AuthSignUpComponent implements OnInit {
                 },
                 (error) => {
 
+                    console.log(error)
                     // Re-enable the form
                     this.signUpForm.enable();
 
@@ -170,39 +208,23 @@ export class AuthSignUpComponent implements OnInit {
         this.showAlert = true;
     }
 
-  /*  openDialog(): void {
-        const dialogRef = this._dialog.open(OtpConfirmComponent, {
-            data: {
-                accountName: this.signUpForm.value.accountName,
-                complete: () => {
-                    this.step = Steps.complete;
-                    dialogRef.close();
-                },
-                disableClose: true
-            }
-        });
-    };*/
-
-
     sendOtp(otpType: string, message: string): void {
         const dialogRef = this._dialog.open(OtpSmsConfirmComponent, {
+            // width: '450px',
             data: {
                 service: this._authService,
                 payload: {
                     otpType: otpType,
-                    actionKey : this.actionKey
+                    actionKey: this.actionKey
                 },
                 title: 'Nhận mã xác thực',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                 complete: () => {
-
-                    // console.log(message);
-                    // this._fuseAlertService.showMessageSuccess(message);
-                    // this.step = Steps.complete;
                     this._router.navigateByUrl('sign-in');
-                     this._fuseAlertService.showMessageSuccess(message)
+                    this._fuseAlertService.showMessageSuccessAuth(message)
                     dialogRef.close();
                 },
+                autoCloseOnTimeout: true
             }
         });
     };
@@ -239,22 +261,28 @@ export class AuthSignUpComponent implements OnInit {
     }
 
     convertTLowerCase() {
-        if (this.signUpForm.get('accountName').value) {
-            this.signUpForm.get('accountName').patchValue(this.signUpForm.get('accountName').value.toString().toLowerCase());
+        const control = this.signUpForm.get('accountName');
+        const value = control?.value?.toString() || '';
+        const lower = value.toLowerCase();
+
+        if (value !== lower) {
+            control.patchValue(lower, { emitEvent: false }); // tránh kích hoạt vòng lặp
         }
     }
 
-    public getErrorAccount(): string {
-        if (this.signUpForm.get('accountName')?.hasError('required')) {
+
+    public getErrorKey(key: string): string {
+        if (this.signUpForm.get(key)?.hasError('required')) {
             return 'DKTK006';
         }
 
-        if (this.signUpForm.get('accountName')?.hasError('forbiddenUserName') ||
-            this.signUpForm.get('accountName')?.hasError('minlength') ||
-            this.signUpForm.get('accountName')?.hasError('maxlength')) {
+        if (this.signUpForm.get(key)?.hasError('forbiddenUserName') ||
+            this.signUpForm.get(key)?.hasError('minlength') ||
+            this.signUpForm.get(key)?.hasError('maxlength')) {
             return 'DKTK005';
         }
     }
+
     getErrorPassword() {
         if (this.signUpForm.get('passwd')?.hasError('required')) {
             return 'DKTK014';

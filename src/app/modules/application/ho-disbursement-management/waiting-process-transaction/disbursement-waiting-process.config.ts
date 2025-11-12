@@ -16,7 +16,7 @@ export const TABLE_WAITING_TRANSACTION_CONFIG: ITableConfig = {
         new TextColumn('approvalDate', 'Ngày xử lý', 15, false,'DD/MM/YYYY HH:mm:ss'),
         new TextColumn('statusName', 'Trạng thái', 15, false),
     ],
-    title: 'Giao dịch giải ngân chờ xử ly',isViewDetail: false,
+    title: 'Giao dịch giải ngân chờ xử lý',isViewDetail: false,
     footerTable: [{
         label: 'Tổng tiền:',
         value: 0,

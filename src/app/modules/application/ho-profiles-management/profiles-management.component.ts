@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseNavigationItem, } from '../../../../@fuse/components/navigation';
 import { ROUTER_CONST } from '../../../shared/constants';
@@ -19,8 +19,6 @@ export class ProfilesManagementComponent implements OnInit, OnDestroy {
     review: FuseNavigationItem;
     reReview: FuseNavigationItem;
     store: FuseNavigationItem;
-    drawerOpened: boolean;
-    drawerMode: 'side' | 'over';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
 
@@ -33,6 +31,7 @@ export class ProfilesManagementComponent implements OnInit, OnDestroy {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private router: Router
     ) {
+        this.checkScreenSize();
         this.menuData = [
             {
                 title: 'Quản lý hồ sơ',
@@ -152,7 +151,7 @@ export class ProfilesManagementComponent implements OnInit, OnDestroy {
                     link: `${ROUTER_CONST.config.application.profile.link}/archive/disbursement`,
                 },
                 {
-                    title: 'Hồ sơ chờ tất toán khoản vay',
+                    title: 'Hồ sơ chờ tất toán huy động vốn',
                     type: 'basic',
                     link: `${ROUTER_CONST.config.application.profile.link}/archive/wait-payment`,
                 },
@@ -201,21 +200,20 @@ export class ProfilesManagementComponent implements OnInit, OnDestroy {
         return _p;
     }
 
+
+    isMobile = false;
+
+    @HostListener('window:resize', [])
+    onResize() {
+        this.checkScreenSize();
+    }
+
+    private checkScreenSize() {
+        this.isMobile = window.innerWidth < 1024; // < 1024px thì coi là mobile/tablet
+    }
     ngOnInit(): void {
         // Subscribe to media query change
-        this._fuseMediaWatcherService.onMediaChange$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({ matchingAliases }) => {
-                // Set the drawerMode and drawerOpened
-                if (matchingAliases.includes('md')) {
-                    this.drawerMode = 'side';
-                    this.drawerOpened = true;
-                }
-                else {
-                    this.drawerMode = 'over';
-                    this.drawerOpened = false;
-                }
-            });
+
     }
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions

@@ -37,6 +37,7 @@ export const TABLE_INVESTOR_INVESTING_CONFIG_SUCCESS: ITableConfig = {
     columnDefinition: [
         new CheckboxColumn(),
         new IndexColumn('no', 'STT', 4),
+        new TextColumn('admAccountId', 'ID khách hàng', 10, true),
         new TextColumn('transCode', 'Mã giao dịch', 20, true),
         new TextColumn('admAccountName', 'Người thụ hưởng', 20, false),
         new TextColumn('amount', 'Số tiền nạp', 15, false, 1),
@@ -65,3 +66,33 @@ export const TABLE_BUTTON_ACTION_SUCCESS_CONFIG: DataTableButtonConfig = {
     ],
 };
 
+export const TABLE_INVESTOR_INVESTING_CONFIG_WAIT: ITableConfig = {
+    columnDefinition: [
+        new CheckboxColumn(),
+        new IndexColumn('no', 'STT', 4),
+        new TextColumn('admAccountIdRecive', 'ID khách hàng', 10, true),
+        new TextColumn('fsTopupCode', 'Mã giao dịch', 20, true),
+        new TextColumn('admAccountIdReciveName', 'Người tạo', 20, false),
+        new TextColumn('createdDate', 'Thời gian giao dịch', 20, false, 'DD/MM/YYYY HH:mm:ss'),
+        new TextColumn('admAccountIdManagerName', 'Nhân viên phụ trách', 20, false),
+    ],
+    title: 'Danh sách giao dịch chờ nạp tiền',isViewDetail: false,
+    // footerTable: [{
+    //     label: 'Tổng tiền:',
+    //     value: 0,
+    //     type: 'VND'
+    // }]
+};
+
+export const TASK_BAR_CONFIG_WAIT: TaskBarConfig = {
+    searchBar: {
+        placeholder: 'Nhập để tìm kiếm',
+        isShowBtnFilter: true,
+    }
+};
+
+export const TABLE_BUTTON_ACTION_WAIT_CONFIG: DataTableButtonConfig = {
+    commonBtn: [
+        {type : 'export', role : 'SFF_RECHARGE_TRANSACTION_EXPORT', fileName : 'Danh_sach_giao_dich_nap_tien'},
+    ],
+};

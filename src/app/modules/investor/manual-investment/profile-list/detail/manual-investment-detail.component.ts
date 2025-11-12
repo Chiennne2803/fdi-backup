@@ -118,6 +118,7 @@ export class ManualInvestmentDetailComponent implements OnInit, AfterViewInit {
                             data: {
                                 prepareData: res.payload,
                                 loanProfile: profile,
+                                onClose: () => this.onClose()
                             },
                         });
                     });

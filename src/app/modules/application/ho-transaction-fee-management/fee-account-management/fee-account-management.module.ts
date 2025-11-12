@@ -35,6 +35,7 @@ const investedProfileRoutes: Route[] = [
         path     : '',
         children: [
             {
+                data: { title: 'Danh sách phí quản lý tài khoản' },
                 path: 'list',
                 component: FeeAccountManagementListComponent,
                 resolve: {
@@ -42,6 +43,7 @@ const investedProfileRoutes: Route[] = [
                 },
             },
             {
+                data: { title: 'Yêu cầu phí quản lý tài khoản' },
                 path: 'request',
                 component: FeeAccountManagementRequestComponent,
                 resolve: {

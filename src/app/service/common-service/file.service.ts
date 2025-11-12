@@ -1,12 +1,13 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BaseResponse} from 'app/models/base';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BaseResponse } from 'app/models/base';
 import FileSaver from 'file-saver';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {FsDocuments} from '../../models/admin';
-import {IBaseModel} from '../../shared/models/base.model';
-import {BaseService} from '../base-service';
-import {FuseAlertService} from "../../../@fuse/components/alert";
+import { BehaviorSubject, Observable } from 'rxjs';
+import { FsDocuments } from '../../models/admin';
+import { IBaseModel } from '../../shared/models/base.model';
+import { BaseService } from '../base-service';
+import { FuseAlertService } from "../../../@fuse/components/alert";
+import imageCompression from 'browser-image-compression';
 
 @Injectable({
     providedIn: 'root'
@@ -71,7 +72,6 @@ export class FileService extends BaseService {
         formData.append('file', file);
         return this.post(`${this.url}/upload`, formData);
     }
-
     dataURItoBlob(dataURI): Blob {
         const byteString = atob(dataURI.split(',')[1]);
         const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
@@ -81,5 +81,22 @@ export class FileService extends BaseService {
             ia[i] = byteString.charCodeAt(i);
         }
         return new Blob([ab], { type: mimeString });
+    }
+    async compressImage(file: File, options: any): Promise<File> {
+        try {
+            const compressedBlob = await imageCompression(file, options);
+
+            // ✅ Convert Blob về File để giữ lại tên và type
+            const compressedFile = new File(
+                [compressedBlob],
+                file.name,  // giữ nguyên tên file gốc
+                { type: file.type, lastModified: Date.now() }
+            );
+
+            return compressedFile;
+        } catch (error) {
+            console.error('Lỗi khi nén ảnh:', error);
+            return file;
+        }
     }
 }

@@ -3,8 +3,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ManagementInvestorService } from 'app/service/admin/management-investor.service';
-import { FileService } from 'app/service/common-service/file.service';
-import { AddressDialogComponent } from 'app/shared/components/address-dialog/address-dialog.component';
 import { DateTimeformatPipe } from 'app/shared/components/pipe/date-time-format.pipe';
 import { ISelectModel } from 'app/shared/models/select.model';
 import {UserType} from '../../../../../enum';
@@ -15,6 +13,7 @@ import {
 } from '../../../../../shared/validator/forbidden';
 import {AdmAccountDetailDTO} from "../../../../../models/admin";
 import moment from "moment";
+import { AddressKycDialogComponent } from 'app/shared/components/dialog/address-dialog/address-dialog.component';
 
 @Component({
     selector: 'app-personal-investor',
@@ -31,6 +30,8 @@ export class PersonalInvestorComponent implements OnInit {
     public lstManagerStaff: AdmAccountDetailDTO[];
     yearLate = moment().subtract(216, 'months');
     yesterday = moment().subtract(1, 'days');
+    addressModes: { [key: string]: 'new' | 'old' } = {};
+
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -38,7 +39,6 @@ export class PersonalInvestorComponent implements OnInit {
         private _datetimePipe: DateTimeformatPipe,
         private _investorService: ManagementInvestorService,
         private _matDialog: MatDialog,
-        private _fileService: FileService,
     ) { }
 
     ngOnInit(): void {
@@ -59,19 +59,24 @@ export class PersonalInvestorComponent implements OnInit {
     }
 
     public choseAddress(event: string): void {
+        const type = this.addressModes[event] || 'old';
         const dialogConfig = new MatDialogConfig();
         dialogConfig.autoFocus = true;
         dialogConfig.disableClose = true;
-        dialogConfig.width = '520px';
-        dialogConfig.data = event === 'address1' ? this.personForm.controls.address1.value : this.personForm.controls.address2.value;
-        const dialog = this._matDialog.open(AddressDialogComponent, dialogConfig);
+        dialogConfig.width = '450px';
+        dialogConfig.data = {
+            type,
+            value: event === 'address1' ? this.personForm.controls.address1.value : this.personForm.controls.address2.value
+        };
+        const dialog = this._matDialog.open(AddressKycDialogComponent, dialogConfig);
         dialog.afterClosed().subscribe((res) => {
             if (res) {
+                this.addressModes[event] = res.type;
                 if (event === 'address1') {
-                    this.personForm.controls.address1.setValue(res);
+                    this.personForm.controls.address1.setValue(res.payload);
                 }
                 if (event === 'address2') {
-                    this.personForm.controls.address2.setValue(res);
+                    this.personForm.controls.address2.setValue(res.payload);
                 }
             }
         });
@@ -124,7 +129,8 @@ export class PersonalInvestorComponent implements OnInit {
             identification: new FormControl(null, [Validators.required, Validators.maxLength(12)]),
             dateOfIdnumber: new FormControl(null, [Validators.required, Validators.maxLength(20)]),
             placeOfIdnumber: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
-            gender: new FormControl(this.genders[0].id, [Validators.required]),
+            gender: new FormControl(null, [Validators.required]),
+            // gender: new FormControl(this.genders[0].id, [Validators.required]),
             taxCode: new FormControl(null, [Validators.maxLength(13)]),
             dateOfBirth: new FormControl(null, [Validators.required]),
             address1: new FormControl(null, [Validators.required]),

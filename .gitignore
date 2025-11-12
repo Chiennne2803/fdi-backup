@@ -5,7 +5,8 @@ node_modules
 .idea
 sassdoc
 *.tar
-
+push.sh
+/push.sh
 *-lock.json
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 

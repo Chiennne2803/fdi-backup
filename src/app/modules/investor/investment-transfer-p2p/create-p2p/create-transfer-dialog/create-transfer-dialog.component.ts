@@ -9,7 +9,6 @@ import {FuseAlertService} from '../../../../../../@fuse/components/alert';
 import {OtpSmsConfirmComponent} from 'app/shared/components/otp-sms-confirm/otp-sms-confirm.component';
 import {Router} from '@angular/router';
 import {FsReqTransP2PService} from 'app/service/admin/req-trans-p2p.service';
-import {InvestorListService} from "../../../../../service";
 
 @Component({
     selector: 'app-add-dialog',
@@ -33,7 +32,6 @@ export class CreateTransferDialogComponent implements OnInit {
         private _alertService: FuseAlertService,
         private _fsReqTransP2PService: FsReqTransP2PService,
         private _fuseAlertService: FuseAlertService,
-        private _investorListService: InvestorListService,
         private _router: Router,
     ) {
         this.dialogRef.disableClose = true;
@@ -119,7 +117,7 @@ export class CreateTransferDialogComponent implements OnInit {
                     otpType: otpType,
                 },
                 title: 'Điền mã xác nhận OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                 complete: () => {
                     dialog.close();
                     this._fuseAlertService.showMessageSuccess(message);

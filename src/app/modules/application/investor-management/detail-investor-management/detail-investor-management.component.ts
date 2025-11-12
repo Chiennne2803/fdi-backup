@@ -1,28 +1,21 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {ManagementInvestorService} from 'app/service/admin/management-investor.service';
-import {Observable, tap} from 'rxjs';
-import {AdmAccountDetailDTO, FsDocuments, UserType} from '../../../../models/admin';
-import {FileService} from '../../../../service/common-service';
-import {AccountDetailStatus} from '../../../../enum';
-import {ConfirmProcessingComponent} from '../../../../shared/components/confirm-processing/confirm-processing.component';
-import {MatDialog} from '@angular/material/dialog';
-import {FuseAlertService} from '../../../../../@fuse/components/alert';
-import {MatDrawer} from "@angular/material/sidenav";
-import {BaseRequest} from '../../../../models/base';
-import {fuseAnimations} from "../../../../../@fuse/animations";
-import {MatTabGroup} from "@angular/material/tabs";
-import {ManageStaffDialogsComponent} from "../manager-staff-dialog/manager-staff-dialog.component";
-import {environment} from "../../../../../environments/environment";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
-import {SelectionModel} from "@angular/cdk/collections";
-import { FsTransactionHistoryDTO} from "../../../../models/service";
-import {
-    CheckboxColumn,
-    TextColumn
-} from "../../../../shared/models/datatable/display-column.model";
-import {ExcelService} from "../../../../service/common-service/excel.service";
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { ManagementInvestorService } from 'app/service/admin/management-investor.service';
+import { Observable, tap } from 'rxjs';
+import { AdmAccountDetailDTO, FsDocuments, UserType } from '../../../../models/admin';
+import { FileService } from '../../../../service/common-service';
+import { AccountDetailStatus } from '../../../../enum';
+import { ConfirmProcessingComponent } from '../../../../shared/components/confirm-processing/confirm-processing.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FuseAlertService } from '../../../../../@fuse/components/alert';
+import { MatDrawer } from "@angular/material/sidenav";
+import { BaseRequest } from '../../../../models/base';
+import { fuseAnimations } from "../../../../../@fuse/animations";
+import { MatTabGroup } from "@angular/material/tabs";
+import { ManageStaffDialogsComponent } from "../manager-staff-dialog/manager-staff-dialog.component";
+import { environment } from "../../../../../environments/environment";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
+import { DialogService } from 'app/service/common-service/dialog.service';
 
 @Component({
     selector: 'app-detail-investor-management',
@@ -31,7 +24,7 @@ import {ExcelService} from "../../../../service/common-service/excel.service";
     animations: fuseAnimations,
 })
 export class DetailInvestorManagementComponent implements OnInit {
-    @ViewChild('fileDrawer', {static: true}) fileDrawer: MatDrawer;
+    @ViewChild('fileDrawer', { static: true }) fileDrawer: MatDrawer;
     public detail: Observable<AdmAccountDetailDTO>;
     @Output() public handleCloseDetailPanel: EventEmitter<Event> = new EventEmitter<Event>();
     @ViewChild(MatTabGroup) matTabGroup: MatTabGroup;
@@ -45,7 +38,7 @@ export class DetailInvestorManagementComponent implements OnInit {
     public businessDocumentation: FsDocuments[];
     public photoOfBusiness: FsDocuments[];
     public cmnd: FsDocuments[];
-    public avatar: FsDocuments;
+    public avatar: FsDocuments | null = null;;
     public deputyAvatar: FsDocuments;
     public selectedFile: FsDocuments;
     lstManagerStaff: AdmAccountDetailDTO[];
@@ -62,12 +55,11 @@ export class DetailInvestorManagementComponent implements OnInit {
 
     constructor(
         private _investorService: ManagementInvestorService,
-        private _router: Router,
         private matDialog: MatDialog,
         private _fileService: FileService,
         private _fuseAlertService: FuseAlertService,
         private _matDialog: MatDialog,
-        private _excelService: ExcelService,
+        private _dialogService: DialogService,
     ) {
     }
 
@@ -155,6 +147,8 @@ export class DetailInvestorManagementComponent implements OnInit {
     public onClose(): void {
         this._investorService.closeDetailDrawer();
         this.handleCloseDetailPanel.emit();
+        this.avatar = null;
+        this.deputyAvatar = null;
     }
 
     public downloadFile(id: string): void {
@@ -179,7 +173,7 @@ export class DetailInvestorManagementComponent implements OnInit {
                 }).subscribe(resDto => {
                     if (resDto.errorCode === '0') {
                         this._investorService
-                            .detail({admAccountDetailId: this.admAccountId}).subscribe();
+                            .detail({ admAccountDetailId: this.admAccountId }).subscribe();
                         this._investorService.doSearch().subscribe();
                         this._fuseAlertService.showMessageSuccess('Xử lý thành công');
                     } else {
@@ -193,7 +187,7 @@ export class DetailInvestorManagementComponent implements OnInit {
 
     public onClickProcess(): void {
         const dialogRef = this.matDialog.open(ConfirmProcessingComponent, {
-            width: '450px',
+            // width: '450px',
             disableClose: true,
             data: {
                 title: 'Xác nhận nội dung xử lý',
@@ -209,7 +203,7 @@ export class DetailInvestorManagementComponent implements OnInit {
                         name: 'Từ chối(Ghi rõ lý do)',
                     }
                 ],
-                maxlenNote : 500,
+                maxlenNote: 500,
                 complete: () => {
                     dialogRef.close();
                 },
@@ -233,6 +227,21 @@ export class DetailInvestorManagementComponent implements OnInit {
             }
         );
     }
+    // onClickGiveBonus(): void {
+    //     const dialogRef = this._dialogService.openConfirmDialog('Xác nhận tặng lại 50.000 VND');
+    //     dialogRef.afterClosed().subscribe((result) => {
+    //         if (result === 'confirmed') {
+    //             this._investorService.bonus({ admAccountDetailId: this.admAccountId }).subscribe(res => {
+    //                 if (res.errorCode === '0') {
+    //                     this._fuseAlertService.showMessageSuccess('Tặng lại thành thành công');
+    //                 } else {
+    //                     this._fuseAlertService.showMessageError(res.message.toString());
+    //                 }
+    //                 dialogRef.close();
+    //             });
+    //         }
+    //     })
+    // }
 
     public clickViewImage(id: string): void {
         this._fileService

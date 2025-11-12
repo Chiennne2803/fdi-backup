@@ -5,15 +5,17 @@ import {
     OnChanges,
     OnInit,
     Optional,
+    Output,
     SimpleChanges,
-    ViewEncapsulation
+    ViewEncapsulation,
+    EventEmitter
 } from '@angular/core';
-import {ControlValueAccessor, FormControl, FormControlName, Validators} from '@angular/forms';
-import {MomentDateAdapter} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats} from '@angular/material/core';
-import moment, {DurationInputObject, Moment} from 'moment';
-import {APP_TEXT} from '../../constants';
-import {mustLessThanToday, notAllowFutureDays, upper18YearsOld} from '../../validator/date';
+import { ControlValueAccessor, FormControl, FormControlName, Validators } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats } from '@angular/material/core';
+import moment, { DurationInputObject, Moment } from 'moment';
+import { APP_TEXT } from '../../constants';
+import { mustLessThanToday, notAllowFutureDays, upper18YearsOld } from '../../validator/date';
 
 export const DATE_FORMATTER: MatDateFormats = {
     parse: {
@@ -53,6 +55,8 @@ export class DatePickerComponent implements ControlValueAccessor, OnChanges, OnI
     @Input() maxMsg: string;
     @Input() minMsg: string;
 
+    @Output() dateChanged = new EventEmitter<void>();
+
     biggerThanTodayMessage: string = 'Vượt quá ngày cho phép';
     mustLessThanTodayMessage: string = 'Ngày không được < Ngày hôm qua';
     appText = APP_TEXT;
@@ -66,7 +70,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnChanges, OnI
         @Optional() private _controlName: FormControlName,
         private _cdr: ChangeDetectorRef,
     ) {
-        if ( this._controlName !== null ) {
+        if (this._controlName !== null) {
             this._controlName.valueAccessor = this;
         }
 
@@ -74,12 +78,17 @@ export class DatePickerComponent implements ControlValueAccessor, OnChanges, OnI
 
     ngOnInit(): void {
         this.control = this._controlName?.control;
+        if (this.control) {
+            this.control.valueChanges.subscribe(() => {
+                this.dateChanged.emit();
+            });
+        }
         this._cdr.detectChanges();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.biggerThanTodayMessage= this.label + ' không được > Ngày tối đa';
-        this.mustLessThanTodayMessage = this.label +  ' không được < Ngày tối thiểu';
+        this.biggerThanTodayMessage = this.label + ' không được > Ngày tối đa';
+        this.mustLessThanTodayMessage = this.label + ' không được < Ngày tối thiểu';
 
         if (this.control?.errors) {
             this.control?.setErrors(null)
@@ -103,12 +112,12 @@ export class DatePickerComponent implements ControlValueAccessor, OnChanges, OnI
                 this.addValidationForControl();
             });
         }
-        if ( 'label' in changes ) {
+        if ('label' in changes) {
             this.setValidateMessage();
         }
-        if ( 'isRequired' in changes && this.control != undefined) {
+        if ('isRequired' in changes && this.control != undefined) {
             let change = changes['isRequired'];
-            let curVal  = JSON.stringify(change.currentValue);
+            let curVal = JSON.stringify(change.currentValue);
             if (curVal == 'true') {
                 this.control.addValidators(Validators.required);
             } else {
@@ -119,24 +128,24 @@ export class DatePickerComponent implements ControlValueAccessor, OnChanges, OnI
     }
 
     setValidateMessage(): void {
-        if ( this.validationType ) {
+        if (this.validationType) {
             this.validationType.forEach((type) => {
                 switch (type) {
                     case 'today':
-                        if ( this.label.includes('Ngày cấp') ) {
+                        if (this.label.includes('Ngày cấp')) {
                             this.biggerThanTodayMessage = 'Ngày cấp không được > Ngày hiện tại';
                         }
 
-                        if ( this.label.includes('Ngày sinh') ) {
+                        if (this.label.includes('Ngày sinh')) {
                             this.biggerThanTodayMessage = 'Ngày sinh không được > Ngày hiện tại';
                         }
                         break;
                     case 'yesterday':
-                        if ( this.label.includes('Ngày cấp') ) {
+                        if (this.label.includes('Ngày cấp')) {
                             this.mustLessThanTodayMessage = 'Ngày cấp không được > Ngày hôm qua';
                         }
 
-                        if ( this.label.includes('Ngày sinh') ) {
+                        if (this.label.includes('Ngày sinh')) {
                             this.mustLessThanTodayMessage = 'Ngày sinh không được > Ngày hôm qua';
                         }
                         break;
@@ -168,7 +177,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnChanges, OnI
                 return this.fomatMsg ? this.fomatMsg : this.appText.form.errors.invalidDateFormat;
             }
             if (this.control.hasError('mustUpper18')) {
-                return this.y18Msg ? this.y18Msg :this.appText.form.errors.mustUpper18;
+                return this.y18Msg ? this.y18Msg : this.appText.form.errors.mustUpper18;
             }
             if (this.control.hasError('biggerThanToday') || this.control.hasError('matDatepickerMax')) {
                 return this.maxMsg ? this.maxMsg : this.biggerThanTodayMessage;

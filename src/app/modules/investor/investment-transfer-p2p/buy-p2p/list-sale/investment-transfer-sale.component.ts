@@ -43,7 +43,7 @@ export class InvestmentTransferSaleComponent implements OnInit {
         this._fsReqTransP2PService.setDrawer(this.matDrawer);
         this._fsReqTransP2PService.prepareP2P$.subscribe((res) => {
             if (res) {
-                this._dataTenor.push({label: 'Tẩt cả', value: null});
+                this._dataTenor.push({label: 'Tẩt cả', value: ''});
                 res.payload.lstTenor.map((value) => {
                     this._dataTenor.push({
                         label: value,
@@ -78,7 +78,7 @@ export class InvestmentTransferSaleComponent implements OnInit {
                 searchConfig: {
                     config: [
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ', null, false),
-                        new FromToSearch('tranferAmount', 'Số tiền chuyển nhượng (VNĐ)', null, 'number'),
+                        new FromToSearch('tranferAmount', 'Số tiền chuyển nhượng (VND)', null, 'number'),
                         new DateTimeFromToSearch( 'investorTimeExpried', 'Ngày đáo hạn', null, false),
                         new DropListSearch('loanTimeCycle', 'Kỳ hạn(ngày)', this._dataTenor, null,false),
                         new InputSearch('companyName', 'Bên huy động vốn', null, false),

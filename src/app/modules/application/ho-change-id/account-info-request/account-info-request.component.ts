@@ -78,7 +78,7 @@ export class AccountInfoRequestComponent implements OnInit, OnChanges {
     onClickApprove(): void {
         const dialogRef = this._matDialog.open(ConfirmProcessingComponent, {
             disableClose: true,
-            width: '450px',
+            // width: '450px',
             data: {
                 title: 'Xác nhận nội dung xử lý',
                 valueDefault: 2,
@@ -120,16 +120,16 @@ export class AccountInfoRequestComponent implements OnInit, OnChanges {
 
     private initForm(data?: FsAccountInfoReqDTO): void {
         this.accountInfoForm = this._formBuilder.group({
-            transCode: new FormControl(data ? data.transCode : null),
-            type: new FormControl(data ? data.type === '1' ? 'Thay đổi CCCD/Hộ Chiếu' : 'Thay đổi GPKD' : null),
-            createdByName: new FormControl(data ? data.createdByName : null),
-            createdDate: new FormControl(data ? this._datetimePipe.transform(data.createdDate, 'DD/MM/YYYY') : null),
-            approvalBy: new FormControl(data ? data.approvalBy : null),
-            approvalByName: new FormControl(data ? data.approvalByName : null),
-            approvalDate: new FormControl(data ? this._datetimePipe.transform(data.approvalDate, 'DD/MM/YYYY') : null),
-            status: new FormControl(data ? data.status : null),
-            statusName: new FormControl(data ? data.statusName : null),
-            approvalInfo: new FormControl(data ? data.approvalInfo : null),
+            transCode: new FormControl({value: data ? data.transCode : null, disabled: true}),
+            type: new FormControl( {value:data ? data.type === '1' ? 'Thay đổi CCCD/Hộ chiếu' : 'Thay đổi GPKD' : null, disabled: true}),
+            createdByName: new FormControl({value:data ? data.createdByName : null,disabled: true}),
+            createdDate: new FormControl({value:data ? this._datetimePipe.transform(data.createdDate, 'DD/MM/YYYY') : null, disabled: true}),
+            approvalBy: new FormControl({value:data ? data.approvalBy : null, disabled: true}),
+            approvalByName: new FormControl({value:data ? data.approvalByName : null, disabled: true}),
+            approvalDate: new FormControl({value:data ? this._datetimePipe.transform(data.approvalDate, 'DD/MM/YYYY') : null, disabled: true}),
+            status: new FormControl({value:data ? data.status : null, disabled: true}),
+            statusName: new FormControl({value:data ? data.statusName : null, disabled: true}),
+            approvalInfo: new FormControl({value:data ? data.approvalInfo : null, disabled: true}),
         });
     }
 }

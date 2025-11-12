@@ -30,6 +30,8 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
     @Input() showIcon: boolean = true;
     @Input() type: FuseAlertType = 'primary';
     @Output() readonly dismissedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() closed = new EventEmitter<void>();
+
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -167,7 +169,10 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
 
         // Dismiss the alert
         this._toggleDismiss(true);
+        this.closed.emit()
+
     }
+   
 
     /**
      * Show the dismissed alert

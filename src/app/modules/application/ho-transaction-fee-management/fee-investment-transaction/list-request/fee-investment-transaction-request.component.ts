@@ -102,7 +102,7 @@ export class FeeInvestmentTransactionRequestComponent implements OnInit {
                     config: [
                         new InputSearch('fsLoanProfilesId', 'Mã yêu cầu', null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Soạn thảo', value: 1},
                             {label: 'Chờ xử lý', value: 2},
                             {label: 'Phê duyệt', value: 3},

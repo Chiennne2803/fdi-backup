@@ -50,12 +50,13 @@ export class ProcessListComponent implements OnInit, OnDestroy, OnChanges {
 
     private SPECIAL_INTERVAL_KEY = {
         "PDF_QUEUE_SCHEDULER": 1000
+
     }
 
     constructor(
         private _admProcessConfigService: AdmProcessConfigService,
         private _dialogService: DialogService,
-        private _fuseAlertService: FuseAlertService
+        private _fuseAlertService: FuseAlertService 
     ) {
     }
 
@@ -69,6 +70,7 @@ export class ProcessListComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnInit(): void {
+        // console.log(this.lstProcess)
     }
 
     private logToProcessScheduler(log: string): ProcessScheduler {

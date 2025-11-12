@@ -63,7 +63,7 @@ export class StaffComponent implements OnInit {
         this._staffService.getPrepareLoadingPage().subscribe((res) => {
             //departments
             if (res.payload.departments != undefined && res.payload.departments.length > 0) {
-                this.lstDepartments.push({label: 'Tẩt cả', value: null});
+                this.lstDepartments.push({label: 'Tẩt cả', value: ''});
                 res.payload.departments.forEach(x => this.lstDepartments.push({
                     label: x.departmentName,
                     value: x.admDepartmentsId
@@ -71,14 +71,14 @@ export class StaffComponent implements OnInit {
             }
             //positionCode
             if (res.payload.positionCode != undefined && res.payload.positionCode.length > 0) {
-                this.lstPositionCode.push({label: 'Tẩt cả', value: null});
+                this.lstPositionCode.push({label: 'Tẩt cả', value: ''});
                 res.payload.positionCode.forEach(x => this.lstPositionCode.push({
                     label: x.categoriesName,
                     value: x.admCategoriesId
                 }));
             }
             /* if (res.payload.lstReasons != undefined && res.payload.lstReasons.length > 0) {
-                 this.lstReasons.push({label: 'Tẩt cả', value: null});
+                 this.lstReasons.push({label: 'Tẩt cả', value: ''});
                  res.payload.lstReasons.forEach(x => this.lstReasons.push({label: x.categoriesName, value: x.admCategoriesId}));
              }*/
             this.departmentsDrop = res.payload.departments.map(el => ({

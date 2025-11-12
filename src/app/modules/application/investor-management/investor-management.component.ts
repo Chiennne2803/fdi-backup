@@ -91,8 +91,8 @@ export class InvestorManagementComponent implements OnInit {
                 const dialogConfig = new MatDialogConfig();
                 dialogConfig.autoFocus = true;
                 dialogConfig.disableClose = true;
-                dialogConfig.width = '480px'; // nhỏ gọn hơn
-                dialogConfig.maxWidth = '480px'; // responsive
+                dialogConfig.width = '450px'; // nhỏ gọn hơn
+                // dialogConfig.maxWidth = '480px'; // responsive
                 const dialog = this._matDialog.open(ConfirmTypeDialogComponent, dialogConfig);
                 dialog.afterClosed().subscribe((res: number) => {
                     if (res) {
@@ -141,7 +141,7 @@ export class InvestorManagementComponent implements OnInit {
                 break;
             case 'approve':
                 const dialogRef = this._matDialog.open(ConfirmProcessingComponent, {
-                    width: '450px',
+                    // width: '450px',
                     disableClose: true,
                     data: {
                         title: 'Xác nhận nội dung xử lý',

@@ -1,62 +1,112 @@
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {AuthService} from 'app/core/auth/auth.service';
-import {catchError, Observable, throwError} from 'rxjs';
-import {TranslocoService} from "@ngneat/transloco";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AuthService } from 'app/core/auth/auth.service';
+import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError } from 'rxjs';
+import { TranslocoService } from "@ngneat/transloco";
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor
-{
-    /**
-     * Constructor
-     */
-    constructor(private _authService: AuthService,
-                private translocoService: TranslocoService
-                )
-    {
-    }
+export class AuthInterceptor implements HttpInterceptor {
 
-    /**
-     * Intercept
-     *
-     * @param req
-     * @param next
-     */
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
-    {
-        // Clone the request object
+    private isRefreshing = false;
+    private refreshTokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+
+    constructor(
+        private _authService: AuthService,
+        private translocoService: TranslocoService,
+    ) {}
+
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let newReq = req.clone();
 
-        // Request
-        //
-        // If the access token didn't expire, add the Authorization header.
-        // We won't add the Authorization header if the access token expired.
-        // This will force the server to return a "401 Unauthorized" response
-        // for the protected API routes which our response interceptor will
-        // catch and delete the access token from the local storage while logging
-        // the user out from the app.
-        if (this._authService.accessToken) {
+        // Không thêm Bearer token cho refresh token request
+        if (this._authService.accessToken && !req.url.includes('/oauth/token')) {
             newReq = req.clone({
                 headers: req.headers
-                    .set('Authorization', 'Bearer ' + this._authService.jwtToken)
+                    .set('Authorization', 'Bearer ' + this._authService.accessToken)
                     .append('lang', this.translocoService.getActiveLang()),
             });
-        } 
-       
+        }
 
-        // Response
         return next.handle(newReq).pipe(
-            catchError((error) => {
-
-                // Catch "401 Unauthorized" responses
-                if ( error instanceof HttpErrorResponse && error.status === 401 )
-                {
-                    // Sign out
-                    this._authService.signOut(true);
+            catchError(error => {
+                if (error instanceof HttpErrorResponse && 
+                    (error.status === 401 || error?.error === 'invalid_token' || error?.error?.error === 'invalid_token') &&
+                    this._authService.refreshToken) {
+                    return this.handle401Error(newReq, next);
                 }
 
-                return throwError(error);
+                // Nếu server bảo trì
+                if (error instanceof HttpErrorResponse && error.status === 503) {
+                    this._authService.signOutMaintenance();
+                    return throwError(() => error);
+                }
+
+                // Các lỗi 500
+                if (error instanceof HttpErrorResponse && error.status >= 500 && error.status < 600) {
+                    this._authService.signOutError();
+                    return throwError(() => error);
+                }
+
+                return throwError(() => error);
             })
         );
+    }
+
+    private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        if (!this.isRefreshing) {
+            this.isRefreshing = true;
+            this.refreshTokenSubject.next(null);
+
+            const refreshToken = this._authService.refreshToken;
+            if (!refreshToken) {
+                this._authService.signOut(false).subscribe();
+                return throwError(() => new Error('No refresh token'));
+            }
+
+            // 🔹 Gọi API refresh token
+            return this._authService.refreshAccessToken(refreshToken).pipe(
+                switchMap((tokenResponse: any) => {
+                    this.isRefreshing = false;
+
+                    if (tokenResponse?.access_token) {
+                        this.refreshTokenSubject.next(tokenResponse.access_token);
+
+                        const cloned = request.clone({
+                            setHeaders: {
+                                Authorization: `Bearer ${tokenResponse.access_token}`,
+                                lang: this.translocoService.getActiveLang()
+                            }
+                        });
+
+                        return next.handle(cloned);
+                    } else {
+                        // Nếu refresh thất bại
+                        this._authService.signOut(false).subscribe();
+                        return throwError(() => new Error('Failed to refresh token'));
+                    }
+                }),
+                catchError(err => {
+                    this.isRefreshing = false;
+                    this._authService.signOut(false).subscribe();
+                    return throwError(() => err);
+                })
+            );
+
+        } else {
+            // Nếu đang refresh -> chờ token mới
+            return this.refreshTokenSubject.pipe(
+                filter(token => token != null),
+                take(1),
+                switchMap(token => {
+                    const cloned = request.clone({
+                        setHeaders: {
+                            Authorization: `Bearer ${token}`,
+                            lang: this.translocoService.getActiveLang()
+                        }
+                    });
+                    return next.handle(cloned);
+                })
+            );
+        }
     }
 }

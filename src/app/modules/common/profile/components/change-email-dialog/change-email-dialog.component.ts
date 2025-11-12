@@ -81,7 +81,7 @@ export class ChangeEmailDialogComponent implements OnInit {
                         content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                             'Vui lòng kiểm tra và điền vào mã xác nhận!',
                         type: 'Email',
-                        resendTime: 300,
+                        resendTime: 180,
                         complete: () => {
                             dialogRef.close();
                             this.changeEmailStep = 1;
@@ -116,7 +116,7 @@ export class ChangeEmailDialogComponent implements OnInit {
                             title: 'Điền mã xác nhận OTP',
                             content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                 'Vui lòng kiểm tra và điền vào mã xác nhận!',
-                            resendTime: 300,
+                            resendTime: 180,
                             complete: () => {
                                 this.changeEmailStep = 0;
                                 dialogRef.close();

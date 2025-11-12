@@ -1,8 +1,8 @@
-<div class="flex flex-col max-w-240 md:min-w-160 -m-6 max-h-full">
+<div class="flex flex-col -m-6 max-h-full">
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium">Danh sách yêu cầu thanh toán khoản vay</div>
-        <button mat-icon-button>
+        <button mat-icon-button [tabIndex]="-1">
             <mat-icon class="text-current"
                       [svgIcon]="'heroicons_outline:x'"
                       mat-dialog-close></mat-icon>
@@ -11,9 +11,9 @@
 
     <!-- Content -->
     <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="formGroup">
-        <mat-form-field class="w-full">
+        <mat-form-field class="w-full" floatLabel="always">
             <mat-label>Mã giao dịch</mat-label>
-            <mat-select formControlName="transPayReq" class="{{this.statusTopupMailTrans !== 2 ? 'custom-select' : ''}}">
+            <mat-select placeholder="Chọn mã giao dịch" formControlName="transPayReq" class="{{this.statusTopupMailTrans !== 2 ? 'custom-select' : ''}}">
                 <mat-option
                     *ngFor="let transPay of lstTranspayReq"
                     [value]="transPay"
@@ -26,9 +26,10 @@
             </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="w-full mt-5" *ngIf="statusTopupMailTrans === 3 || statusTopupMailTrans === 6">
-            <mat-label>Số tiền chuyển (VNĐ)</mat-label>
+        <mat-form-field floatLabel="always" class="w-full mt-5" *ngIf="statusTopupMailTrans === 3 || statusTopupMailTrans === 6">
+            <mat-label>Số tiền chuyển (VND)</mat-label>
             <input matInput
+                    placeholder="Nhập số tiền chuyển..."
                    currencyMask autocomplete="off"
                    maxlength="15"
                    class="text-left"
@@ -51,7 +52,7 @@
             </button>
             <button
                 mat-flat-button
-                color="warn"
+                color="primary"
                 class="ml-2"
                 (click)="onSubmit()"
             >

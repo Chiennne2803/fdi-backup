@@ -1,15 +1,12 @@
-::ng-deep .mat-paginator .mat-paginator-container {
+@media screen and (min-width: 768px) {
+  ::ng-deep .mat-paginator .mat-paginator-container {
     justify-content: flex-end;
+  }
 }
 
 .reWidth70 {
     width: 70% !important;
 }
-
-.content-config {
-    min-height: 8rem;
-}
-
 .arrow-up {
     position: absolute;
     width: 0;
@@ -36,13 +33,10 @@
     display: none;
 }
 
-.sm-actions {
-    display: none !important;
-}
 
 @media only screen and (max-width: 428px) {
     .title {
-        font-size: small !important;
+        font-size: 16px !important;
         width: 100%;
     }
 
@@ -74,9 +68,6 @@
         display: inline-block;
     }
 
-    .sm-actions {
-        display: block !important;
-    }
 }
 
 .active-scroll {
@@ -95,19 +86,14 @@ tr.element-row:not(.expanded-row):active {
     background: #efefef;
 }
 
-.element-row td {
-    //border-bottom-width: 0;
-}
+// .element-row td {
+//     //border-bottom-width: 0;
+// }
 
 .element-detail {
     overflow: hidden;
     display: flex;
 }
 
-.text-ellipsis-line-2 {
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-}
+
+

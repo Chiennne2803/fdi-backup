@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ConfigInvestorService} from '../../../../service/admin/config-investor.service';
-import {WControlEuDTO} from '../../../../models/wallet/WControlEuDTO.model';
-import {MatDialog} from '@angular/material/dialog';
-import {OtpSmsConfirmComponent} from '../../../../shared/components/otp-sms-confirm/otp-sms-confirm.component';
-import {FuseAlertService} from '../../../../../@fuse/components/alert';
-import {AutoInvestmentRechargeComponent} from '../auto-investment-recharge-dialog/auto-investment-recharge.component';
-import {AuthService} from "../../../../core/auth/auth.service";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ConfigInvestorService } from '../../../../service/admin/config-investor.service';
+import { WControlEuDTO } from '../../../../models/wallet/WControlEuDTO.model';
+import { MatDialog } from '@angular/material/dialog';
+import { OtpSmsConfirmComponent } from '../../../../shared/components/otp-sms-confirm/otp-sms-confirm.component';
+import { FuseAlertService } from '../../../../../@fuse/components/alert';
+import { AutoInvestmentRechargeComponent } from '../auto-investment-recharge-dialog/auto-investment-recharge.component';
+import { AuthService } from "../../../../core/auth/auth.service";
 
 @Component({
     selector: 'app-automatic-investment-header',
@@ -24,6 +24,7 @@ export class AutomaticInvestmentHeaderComponent implements OnInit {
         private _matDialog: MatDialog,
         private _fuseAlertService: FuseAlertService,
         private authService: AuthService,
+
     ) {
         this.fullName = this.authService.authenticatedUser.fullName;
     }
@@ -45,12 +46,21 @@ export class AutomaticInvestmentHeaderComponent implements OnInit {
             investmentAmount: new FormControl(0, [Validators.required, Validators.min(1)]),
         });
     }
+    generateActionKey(prefix: string = 'REG'): string {
+        const random = Math.floor(Math.random() * 1000); // random 0-999
+        const millis = Date.now(); // milliseconds since epoch
+        return `${prefix}${random}${millis}`;
+    }
 
     onSubmit(): void {
+        const actionKey = this.generateActionKey()
         this.autoInvestForm.markAllAsTouched();
         if (this.autoInvestForm.valid) {
             this._configInvestorService
-                .create(this.autoInvestForm.value)
+                .create({
+                    ...this.autoInvestForm.value,
+                    actionKey: actionKey
+                })
                 .subscribe((res) => {
                     if (res.errorCode === '0') {
                         const dialogRef = this._matDialog.open(OtpSmsConfirmComponent, {
@@ -58,9 +68,10 @@ export class AutomaticInvestmentHeaderComponent implements OnInit {
                             data: {
                                 payload: {
                                     otpType: 'INVESTOR_AUTO_OTP',
+                                    actionKey: actionKey
                                 },
                                 title: 'Điền mã xác nhận OTP',
-                                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                     'Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất đặt lệnh đầu tư tự động!',
                                 complete: () => {
                                     dialogRef.close();

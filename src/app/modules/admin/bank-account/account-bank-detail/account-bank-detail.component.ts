@@ -8,14 +8,14 @@ import { AccountBankService } from 'app/service';
 import { DateTimeformatPipe } from 'app/shared/components/pipe/date-time-format.pipe';
 import { APP_TEXT } from 'app/shared/constants';
 import { ISelectModel } from 'app/shared/models/select.model';
-import {fuseAnimations} from "../../../../../@fuse/animations";
+import { fuseAnimations } from "../../../../../@fuse/animations";
 
 @Component({
     selector: 'app-account-bank-detail',
     templateUrl: './account-bank-detail.component.html',
     styleUrls: ['./account-bank-detail.component.scss'],
     providers: [DateTimeformatPipe],
-    animations     : fuseAnimations,
+    animations: fuseAnimations,
 })
 export class AccountBankDetailComponent implements OnChanges {
     @Output() public handleCloseDetailPanel: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -56,6 +56,7 @@ export class AccountBankDetailComponent implements OnChanges {
             request.fsAccountBankId = changes.fsAccountBankId.currentValue;
             this._accountService.getDetail(request).subscribe((res) => {
                 if (res) {
+
                     this.detailAccount = res.payload;
                     this.initForm();
                 }
@@ -86,9 +87,10 @@ export class AccountBankDetailComponent implements OnChanges {
                 }
             });
             return;
+        } else {
+            this.isEditable = false;
+            this.handleCloseDetailPanel.emit(false);
         }
-        this.isEditable = false;
-        this.handleCloseDetailPanel.emit(false);
     }
 
     submit(): void {
@@ -96,13 +98,8 @@ export class AccountBankDetailComponent implements OnChanges {
             title: 'Xác nhận lưu dữ liệu',
             message: '',
             actions: {
-                confirm: {
-                    label: 'Lưu',
-                    color: 'primary'
-                },
-                cancel: {
-                    label: 'Huỷ'
-                }
+                confirm: { label: 'Lưu', color: 'primary' },
+                cancel: { label: 'Huỷ' }
             }
         };
         const dialog = this._confirmService.open(config);
@@ -111,6 +108,17 @@ export class AccountBankDetailComponent implements OnChanges {
                 const request = this.accountBankForm.value;
                 this._accountService.update(request).subscribe((result) => {
                     if (result.errorCode === '0') {
+                        // Sau khi update thành công => gọi lại detail
+                        const req = new FsAccountBankDTO();
+                        req.fsAccountBankId = this.fsAccountBankId;
+                        this._accountService.getDetail(req).subscribe((resDetail) => {
+                            if (resDetail) {
+                                this.detailAccount = resDetail.payload;
+                                this.initForm(); // đồng bộ lại form
+                            }
+                        });
+
+                        this.isEditable = false;
                         this.handleCloseDetailPanel.emit(true);
                         this._fuseAlertService.showMessageSuccess(APP_TEXT.form.success.message);
                     } else {
@@ -121,6 +129,7 @@ export class AccountBankDetailComponent implements OnChanges {
         });
     }
 
+
     public getAccType(): string {
         return this.accTypes.filter(x => x.id === this.detailAccount.accType)[0].label;
     }
@@ -130,8 +139,8 @@ export class AccountBankDetailComponent implements OnChanges {
             fsAccountBankId: new FormControl(this.detailAccount.fsAccountBankId),
             accNo: new FormControl(this.detailAccount.accNo, [Validators.required, Validators.maxLength(15), Validators.pattern("[a-zA-Z0-9]*")]),
             bankId: new FormControl(this.detailAccount.bankId, [Validators.required]),
-            accName: new FormControl(this.detailAccount.accName, [Validators.required, Validators.maxLength(50)]),
-            bankBranch: new FormControl(this.detailAccount.bankBranch, [Validators.required, Validators.maxLength(100)]),
+            accName: new FormControl(this.detailAccount.accName, [Validators.required, Validators.maxLength(120)]),
+            bankBranch: new FormControl(this.detailAccount.bankBranch, [Validators.required, Validators.maxLength(120)]),
             accType: new FormControl(this.detailAccount.accType, [Validators.required]),
             createdByName: new FormControl({
                 value: this.detailAccount ? this.detailAccount.createdByName : this._authService.authenticatedUser.fullName,
@@ -153,5 +162,10 @@ export class AccountBankDetailComponent implements OnChanges {
             }),
         });
     }
+    onEdit(): void {
+        this.isEditable = true;
+        this.accountBankForm.reset(this.detailAccount)
+    }
+
 
 }

@@ -45,7 +45,7 @@ export class DepartmentsComponent implements OnInit {
         this._dataSource = this._departmentsService.lazyLoad;
         this._departmentsService.getPrepareLoadingPage().subscribe((res) => {
             if (res.payload.lstUser != undefined && res.payload.lstUser.length > 0) {
-                this._listUser.push({label: 'Tẩt cả', value: null});
+                this._listUser.push({label: 'Tẩt cả', value: ''});
                 res.payload.lstUser.forEach(el => this._listUser.push({
                     label: el.accountName + ' - ' + el.fullName,
                     value: el.admAccountId

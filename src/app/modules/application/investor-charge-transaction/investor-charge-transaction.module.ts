@@ -7,7 +7,7 @@ import { ErrorChargeTransactionComponent } from './error/error-charge-transactio
 import { SuccessChargeTransactionComponent } from './success/success-charge-transaction.component';
 import {
     ErrorTransaction,
-    SuccessTransaction
+    SuccessTransaction,
 } from './investor-charge-transaction.resolvers';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatDividerModule} from '@angular/material/divider';
@@ -16,8 +16,11 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {InvestorChargeTransactionComponent} from './investor-charge-transaction.component';
 import {AsyncPipe, CommonModule, NgIf, NgStyle} from '@angular/common';
 import {DetailChargeTransactionComponent} from "./detail-charge-transaction/detail-charge-transaction.component";
-import {SharedModule} from "../../../shared/shared.module";
 import {TranslocoModule} from "@ngneat/transloco";
+import { MatIconModule } from '@angular/material/icon';
+import { WaitChargeTransactionComponent } from './wait/wait-charge-transaction.component';
+import { WaitTransaction } from './investor-charge-tramsaction-topup.resolvers';
+import { DetailTopupTransactionComponent } from './detail-wait-topup-transaction/detail-wait-topup-transaction.component';
 
 const investedProfileRoutes: Route[] = [
     {
@@ -26,16 +29,26 @@ const investedProfileRoutes: Route[] = [
         children: [
             {
                 path: '',
+                data: { title: 'Giao dịch nạp tiền lỗi' },
                 component: ErrorChargeTransactionComponent,
                 resolve: {
                     error: ErrorTransaction,
                 },
             },
             {
+                data: { title: 'Giao dịch nạp tiền thành công' },
                 path: 'success',
                 component: SuccessChargeTransactionComponent,
                 resolve: {
                     success: SuccessTransaction,
+                },
+            },
+            {
+                data: { title: 'Giao dịch chờ nạp tiền' },
+                path: 'wait',
+                component: WaitChargeTransactionComponent,
+                resolve: {
+                    wait: WaitTransaction,
                 },
             },
         ],
@@ -47,12 +60,15 @@ const investedProfileRoutes: Route[] = [
         InvestorChargeTransactionComponent,
         ErrorChargeTransactionComponent,
         SuccessChargeTransactionComponent,
+        WaitChargeTransactionComponent,
         DetailChargeTransactionComponent,
+        DetailTopupTransactionComponent
     ],
     imports: [
         RouterModule.forChild(investedProfileRoutes),
         MatSidenavModule,
         SharedUIModule,
+        MatIconModule,
         FuseNavigationModule,
         MatTabsModule,
         MatDividerModule,

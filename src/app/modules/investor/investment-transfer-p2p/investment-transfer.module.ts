@@ -25,10 +25,12 @@ const investmentTransferRoutes: Route[] = [
         component: InvestmentTransferComponent,
         children: [
             {
+                data: { title: 'Đang chuyển nhượng' },
                 path: 'offer',
                 loadChildren: () => import('./create-p2p/offer.module').then(m => m.OfferModule),
             },
             {
+                data: { title: 'Hồ sơ đề nghị chuyển nhượng' },
                 path: 'sale',
                 loadChildren: () => import('./buy-p2p/investment-transfer-sale.module').then(m => m.InvestmentTransferSaleModule)
             }

@@ -1,59 +1,91 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {FuseAlertService} from "../../../@fuse/components/alert";
-import {Injectable} from '@angular/core';
-import {UserService} from 'app/core/user/user.service';
-import {HttpService} from 'app/shared/services/common/http.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpService } from 'app/shared/services/common/http.service';
 import aes from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
 import modeEcb from 'crypto-js/mode-ecb';
 import padPkcs7 from 'crypto-js/pad-pkcs7';
-import {environment} from 'environments/environment';
-import {BehaviorSubject, catchError, map, Observable, of, switchMap} from 'rxjs';
-import {AdmAccountType, User} from '../user/user.types';
-import {Router} from '@angular/router';
-import {AdmAccountDetailDTO, FsDocuments, UserAvatarMap} from "../../models/admin";
-import {FileService} from "../../service/common-service";
-import {BaseResponse} from "../../models/base";
+import { environment } from 'environments/environment';
+import { BehaviorSubject, catchError, Observable, of, switchMap, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { AdmAccountDetailDTO, FsDocuments } from "../../models/admin";
+import { FileService } from "../../service/common-service";
+import { FuseAlertService } from '@fuse/components/alert';
+import { AccountDetailStatus } from 'app/enum';
+import { CookieService } from './cookie.service';
+import { DialogService } from 'app/service/common-service/dialog.service';
 
 
 @Injectable()
-export class AuthService extends HttpService{
+export class AuthService extends HttpService {
     private _authenticated: boolean = false;
     public avatar: BehaviorSubject<string> = new BehaviorSubject(null);
-    private ADMIN_AVATAR: string = 'assets/images/images/canhanvayvon.svg'
-
     public authenticated: BehaviorSubject<Boolean> = new BehaviorSubject(false);
+    public userChanged$: BehaviorSubject<any> = new BehaviorSubject(null);
+    private refreshTimeout: any;
+
+    private _accessTokenKey = 'access_token';
+    private _refreshTokenKey = 'refresh_token';
+    private _userInfoKey = 'userInfo';
+    private _avatarKey = 'avatar';
+    private _usernameKey = 'username';
+    private _expireTimeKey = 'access_token_expire_time';
+    private _expireTime = 120; //thời gian trước khi gọi token
+
 
     /**
      * Constructor
      */
     constructor(
         private _httpClient: HttpClient,
-        private _userService: UserService,
         private _fileService: FileService,
         private _router: Router,
-        private _fuseAlertService: FuseAlertService,
+        private _alert: FuseAlertService,
+        private _cookieService: CookieService,
+        private _dialogService: DialogService
     ) {
         super(_httpClient);
     }
 
+
+    // Getter & Setter cho expireTime (thời điểm hết hạn tính bằng timestamp ms)
+    get expireTime(): number {
+        const stored = localStorage.getItem(this._expireTimeKey);
+        return stored ? Number(stored) : 0;
+    }
+
+    set expireTime(value: number) {
+        if (value) {
+            localStorage.setItem(this._expireTimeKey, value.toString());
+        } else {
+            localStorage.removeItem(this._expireTimeKey);
+        }
+    }
     get isAuthenticated(): Observable<Boolean> {
         return this.authenticated.asObservable();
     }
+
 
     setAuthenticated(v) {
         this.authenticated.next(v)
     }
 
-    get authenticatedUser(): User {
-        return JSON.parse(localStorage.getItem('userInfo')) ?? null;
-
+    // Setter & Getter cho userInfo
+    set authenticatedUser(userInfo: any) {
+        if (userInfo) {
+            localStorage.setItem(this._userInfoKey, JSON.stringify(userInfo));
+            this.userChanged$.next(userInfo);
+        } else {
+            localStorage.removeItem(this._userInfoKey);
+            this.userChanged$.next(null);
+        }
     }
 
-    get jwtToken(): string {
-        return localStorage.getItem('jwt') ?? '';
+    get authenticatedUser(): any {
+        const user = localStorage.getItem(this._userInfoKey);
+        // return user;
+        return user ? JSON.parse(user) : null;
     }
-
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
@@ -62,19 +94,86 @@ export class AuthService extends HttpService{
      * Setter & getter for access token
      */
     get accessToken(): string {
-        return localStorage.getItem('jwt') || '';
+        return this._cookieService.getCookie(this._accessTokenKey) || '';
     }
 
     set accessToken(token: string) {
-        localStorage.setItem('jwt', token);
+        if (token) {
+            // Lưu access token trong cookies với thời gian hết hạn 1 ngày
+            // Sử dụng secure=false cho localhost, production nên set true
+            const isProduction = window.location.protocol === 'https:';
+            this._cookieService.setCookie(
+                this._accessTokenKey,
+                token,
+                1, // 1 ngày
+                '/',
+                isProduction, // Chỉ bật Secure trong production (HTTPS)
+                'Strict'
+            );
+        } else {
+            this._cookieService.deleteCookie(this._accessTokenKey);
+        }
     }
 
+    get refreshToken(): string {
+        return this._cookieService.getCookie(this._refreshTokenKey) || '';
+    }
+
+    set refreshToken(token: string) {
+        if (token) {
+            // Lưu refresh token trong cookies với thời gian hết hạn 7 ngày
+            const isProduction = window.location.protocol === 'https:';
+            this._cookieService.setCookie(
+                this._refreshTokenKey,
+                token,
+                7, // 7 ngày
+                '/',
+                isProduction, // Chỉ bật Secure trong production (HTTPS)
+                'Strict'
+            );
+        } else {
+            this._cookieService.deleteCookie(this._refreshTokenKey);
+        }
+    }
+
+
+    // Setter & Getter cho username ghi nhớ
+    set rememberedUsername(username: string) {
+        if (username) {
+            localStorage.setItem(this._usernameKey, username);
+        } else {
+            localStorage.removeItem(this._usernameKey);
+        }
+    }
+
+    get rememberedUsername(): string {
+        return localStorage.getItem(this._usernameKey) || '';
+    }
+
+
+    // Xóa toàn bộ thông tin đăng nhập
+    clearAuthData(): void {
+        // Xóa tokens từ cookies
+        if (this.refreshTimeout) {
+            clearTimeout(this.refreshTimeout);
+        }
+        this._cookieService.deleteCookie(this._accessTokenKey);
+        this._cookieService.deleteCookie(this._refreshTokenKey);
+
+        // Xóa các thông tin khác từ localStorage
+        localStorage.removeItem(this._userInfoKey);
+        localStorage.removeItem(this._expireTimeKey);
+        localStorage.removeItem(this._avatarKey);
+        // localStorage.removeItem(this._usernameKey);
+        this._authenticated = false;
+        this.userChanged$.next(null);
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
     loadAvataLocal(): void {
-        let avatar = localStorage.getItem('avatar');
+        let avatar = localStorage.getItem(this._avatarKey);
         if (avatar) {
             this.avatar.next(avatar);
         }
@@ -102,103 +201,158 @@ export class AuthService extends HttpService{
         return this._httpClient.post(environment.forgotPasswordUrl, user);
     }
 
-    /**
-     * Reset password
-     *
-     * @param password
-     */
-    resetPassword(password: string): Observable<any> {
-        return this._httpClient.post('api/auth/reset-password', password);
-    }
+    scheduleTokenRefresh(expiresInSeconds: number): void {
+        if (!expiresInSeconds) return;
 
-    /**
-     * Sign in
-     *
-     * @param credentials
-     */
-    signIn(credentials: { email: string; password: string }): Observable<any> {
-        // Throw error, if the user is already logged in
-        if (this._authenticated) {
-            return of(new Error('User is already logged in.'));
+        // Xóa timer cũ nếu có
+        if (this.refreshTimeout) {
+            clearTimeout(this.refreshTimeout);
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
-            switchMap((response: any) => {
-
-                // Store the access token in the local storage
-                this.accessToken = response.accessToken;
-
-                // Set the authenticated flag to true
-                this._authenticated = true;
-
-                // Store the user on the user service
-                this._userService.user = response.user;
-
-                // Return a new observable with the response
-                return of(response);
-            })
-        );
+        // Giảm 1–2 phút để refresh sớm hơn
+        const refreshBefore = Math.max((expiresInSeconds - this._expireTime), 0) * 1000;
+        this.refreshTimeout = setTimeout(() => {
+            const currentRefreshToken = this.refreshToken;
+            if (currentRefreshToken) {
+                this.refreshAccessToken(currentRefreshToken).subscribe({
+                    next: (res) => {
+                        // if (res?.access_token && res?.expires_in) {
+                        //     this.scheduleTokenRefresh(res.expires_in); // Lên lịch lại
+                        // }
+                    },
+                    error: (err) => {
+                        console.error('⚠️ Refresh token failed:', err);
+                        this.signOut(false).subscribe();
+                    }
+                });
+            }
+        }, refreshBefore);
     }
 
-    /**
-     * Sign in using the access token
-     */
-    signInUsingToken(): Observable<any> {
-        // Sign in using the token
-        return this._httpClient.post('api/auth/sign-in-with-token', {
-            accessToken: this.accessToken
-        }).pipe(
-            catchError(() =>
+    refreshAccessToken(refreshToken: string): Observable<any> {
+        // Sử dụng URLSearchParams thay vì FormData để tránh multipart/form-data
+        const body = new URLSearchParams();
+        body.set('grant_type', 'refresh_token');
+        body.set('refresh_token', refreshToken);
 
-                // Return false
-                of(false)
-            ),
-            switchMap((response: any) => {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + btoa(environment.clientId + ':' + environment.clientSecret)
+        });
 
-                // Replace the access token with the new one if it's available on
-                // the response object.
-                //
-                // This is an added optional step for better security. Once you sign
-                // in using the token, you should generate a new one on the server
-                // side and attach it to the response object. Then the following
-                // piece of code can replace the token with the refreshed one.
-                if (response.accessToken) {
-                    this.accessToken = response.accessToken;
-                }
+        return this._httpClient.post(`${environment.refreshTokenUrl}`, body.toString(), { headers })
+            .pipe(
+                tap((response: any) => {
+                    if (response.access_token) {
+                        // ✅ Lưu lại token mới
+                        this.accessToken = response.access_token;
+                        this.refreshToken = response.refresh_token || this.refreshToken;
+                        // this.authenticatedUser = response.userInfo || this.authenticatedUser;
 
-                // Set the authenticated flag to true
-                this._authenticated = true;
-
-                // Store the user on the user service
-                this._userService.user = response.user;
-
-                // Return true
-                return of(true);
-            })
-        );
+                        // ✅ Cập nhật expireTime & lên lịch mới
+                        if (response.expires_in) {
+                            this.expireTime = Date.now() + response.expires_in * 1000;
+                            this.scheduleTokenRefresh(response.expires_in);
+                        }
+                    }
+                })
+            );
     }
 
     /**
      * Sign out
      */
-    signOut(force: boolean = false): Observable<any> {
-        // Remove the access token from the local storage
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('avatar');
+    signOut(confirm: boolean = true): Observable<any> {
+        if (confirm) {
+            // ✅ Trường hợp cần xác nhận
+            const dialogRef = this._dialogService.openConfirmDialog('Xác nhận đăng xuất tài khoản ra khỏi thiết bị');
 
-        // Set the authenticated flag to false
-        this._authenticated = false;
-        this._router.navigate(['sign-in']);
-        /*if (force) {
-            this._fuseAlertService.showMessageError('Hết hạn đăng nhập');
-        }*/
+            return dialogRef.afterClosed().pipe(
+                switchMap((result) => {
+                    if (result !== 'confirmed') {
+                        // Người dùng hủy
+                        return of(false);
+                    }
+                    // Gọi lại chính hàm signOut nhưng không cần confirm nữa
+                    return this.signOut(false);
+                })
+            );
+        }
 
-        // Return the observable
-        return of(true);
-        this.authenticated.next(false)
+        // ✅ Trường hợp KHÔNG cần xác nhận (chạy trực tiếp logout)
+        if (!this.accessToken) {
+            this.clearAuthData();
+            this._authenticated = false;
+            this.setAvata(null);
+            this._router.navigate(['sign-in']);
+            return of(true);
+        }
+
+        // Gọi API revoke token
+        return this._httpClient.post(environment.logoutUrl, {}).pipe(
+            tap(() => {
+                this.clearAuthData();
+                this._authenticated = false;
+                this.setAvata(null);
+                this._router.navigate(['sign-in']);
+            }),
+            catchError((error) => {
+                console.error('Revoke token error:', error);
+                this.clearAuthData();
+                this._authenticated = false;
+                this.setAvata(null);
+                this._router.navigate(['sign-in']);
+                return of(false);
+            })
+        );
     }
+
+    signOutMaintenance(): Observable<any> {
+        if (!this.accessToken) {
+            this.clearAuthData();
+            this._authenticated = false;
+            this.setAvata(null);
+            this._router.navigate(['maintenance']);
+            return of(true);
+        }
+
+        // Gọi API revoke token
+        return this._httpClient.post(environment.logoutUrl, {}).pipe(
+            tap(() => {
+                this.clearAuthData();
+                this._authenticated = false;
+                this.setAvata(null);
+                this._router.navigate(['maintenance']);
+            }),
+            catchError((error) => {
+                console.error('Revoke token error:', error);
+                this.clearAuthData();
+                this._authenticated = false;
+                this.setAvata(null);
+                this._router.navigate(['maintenance']);
+                return of(false);
+            })
+        );
+    }
+    signOutError(): Observable<any> {
+        if (!this.authenticatedUser) {
+            // Nếu chưa có userInfo thì chỉ chuyển trang
+            this._router.navigate(['error']);
+            return of(true);
+        }
+
+        // Nếu có thì clear localStorage
+        this.clearAuthData();
+
+        // Set lại authenticated
+        this._authenticated = false;
+
+        // Chuyển trang
+        this._router.navigate(['error']);
+
+        return of(true);
+    }
+
 
     /**
      * Sign up
@@ -207,7 +361,7 @@ export class AuthService extends HttpService{
      */
     signUp(user: {
         payload: {
-            actionKey : string,
+            actionKey: string,
             accountName: string;
             passwd: string;
             type: string;
@@ -223,32 +377,37 @@ export class AuthService extends HttpService{
         return this._httpClient.post(environment.registerUrl, user);
     }
 
-    /**
-     * Unlock session
-     *
-     * @param credentials
-     */
-    unlockSession(credentials: { email: string; password: string }): Observable<any> {
-        return this._httpClient.post('api/auth/unlock-session', credentials);
-    }
 
     /**
      * Check the authentication status
      */
     check(): Observable<boolean> {
-        // Check if the user is logged in
         if (this._authenticated) {
             return of(true);
         }
 
-        // Check the access token availability
-        if (!this.accessToken) {
+        // Không có token
+        if (!this.accessToken || !this.refreshToken) {
             return of(false);
         }
 
-        // If the access token exists and it didn't expire, sign in using it
-        return this.signInUsingToken();
+        // Có token -> xác nhận đăng nhập
+        this._authenticated = true;
+
+        // 🔹 Nếu còn hạn thì tính thời gian còn lại để đặt lại timer
+        const now = Date.now();
+        const remainSeconds = Math.max((this.expireTime - now) / 1000, 0);
+
+        if (remainSeconds > this._expireTime) {
+            this.scheduleTokenRefresh(remainSeconds);
+        } else if (remainSeconds > 0) {
+            // Nếu sắp hết hạn thì refresh ngay
+            this.refreshAccessToken(this.refreshToken).subscribe();
+        }
+
+        return of(true);
     }
+
 
     verifyOtp(user: { payload: { userName: string; smsOtp?: string; mailOtp?: string } }): Observable<any> {
         return this._httpClient.post(environment.baseUrl + 'register/verify', user);
@@ -259,19 +418,11 @@ export class AuthService extends HttpService{
         return this._httpClient.post(environment.baseUrl + 'register/verify/resend', user);
     }
 
-    // verifySmsOtp(user: { payload: { userName: string; smsOtp: string } }): Observable<any> {
-    //     return this._httpClient.post(environment.forgotPasswordVerifyOtpUrl, user);
-    // }
-
-    // resendSmsOtp(user: { payload: { userName: string } }): Observable<any> {
-    //     return this._httpClient.post(environment.forgotPasswordResendOtpUrl, user);
-    // }
-
     forgotPasswordVerifyToken(token): Observable<any> {
         return this._httpClient.post(environment.forgotPasswordVerifyTokenUrl, { payload: { token: token } });
     }
 
-    updateNewPassword(token, password, confirmPassword): Observable<any> {
+    updateNewPassword(token: string, password: string, confirmPassword: string): Observable<any> {
         password = this.encrypt(password);
         confirmPassword = this.encrypt(confirmPassword);
         return this._httpClient.post(environment.updateNewPassword, { payload: { token: token, password: password, confirmPassword: confirmPassword } });
@@ -286,23 +437,109 @@ export class AuthService extends HttpService{
     }
 
 
+    // ==================================================
+    // 🔹 Login
+    // ==================================================
     login(username: string, password: string): Observable<any> {
-        const formData: any = new FormData();
+        const formData = new FormData();
         formData.set('username', username);
         formData.set('password', password);
 
         const options = {
             headers: new HttpHeaders({
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                'Authorization': 'Basic ' + btoa(environment.clientId + ":" + environment.clientSecret),
+                Authorization: 'Basic ' + btoa(environment.clientId + ':' + environment.clientSecret),
             }),
         };
 
-
         return this._httpClient.post(environment.loginUrl, formData, options).pipe(
-            map(res => res),
+            switchMap((response: any) => {
+                if (!response.userInfo) {
+                    this._alert.showMessageError('DNTK009'); // đăng nhập thất bại
+                    return of(null);
+                }
+
+                // ✅ Lưu thông tin đăng nhập
+                this._authenticated = true;
+                this.accessToken = response.access_token;
+                this.refreshToken = response.refresh_token;
+                this.authenticatedUser = response.userInfo;
+                if (response.expires_in) {
+                    this.expireTime = Date.now() + response.expires_in * 1000;
+                    this.scheduleTokenRefresh(response.expires_in);
+                }
+
+                return of(response);
+            }),
+            tap((response: any) => {
+                if (response?.userInfo) {
+                    this.userChanged$.next(response.userInfo);
+                    this._alert.showMessageSuccess('DNTK008');
+                    this.handleRedirect(response.userInfo);
+                }
+            }),
             catchError(err => of(err))
         );
+    }
+
+    loadAvatar(avatar: string): void {
+        if (avatar) {
+            this._fileService.getFileFromServer(avatar).pipe(
+                tap((res: any) => {
+                    if (res?.payload?.contentBase64) {
+                        try {
+                            // Thử lưu vào localStorage
+                            localStorage.setItem(this._avatarKey, res.payload.contentBase64);
+                            this.setAvata(res.payload.contentBase64);
+                        } catch (err) {
+                            // ❌ Nếu vượt dung lượng -> fallback qua BehaviorSubject
+                            console.warn('⚠️ Không thể lưu avatar vào localStorage (quota exceeded). Dùng tạm trong bộ nhớ.');
+                            this.setAvata(res.payload.contentBase64);
+                        }
+                    }
+                })
+            ).subscribe();
+        }
+    }
+
+    // Lấy avatar từ localStorage khi khởi tạo
+    loadAvatarFromLocalStorage(): void {
+        const avatarBase64 = localStorage.getItem(this._avatarKey);
+        if (avatarBase64) {
+            this.setAvata(avatarBase64);
+        }
+    }
+
+    // ==================================================
+    // 🔹 Điều hướng sau đăng nhập
+    // ==================================================
+    private handleRedirect(userInfo: any): void {
+        const { accountType, status } = userInfo;
+
+        if (accountType === 3) {
+            this._router.navigateByUrl('page/home');
+            return;
+        }
+
+        if (accountType === 1) {
+            if (status === AccountDetailStatus.WAIT_CONFIRM) {
+                this._router.navigateByUrl('investor/kyc');
+            } else if (status === AccountDetailStatus.WAIT_APPROVE) {
+                this._router.navigateByUrl('investor/kyc-success');
+            } else if (status === AccountDetailStatus.ACTIVE) {
+                this._router.navigateByUrl('page/home');
+            }
+            return;
+        }
+
+        if (accountType === 2) {
+            if (status === 0) {
+                this._router.navigateByUrl('borrower/kyc');
+            } else if (status === AccountDetailStatus.WAIT_APPROVE) {
+                this._router.navigateByUrl('borrower/kyc-success');
+            } else if (status === AccountDetailStatus.ACTIVE) {
+                this._router.navigateByUrl('page/home');
+            }
+        }
     }
 
     /**
@@ -311,7 +548,7 @@ export class AuthService extends HttpService{
      */
     downloadRulesDoc():
         Observable<{ payload: any }> {
-        return this._httpClient.post(environment.registerUrl +'/downloadServiceProviderDoc', {payload: ''}) as Observable<{ payload: FsDocuments }>;
+        return this._httpClient.post(environment.registerUrl + '/downloadServiceProviderDoc', { payload: '' }) as Observable<{ payload: FsDocuments }>;
     }
     /**
      * downloadSecurityDoc
@@ -319,28 +556,22 @@ export class AuthService extends HttpService{
      */
     downloadSecurityDoc():
         Observable<{ payload: any }> {
-        return this._httpClient.post(environment.registerUrl +'/downloadInformationSecurityDoc', {payload: ''}) as Observable<{ payload: FsDocuments }>;
-    }
-
-    loadDefaultAvatar(): string {
-        if(this.authenticatedUser) {
-            if(this.authenticatedUser.accountType === AdmAccountType.ADMIN) {
-                return this.ADMIN_AVATAR;
-            }
-            return UserAvatarMap[this.authenticatedUser.type]
-        }
-        return this.ADMIN_AVATAR;
+        return this._httpClient.post(environment.registerUrl + '/downloadInformationSecurityDoc', { payload: '' }) as Observable<{ payload: FsDocuments }>;
     }
 
     afterUpdateAccountDetail(payload: AdmAccountDetailDTO): void {
-        localStorage.setItem('userInfo', JSON.stringify(Object.assign(this.authenticatedUser, payload)))
-        if (this.authenticatedUser?.avatar) {
-            this._fileService.getFileFromServer(this.authenticatedUser?.avatar).subscribe(res => {
-                if (res && res.payload && res.payload.contentBase64) {
-                    localStorage.setItem('avatar', res.payload.contentBase64);
-                    this.setAvata(res.payload.contentBase64);
-                }
-            })
+        localStorage.setItem(this._userInfoKey, JSON.stringify(Object.assign(this.authenticatedUser, payload)))
+        if (payload?.avatar) {
+            // this._fileService.getFileFromServer(this.authenticatedUser?.avatar).subscribe(res => {
+            //     if (res && res.payload && res.payload.contentBase64) {
+            //         localStorage.setItem(this._avatarKey, res.payload.contentBase64);
+            //         this.setAvata(res.payload.contentBase64);
+            //     }
+            // })
+            this.loadAvatar(payload?.avatar)
+        } else {
+            localStorage.removeItem(this._avatarKey)
+            this.setAvata(null);
         }
     }
 }

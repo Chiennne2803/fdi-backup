@@ -91,36 +91,6 @@ export class NotificationsService extends BaseService {
     }
 
     /**
-     * Delete the notification
-     *
-     * @param id
-     */
-
-    /*delete(id: number): Observable<boolean>
-    {
-        return null;
-        return this.notifications$.pipe(
-            take(1),
-            switchMap(notifications => this._httpClient.delete<boolean>('api/common/notifications', {params: {id}}).pipe(
-                map((isDeleted: boolean) => {
-
-                    // Find the index of the deleted notification
-                    const index = notifications.findIndex(item => item.id === id);
-
-                    // Delete the notification
-                    notifications.splice(index, 1);
-
-                    // Update the notifications
-                    this._notifications.next(notifications);
-
-                    // Return the deleted status
-                    return isDeleted;
-                })
-            ))
-        );
-    }*/
-
-    /**
      * Mark all notifications as read
      */
     markAllAsRead(payload?) {

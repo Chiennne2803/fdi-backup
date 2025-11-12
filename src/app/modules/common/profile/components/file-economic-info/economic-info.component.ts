@@ -61,7 +61,7 @@ export class EconomicInfoComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit(): void {
         Promise.resolve().then(
-            () => this._profileService.changeTitlePage('Thông tin tài chính chi tiết')
+            () => this._profileService.changeTitlePage('Báo cáo tài chính chi tiết')
         );
     }
 
@@ -173,7 +173,7 @@ export class EconomicInfoComponent implements OnInit, OnDestroy, AfterViewInit {
                             styleInput: 'h-24 mt-[3px]',
                             type: 'file',
                             maxFile: 1,
-                            accept: 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            accept: 'application/VND.ms-excel,application/VND.openxmlformats-officedocument.spreadsheetml.sheet'
                         },
                     ],
                     formGroup: this.fileForm,

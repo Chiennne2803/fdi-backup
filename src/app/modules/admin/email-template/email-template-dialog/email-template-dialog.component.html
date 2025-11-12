@@ -1,0 +1,123 @@
+<div class="flex flex-col max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Sửa template</div>
+
+        <button (click)="discard()" mat-icon-button tabindex="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto">
+        <form *ngIf="emailTemplateForm" [formGroup]="emailTemplateForm" class="grid grid-cols-2">
+            <!-- SUBJECT -->
+            <div class="col-span-2 w-full" *ngIf="emailTemplateForm.get('subject')">
+                <mat-label class="text-sm font-medium text-gray-700 mb-2 block">Tiêu đề (Subject)</mat-label>
+                
+                <!-- Hiển thị nội dung được bảo vệ -->
+                <div *ngIf="isSubjectProtected" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <div class="flex items-center mb-2">
+                        <mat-icon class="text-yellow-600 mr-2" [svgIcon]="'heroicons_outline:exclamation'"></mat-icon>
+                        <span class="text-sm font-medium text-yellow-800">Nội dung này chứa code được bảo vệ - bạn có thể chỉnh sửa text bình thường</span>
+                    </div>
+                    <div class="text-sm text-gray-700" [innerHTML]="subjectDisplayText"></div>
+                    <!-- <div class="text-xs text-gray-500 mt-2">
+                        <strong>Lưu ý:</strong> Các đoạn code có format {{ '{' }}ClassName.property{{ '}' }} và thẻ HTML được bảo vệ, không nên thay đổi
+                    </div> -->
+                </div>
+                
+                <!-- Input field cho subject -->
+                <mat-form-field floatLabel="always" class="w-full">
+                    <input matInput formControlName="subject" placeholder="Nhập tiêu đề...">
+                    <mat-error *ngIf="emailTemplateForm.get('subject')?.hasError('required')">
+                        Vui lòng nhập tiêu đề
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- HEADER -->
+            <div class="col-span-2 w-full" *ngIf="emailTemplateForm.get('header')">
+                <mat-label class="text-sm font-medium text-gray-700 mb-2 block">Phần mở đầu (Header)</mat-label>
+                
+                <!-- Hiển thị nội dung được bảo vệ -->
+                <div *ngIf="isHeaderProtected" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <div class="flex items-center mb-2">
+                        <mat-icon class="text-yellow-600 mr-2" [svgIcon]="'heroicons_outline:exclamation'"></mat-icon>
+                        <span class="text-sm font-medium text-yellow-800">Nội dung này chứa code được bảo vệ - bạn có thể chỉnh sửa text bình thường</span>
+                    </div>
+                    <div class="text-sm text-gray-700" [innerHTML]="headerDisplayText"></div>
+                    <!-- <div class="text-xs text-gray-500 mt-2">
+                        <strong>Lưu ý:</strong> Các đoạn code có format {{ '{' }}ClassName.property{{ '}' }} và thẻ HTML được bảo vệ, không nên thay đổi
+                    </div> -->
+                </div>
+                
+                <!-- Textarea field cho header -->
+                <mat-form-field floatLabel="always" class="w-full">
+                    <textarea matInput rows="3" formControlName="header" placeholder="Nhập phần mở đầu..."></textarea>
+                </mat-form-field>
+            </div>
+
+            <!-- BODY -->
+            <div class="col-span-2 w-full" *ngIf="emailTemplateForm.get('body')">
+                <mat-label class="text-sm font-medium text-gray-700 mb-2 block">Nội dung chính (Body)</mat-label>
+                
+                <!-- Hiển thị nội dung được bảo vệ -->
+                <div *ngIf="isBodyProtected" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <div class="flex items-center mb-2">
+                        <mat-icon class="text-yellow-600 mr-2" [svgIcon]="'heroicons_outline:exclamation'"></mat-icon>
+                        <span class="text-sm font-medium text-yellow-800">Nội dung này chứa code được bảo vệ - bạn có thể chỉnh sửa text bình thường</span>
+                    </div>
+                    <div class="text-sm text-gray-700" [innerHTML]="bodyDisplayText"></div>
+                    <!-- <div class="text-xs text-gray-500 mt-2">
+                        <strong>Lưu ý:</strong> Các đoạn code có format {{ '{' }}ClassName.property{{ '}' }} và thẻ HTML được bảo vệ, không nên thay đổi
+                    </div> -->
+                </div>
+                
+                <!-- Textarea field cho body -->
+                <mat-form-field floatLabel="always" class="w-full">
+                    <textarea matInput rows="6" formControlName="body" placeholder="Nhập nội dung..."></textarea>
+                    <mat-error *ngIf="emailTemplateForm.get('body')?.hasError('required')">
+                        Vui lòng nhập nội dung
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="col-span-2 w-full" *ngIf="emailTemplateForm.get('footer')">
+                <mat-label class="text-sm font-medium text-gray-700 mb-2 block">Phần chân (Footer)</mat-label>
+                
+                <!-- Hiển thị nội dung được bảo vệ -->
+                <div *ngIf="isFooterProtected" class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <div class="flex items-center mb-2">
+                        <mat-icon class="text-yellow-600 mr-2" [svgIcon]="'heroicons_outline:exclamation'"></mat-icon>
+                        <span class="text-sm font-medium text-yellow-800">Nội dung này chứa code được bảo vệ - bạn có thể chỉnh sửa text bình thường</span>
+                    </div>
+                    <div class="text-sm text-gray-700" [innerHTML]="footerDisplayText"></div>
+                    <!-- <div class="text-xs text-gray-500 mt-2">
+                        <strong>Lưu ý:</strong> Các đoạn code có format {{ '{' }}ClassName.property{{ '}' }} và thẻ HTML được bảo vệ, không nên thay đổi
+                    </div> -->
+                </div>
+                
+                <!-- Textarea field cho footer -->
+                <mat-form-field floatLabel="always" class="w-full">
+                    <textarea matInput rows="3" formControlName="footer" placeholder="Nhập phần chân..."></textarea>
+                </mat-form-field>
+            </div>
+
+        </form>
+    </div>
+    <!-- Actions -->
+    <div class="flex flex-row items-center justify-center mb-4 sm:mb-6 gap-2">
+            <!-- Discard -->
+            <button mat-stroked-button (click)="discard()">
+                Huỷ
+            </button>
+            <!-- Submit -->
+            <button (click)="submitUpdate()" mat-flat-button [color]="'primary'">
+                Lưu
+            </button>
+
+    </div>
+</div>

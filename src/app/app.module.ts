@@ -16,11 +16,10 @@ import { mockApiServices } from 'app/mock-api';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { environment } from 'environments/environment';
-import {AngularFireModule} from "@angular/fire/compat";
-import {AngularFireMessagingModule} from "@angular/fire/compat/messaging";
-import { IconsModule } from './core/icons/icons.module';
-// import { initializeApp } from 'firebase/app';
-// initializeApp(environment.firebaseConfig);
+import { AngularFireModule } from "@angular/fire/compat";
+import { AngularFireMessagingModule } from "@angular/fire/compat/messaging";
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { DeviceInterceptor } from './core/auth/device.interceptor';
 
 
 const routerConfig: ExtraOptions = {
@@ -58,7 +57,12 @@ const routerConfig: ExtraOptions = {
         AngularFireMessagingModule,
     ],
     providers: [
-        { provide: MAT_DATE_LOCALE, useValue: 'vi-VN' }
+        { provide: MAT_DATE_LOCALE, useValue: 'vi-VN' },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: DeviceInterceptor,
+            multi: true
+        }
     ],
     bootstrap: [
         AppComponent

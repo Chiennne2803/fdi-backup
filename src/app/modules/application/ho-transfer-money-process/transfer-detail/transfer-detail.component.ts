@@ -51,7 +51,7 @@ export class TransferDetailComponent implements OnInit, OnChanges {
     onClickApprove(): void {
         const dialogRef = this._matDialog.open(ConfirmProcessingComponent, {
             disableClose: true,
-            width: '450px',
+            // width: '450px',
             data: {
                 title: 'Xác nhận nội dung xử lý',
                 valueDefault: 3,

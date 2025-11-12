@@ -44,6 +44,7 @@ import {ChangeEmailDialogComponent} from "./components/change-email-dialog/chang
 import {MainScreenComponent} from "./components/main-screen/main-screen.component";
 import {ChangeIdGpkdComponent} from "./components/main-screen/change-id-gpkd.component";
 import {MatTabsModule} from "@angular/material/tabs";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     declarations: [
@@ -91,6 +92,7 @@ import {MatTabsModule} from "@angular/material/tabs";
         MatChipsModule,
         TranslocoModule,
         MatTabsModule,
+        MatTooltipModule
     ]
 })
 export class ProfileModule { }

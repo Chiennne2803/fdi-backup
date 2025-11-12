@@ -76,7 +76,7 @@ export class DetailComponent implements OnInit, OnChanges {
     private resolveRequestDialog(): void {
         const dialogRef = this._matDialog.open(ConfirmProcessingComponent, {
             disableClose: true,
-            width: '450px',
+            // width: '450px',
             data: {
                 title: 'Xác nhận nội dung xử lý',
                 valueDefault: 3,

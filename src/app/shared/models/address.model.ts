@@ -3,7 +3,7 @@ import {IBaseDataSourceObj} from './base.model';
 export interface IAddressForm {
     province: IBaseDataSourceObj;
     district: IBaseDataSourceObj;
-    commune: string;
+    commune: IBaseDataSourceObj;
     street: string;
 }
 
@@ -13,4 +13,5 @@ export interface IAddressData {
     commune: string;
     street: string;
     payload: string;
+    type?: 'new' | 'old';
 }

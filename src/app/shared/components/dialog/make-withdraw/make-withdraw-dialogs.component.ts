@@ -93,7 +93,7 @@ export class MakeWithdrawDialogsComponent implements OnInit {
                     } else {
                         // Show the alert
                         this.showAlert = true;
-
+                          this._fuseAlertService.showMessageError(response.message.toString());
                         // Set the alert
                         this.alert = {
                             type: 'error',
@@ -122,7 +122,7 @@ export class MakeWithdrawDialogsComponent implements OnInit {
                     smsOtp: 'resend'
                 },
                 title: 'Điền mã xác nhận OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                     'Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất rút tiền đầu tư',
                 complete: () => {
                     this._fuseAlertService.showMessageSuccess('Tạo giao dịch rút tiền đầu tư thành công');

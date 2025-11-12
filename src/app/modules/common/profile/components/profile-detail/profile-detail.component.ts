@@ -1,37 +1,37 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSelectChange} from '@angular/material/select';
-import * as moment from 'moment';
-import {fuseAnimations} from '../../../../../../@fuse/animations';
-import {AdmAccountDetailDTO} from 'app/models/admin/AdmAccountDetailDTO.model';
-import {ProfileService} from 'app/service/common-service/profile.service';
-import {ISelectModel} from 'app/shared/models/select.model';
-import {FuseAlertService} from '../../../../../../@fuse/components/alert';
-import {DialogService} from 'app/service/common-service/dialog.service';
-import {AdmCategoriesDTO, FsDocuments} from 'app/models/admin';
-import {AddressKycDialogComponent} from 'app/shared/components/dialog/address-dialog/address-dialog.component';
-import {IAddressData} from 'app/shared/models/address.model';
-import {AuthService} from '../../../../../core/auth/auth.service';
-import {AdmAccountType} from '../../../../../core/user/user.types';
-import {MatDrawer} from "@angular/material/sidenav";
-import {FileService} from "../../../../../service/common-service";
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
+import { fuseAnimations } from '../../../../../../@fuse/animations';
+import { AdmAccountDetailDTO } from 'app/models/admin/AdmAccountDetailDTO.model';
+import { ProfileService } from 'app/service/common-service/profile.service';
+import { ISelectModel } from 'app/shared/models/select.model';
+import { FuseAlertService } from '../../../../../../@fuse/components/alert';
+import { DialogService } from 'app/service/common-service/dialog.service';
+import { AdmCategoriesDTO, FsDocuments } from 'app/models/admin';
+import { AddressKycDialogComponent } from 'app/shared/components/dialog/address-dialog/address-dialog.component';
+import { IAddressData } from 'app/shared/models/address.model';
+import { AuthService } from '../../../../../core/auth/auth.service';
+import { AdmAccountType } from '../../../../../core/user/user.types';
+import { MatDrawer } from "@angular/material/sidenav";
+import { FileService } from "../../../../../service/common-service";
 @Component({
     selector: 'profile-detail',
     templateUrl: './profile-detail.component.html',
     animations: fuseAnimations
 })
 export class ProfileDetailComponent implements OnInit, AfterViewInit {
-    @ViewChild('fileDrawer', {static: true}) fileDrawer: MatDrawer;
+    @ViewChild('fileDrawer', { static: true }) fileDrawer: MatDrawer;
     accountDetail: AdmAccountDetailDTO;
     isEditable: boolean = false;
     accountDetailForm: FormGroup = new FormGroup({});
     genders: Array<ISelectModel> = [];
-    yesterday = moment().subtract(216, 'months');
     listJob: AdmCategoriesDTO[] = [];
     marriageList: AdmCategoriesDTO[] = [];
-    oldAvata  = '';
+    oldAvata = '';
     selectedFile: FsDocuments;
+    addressModes: 'new' | 'old';
+
     constructor(
         private _profileService: ProfileService,
         private _formBuilder: FormBuilder,
@@ -88,9 +88,10 @@ export class ProfileDetailComponent implements OnInit, AfterViewInit {
             const cfDialog = this._dialogService.openConfirmDialog('Xác nhận lưu dữ liệu');
             cfDialog.afterClosed().subscribe(
                 (res) => {
-                    if ( res === 'confirmed' ) {
+                    if (res === 'confirmed') {
                         this._profileService.updateAccountDetail(payload).subscribe((response) => {
                             if (response.errorCode === '0') {
+                                console.log(response.payload.avatar, !response.payload.avatar)
                                 this._fuseAlertService.showMessageSuccess('Cập nhật thành công');
                                 this._profileService.getPrepareLoadingPage().subscribe(() => {
                                     this.isEditable = false;
@@ -158,7 +159,7 @@ export class ProfileDetailComponent implements OnInit, AfterViewInit {
             address2: this._formBuilder.control(data ? data.address2 : null, [Validators.required])
         });
 
-        if ( this.authService.authenticatedUser.accountType === AdmAccountType.BORROWER ) {
+        if (this.authService.authenticatedUser.accountType === AdmAccountType.BORROWER) {
             this.accountDetailForm.addControl(
                 'marital',
                 this._formBuilder.control(
@@ -185,13 +186,19 @@ export class ProfileDetailComponent implements OnInit, AfterViewInit {
     }
 
     openAddressDialog(): void {
+        const type = this.addressModes || 'old';
+
         const dialogRef = this._matDialog.open(AddressKycDialogComponent, {
             disableClose: true,
             width: '450px',
-            data: this.accountDetailForm.get('address2').value,
+            data: {
+                type,
+                value: this.accountDetailForm.get('address2').value
+            },
         });
         dialogRef.afterClosed().subscribe((res: IAddressData) => {
-            if (res && res.payload) {
+            if (res && res.payload && res.type) {
+                this.addressModes = res.type
                 this.accountDetailForm.get('address2').patchValue(res.payload);
                 this.accountDetailForm.markAsDirty();
             }
@@ -213,4 +220,31 @@ export class ProfileDetailComponent implements OnInit, AfterViewInit {
                 }
             });
     }
+    isValidFacebookLink(link: string): boolean {
+        if (!link) return false;
+
+        // Chuẩn hoá thêm https nếu thiếu
+        if (!/^https?:\/\//i.test(link)) {
+            link = 'https://' + link;
+        }
+
+        // Regex kiểm tra link facebook
+        const regex = /^(https?:\/\/)?(www\.)?facebook\.com\/[A-Za-z0-9\.]+/i;
+        return regex.test(link);
+    }
+
+    sanitizeFacebookLink(link: string): string {
+        if (!link) return '';
+        if (!/^https?:\/\//i.test(link)) {
+            return 'https://' + link;
+        }
+        return link;
+    }
+
+    shortenLink(link: string, maxLength: number = 30): string {
+        if (!link) return '';
+        return link.length > maxLength ? link.substring(0, maxLength) + '...' : link;
+    }
+
+
 }

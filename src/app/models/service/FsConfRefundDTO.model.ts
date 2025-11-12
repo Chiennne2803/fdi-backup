@@ -13,13 +13,13 @@ export class FsConfRefundDTO extends AuditModel {
     minBlance?: number;
     percentTax?: number;
     investFee?: number;
-
     autoInvestExpiration?: number;
     refundExpiration?: number;
     p2PExpiration?: number;
     stopCapital?: number;
     overdueDeb?: number;
     accByPassMinInvest?: number;
+    accNameByPassMinInvest?: String;
     p2PRemainingDays?: number;
     amountBypassDebt?: number;
     percentTaxCompany?: number;

@@ -1,12 +1,12 @@
 <div class="-m-6 flex max-h-screen max-w-240 flex-col md:min-w-160">
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="flex items-center justify-center gap-2 text-lg font-medium">
-            <mat-icon class="icon-size-5 text-white" matPrefix [svgIcon]="'feather:search'"></mat-icon>
+            <mat-icon class="icon-size-5 text-white"  matPrefix [svgIcon]="'feather:search'"></mat-icon>
             Tìm kiếm nâng cao
         </div>
-        <button mat-icon-button>
-            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'" (click)="close()"></mat-icon>
+        <button mat-icon-button [tabIndex]="-1">
+            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'" (click)="close()" ></mat-icon>
         </button>
     </div>
     <div [formGroup]="searchGroup" class="flex flex-auto flex-col overflow-y-auto p-6 sm:p-8"
@@ -32,7 +32,7 @@
                 <!-- ::::::::::::::::::::::::::::::::::DATETIME:::::::::::::::::::::::::::::::::::::::: -->
                 <mat-form-field *ngIf="item.type === 'date'" floatLabel="always" class="w-full">
                     <mat-label class="lbl-input-search">{{item.name}}</mat-label>
-                    <input matInput [placeholder]="item.name + '...'" autocomplete="off" [formControlName]="item.id"
+                    <input [max]="today" matInput [placeholder]="item.name + '...'" autocomplete="off" [formControlName]="item.id"
                         [matDatepicker]="dp">
                     <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
                     <mat-datepicker #dp></mat-datepicker>
@@ -58,9 +58,9 @@
                     [value]="item.value">{{ item.name }}</mat-checkbox>
 
                 <!-- ::::::::::::::::::::::::::::::::::FROM_TO_INPUT:::::::::::::::::::::::::::::::::::::::: -->
-                <div class="w-full grid grid-cols-2 grid-rows-2 gap-5 mb-12 " style="max-height: 30px !important;"
+                <div class="w-full grid grid-cols-2 grid-rows-2 gap-3 mb-12 " style="max-height: 30px !important;"
                     *ngIf="item.type === 'input-from-to'">
-                    <mat-label class="col-span-2 ">{{item.name}} <font *ngIf="item.required" style="color: red">*</font>
+                    <mat-label class="col-span-2 ">{{item.name}} <span *ngIf="item.required" style="color: red">*</span>
                     </mat-label>
                     <mat-form-field floatLabel="always">
                         <input *ngIf="item.format === 'number';else elseInputFrom" matInput currencyMask
@@ -91,7 +91,7 @@
                 </div>
 
                 <!-- ::::::::::::::::::::::::::::::::::FROM_TO_SELECT:::::::::::::::::::::::::::::::::::::::: -->
-                <div class="w-full grid grid-cols-2 gap-5" *ngIf="item.type === 'select-from-to'">
+                <div class="w-full grid grid-cols-2 gap-3" *ngIf="item.type === 'select-from-to'">
                     <mat-form-field floatLabel="always">
                         <mat-label class="lbl-input-search">{{item.name}}</mat-label>
                         <mat-select [placeholder]="'Chọn ' + item.name" [formControlName]="item.id.concat('From')">
@@ -113,7 +113,7 @@
                 </div>
 
                 <!-- ::::::::::::::::::::::::::::::::::FROM_TO_DATETIME:::::::::::::::::::::::::::::::::::::::: -->
-                <div class="w-full grid grid-cols-2 gap-5" *ngIf="item.type === 'date-from-to'">
+                <div class="w-full grid grid-cols-2 gap-3" *ngIf="item.type === 'date-from-to'">
                     <mat-form-field floatLabel="always">
                         <mat-label class="lbl-input-search">{{item.name}}</mat-label>
                         <input matInput autocomplete="off" [min]="groupDate[item.id.concat('FromMin')]"
@@ -148,7 +148,8 @@
                     Nhập lại
                 </span>
             </button>
-            <button mat-raised-button color="primary" [disabled]="isSearchGroupDirty()" (click)="onBtnSearchClk()">
+            <!-- [disabled]="isSearchGroupDirty()" -->
+            <button mat-raised-button color="primary" (click)="onBtnSearchClk()">
                 Tìm kiếm
             </button>
         </mat-dialog-actions>

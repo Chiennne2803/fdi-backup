@@ -28,7 +28,7 @@ export class FinancialDocumentsComponent implements OnInit, OnDestroy, AfterView
         type: 'file',
         maxFile: 10,
         maxFileSize: 10,
-        accept: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
+        accept: 'application/VND.ms-excel, application/VND.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/VND.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
     }];
     configFile1 = [{
         topTitle: 'Chi tiết các sổ phải thu, phải trả, hàng tồn kho, tài sản cố định',
@@ -38,7 +38,7 @@ export class FinancialDocumentsComponent implements OnInit, OnDestroy, AfterView
         type: 'file',
         maxFile: 10,
         maxFileSize: 10,
-        accept: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
+        accept: 'application/VND.ms-excel, application/VND.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/VND.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
     }];
     configFile2 = [{
         topTitle: 'Tờ khai VAT',

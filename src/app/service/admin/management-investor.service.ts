@@ -122,4 +122,8 @@ export class ManagementInvestorService extends BaseService {
         Observable<BaseResponse> {
         return this.doPost('setManageStaff', payload);
     }
+
+    bonus(payload):Observable<BaseResponse> {
+        return this.doPost('bonus', payload);
+    }
 }

@@ -1,0 +1,22 @@
+<mat-drawer-container class="flex-auto h-full bg-white">
+    <mat-drawer class="w-full md:w-12/12"
+                [mode]="'side'"
+                [opened]="false"
+                [position]="'end'"
+                [disableClose]="true"
+                #matDrawer>
+    </mat-drawer>
+    <mat-drawer-content class="flex flex-col">
+        <app-datatable
+            [tableConfig]="_tableConfig"
+            [taskbarConfig]="_taskBarConfig"
+            [tableConfigBtns]="_btnConfig"
+            [dataSource]="_dataSource"
+            (handleSearch)="handleSearch($event)"
+            (tableEvent)="handleTableEvent($event)"
+            (rowClick)="handleRowClick($event)"
+            (pageSwitch)="handlePageSwitch($event)"
+           ></app-datatable>
+    </mat-drawer-content>
+</mat-drawer-container>
+

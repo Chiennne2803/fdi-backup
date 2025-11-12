@@ -1,10 +1,8 @@
-<div class="relative flex h-full min-w-0 md:w-full p-4">
-    <div class="flex-auto">
-        <fuse-card class="flex flex-col p-4 h-full">
-            <div class="flex h-full">
-                <div class="flex flex-col p-2 w-6/12">
-                    <div class="flex">
-                        <mat-form-field class="w-9/12">
+<div class="p-4 border border-primary-grayLight-2 rounded-lg">
+            <div class="flex flex-col md:flex-row min-w-0 md:w-full gap-4">
+                <div class="flex flex-col w-full md:w-1/2">
+                    <div class="flex items-center justify-center space-x-3">
+                        <mat-form-field class="w-full">
                             <mat-icon>search</mat-icon>
                             <input
                                 class="ml-1"
@@ -15,7 +13,7 @@
                                 placeholder="Nhập để tìm kiếm..."
                             >
                         </mat-form-field>
-                        <div class="w-3/12 ml-3 mt-1">
+                        <div>
                             <button
                                 mat-flat-button
                                 color="primary"
@@ -26,7 +24,7 @@
                             </button>
                         </div>
                     </div>
-                    <ul class="flex-auto overflow-y-auto">
+            <ul class="flex-auto overflow-y-auto h-auto md:h-100 pt-2">
                         <li
                             *ngFor="let contact of contactInfoData"
                             [class.bg-gray-100]="contact === contactSelected"
@@ -39,7 +37,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="flex flex-col w-6/12 p-2">
+                <div class="flex flex-col w-full md:w-1/2">
                     <ng-container *ngIf="isEditing else readOnlyView">
                         <h4 class="leading-tight text-xl
                                    mt-0 mb-7 text-center font-bold"
@@ -205,20 +203,7 @@
                                 </mat-error>
                             </mat-form-field>
                              <mat-form-field class="col-span-2 mb-2">
-                                <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
-                                <input
-                                    (click)="openAddressDialog('address2')"
-                                    class="cursor-pointer"
-                                    matInput
-                                    readonly
-                                    formControlName="address2"
-                                >
-                                <mat-error *ngIf="isRequiredFormControl('address2')">
-                                    {{ 'QLVV168' | transloco }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field class="col-span-2 mb-2">
-                                <mat-label>Địa chỉ hiện tại</mat-label>
+                                <mat-label>Địa chỉ thường trú</mat-label>
                                 <input
                                     (click)="openAddressDialog('address1')"
                                     class="cursor-pointer"
@@ -230,7 +215,19 @@
                                    {{ 'QLVV167' | transloco }}
                                 </mat-error>
                             </mat-form-field>
-                           
+                            <mat-form-field class="col-span-2 mb-2">
+                                <mat-label>Địa chỉ hiện tại</mat-label>
+                                <input
+                                    (click)="openAddressDialog('address2')"
+                                    class="cursor-pointer"
+                                    matInput
+                                    readonly
+                                    formControlName="address2"
+                                >
+                                <mat-error *ngIf="isRequiredFormControl('address2')">
+                                    {{ 'QLVV168' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
                         </div>
                         <div class="flex justify-end">
                             <button class="mr-2" mat-flat-button (click)="cancelEditing()">Hủy</button>
@@ -272,7 +269,7 @@
                                     <span class="font-bold">{{ contactSelected.genderName }}</span>
                                 </li>
                                 <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>CCCD/Hộ Chiếu</span>
+                                    <span>CCCD/Hộ chiếu</span>
                                     <span class="font-bold">{{ contactSelected.identification }}</span>
                                 </li>
                                 <li class="pb-1 border-b flex justify-between mb-8" *ngIf="contactType !== deputyType.CAPITAL_CONTRIBUTOR">
@@ -304,12 +301,12 @@
                                     <a class="font-bold">{{ contactSelected.facebook }}</a>
                                 </li>
                                  <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Địa chỉ (theo CCCD/Hộ chiếu)</span>
-                                    <span class="font-bold">{{ contactSelected.address2 }}</span>
+                                    <span>Địa chỉ thường trú</span>
+                                    <span class="font-bold">{{ contactSelected.address1 }}</span>
                                 </li>
                                 <li class="pb-1 border-b flex justify-between mb-8" *ngIf="contactType !== deputyType.CAPITAL_CONTRIBUTOR">
                                     <span>Địa chỉ hiện tại</span>
-                                    <span class="font-bold">{{ contactSelected.address1 }}</span>
+                                    <span class="font-bold">{{ contactSelected.address2 }}</span>
                                 </li>
                                
                                 <li class="pb-1 border-b flex justify-between mb-8">
@@ -333,6 +330,4 @@
                     </ng-template>
                 </div>
             </div>
-        </fuse-card>
-    </div>
-</div>
+        </div>

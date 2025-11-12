@@ -58,11 +58,11 @@ export const TABLE_TOPUP_CONFIG: ITableConfig = {
         new IndexColumn('no', 'STT', 2),
         new TextColumn('fsTopupCode', 'Mã giao dịch', 15, false),
         new TextColumn('accName', 'Người thụ hưởng', 20, false),
-        new TextColumn('bankName', 'Ngân hàng', 20, false),
+        new TextColumn('bankName', 'Ngân hàng', 25, false),
         new TextColumn('branchName', 'Chi nhánh', 20, false),
         new TextColumn('accNo', 'Số tài khoản', 15, false),
         new TextColumn('statusName', 'Trạng thái', 10, false),
-        new TextColumn('createdByName', 'Người tạo', 10, false,),
+        new TextColumn('createdByName', 'Người tạo', 20, false,),
         new TextColumn('createdDate', 'Ngày tạo', 10, false, 'DD/MM/YYYY HH:mm:ss'),
     ],
     title: 'Nạp tiền đầu tư',isViewDetail: false
@@ -71,8 +71,9 @@ export const TABLE_TOPUP_CONFIG: ITableConfig = {
 export const TASK_BAR_CONFIG: TaskBarConfig = {
     searchBar: {
         placeholder: 'Nhập để tìm kiếm',
-        searchBarRole: 'INVESTOR_TOPUP_SEARCH_DEPOSIT',
-        isShowBtnFilter: false,
+        isShowBtnFilter: true,
+        btnFilterRole: 'INVESTOR_TOPUP_SEARCH_DEPOSIT',
+        searchBarRole: 'INVESTOR_TOPUP_SEARCH_DEPOSIT'
     },
     otherBtn: [
         new ButtonConfig('INVESTOR_TOPUP_CREATE_DEPOSIT_ORDER', true, false, 'Nạp tiền', 'feather:dollar-sign', 'add')

@@ -44,7 +44,7 @@ export class RejectedProfileComponent implements OnInit {
         this._investorListService.setDrawer(this.matDrawer);
         this._investorListService.getPrepareLoadingPage().subscribe((res: BaseResponse) => {
             if (res.payload.listInvestmentTime != undefined && res.payload.listInvestmentTime.length > 0) {
-                this.listInvestmentTime.push({label: 'Tẩt cả', value: null});
+                this.listInvestmentTime.push({label: 'Tẩt cả', value: ''});
                 res.payload.listInvestmentTime.forEach(x => this.listInvestmentTime.push({label: x, value: x}));
                 let indexToUpdate = advanceSearch.config.findIndex(item => item.id === 'investorTime');
                 advanceSearch.config[indexToUpdate] = new DropListSearch('investorTime', 'Kỳ hạn(ngày)', this.listInvestmentTime, null, false);

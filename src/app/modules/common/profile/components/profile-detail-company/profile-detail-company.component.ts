@@ -1,26 +1,24 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FileService, ProfileService} from '../../../../../service/common-service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {DialogService} from '../../../../../service/common-service/dialog.service';
-import {MatDialog} from '@angular/material/dialog';
-import {FuseAlertService} from '../../../../../../@fuse/components/alert';
-import {APP_TEXT} from '../../../../../shared/constants';
-import {AdmAccountDetailDTO, AdmCategoriesDTO, FsDocuments} from '../../../../../models/admin';
-import {Subscription, tap} from 'rxjs';
-import {AddressKycDialogComponent} from '../../../../../shared/components/dialog/address-dialog/address-dialog.component';
-import {IAddressData} from '../../../../../shared/models/address.model';
-import {AdmAccountType} from '../../../../../core/user/user.types';
-import {forbiddenPhoneNumberValidator} from "../../../../../shared/validator/forbidden";
-import {AuthService} from "../../../../../core/auth/auth.service";
-import {MatDrawer} from "@angular/material/sidenav";
-import {data} from "autoprefixer";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FileService, ProfileService } from '../../../../../service/common-service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DialogService } from '../../../../../service/common-service/dialog.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FuseAlertService } from '../../../../../../@fuse/components/alert';
+import { APP_TEXT } from '../../../../../shared/constants';
+import { AdmAccountDetailDTO, AdmCategoriesDTO, FsDocuments } from '../../../../../models/admin';
+import { Subscription, tap } from 'rxjs';
+import { AddressKycDialogComponent } from '../../../../../shared/components/dialog/address-dialog/address-dialog.component';
+import { IAddressData } from '../../../../../shared/models/address.model';
+import { AdmAccountType } from '../../../../../core/user/user.types';
+import { AuthService } from "../../../../../core/auth/auth.service";
+import { MatDrawer } from "@angular/material/sidenav";
 
 @Component({
     selector: 'profile-detail-company',
     templateUrl: './profile-detail-company.component.html'
 })
 export class ProfileDetailCompanyComponent implements OnInit, OnDestroy, AfterViewInit {
-    @ViewChild('fileDrawer', {static: true}) fileDrawer: MatDrawer;
+    @ViewChild('fileDrawer', { static: true }) fileDrawer: MatDrawer;
     accountDetail: AdmAccountDetailDTO;
     accountType: AdmAccountType;
     formGroup: FormGroup;
@@ -31,6 +29,8 @@ export class ProfileDetailCompanyComponent implements OnInit, OnDestroy, AfterVi
     isEditable: boolean = false;
     oldAvata = '';
     selectedFile: FsDocuments;
+    addressModes: 'new' | 'old';
+
 
     constructor(
         private _profileService: ProfileService,
@@ -40,7 +40,7 @@ export class ProfileDetailCompanyComponent implements OnInit, OnDestroy, AfterVi
         private _fuseAlertService: FuseAlertService,
         public authService: AuthService,
         private _fileService: FileService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.subscription.add(
@@ -81,8 +81,8 @@ export class ProfileDetailCompanyComponent implements OnInit, OnDestroy, AfterVi
             }),
             businessLicenseDate: this._fb.control({
                 value: this.accountDetail?.businessLicenseDate
-                        ? new Date(this.accountDetail?.businessLicenseDate)
-                        : null,
+                    ? new Date(this.accountDetail?.businessLicenseDate)
+                    : null,
                 disabled: true,
             }),
             placeOfBusinessLicense: this._fb.control({
@@ -122,13 +122,19 @@ export class ProfileDetailCompanyComponent implements OnInit, OnDestroy, AfterVi
     }
 
     openAddressDialog(formControlName: string): void {
+        const type = this.addressModes || 'old';
+
         const dialogRef = this._matDialog.open(AddressKycDialogComponent, {
             disableClose: true,
             width: '450px',
-            data: this.formGroup.get(formControlName).value,
+            data: {
+                type,
+                value: this.formGroup.get(formControlName).value
+            },
         });
         dialogRef.afterClosed().subscribe((res: IAddressData) => {
-            if (res && res.payload) {
+            if (res && res.payload && res.type) {
+                this.addressModes = res.type
                 this.formGroup.get(formControlName).patchValue(res.payload);
                 this.formGroup.markAsDirty();
             }
@@ -161,12 +167,13 @@ export class ProfileDetailCompanyComponent implements OnInit, OnDestroy, AfterVi
             return;
         }
         this.formGroup.markAllAsTouched();
-        if ( this.formGroup.valid ) {
+        if (this.formGroup.valid) {
             const dialog = this._dialogService.openConfirmDialog('Xác nhận cập nhật dữ liệu');
             dialog.afterClosed().subscribe((res) => {
-                if ( res === 'confirmed' ) {
+                if (res === 'confirmed') {
                     this._profileService.updateAccountDetail(this.formGroup.value).subscribe((response) => {
-                        if ( response.errorCode === '0' ) {
+                        if (response.errorCode === '0') {
+                            // console.log(response, this.formGroup.value)
                             this._fuseAlertService.showMessageSuccess('Cập nhật thành công !');
                             this._profileService.getPrepareLoadingPage().subscribe();
                             this.isEditable = false;
@@ -183,7 +190,7 @@ export class ProfileDetailCompanyComponent implements OnInit, OnDestroy, AfterVi
     }
 
     changeStateControl(): void {
-        if ( !this.isEditable ) {
+        if (!this.isEditable) {
             this.formGroup.get('landline').disable();
             this.formGroup.get('facebook').disable();
             this.formGroup.get('admCategoriesId').disable();

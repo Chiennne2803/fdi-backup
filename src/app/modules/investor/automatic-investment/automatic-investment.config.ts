@@ -6,9 +6,9 @@ export const TABLE_AUTOMATIC_INVESTMENT_CONFIG: ITableConfig = {
     columnDefinition: [
         new CheckboxColumn(),
         new TextColumn('investmentTime', 'Kỳ hạn(ngày)', 5),
-        new TextColumn('investmentAmount', 'Số tiền đầu tư (VNĐ)', 15, false, 1),
-        new TextColumn('preMatchingAmount', 'Số tiền chờ khớp lệnh (VNĐ)', 15, false, 1),
-        new TextColumn('matchingAmount', 'Số tiền đã khớp lệnh (VNĐ)', 15, false, 1),
+        new TextColumn('investmentAmount', 'Số tiền đầu tư (VND)', 15, false, 1),
+        new TextColumn('preMatchingAmount', 'Số tiền chờ khớp lệnh (VND)', 15, false, 1),
+        new TextColumn('matchingAmount', 'Số tiền đã khớp lệnh (VND)', 15, false, 1),
         new TextColumn('statusName', 'Trạng thái', 15),
         new TextColumn('createdDate', 'Ngày tạo', 15, false, 'DD/MM/YYYY - HH:mm:ss'),
         new TextColumn('expireDate', 'Ngày hết hiệu lực', 15, false, 'DD/MM/YYYY - HH:mm:ss'),

@@ -1,228 +1,208 @@
 <mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
-    <mat-drawer class="w-full sm:w-100"
-                [mode]="'side'"
-                [opened]="false"
-                [position]="'end'"
-                #fileDrawer>
-        <file-detail [fileDrawer]="fileDrawer"
-                     [selectedFile]="selectedFile"></file-detail>
+    <mat-drawer class="w-full sm:w-100" [mode]="'side'" [opened]="false" [position]="'end'" #fileDrawer>
+        <file-detail [fileDrawer]="fileDrawer" [selectedFile]="selectedFile"></file-detail>
     </mat-drawer>
 
     <mat-drawer-content class="flex flex-col">
         <div class="w-full px-5">
-            <div class="flex items-center justify-between w-full mx-auto py-2">
-                <article class="w-2/4 prose break-words py-3">
-                    <h3>
-                        <!-- Yêu cầu thay đổi Giấy phép kinh doanh -->
-                         Chi tiết yêu cầu thay đổi thông tin
+            <div class="flex items-center justify-between w-full mx-auto pt-3 pb-2">
+                <article class="w-full prose break-words py-3">
+                    <h3 class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3 w-full">
+                        <span (click)="onClose()"
+                            class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                            <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                                svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                            Quay lại
+                        </span>
+                        Chi tiết yêu cầu thay đổi thông tin
                     </h3>
                 </article>
                 <div class="flex items-center justify-end">
-                    <button (click)="onClose()"
-                            mat-stroked-button>
-                        Quay lại
-                    </button>
-                    <button
-                        @fadeInRight
-                        *ngIf="detail?.status === 1 && ('SFF_CHANGE_ID_APPROVE' | permission)"
-                            (click)="onClickApprove()"
-                            mat-flat-button
-                            color="primary"
-                            class="ml-5">
+                    <button @fadeInRight *ngIf="detail?.status === 1 && ('SFF_CHANGE_ID_APPROVE' | permission)"
+                        (click)="onClickApprove()" mat-flat-button color="primary" class="ml-5">
                         Xử lý yêu cầu
                     </button>
                 </div>
             </div>
         </div>
-        <div class="p-5 flex flex-col overflow-y-auto"
-             [formGroup]="accountInfoForm">
-            <div class="flex flex-col flex-auto w-full p-8 ">
-                <div class="flex flex-row w-full gap-4 ">
-                    <mat-form-field class="w-1/4">
+        <div class="px-5 flex flex-col" [formGroup]="accountInfoForm">
+            <div class="flex flex-col flex-auto w-full border border-primary-grayLight-2 rounded-lg p-4 mb-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4">
+                    <mat-form-field>
                         <mat-label>Mã yêu cầu</mat-label>
-                        <input id="transCode"
-                               matInput
-                               [readonly]="true"
-                               formControlName="transCode">
+                        <input id="transCode" matInput [readonly]="true" formControlName="transCode">
                     </mat-form-field>
-                    <mat-form-field class="w-1/4">
+                    <mat-form-field>
                         <mat-label>Loại yêu cầu</mat-label>
-                        <input id="type"
-                               matInput
-                               [readonly]="true"
-                               formControlName="type">
+                        <input id="type" [disabled]="true" matInput [readonly]="true" formControlName="type">
                     </mat-form-field>
-                    <mat-form-field class="w-1/4">
+                    <mat-form-field>
                         <mat-label>Người yêu cầu</mat-label>
-                        <input id="createdByName"
-                               matInput
-                               [readonly]="true"
-                               formControlName="createdByName">
+                        <input id="createdByName" matInput [readonly]="true" formControlName="createdByName">
                     </mat-form-field>
-                    <mat-form-field class="w-1/4">
+                    <mat-form-field>
                         <mat-label>Ngày yêu cầu</mat-label>
-                        <input id="createdDate"
-                               matInput
-                               [readonly]="true"
-                               formControlName="createdDate">
+                        <input id="createdDate" matInput [readonly]="true" formControlName="createdDate">
                     </mat-form-field>
-                </div>
-                <div class="flex flex-row w-full gap-4 ">
-                    <mat-form-field class="w-1/4">
+                    <mat-form-field>
                         <mat-label>Người xử lý</mat-label>
-                        <input id="approvalBy"
-                               matInput
-                               [readonly]="true"
-                               formControlName="approvalByName">
+                        <input id="approvalBy" matInput [readonly]="true" formControlName="approvalByName">
                     </mat-form-field>
-                    <mat-form-field class="w-1/4">
+                    <mat-form-field>
                         <mat-label>Ngày xử lý</mat-label>
-                        <input id="approvalDate"
-                               matInput
-                               [readonly]="true"
-                               formControlName="approvalDate">
+                        <input id="approvalDate" matInput [readonly]="true" formControlName="approvalDate">
                     </mat-form-field>
-                    <mat-form-field class="w-1/4">
+                    <mat-form-field>
                         <mat-label>Trạng thái</mat-label>
-                        <input id="statusName"
-                               matInput
-                               [readonly]="true"
-                               formControlName="statusName">
+                        <input id="statusName" matInput [readonly]="true" formControlName="statusName">
                     </mat-form-field>
-                    <mat-form-field class="w-1/4">
+                    <mat-form-field>
                         <mat-label>Nội dung xử lý</mat-label>
-                        <input id="approvalInfo"
-                               matInput
-                               [readonly]="true"
-                               formControlName="approvalInfo">
+                        <input id="approvalInfo" matInput [readonly]="true" formControlName="approvalInfo">
                     </mat-form-field>
                 </div>
             </div>
-            <div class="flex flex-col flex-auto w-full border-b p-8">
-                <article class="w-2/4 prose break-words py-3">
+            <div class="flex flex-col flex-auto w-full border border-primary-grayLight-2 rounded-lg mb-8">
+                <article class="prose break-words p-4">
                     <h3>
                         Nội dung yêu cầu
                     </h3>
                 </article>
-                <div class="w-full grid grid-cols-3 border border-solid">
-                    <article class="prose break-words py-3 text-center border-b border-solid">
+                <div class="w-full grid grid-cols-1 sm:grid-cols-3 border-t">
+                    <article class="prose break-words p-3 text-start border-b hidden sm:block">
                         <h4>
                             Nội dung thay đổi
                         </h4>
                     </article>
-                    <article class="prose break-words py-3 text-center border-x border-b border-solid">
+                    <article class="prose break-words p-3 text-start  border-b border-solid hidden sm:block">
                         <h4>
                             Thông tin cũ
                         </h4>
                     </article>
-                    <article class="prose break-words py-3 text-center border-b border-solid">
+                    <article class="prose break-words p-3 text-start border-b border-solid hidden sm:block">
                         <h4>
                             Thông tin mới
                         </h4>
                     </article>
                     <ng-container [ngSwitch]="detail?.type">
                         <ng-container *ngSwitchCase="2">
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <!-- <span class="sm:hidden"> Nội dung thay đổi:</span> -->
                                 <h6> Địa chỉ (Theo GPKD) </h6>
                             </article>
-                            <article class="prose break-words py-3 text-center border-x border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin cũ:</span>
                                 <span> {{ detail?.oldAccountDetailDTO.address3 }} </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin mới:</span>
                                 <span> {{ detail?.newAccountDetailDTO.address3 }} </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b sm:border-none border-solid">
                                 <h6> Ảnh GPKD </h6>
                             </article>
-                            <article class="prose break-words py-3 text-center border-x border-b border-solid">
-                                <span>
+                            <article class="prose break-words p-3 text-start border-solid">
+                                <span class="sm:hidden font-semibold mr-1.5">Thông tin cũ:</span>
                                     <a href="javascript:void(0)"
-                                       (click)="clickViewImage(detail?.oldAccountDetailDTO.photoOfBusiness )">Xem
-                                        file</a>
-                                </span>
+                                        (click)="clickViewImage(detail?.oldAccountDetailDTO.photoOfBusiness )">Xem
+                                        file
+                                    </a>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
-                                <span>
+                            <article class="prose break-words p-3 text-start border-solid">
+                                <span class="sm:hidden font-semibold mr-1.5">Thông tin mới:</span>
                                     <a href="javascript:void(0)"
-                                       (click)="clickViewImage(detail?.newAccountDetailDTO.photoOfBusiness )">Xem
+                                        (click)="clickViewImage(detail?.newAccountDetailDTO.photoOfBusiness )">Xem
                                         file</a>
-                                </span>
                             </article>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="3">
-
                         </ng-container>
                         <ng-container *ngSwitchDefault>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
-                                <h6> CCCD/Hộ Chiếu </h6>
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <h6> CCCD/Hộ chiếu </h6>
                             </article>
-                            <article class="prose break-words py-3 text-center border-x border-b border-solid">
+                            <article class="prose break-words p-3 text-start  border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin cũ:</span>
                                 <span> {{ detail?.oldAccountDetailDTO.identification }} </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin mới:</span>
                                 <span> {{ detail?.newAccountDetailDTO.identification }} </span>
                             </article>
-
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
                                 <h6> Nơi cấp </h6>
                             </article>
-                            <article class="prose break-words py-3 text-center border-x border-b border-solid">
+                            <article class="prose break-words p-3 text-start  border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin cũ:</span>
                                 <span> {{ detail?.oldAccountDetailDTO.placeOfIdnumber }} </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin mới:</span>
                                 <span> {{ detail?.newAccountDetailDTO.placeOfIdnumber }} </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
                                 <h6> Ngày cấp </h6>
                             </article>
-                            <article class="prose break-words py-3 text-center border-x border-b border-solid">
-                                <span> {{ detail?.oldAccountDetailDTO.dateOfIdnumber | datetimeformat : 'DD/MM/YYYY'}} </span>
+                            <article class="prose break-words p-3 text-start  border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin cũ:</span>
+                                <span> {{ detail?.oldAccountDetailDTO.dateOfIdnumber | datetimeformat : 'DD/MM/YYYY'}}
+                                </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
-                                <span> {{ detail?.newAccountDetailDTO.dateOfIdnumber | datetimeformat : 'DD/MM/YYYY'}} </span>
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin mới:</span>
+                                <span> {{ detail?.newAccountDetailDTO.dateOfIdnumber | datetimeformat : 'DD/MM/YYYY'}}
+                                </span>
                             </article>
 
-                            <article class="prose break-words py-3 text-center border-b border-solid">
-                                <h6> Địa chỉ (Theo CCCD/Hộ Chiếu) </h6>
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <h6> Địa chỉ thường trú </h6>
                             </article>
-                            <article class="prose break-words py-3 text-center border-x border-b border-solid">
+                            <article class="prose break-words p-3 text-start  border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin cũ:</span>
                                 <span> {{ detail?.oldAccountDetailDTO.address1}} </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <span class="sm:hidden font-semibold">Thông tin mới:</span>
                                 <span> {{ detail?.newAccountDetailDTO.address1}} </span>
                             </article>
 
 
-                            <article class="prose break-words py-3 text-center border-b border-solid">
-                                <h6> Mặt trước CCCD/Hộ Chiếu </h6>
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <h6> Mặt trước CCCD/Hộ chiếu </h6>
                             </article>
-                            <article class="prose break-words py-3 text-center border-x border-b border-solid">
+                            <article class="prose break-words p-3 text-start  border-b border-solid">
+                                <span class="sm:hidden font-semibold mr-1.5">Thông tin cũ:</span>
                                 <span>
                                     <a href="javascript:void(0)"
-                                       (click)="clickViewImage(detail?.oldAccountDetailDTO.frontPhotoIdentication)">mat_truoc.jpg</a>
+                                        (click)="clickViewImage(detail?.oldAccountDetailDTO.frontPhotoIdentication)">Mặt
+                                        trước</a>
                                 </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-b border-solid">
+                            <article class="prose break-words p-3 text-start border-b border-solid">
+                                <span class="sm:hidden font-semibold mr-1.5">Thông tin mới:</span>
                                 <span>
                                     <a href="javascript:void(0)"
-                                       (click)="clickViewImage(detail?.newAccountDetailDTO.frontPhotoIdentication)">mat_truoc.jpg</a>
+                                        (click)="clickViewImage(detail?.newAccountDetailDTO.frontPhotoIdentication)">Mặt
+                                        trước</a>
                                 </span>
                             </article>
-                            <article class="prose break-words py-3 text-center border-solid">
+                            <article class="prose break-words p-3 text-start border-b sm:border-none border-solid">
                                 <h6>
-                                    Mặt sau CCCD/Hộ Chiếu
+                                    Mặt sau CCCD/Hộ chiếu
                                 </h6>
                             </article>
-                            <article class="prose break-words py-3 text-center border-x border-solid">
+                            <article class="prose break-words p-3 text-start  border-solid">
+                                <span class="sm:hidden font-semibold mr-1.5">Thông tin cũ:</span>
                                 <span>
                                     <a href="javascript:void(0)"
-                                       (click)="clickViewImage(detail?.oldAccountDetailDTO.backsitePhotoIdentication )">mat_sau.jpg</a>
+                                        (click)="clickViewImage(detail?.oldAccountDetailDTO.backsitePhotoIdentication )">Mặt
+                                        sau</a>
                                 </span>
                             </article>
-                            <article class="prose break-words py-3 text-center">
+                            <article class="prose break-words p-3 text-start">
+                                <span class="sm:hidden font-semibold mr-1.5">Thông tin mới:</span>
                                 <span>
                                     <a href="javascript:void(0)"
-                                       (click)="clickViewImage(detail?.newAccountDetailDTO.backsitePhotoIdentication )">mat_sau.jpg</a>
+                                        (click)="clickViewImage(detail?.newAccountDetailDTO.backsitePhotoIdentication )">Mặt
+                                        sau</a>
                                 </span>
                             </article>
                         </ng-container>

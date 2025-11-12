@@ -1,29 +1,41 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {FuseNavigationItem} from '@fuse/components/navigation';
-import {MatDrawer} from '@angular/material/sidenav';
-import {RechargeTransactionService} from 'app/service/admin/recharge-transaction.service';
-import {ROUTER_CONST} from 'app/shared/constants';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {InvestorService} from 'app/service';
-import {FsLoanProfilesDTO} from 'app/models/service';
-import {WControlEuDTO} from 'app/models/wallet/WControlEuDTO.model';
-import {TopupDialog} from '../investment-topup/dialogs/investor-dialogs.component';
-import {FsReqTransP2PService} from "../../../service/admin/req-trans-p2p.service";
-import {AuthService} from "../../../core/auth/auth.service";
+import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FuseNavigationItem } from '@fuse/components/navigation';
+import { MatDrawer } from '@angular/material/sidenav';
+import { RechargeTransactionService } from 'app/service/admin/recharge-transaction.service';
+import { ROUTER_CONST } from 'app/shared/constants';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { InvestorService } from 'app/service';
+import { FsLoanProfilesDTO } from 'app/models/service';
+import { WControlEuDTO } from 'app/models/wallet/WControlEuDTO.model';
+import { TopupDialog } from '../investment-topup/dialogs/investor-dialogs.component';
+import { FsReqTransP2PService } from "../../../service/admin/req-trans-p2p.service";
+import { AuthService } from "../../../core/auth/auth.service";
 
 @Component({
-    selector     : 'investor-charge-transaction',
-    templateUrl  : './investment-transfer.component.html',
+    selector: 'investor-charge-transaction',
+    templateUrl: './investment-transfer.component.html',
     styleUrls: ['./investment-transfer.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class InvestmentTransferComponent
-{
+export class InvestmentTransferComponent {
     menuData: FuseNavigationItem[];
     @ViewChild('detailDrawer', { static: true }) detailDrawer: MatDrawer;
     investorProfile: FsLoanProfilesDTO;
     wControlEuDTO: WControlEuDTO;
     public fullName = '';
+
+
+    isMobile = false;
+
+
+    @HostListener('window:resize', [])
+    onResize() {
+        this.checkScreenSize();
+    }
+
+    private checkScreenSize() {
+        this.isMobile = window.innerWidth < 1024; // < 1024px thì coi là mobile/tablet
+    }
 
     /**
      * Constructor
@@ -34,32 +46,33 @@ export class InvestmentTransferComponent
         private _matDialog: MatDialog,
         private authService: AuthService,
     ) {
+        this.checkScreenSize();
         this._fsReqTransP2PService.prepare().subscribe();
         this.fullName = this.authService.authenticatedUser.fullName;
         this.menuData = [
             {
-                type    : 'group',
+                type: 'group',
                 children: [
                     {
                         title: 'Hồ sơ đề nghị chuyển nhượng',
-                        type : 'basic',
+                        type: 'basic',
                         link: `/${ROUTER_CONST.config.investor.investmentTransfer.sale.link}`,
                     },
                     {
                         title: 'Hồ sơ chuyển nhượng của tôi',
-                        type : 'collapsable',
+                        type: 'collapsable',
                         link: `${ROUTER_CONST.config.investor.investmentTransfer.offer.link}`,
                         exactMatch: true,
                         children: [
                             {
                                 title: 'Đang chuyển nhượng',
-                                type : 'basic',
+                                type: 'basic',
                                 link: `/${ROUTER_CONST.config.investor.investmentTransfer.offer.link}`,
                                 exactMatch: true,
                             },
                             {
                                 title: 'Đã kết thúc',
-                                type : 'basic',
+                                type: 'basic',
                                 link: `/${ROUTER_CONST.config.investor.investmentTransfer.offer.link}/finished`,
                                 exactMatch: true,
                             }
@@ -73,7 +86,7 @@ export class InvestmentTransferComponent
     ngOnInit(): void {
 
         this._fsReqTransP2PService.prepareP2P$.subscribe((res) => {
-            if (res) {
+            if (res && res.payload) {
                 this.wControlEuDTO = res.payload.wControlEuDTO;
             }
         });

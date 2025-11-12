@@ -39,15 +39,15 @@ export class CreateCreditLimitDialogsComponent implements OnInit {
         this.formGroup = this._fb.group({
             creditLimit: new FormControl(null, [Validators.required, Validators.maxLength(15), Validators.min(0)]),
             finDocumentsId: new FormControl(null, Validators.required),
-            createdByName: new FormControl(this._authService.authenticatedUser.fullName),
-            createdDate: new FormControl(this._datetimePipe.transform(new Date().getTime(), 'DD/MM/YYYY')),
+            createdByName: new FormControl( {value:this._authService.authenticatedUser.fullName, disabled: true}),
+            createdDate: new FormControl({value: this._datetimePipe.transform(new Date().getTime(), 'DD/MM/YYYY'), disabled: true})
         });
     }
 
     onSubmit(): void {
         this.formGroup.markAllAsTouched();
         if (this.formGroup.valid) {
-            const confirmDialog = this._dialogService.openConfirmDialog('Bạn sẽ không thể chỉnh sửa hoặc xóa hạn mức tín dụng đã cấp', 'Xác nhận cấp hạn mức tín dụng');
+            const confirmDialog = this._dialogService.openConfirmDialog('Bạn sẽ không thể chỉnh sửa hoặc xóa hạn mức huy động vốn đã cấp', 'Xác nhận cấp hạn mức huy động vốn');
             confirmDialog.afterClosed().subscribe((res) => {
                 if (res === 'confirmed') {
                     this._managementLenderService.createOrUpdateCreditLimit({

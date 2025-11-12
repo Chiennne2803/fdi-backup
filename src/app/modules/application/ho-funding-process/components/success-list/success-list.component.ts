@@ -97,13 +97,13 @@ export class SuccessListComponent implements OnInit {
                     config: [
                         new InputSearch('transCode', 'Mã yêu cầu', null, false),
                         new DropListSearch('transType', 'Loại yêu cầu', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Tiếp quỹ tiền điện tử', value: 3},
                             {label: 'Tiếp quỹ tiền mặt', value: 2},
                         ], null),
                         new DateTimeFromToSearch('createdDate', 'Ngày lập', null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Đã phê duyệt', value: 3},
                             {label: 'Từ chối', value: 4},
                             {label: 'Chờ hạch toán', value: 5},

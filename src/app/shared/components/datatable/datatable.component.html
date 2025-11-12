@@ -1,57 +1,21 @@
-<div class="sm:absolute flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
-    *ngIf="!tableConfig.isViewDetail" @fadeOutLeft @slideInLeft [ngClass]="fullHeight ? 'sm:inset-0' : ''"
-    [ngStyle]="containerStyle">
-    <div style="height: 100px !important; z-index: 2" *ngIf="tableConfig?.title"
-        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-3 px-3 md:px-8 border-b">
-        <div class="font-extrabold tracking-tight" *ngIf="!isSearchOpen">
-            <div class="flex items-center justify-center gap-2">
-                <button (click)="callToggleDrawer()" class="block md:hidden" mat-icon-button>
+<div class="sm:absolute flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-white" *ngIf="!tableConfig.isViewDetail"
+    @fadeOutLeft @slideInLeft [ngClass]="fullHeight ? 'sm:inset-0' : ''" [ngStyle]="containerStyle">
+    <div *ngIf="tableConfig?.title"
+        class="relative flex flex-col md:flex-row justify-start items-start md:items-center md:justify-between p-5 border-b gap-y-4">
+        <div class="font-extrabold tracking-tight">
+            <!-- <div class="flex items-center justify-start gap-2" *ngIf="!isSearchOpen"> -->
+            <!-- <button (click)="callToggleDrawer()" class="block md:hidden" mat-icon-button>
                     <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
-                </button>
-                <div *ngIf="!hasSelected()" @fadeInTop class="text-2xl font-extrabold tracking-tight title">
-                    {{ tableConfig.title }}
-                </div>
+                </button> -->
+            <div *ngIf="!hasSelected()" @fadeInTop class="text-2xl font-extrabold tracking-tight title">
+                {{ tableConfig.title }}
             </div>
+            <!-- </div> -->
             <div [matTooltip]="tableConfig.title" *ngIf="hasSelected()" @fadeInLeft
                 class="text-1xl font-extrabold tracking-tight">
                 {{ tableConfig.title }}
             </div>
             <div class="flex gap-2.5 m-2 fadeInBottom" *ngIf="hasSelected() && tableConfigBtns" @fadeInBottom>
-                <!--
-                                <button mat-button
-                                        *ngIf="tableConfigBtns.isShowDetail"
-                                        [disabled]="disabedBtn()"
-                                        (click)="handleTableAction('edit')">
-                                    <mat-icon svgIcon="feather:edit"
-                                              class="mr-2"></mat-icon>
-                                    <span>Sửa</span>
-                                </button>
-
-                                <button mat-button
-                                        *ngIf="tableConfigBtns.isShowLock"
-                                        [disabled]="disabledBtnLock()"
-                                        (click)="handleTableAction('lock')">
-                                    <mat-icon svgIcon="feather:lock"
-                                              class="mr-2"></mat-icon>
-                                    <span>Khoá</span>
-                                </button>
-                                <button mat-button
-                                        *ngIf="tableConfigBtns.isShowUnlock"
-                                        [disabled]="disabledBtnUnlock()"
-                                        (click)="handleTableAction('unlock')">
-                                    <mat-icon svgIcon="feather:unlock"
-                                              class="mr-2"></mat-icon>
-                                    <span>Mở khoá</span>
-                                </button>
-                                <button mat-button
-                                        *ngIf="tableConfigBtns.isShowExport"
-                                        [disabled]="!selectionModel.hasValue()"
-                                        (click)="handleTableAction('export')">
-                                    <mat-icon svgIcon="feather:file-text"
-                                              class="mr-2"></mat-icon>
-                                    <span>Export</span>
-                                </button>
-                                -->
                 <ng-container *ngIf="tableConfigBtns.commonBtn && tableConfigBtns.commonBtn.length > 0">
                     <ng-container *ngFor="let btn of tableConfigBtns.commonBtn;">
                         <button mat-stroked-button [color]="'primary'" *ngIf="(btn.role | permission)"
@@ -97,23 +61,25 @@
             </div>
         </div>
         <!-- Mobile Actions -->
-        <div class="flex shrink-0 items-center sm:mt-0 sm:ml-4 sm-actions" *ngIf="taskbarConfig">
-            <!-- Search -->
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"
-                *ngIf="taskbarConfig.searchBar && isSearchOpen">
-                <button matPrefix>
-                    <mat-icon (click)="onClickSearchIcon(false)" [svgIcon]="'feather:search'"></mat-icon>
+        <div class="flex relative shrink-0 items-center md:hidden w-full" *ngIf="taskbarConfig">
+            <div class="flex items-center gap-4 w-full" *ngIf="taskbarConfig.searchBar && isSearchOpen">
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64 w-full">
+                    <button matPrefix>
+                        <mat-icon [svgIcon]="'feather:search'"></mat-icon>
+                    </button>
+                    <input matInput trim="blur" *ngIf=" taskbarConfig.searchBar.searchBarRole | permission"
+                        [(ngModel)]="searchInputControl" placeholder="Tìm kiếm" (input)="onSearchQueryInput($event)"
+                        [autocomplete]="'off'" autoFocus>
+                    <button mat-icon-button
+                        *ngIf="taskbarConfig.searchBar.isShowBtnFilter && ( taskbarConfig.searchBar.btnFilterRole | permission)"
+                        matSuffix (click)="onBtnClick('advanced-search')" [disabled]="selectionModel.hasValue()">
+                        <mat-icon svgIcon="heroicons_outline:adjustments"></mat-icon>
+                    </button>
+                </mat-form-field>
+                <button mat-icon-button (click)="onClickSearchIcon(false)">
+                    <mat-icon svgIcon="heroicons_outline:x"></mat-icon>
                 </button>
-                <input matInput trim="blur" *ngIf=" taskbarConfig.searchBar.searchBarRole | permission"
-                    [(ngModel)]="searchInputControl" placeholder="Tìm kiếm" (input)="onSearchQueryInput($event)"
-                    [autocomplete]="'off'" autoFocus>
-                <button mat-icon-button
-                    *ngIf="taskbarConfig.searchBar.isShowBtnFilter && ( taskbarConfig.searchBar.btnFilterRole | permission)"
-                    matSuffix (click)="onBtnClick('advanced-search')" [disabled]="selectionModel.hasValue()">
-                    <mat-icon svgIcon="heroicons_outline:adjustments"></mat-icon>
-                </button>
-            </mat-form-field>
-            <!-- Button group area -->
+            </div>
             <div *ngIf="!isSearchOpen">
                 <button mat-icon-button>
                     <mat-icon (click)="onClickSearchIcon(true)" [svgIcon]="'heroicons_solid:search'"></mat-icon>
@@ -123,75 +89,101 @@
                         (click)="onBtnClick(btn.action)">
                         <mat-icon [svgIcon]="btn.icon"></mat-icon>
                     </button>
-                    <button *ngIf="btn.isConfigDatatable" class="relative" (click)="showBtnConfig()" mat-icon-button>
+                    <button class="btn-open-config" *ngIf="btn.isConfigDatatable" (click)="toggleConfig($event)"
+                        mat-icon-button>
                         <mat-icon [svgIcon]="btn.icon"></mat-icon>
                     </button>
-                    <div *ngIf="btn.isConfigDatatable && isShowConfig"
-                        class="absolute w-72 top-20 right-7 border bg-slate-200 p-4">
-                        <div class="content-config flex flex-col gap-1">
+                    <!-- Dropdown config -->
+                    <div *ngIf="btn.isConfigDatatable && isShowConfig" #configPanel class="absolute right-0 top-12 w-64 max-w-[90vw] origin-top-right rounded-xl
+                    bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
+                     p-4 z-[9999]" (click)="$event.stopPropagation()">
+                        <div class="flex flex-col gap-1.5 max-h-[70vh] overflow-y-auto">
                             <ng-container *ngFor="let item of columnDefinition">
-                                <mat-checkbox *ngIf="item.id !== 'selection'" (change)="onItemChecked(item)"
-                                    color="primary" [checked]="item.isShow">{{item.name}}</mat-checkbox>
+                                <mat-checkbox *ngIf="item.id !== 'selection'" (click)="$event.stopPropagation()"
+                                    (change)="onItemChecked(item)" color="primary" [checked]="item.isShow">
+                                    {{ item.name }}
+                                </mat-checkbox>
                             </ng-container>
                         </div>
-                        <div class="arrow-up"></div>
                     </div>
                 </ng-container>
             </div>
         </div>
         <!-- Actions -->
-        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4 actions" *ngIf="taskbarConfig">
+        <div class="hidden relative md:flex flex-col md:flex-row items-center justify-between md:space-x-4"
+            *ngIf="taskbarConfig">
             <!-- Search -->
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64"
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64 w-full"
                 *ngIf="taskbarConfig.searchBar && !isStatisticalReport()">
                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'feather:search'"></mat-icon>
                 <input matInput trim="blur" [(ngModel)]="searchInputControl" placeholder="Tìm kiếm"
                     (input)="onSearchQueryInput($event)" [autocomplete]="'off'">
-                <button mat-icon-button *ngIf="taskbarConfig.searchBar.isShowBtnFilter" matSuffix
-                    (click)="onBtnClick('advanced-search')" [disabled]="selectionModel.hasValue()">
+                <button [matTooltip]="'Tìm kiếm nâng cao'" mat-icon-button
+                    *ngIf="taskbarConfig.searchBar.isShowBtnFilter" matSuffix (click)="onBtnClick('advanced-search')"
+                    [disabled]="selectionModel.hasValue()">
                     <mat-icon svgIcon="heroicons_outline:adjustments"></mat-icon>
                 </button>
             </mat-form-field>
-            <button *ngIf="taskbarConfig.searchBar.isShowBtnFilter && isStatisticalReport()" mat-raised-button
-                (click)="onBtnClick('advanced-search')" [disabled]="selectionModel.hasValue()" color="primary">
+
+            <button mat-flat-button color="primary" class="w-full"
+                *ngIf="taskbarConfig.searchBar.isShowBtnFilter && isStatisticalReport()"
+                (click)="onBtnClick('advanced-search')" [disabled]="selectionModel.hasValue()">
                 Tìm kiếm nâng cao
             </button>
             <!-- Button group area -->
-            <div>
-                <ng-container *ngFor="let btn of taskbarConfig.otherBtn">
-                    <button *ngIf="btn.isBtn && (btn.role | permission)" class="ml-4"
-                        [ngClass]="[btn.buttonType ? btn.buttonType : 'mat-flat-button']" mat-flat-button
-                        [color]="btn.color ? btn.color : 'primary'" (click)="onBtnClick(btn.action)">
-                        <ng-container *ngIf="btn.icon">
-                            <mat-icon [svgIcon]="btn.icon"></mat-icon>
-                        </ng-container>
-                        <span class="ml-2 mr-1" *ngIf="btn.label">{{btn.label}}</span>
-                    </button>
-                    <button *ngIf="btn.isConfigDatatable" class="ml-4 relative" (click)="showBtnConfig()"
-                        mat-icon-button>
+            <ng-container *ngFor="let btn of taskbarConfig.otherBtn">
+                <button class="w-full" *ngIf="btn.isBtn && (btn.role | permission)"
+                    [ngClass]="[btn.buttonType ? btn.buttonType : 'mat-flat-button']" mat-flat-button
+                    [color]="btn.color ? btn.color : 'primary'" (click)="onBtnClick(btn.action)">
+                    <ng-container *ngIf="btn.icon">
                         <mat-icon [svgIcon]="btn.icon"></mat-icon>
-                    </button>
-                    <div *ngIf="btn.isConfigDatatable && isShowConfig"
-                        class="absolute w-72 top-20 right-7 border bg-slate-200 p-4">
-                        <div class="content-config flex flex-col gap-1">
-                            <ng-container *ngFor="let item of columnDefinition">
-                                <mat-checkbox *ngIf="item.id !== 'selection'" (change)="onItemChecked(item)"
-                                    color="primary" [checked]="item.isShow">{{item.name}}</mat-checkbox>
-                            </ng-container>
-                        </div>
-                        <div class="arrow-up"></div>
+                    </ng-container>
+                    <span class="ml-2 mr-1" *ngIf="btn.label">{{btn.label}}</span>
+                </button>
+                <!-- <button *ngIf="btn.isConfigDatatable" class="ml-3 relative" (click)="showBtnConfig()" mat-icon-button>
+                    <mat-icon [svgIcon]="btn.icon"></mat-icon>
+                </button>
+                <div *ngIf="btn.isConfigDatatable && isShowConfig"
+                    class="absolute right-0 mt-2 w-64 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-4 z-99">
+                    <div class="content-config flex flex-col gap-1">
+                        <ng-container *ngFor="let item of columnDefinition">
+                            <mat-checkbox *ngIf="item.id !== 'selection'" (change)="onItemChecked(item)" color="primary"
+                                [checked]="item.isShow">{{item.name}}</mat-checkbox>
+                        </ng-container>
                     </div>
-                </ng-container>
-            </div>
+                    <div class="arrow-up"></div>
+                </div> -->
+                <!-- Nút Setting -->
+                <button class="btn-open-config" *ngIf="btn.isConfigDatatable" (click)="toggleConfig($event)"
+                    mat-icon-button>
+                    <mat-icon [svgIcon]="btn.icon"></mat-icon>
+                </button>
+
+                <!-- Dropdown config -->
+                <div *ngIf="btn.isConfigDatatable && isShowConfig" #configPanel class="absolute right-0 top-12 w-64 max-w-[90vw] origin-top-right rounded-xl
+                    bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
+                    p-5 z-[9999]" (click)="$event.stopPropagation()">
+                    <div class="flex flex-col gap-1.5 max-h-[70vh] overflow-y-auto">
+                        <ng-container *ngFor="let item of columnDefinition">
+                            <mat-checkbox *ngIf="item.id !== 'selection'" (click)="$event.stopPropagation()"
+                                (change)="onItemChecked(item)" color="primary" [checked]="item.isShow">
+                                {{ item.name }}
+                            </mat-checkbox>
+                        </ng-container>
+                    </div>
+                </div>
+
+            </ng-container>
         </div>
     </div>
     <div *ngIf="displayColumns.length > 0 && (dataSource | async)" [@fadeOutTop]="tableConfig.isViewDetail !== false"
         [@fadeOutBottom]="tableConfig.isViewDetail === false" class="flex flex-auto overflow-hidden relative">
-        <div class="flex flex-col flex-auto overflow-auto table-container">
-            <table mat-table style="margin-bottom: 100px;" #matTable [dataSource]="(dataSource | async).content"
+        <div class="flex flex-col flex-auto mb-32 sm:mb-18 overflow-y-auto">
+            <table mat-table #matTable [dataSource]="(dataSource | async)?.content || []"
                 (matSortChange)="handleSort.emit($event)" multiTemplateDataRows>
                 <ng-container *ngFor="let column of columnDefinition" [matColumnDef]="column.id"
                     [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
+
                     <ng-container [ngSwitch]="column.type">
                         <!-- ::::::::::::::::::::::::::::::::::INDEX:::::::::::::::::::::::::::::::::::::::: -->
                         <div *ngSwitchCase="'index'">
@@ -290,27 +282,26 @@
                                     'cursor': (column.viewDetail)?'pointer' : 'default' }"
                                 [class.cell-align-right]="column.alignRight"
                                 [class.cell-align-center]="column.alignCenter">
-                                <span class="text-ellipsis-line-2" *ngIf="!column.format && !column.viewDetail"
-                                    [matTooltip]="!utils.getValueByKey(element, column.id) ? '-' :
+                                <span class="line-clamp-1" *ngIf="!column.format && !column.viewDetail" [matTooltip]="!utils.getValueByKey(element, column.id) ? '-' :
                                     utils.getValueByKey(element, column.id)">
                                     {{ !utils.getValueByKey(element, column.id) ? '-' :
                                     utils.getValueByKey(element, column.id)}}
                                 </span>
                                 <span *ngIf="!column.format && column.viewDetail"
-                                    class="hover:cursor-pointer text-link text-ellipsis-line-2" [matTooltip]="!utils.getValueByKey(element, column.id) ? '-' :
+                                    class="hover:cursor-pointer text-link line-clamp-1" [matTooltip]="!utils.getValueByKey(element, column.id) ? '-' :
                                     utils.getValueByKey(element, column.id)">
                                     {{ !utils.getValueByKey(element, column.id) ? '-' :
                                     utils.getValueByKey(element, column.id)}}
                                 </span>
 
-                                <span class="text-ellipsis-line-2"
-                                    *ngIf="column && column.format && isNumber(column.format)" [matTooltip]="utils.getValueByKey(element, column.id) | currencyFormatPipe:
+                                <span class="line-clamp-1" *ngIf="column && column.format && isNumber(column.format)"
+                                    [matTooltip]="utils.getValueByKey(element, column.id) | currencyFormatPipe:
                                     pipeNumber(column.format)">
                                     {{ utils.getValueByKey(element, column.id) | currencyFormatPipe:
                                     pipeNumber(column.format) }}
                                 </span>
-                                <span class="text-ellipsis-line-2"
-                                    *ngIf="column && column.format && isDateTime(column.format)" [matTooltip]="utils.getValueByKey(element, column.id) | datetimeformat:
+                                <span class="line-clamp-1" *ngIf="column && column.format && isDateTime(column.format)"
+                                    [matTooltip]="utils.getValueByKey(element, column.id) | datetimeformat:
                                     column.format.toString()">
                                     {{ utils.getValueByKey(element, column.id) | datetimeformat:
                                     column.format.toString() }}
@@ -382,6 +373,45 @@
                                 </mat-checkbox>
                             </td>
                         </div>
+                        <!-- ::::::::::::::::::::::::::::::::::TRANSACTION AMOUNT:::::::::::::::::::::::::::::::::::::::: -->
+                        <ng-container *ngSwitchCase="'transaction-amount'">
+                            <th *matHeaderCellDef mat-header-cell
+                                [ngStyle]="{
+                                    'text-align': column.alignRight ? 'right' : 'left',
+                                    'padding-left': column.alignRight ? '20px' : '10px',
+                                    'width': ((column.weight || 0) * 10) + 'px',
+                                    'min-width': ((column.weight || 0) * 10) + 'px'
+                                }">
+                                {{ column.name }}
+                            </th>
+
+                            <td *matCellDef="let element" mat-cell
+                                [ngStyle]="{
+                                    'text-align': column.alignRight ? 'right' : 'left',
+                                    'padding-left': column.alignRight ? '20px' : '10px',
+                                    'width': ((column.weight || 0) * 10) + 'px',
+                                    'min-width': ((column.weight || 0) * 10) + 'px'
+                                }"
+                                [class.cell-align-right]="column.alignRight"
+                                [class.cell-align-center]="column.alignCenter">
+
+                                <ng-container *ngIf="element.oldAmount != null && element.newAmount != null">
+                                    <span
+                                        class="font-semibold"
+                                        [ngClass]="{
+                                        'text-[#16a34a]': element.newAmount > element.oldAmount,
+                                        'text-[#ef4444]': element.newAmount < element.oldAmount
+                                        }">
+                                        {{ element.newAmount > element.oldAmount ? '+' : element.newAmount < element.oldAmount ? '-' : '' }}
+                                        {{ (element.amount ?? utils.getValueByKey(element, column.id)) | number:'1.0-0' }}
+                                    </span>
+                                </ng-container>
+
+                                <ng-container *ngIf="element.oldAmount == null || element.newAmount == null">
+                                    <span class="text-gray-500">-</span>
+                                </ng-container>
+                            </td>
+                        </ng-container>
                         <!-- ::::::::::::::::::::::::::::::::::TextColor:::::::::::::::::::::::::::::::::::::::: -->
                         <div *ngSwitchCase="'text-color'">
                             <th *matHeaderCellDef mat-header-cell
@@ -433,31 +463,39 @@
                 <tr mat-header-row class="bg-primary-grayNeutral-5" *matHeaderRowDef="displayColumns; sticky: true">
                 </tr>
                 <ng-container *ngIf="tableConfig.showFooter">
-                    <tr mat-footer-row *matFooterRowDef="footerColumns" class="example-first-footer-row font-bold"></tr>
+                    <tr mat-footer-row *matFooterRowDef="footerColumns" class="example-first-footer-row font-bold">
+                    </tr>
                 </ng-container>
                 <tr mat-row class="hover:bg-accent-50 element-row" [ngStyle]="styleObject(selectedRowIndex, idx)"
                     [class.expanded-row]="this.isElementExits(element)"
                     *matRowDef="let element; let row; columns: displayColumns; let idx = index"></tr>
                 <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+                <tr *matNoDataRow>
+                    <td [attr.colspan]="displayColumns.length">
+                        <app-no-data></app-no-data>
+                    </td>
+                </tr>
             </table>
-            <ng-template #noItems>
-                <div class="p-8 border-t text-4xl font-semibold tracking-tight text-center" #noDataRef>
-                    <ng-content select="[noDataMessage]"></ng-content>
-                </div>
-                <div *ngIf="noDataRef.children.length === 0">
-                    No data found!
-                </div>
-            </ng-template>
-            <mat-paginator
-                class="sm:absolute sm:inset-x-0 {{ tableConfig.displayScollX ?'sm:bottom-2' : 'sm:bottom-0'}} border-b sm:border-t sm:border-b-0 z-10 bg-white dark:bg-transparent"
-                [pageSizeOptions]="pageSizeOptions" [length]="(dataSource | async).totalElements"
-                [pageIndex]="(dataSource | async).number" [pageSize]="(dataSource | async).size"
+
+            <mat-paginator *ngIf="(dataSource | async)?.totalElements > 0"
+                class="absolute inset-x-0 border-b sm:border-t sm:border-b-0 z-10 bg-white {{ tableConfig.displayScollX ?'bottom-2' : 'bottom-0'}}"
+                [pageSizeOptions]="pageSizeOptions" [length]="(dataSource | async)?.totalElements"
+                [pageIndex]="(dataSource | async)?.number" [pageSize]="(dataSource | async)?.size"
                 [showFirstLastButtons]="true" (page)="pageSwitch.emit($event)">
             </mat-paginator>
+            <!-- <app-custom-paginator
+                [length]="(dataSource | async)?.totalElements"
+                [pageSize]="(dataSource | async)?.size"
+                [pageIndex]="(dataSource | async)?.number"
+                [pageSizeOptions]="[10, 25, 50, 75, 100]"
+                (page)="pageSwitch.emit($event)">
+            </app-custom-paginator> -->
+
+            <!-- </ng-template> -->
         </div>
-        <ng-container class="w-full bg-red">
-            <div class="absolute bottom-3 left-4 d-flex z-999 ">
-                <div class="text-xl font-extrabold text-primary">
+        <ng-container class="w-full">
+            <div class="absolute bottom-3 left-4 z-999">
+                <div class="text-2xl font-extrabold text-primary-blue-2">
                     <ul *ngFor="let footer of footerTable;">
                         <li>
                             {{ footer.label }} {{ footer.value | number }} {{ footer.type }}

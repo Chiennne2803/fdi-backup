@@ -36,7 +36,6 @@ export class ReportNewAccountComponent implements OnInit {
 
     private _dataSearchDialog: object;
     private searchPayload: BaseRequest = new BaseRequest();
-    private isFirstLoad = true;
 
     constructor(
         private _dialogService: DialogService,
@@ -48,16 +47,12 @@ export class ReportNewAccountComponent implements OnInit {
     ngOnInit(): void {
         this.tableConfig.title = 'Báo cáo tài khoản mới';
         this._reportNewAccountService.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
                 this.dataSource$ =  this._reportNewAccountService.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
         });
         this._reportNewAccountService.getPrepareLoadingPage().subscribe(ret => {
             if (ret) {
                 this.lstStaff = [];
-                this.lstStaff.push({label: 'Tẩt cả', value: null});
+                this.lstStaff.push({label: 'Tẩt cả', value: ''});
                 ret.payload.lstStaff.forEach(el => this.lstStaff.push({
                     label: el.fullName,
                     value: el.fullName

@@ -51,11 +51,11 @@
                     </article>
                     <div class="grid grid-cols-2 gap-5 p-5">
                         <div class="w-1/2 flex flex-col gap-4">
-                            <mat-label>Số tiền cho huy động vốn tối thiểu (VNĐ):</mat-label>
+                            <mat-label>Số tiền cho huy động vốn tối thiểu (VND):</mat-label>
                             <b>{{detail.minLoan | currencyFormatPipe: 3}}</b>
                         </div>
                         <div class="w-1/2 flex flex-col gap-4">
-                            <mat-label>Số tiền cho huy động vốn tối đa (VNĐ):</mat-label>
+                            <mat-label>Số tiền cho huy động vốn tối đa (VND):</mat-label>
                             <b>{{detail.maxLoan | currencyFormatPipe: 3}}</b>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                     </article>
                     <div class="grid grid-cols-2 gap-5 p-5">
                         <div class="w-1/2 flex flex-col gap-4">
-                            <mat-label>Phí hàng tháng (VNĐ)</mat-label>
+                            <mat-label>Phí hàng tháng (VND)</mat-label>
                             <b>{{ detail.percentFee  | currencyFormatPipe: 3}}</b>
                         </div>
                         <div class="w-1/2 flex flex-col gap-4">
@@ -105,7 +105,7 @@
                             <b>{{ detail.percentTaxBonusCompany  | currencyFormatPipe: 3}}</b>
                         </div>
                         <div class="w-1/2 flex flex-col gap-4">
-                            <mat-label>Phí chuyển nhượng (VNĐ)</mat-label>
+                            <mat-label>Phí chuyển nhượng (VND)</mat-label>
                             <b>{{ detail.percentTranfer  | currencyFormatPipe: 3}}</b>
                         </div>
                     </div>
@@ -147,12 +147,12 @@
                         </div>
                         <div class="w-1/2 flex flex-col gap-4">
                             <mat-label>Tài khoản bỏ qua check số tiền đầu tư tối thiểu</mat-label>
-                            <b>{{ detail.accByPassMinInvest }}</b>
+                            <b>{{ detail.accNameByPassMinInvest }}</b>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-5 p-5">
                         <div class="w-1/2 flex flex-col gap-4">
-                            <mat-label>Số tiền cho phép bỏ qua để xoá nợ (VNĐ) </mat-label>
+                            <mat-label>Số tiền cho phép bỏ qua để xoá nợ (VND) </mat-label>
                             <b>{{ detail.amountBypassDebt | currencyFormatPipe: 10 }}</b>
                         </div>
                         <div class="w-1/2 flex flex-col gap-4">
@@ -194,7 +194,7 @@
                     </article>
                     <div class="grid grid-cols-2 gap-5 p-5">
                         <mat-form-field class="w-1/2">
-                            <mat-label>Số tiền cho huy động vốn tối thiểu (VNĐ):</mat-label>
+                            <mat-label>Số tiền cho huy động vốn tối thiểu (VND):</mat-label>
                             <input id="minLoan"
                                    [placeholder]="'0'"
                                    currencyMask autocomplete="off"
@@ -214,7 +214,7 @@
                             </mat-error>
                         </mat-form-field>
                         <mat-form-field class="w-1/2">
-                            <mat-label>Số tiền cho huy động vốn tối đa (VNĐ):</mat-label>
+                            <mat-label>Số tiền cho huy động vốn tối đa (VND):</mat-label>
                             <input id="maxLoan"
                                    [placeholder]="'0'"
                                    currencyMask autocomplete="off"
@@ -287,7 +287,7 @@
                     </article>
                     <div class="grid grid-cols-2 gap-5 p-5">
                         <mat-form-field class="w-1/2">
-                            <mat-label>Phí hàng tháng (VNĐ)</mat-label>
+                            <mat-label>Phí hàng tháng (VND)</mat-label>
                             <input id="percentFee"
                                    [placeholder]="'0'"
                                    currencyMask autocomplete="off"
@@ -354,7 +354,7 @@
                     </div>
                     <div class="grid grid-cols-2 gap-5 p-5">
                         <mat-form-field class="w-1/2">
-                            <mat-label>Phí chuyển nhượng (VNĐ)</mat-label>
+                            <mat-label>Phí chuyển nhượng (VND)</mat-label>
                             <input id="percentTranfer"
                                    matInput
                                    formControlName="percentTranfer"
@@ -488,13 +488,13 @@
 
                         <mat-form-field class="w-1/2">
                             <mat-label>Tài khoản bỏ qua check số tiền đầu tư tối thiểu</mat-label>
-                            <input id="accByPassMinInvest"
+                            <input id="accNameByPassMinInvest"
                                    maxlength="15"
                                    matInput
-                                   formControlName="accByPassMinInvest">
+                                   formControlName="accNameByPassMinInvest">
                         </mat-form-field>
                         <mat-form-field class="w-1/2">
-                            <mat-label>Số tiền cho phép bỏ qua để xoá nợ (VNĐ)</mat-label>
+                            <mat-label>Số tiền cho phép bỏ qua để xoá nợ (VND)</mat-label>
                             <input id="amountBypassDebt"
                                    maxlength="15"
                                    matInput

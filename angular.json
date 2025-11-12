@@ -55,9 +55,12 @@
                             "src/styles/vendors.scss",
                             "src/@fuse/styles/main.scss",
                             "src/styles/styles.scss",
+                            "node_modules/flickity/dist/flickity.min.css",
                             "src/styles/tailwind.scss"
                         ],
-                        "scripts": []
+                        "scripts": [
+                            "node_modules/flickity/dist/flickity.pkgd.min.js"
+                        ]
                     },
                     "configurations": {
                         "production": {
@@ -142,75 +145,6 @@
                                     "maximumError": "8mb"
                                 }
                             ]
-                        },
-                        "162": {
-                            "fileReplacements": [
-                                {
-                                    "replace": "src/environments/environment.ts",
-                                    "with": "src/environments/environment.162.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "aot": true,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
-                            "budgets": [
-                                {
-                                    "type": "initial",
-                                    "maximumWarning": "5mb",
-                                    "maximumError": "8mb"
-                                }
-                            ]
-                        },
-                        "188": {
-                            "fileReplacements": [
-                                {
-                                    "replace": "src/environments/environment.ts",
-                                    "with": "src/environments/environment.188.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "aot": true,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
-                            "budgets": [
-                                {
-                                    "type": "initial",
-                                    "maximumWarning": "5mb",
-                                    "maximumError": "8mb"
-                                }
-                            ]
-                        },
-                        "38": {
-                            "fileReplacements": [
-                                {
-                                    "replace": "src/environments/environment.ts",
-                                    "with": "src/environments/environment.38.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "aot": true,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
-                            "budgets": [
-                                {
-                                    "type": "initial",
-                                    "maximumWarning": "5mb",
-                                    "maximumError": "8mb"
-                                }
-                            ]
                         }
                     },
                     "defaultConfiguration": "production"
@@ -229,15 +163,6 @@
                         },
                         "202": {
                             "browserTarget": "app:build:202"
-                        },
-                        "38": {
-                            "browserTarget": "app:build:38"
-                        },
-                        "162": {
-                            "browserTarget": "app:build:162"
-                        },
-                        "188": {
-                            "browserTarget": "app:build:188"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -258,12 +183,17 @@
                         "inlineStyleLanguage": "scss",
                         "assets": [
                             "src/favicon.ico",
-                            "src/assets"
+                            "src/assets",
+                            "src/firebase-messaging-sw.js"
                         ],
                         "styles": [
-                            "src/styles.scss"
+                            "src/styles.scss",
+                            "node_modules/flickity/dist/flickity.min.css"
+
                         ],
-                        "scripts": []
+                        "scripts": [
+                              "node_modules/flickity/dist/flickity.pkgd.min.js"
+                        ]
                     }
                 },
                 "lint": {

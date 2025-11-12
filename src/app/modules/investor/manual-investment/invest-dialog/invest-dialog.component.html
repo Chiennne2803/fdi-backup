@@ -1,8 +1,8 @@
-<div class="flex flex-col max-w-240 w-120 max-h-screen -m-6">
+<div class="flex flex-col sm:max-w-240 sm:w-120 max-h-screen -m-6">
 
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium uppercase">Đầu tư tự chọn</div>
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Đầu tư tự chọn</div>
         <button mat-icon-button
                 tabindex="-1">
             <mat-icon class="text-current"
@@ -13,35 +13,36 @@
 
     <!-- Compose form -->
     <ng-container>
-        <form class="flex flex-col flex-auto p-5 overflow-y-auto"
+        <form class="flex flex-col flex-auto p-4 overflow-y-auto"
               [formGroup]="investForm">
             <!-- Info -->
-            <div class="flex flex-col p-4 mb-4"
+            <div class="flex flex-col space-y-3"
                  *ngIf="data">
-                <div class="flex flex-row w-full gap-4 mb-5">
+                <div class="flex flex-row w-full gap-4 ">
                     <article class="prose break-words">
                         <p>Số dư khả dụng: <br> <span class="text-primary text-3xl">{{ data.prepareData.wlEu |
                                 currencyFormatPipe: 10 }} VND</span></p>
                     </article>
                 </div>
-                <div class="flex flex-row w-full gap-4 mb-5">
+                <div class="flex flex-row w-full gap-4 ">
                     <article class="prose break-words">
                         <p>Số tiền có thể đầu tư: <br> <b>{{ data.prepareData.remainingAmount | currencyFormatPipe: 10
                                 }} VND</b></p>
                     </article>
                 </div>
-                <div class="flex flex-row w-full gap-4 mb-5">
+                <div class="flex flex-row w-full gap-4 ">
                     <article class="prose break-words">
                         <p>Kỳ hạn(ngày): <br> <b>{{ data.prepareData.investorTime }}</b></p>
                     </article>
                 </div>
-                <div class="flex flex-row w-full gap-4 mb-5">
-                    <mat-form-field class="w-full">
-                        <mat-label>Số tiền đầu tư (VNĐ)</mat-label>
+                <div class="flex flex-row w-full gap-4 ">
+                    <mat-form-field class="w-full" floatLabel="always">
+                        <mat-label>Số tiền đầu tư (VND)</mat-label>
                         <input id="amount"
                                tabindex="1"
                                [maxlength]="15"
                                matInput
+                               placeholder="Nhập số tiền đầu tư..."
                                currencyMask autocomplete="off"
                                class="text-left"
                                [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
@@ -60,7 +61,7 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-                <div class="flex flex-row w-full gap-4 mb-5">
+                <div class="flex flex-row w-full gap-4 ">
                     <article class="prose break-words">
                         <p>Lãi dự kiến: <br> <b>{{ interestEstimate | currencyFormatPipe : 10 }} VND</b></p>
                     </article>
@@ -70,8 +71,8 @@
                     <div
                          [class]="investForm.get('isTrusted').touched && investForm.get('isTrusted').hasError('required') ? 'text-red-700' : ''">
                         Tôi xác nhận đã đọc, hiểu và đồng ý với các điều khoản và điều kiện của <button
-                                class="text-blue-700 underline"
-                                type="reset"
+                                class="text-primary underline"
+                                type="button"
                                 (click)="downloadContract()">Hợp đồng tài trợ vốn</button>
                     </div>
                 </mat-checkbox>
@@ -79,7 +80,7 @@
         </form>
     </ng-container>
     <!-- Actions -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6">
+    <div class="flex flex-col sm:flex-row items-center justify-center mb-4 sm:mb-6">
         <div class="flex items-center mt-4 sm:mt-0">
             <button class="order-first sm:order-last"
                     mat-flat-button

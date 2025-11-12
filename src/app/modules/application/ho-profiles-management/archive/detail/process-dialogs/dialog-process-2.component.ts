@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../../../../../core/auth/auth.service';
-import {DateTimeformatPipe} from '../../../../../../shared/components/pipe/date-time-format.pipe';
-import {AdmAccountDetailDTO, UserType} from "../../../../../../models/admin";
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../../../../../core/auth/auth.service';
+import { DateTimeformatPipe } from '../../../../../../shared/components/pipe/date-time-format.pipe';
+import { AdmAccountDetailDTO, UserType } from "../../../../../../models/admin";
 
 
 @Component({
@@ -21,7 +21,7 @@ export class DialogProcess2Component implements OnInit {
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
         private _datetimePipe: DateTimeformatPipe,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.formGroup = this._formBuilder.group({
@@ -42,30 +42,57 @@ export class DialogProcess2Component implements OnInit {
             this.formGroup.removeControl('financialStatement');
         }
         this.formGroup.get('status').valueChanges.subscribe((value) => {
+            // console.log(this.formGroup.value)
             if (value === 0) {
                 this.isRq = false;
                 this.formGroup.get('saleNote').removeValidators(Validators.required);
                 this.formGroup.get('saleComment').removeValidators(Validators.required);
+
                 this.formGroup.addControl('content', new FormControl(null, [Validators.required, Validators.maxLength(500)]));
-                this.formGroup.removeControl('financialStatement');
+
                 if (this.data.type == UserType.COMPANY) {
-                    this.formGroup.addControl('financialStatement', new FormControl(null));
+                    const fs = this.formGroup.get('financialStatement');
+                    fs?.clearValidators(); // không bắt buộc khi từ chối
+                    fs?.updateValueAndValidity();
                 }
             } else {
                 this.isRq = true;
                 this.formGroup.get('saleNote').addValidators(Validators.required);
                 this.formGroup.get('saleComment').addValidators(Validators.required);
                 this.formGroup.removeControl('content');
-                this.formGroup.removeControl('financialStatement');
+
                 if (this.data.type == UserType.COMPANY) {
-                    this.formGroup.addControl('financialStatement', new FormControl(null, Validators.required));
+                    const fs = this.formGroup.get('financialStatement');
+                    fs?.setValidators(Validators.required); // bắt buộc khi duyệt
+                    fs?.updateValueAndValidity();
                 }
             }
+
+            // if (value === 0) {
+            //     this.isRq = false;
+            //     this.formGroup.get('saleNote').removeValidators(Validators.required);
+            //     this.formGroup.get('saleComment').removeValidators(Validators.required);
+            //     this.formGroup.addControl('content', new FormControl(null, [Validators.required, Validators.maxLength(500)]));
+            //     this.formGroup.removeControl('financialStatement');
+            //     if (this.data.type == UserType.COMPANY) {
+            //         this.formGroup.addControl('financialStatement', new FormControl(null));
+            //     }
+            // } else {
+            //     this.isRq = true;
+            //     this.formGroup.get('saleNote').addValidators(Validators.required);
+            //     this.formGroup.get('saleComment').addValidators(Validators.required);
+            //     this.formGroup.removeControl('content');
+            //     this.formGroup.removeControl('financialStatement');
+            //     if (this.data.type == UserType.COMPANY) {
+            //         this.formGroup.addControl('financialStatement', new FormControl(null, Validators.required));
+            //     }
+            // }
         });
     }
 
     onClickSubmit(): void {
         this.formGroup.markAllAsTouched();
+        // console.log(this.formGroup.value)
         if (this.formGroup.valid) {
             this.onSubmit.emit(this.formGroup.value);
         }

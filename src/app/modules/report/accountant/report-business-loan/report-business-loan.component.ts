@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import {BaseRequest, BaseResponse} from 'app/models/base';
+import { BaseRequest, BaseResponse } from 'app/models/base';
 import { DialogService } from 'app/service/common-service/dialog.service';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import {
     TABLE_STATISTICAL_REPORT_INVESTOR_TOPUP_CONFIG,
     TASK_BAR_STATISTICAL_REPORT_CONFIG
 } from './report-business-loan.config';
-import {ButtonTableEvent} from '../../../../shared/models/datatable/table-config.model';
-import {GroupSearchComponent} from '../../../../shared/components/group-search/group-search.component';
+import { ButtonTableEvent } from '../../../../shared/models/datatable/table-config.model';
+import { GroupSearchComponent } from '../../../../shared/components/group-search/group-search.component';
 import {
     DateTimeFromToSearch,
     FromToSearch,
     InputSearch
 } from '../../../../shared/components/group-search/search-config.models';
-import {MatDialog} from '@angular/material/dialog';
-import {ReportBusinessLoanService, ReportTopupRequestService} from '../../../../service';
-import {PageEvent} from '@angular/material/paginator';
-import {FsCardDownDTO, FsTopupDTO} from "../../../../models/service";
+import { MatDialog } from '@angular/material/dialog';
+import { ReportBusinessLoanService, ReportTopupRequestService } from '../../../../service';
+import { PageEvent } from '@angular/material/paginator';
+import { FsCardDownDTO, FsTopupDTO } from "../../../../models/service";
 
 @Component({
-  selector: 'app-report-investor-topup',
-  templateUrl: './report-business-loan.component.html',
-  styleUrls: ['./report-business-loan.component.scss']
+    selector: 'app-report-investor-topup',
+    templateUrl: './report-business-loan.component.html',
+    styleUrls: ['./report-business-loan.component.scss']
 })
 export class ReportBusinessLoanComponent implements OnInit {
     dataSource$: Observable<BaseResponse>;
@@ -29,13 +29,12 @@ export class ReportBusinessLoanComponent implements OnInit {
     taskBarConfig = TASK_BAR_STATISTICAL_REPORT_CONFIG;
     _btnConfig = {
         commonBtn: [
-            {type : 'export', role : 'SFF_STATISTIC_EXPORT', fileName : 'Bao_cao_du_no_doanh_nghiep_huy_dong_von'},
+            { type: 'export', role: 'SFF_STATISTIC_EXPORT', fileName: 'Bao_cao_du_no_doanh_nghiep_huy_dong_von' },
         ],
     };
 
     private _dataSearchDialog: object;
     private searchPayload: BaseRequest = new BaseRequest();
-    private isFirstLoad = true;
 
     constructor(
         private _dialogService: DialogService,
@@ -46,11 +45,7 @@ export class ReportBusinessLoanComponent implements OnInit {
     ngOnInit(): void {
         this.tableConfig.title = 'Báo cáo dư nợ doanh nghiệp huy động vốn';
         this._service.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
-                this.dataSource$ =  this._service.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
+            this.dataSource$ = this._service.lazyLoad;
         });
     }
 

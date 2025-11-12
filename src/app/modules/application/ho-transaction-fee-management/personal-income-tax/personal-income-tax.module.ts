@@ -31,6 +31,7 @@ const investedProfileRoutes: Route[] = [
         path     : '',
         children: [
             {
+                data: { title: 'Danh sách thuế thu nhập cá nhân' },
                 path: 'list',
                 component: PersonalIncomeTaxListComponent,
                 resolve: {
@@ -38,6 +39,7 @@ const investedProfileRoutes: Route[] = [
                 },
             },
             {
+                data: { title: 'Yêu cầu thuế thu nhập cá nhân' },
                 path: 'request',
                 component: PersonalIncomeTaxRequestComponent,
                 resolve: {

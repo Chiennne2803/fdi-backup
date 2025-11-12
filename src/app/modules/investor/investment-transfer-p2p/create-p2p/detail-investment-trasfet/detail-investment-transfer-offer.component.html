@@ -1,133 +1,149 @@
-<mat-drawer-container
-    class="flex-auto h-full bg-card dark:bg-transparent">
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
 
     <mat-drawer-content class="flex flex-col">
         <div class="flex flex-col w-full p-5">
-            <ng-container  *ngIf="detailInvestmentTransferData">
-                <div class="relative w-full px-5">
-                    <div class="flex items-center justify-between w-full mx-auto py-2">
+            <ng-container *ngIf="detailInvestmentTransferData">
+                <div class="relative w-full">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full mx-auto py-2">
                         <article class="prose break-words">
-                            <h3>
-                                Thông tin giao dịch chào bán
+                            <h3 class="flex flex-col sm:flex-row sm:items-center items-start justify-start gap-3">
+                                <span (click)="onClose()"
+                                    class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                                    <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                                        svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                                    Quay lại
+                                </span>
+                                Thông tin giao dịch chuyển nhượng
                             </h3>
                         </article>
                         <div class="flex items-center justify-end">
-                            <button class="ml-4 mat-flat-button "
-                                    mat-flat-button
-                                    color="warn"
-                                    *ngIf="detailInvestmentTransferData?.status == 1"
-                                    (click)="cancelInvest(detailInvestmentTransferData)">
-                                <ng-container >
+                            <button class="ml-4" mat-flat-button color="warn"
+                                *ngIf="detailInvestmentTransferData?.status == 1"
+                                (click)="cancelInvest(detailInvestmentTransferData)">
+                                <ng-container>
                                     <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
                                 </ng-container>
                                 <span class="ml-2 mr-1">Huỷ</span>
                             </button>
 
-                            <button class="ml-4 mat-flat-button" (click)="onClose()"
+                            <!-- <button class="ml-4 mat-flat-button" (click)="onClose()"
                                     mat-stroked-button>
                                 Đóng
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
                 <ng-container>
-                    <fuse-card class="grid grid-cols-4 gap-5 p-5 border p-8 ">
+                    <div
+                        class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 border border-primary-grayLight-2 rounded-lg">
                         <article class="prose break-words ">
-                            <p>Mã giao dịch chuyển nhượng: <br> <b>{{ detailInvestmentTransferData.transCode }}</b></p>
+                            <p>Mã giao: <br> <b>{{ detailInvestmentTransferData.transCode }}</b></p>
                         </article>
                         <article class="prose break-words">
                             <p>Số hồ sơ đầu tư: <br> <b>{{ detailInvestmentTransferData.fsLoanProfilesId }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Ngày tạo giao dịch: <br> <b>{{ detailInvestmentTransferData.createdDate | datetimeformat : 'DD/MM/YYYY'  }}</b></p>
+                            <p>Ngày tạo giao dịch: <br> <b>{{ detailInvestmentTransferData.createdDate | datetimeformat
+                                    : 'DD/MM/YYYY' }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Ngày đáo hạn: <br> <b>{{ detailInvestmentTransferData.investorTimeExpried | datetimeformat : 'DD/MM/YYYY'  }}</b></p>
+                            <p>Ngày đáo hạn: <br> <b>{{ detailInvestmentTransferData.investorTimeExpried |
+                                    datetimeformat : 'DD/MM/YYYY' }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Số tiền chuyển nhượng: <br> <b>{{ detailInvestmentTransferData.tranferAmount | currencyFormatPipe : 10  }}</b></p>
+                            <p>Số tiền chuyển nhượng (VND): <br> <b>{{ detailInvestmentTransferData.tranferAmount |
+                                    currencyFormatPipe : 10 }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Số tiền chào bán: <br> <b>{{ detailInvestmentTransferData.saleAmount | currencyFormatPipe : 10  }}</b></p>
+                            <p>Số tiền chào bán (VND): <br> <b>{{ detailInvestmentTransferData.saleAmount |
+                                    currencyFormatPipe : 10 }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Phí chuyển nhượng: <br> <b>{{ detailInvestmentTransferData.feeP2P | currencyFormatPipe : 10  }}</b></p>
+                            <p>Phí chuyển nhượng (VND): <br> <b>{{ detailInvestmentTransferData.feeP2P |
+                                    currencyFormatPipe : 10 }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Chuyển nhượng thành công: <br> <b>{{ detailInvestmentTransferData.tranferedAmount | currencyFormatPipe : 10  }}</b></p>
+                            <p>Chuyển nhượng thành công: <br> <b>{{ detailInvestmentTransferData.tranferedAmount |
+                                    currencyFormatPipe : 10 }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Số tiền chuyển nhượng còn lại: <br> <b>{{ detailInvestmentTransferData.remainTranferAmount | currencyFormatPipe : 10  }}</b></p>
+                            <p>Số tiền chuyển nhượng còn lại (VND): <br> <b>{{
+                                    detailInvestmentTransferData.remainTranferAmount | currencyFormatPipe : 10 }}</b>
+                            </p>
                         </article>
                         <article class="prose break-words">
-                            <p>Số tiền chào bán còn lại: <br> <b>{{ detailInvestmentTransferData.remainSalAmount | currencyFormatPipe : 10  }}</b></p>
+                            <p>Số tiền chào bán còn lại (VND): <br> <b>{{ detailInvestmentTransferData.remainSalAmount |
+                                    currencyFormatPipe : 10 }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Doanh thu chuyển nhượng: <br> <b>{{ detailInvestmentTransferData.turnoverAmount | currencyFormatPipe : 10  }}</b></p>
+                            <p>Lãi dự kiến (VND): <br> <b>{{ detailInvestmentTransferData.turnoverAmount |
+                                    currencyFormatPipe : 10 }}</b></p>
                         </article>
                         <article class="prose break-words">
                             <p>Trạng thái giao dịch: <br> <b>{{ detailInvestmentTransferData.statusName }}</b></p>
                         </article>
-
-                    </fuse-card>
-                </ng-container>
-                <div class="relative w-full px-5 py-8">
-                    <div class="flex items-center justify-between w-full mx-auto py-2">
-                        <article class="prose break-words">
-                            <h3>
-                                Lịch sử chuyển nhượng
-                            </h3>
-                        </article>
                     </div>
+                </ng-container>
+                <div class="flex items-center justify-between w-full mx-auto px-5 py-4">
+                    <article class="prose break-words">
+                        <h3>
+                            Lịch sử chuyển nhượng
+                        </h3>
+                    </article>
                 </div>
                 <ng-container *ngIf="_dataSourceInv">
-                    <table mat-table [dataSource]="_dataSourceInv" class="overflow-x-auto">
+                    <div class="flex flex-col flex-auto border overflow-y-auto">
+                        <table class="min-w-[800px]" mat-table [dataSource]="_dataSourceInv">
+                            <!-- No Column -->
+                            <ng-container matColumnDef="no">
+                                <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef> STT </th>
+                                <td mat-cell *matCellDef="let element = index"> {{element + 1}} </td>
+                            </ng-container>
 
-                        <!--- Note that these columns can be defined in any order.
-                              The actual rendered columns are set as a property on the row definition" -->
+                            <!-- fsCardDownCode Column -->
+                            <ng-container matColumnDef="transCode">
+                                <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef> Mã giao dịch
+                                </th>
+                                <td mat-cell *matCellDef="let element"> {{element.transCode}} </td>
 
-                        <!-- No Column -->
-                        <ng-container matColumnDef="no">
-                            <th mat-header-cell *matHeaderCellDef> STT </th>
-                            <td mat-cell *matCellDef="let element = index"> {{element + 1}} </td>
-                        </ng-container>
+                            </ng-container>
 
-                        <!-- fsCardDownCode Column -->
-                        <ng-container matColumnDef="transCode">
-                            <th mat-header-cell *matHeaderCellDef> Mã giao dịch </th>
-                            <td mat-cell *matCellDef="let element"> {{element.transCode}} </td>
+                            <!-- periodName Column -->
+                            <ng-container matColumnDef="transferAmount">
+                                <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef> Số tiền chuyển
+                                    nhượng (VND) </th>
+                                <td mat-cell *matCellDef="let element"> {{element.transferAmount | currencyFormatPipe :
+                                    10}} </td>
+                            </ng-container>
 
-                        </ng-container>
+                            <!-- amount Column -->
+                            <ng-container matColumnDef="totalAmountEstimate">
+                                <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef> Doanh thu chuyển
+                                    nhượng (VND) </th>
+                                <td mat-cell *matCellDef="let element"> {{element.totalAmountEstimate |
+                                    currencyFormatPipe : 10}} </td>
+                            </ng-container>
 
-                        <!-- periodName Column -->
-                        <ng-container matColumnDef="transferAmount">
-                            <th mat-header-cell *matHeaderCellDef> Số tiền chuyển nhượng (VNĐ) </th>
-                            <td mat-cell *matCellDef="let element"> {{element.transferAmount | currencyFormatPipe : 10}} </td>
-                        </ng-container>
+                            <!-- date Column -->
+                            <ng-container matColumnDef="transDate">
+                                <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef> Ngày giao dịch
+                                </th>
+                                <td mat-cell *matCellDef="let element"> {{element.transDate | datetimeformat :
+                                    'DD/MM/YYYY'}} </td>
+                            </ng-container>
 
-                        <!-- amount Column -->
-                        <ng-container matColumnDef="totalAmountEstimate">
-                            <th mat-header-cell *matHeaderCellDef> Doanh thu chuyển nhượng (VNĐ) </th>
-                            <td mat-cell *matCellDef="let element"> {{element.totalAmountEstimate | currencyFormatPipe : 10}} </td>
-                        </ng-container>
+                            <tr mat-header-row
+                                *matHeaderRowDef="['no', 'transCode', 'transferAmount', 'totalAmountEstimate', 'transDate']">
+                            </tr>
+                            <tr mat-row
+                                *matRowDef="let row; columns: ['no', 'transCode', 'transferAmount', 'totalAmountEstimate', 'transDate'];">
+                            </tr>
+                        </table>
+                        <mat-paginator #paginatorInv [pageSizeOptions]="pageSizeOptions"
+                            [length]="detailInvestmentTransferData.fsInvestorTransP2PDTOS.length" [pageSize]="0"
+                            [showFirstLastButtons]="true" aria-label="Select page of periodic elements"></mat-paginator>
+                    </div>
 
-                        <!-- date Column -->
-                        <ng-container matColumnDef="transDate">
-                            <th mat-header-cell *matHeaderCellDef> Ngày giao dịch </th>
-                            <td mat-cell *matCellDef="let element"> {{element.transDate | datetimeformat : 'DD/MM/YYYY'}} </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="['no', 'transCode', 'transferAmount', 'totalAmountEstimate', 'transDate']"></tr>
-                        <tr mat-row *matRowDef="let row; columns: ['no', 'transCode', 'transferAmount', 'totalAmountEstimate', 'transDate'];"></tr>
-                    </table>
-                    <mat-paginator #paginatorInv
-                                   [pageSizeOptions]="pageSizeOptions"
-                                   [length]="detailInvestmentTransferData.fsInvestorTransP2PDTOS.length"
-                                   [pageSize]="0"
-                                   [showFirstLastButtons]="true"
-
-
-                                   aria-label="Select page of periodic elements"></mat-paginator>
                 </ng-container>
             </ng-container>
         </div>

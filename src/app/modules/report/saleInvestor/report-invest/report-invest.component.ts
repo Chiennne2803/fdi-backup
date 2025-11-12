@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import {BaseRequest, BaseResponse} from 'app/models/base';
+import { BaseRequest, BaseResponse } from 'app/models/base';
 import { DialogService } from 'app/service/common-service/dialog.service';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import {
     TABLE_STATISTICAL_REPORT_INVESTOR_TOPUP_CONFIG,
     TASK_BAR_STATISTICAL_REPORT_CONFIG
 } from './report-invest.config';
-import {ButtonTableEvent} from '../../../../shared/models/datatable/table-config.model';
-import {GroupSearchComponent} from '../../../../shared/components/group-search/group-search.component';
+import { ButtonTableEvent } from '../../../../shared/models/datatable/table-config.model';
+import { GroupSearchComponent } from '../../../../shared/components/group-search/group-search.component';
 import {
     DateTimeFromToSearch, DropListSearch,
     FromToSearch,
     InputSearch
 } from '../../../../shared/components/group-search/search-config.models';
-import {MatDialog} from '@angular/material/dialog';
-import {ReportInvestService} from '../../../../service';
-import {PageEvent} from '@angular/material/paginator';
-import {FsTransInvestorDTO} from "../../../../models/service";
+import { MatDialog } from '@angular/material/dialog';
+import { ReportInvestService } from '../../../../service';
+import { PageEvent } from '@angular/material/paginator';
+import { FsTransInvestorDTO } from "../../../../models/service";
 
 @Component({
-  selector: 'app-report-investor-topup',
-  templateUrl: './report-invest.component.html',
-  styleUrls: ['./report-invest.component.scss']
+    selector: 'app-report-investor-topup',
+    templateUrl: './report-invest.component.html',
+    styleUrls: ['./report-invest.component.scss']
 })
 export class ReportInvestComponent implements OnInit {
     dataSource$: Observable<BaseResponse>;
@@ -29,13 +29,12 @@ export class ReportInvestComponent implements OnInit {
     taskBarConfig = TASK_BAR_STATISTICAL_REPORT_CONFIG;
     _btnConfig = {
         commonBtn: [
-            {type : 'export', role : 'SFF_STATISTIC_EXPORT', fileName : 'Bao_cao_dau_tu'},
+            { type: 'export', role: 'SFF_STATISTIC_EXPORT', fileName: 'Bao_cao_dau_tu' },
         ],
     };
 
     private _dataSearchDialog: object;
     private searchPayload: BaseRequest = new BaseRequest();
-    private isFirstLoad = true;
 
     constructor(
         private _dialogService: DialogService,
@@ -46,11 +45,7 @@ export class ReportInvestComponent implements OnInit {
     ngOnInit(): void {
         this.tableConfig.title = 'Báo cáo đầu tư';
         this._reportInvestService.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
-                this.dataSource$ =  this._reportInvestService.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
+            this.dataSource$ = this._reportInvestService.lazyLoad;
         });
     }
 
@@ -93,14 +88,14 @@ export class ReportInvestComponent implements OnInit {
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ', null, false),
                         new InputSearch('lenderName', 'Bên huy động', null, false),
                         new InputSearch('investorTime', 'Kỳ hạn', null, false),
-                        new DateTimeFromToSearch( 'investorTimeStart', 'Thời điểm đầu tư', null, false, undefined, undefined,0,true),
+                        new DateTimeFromToSearch('investorTimeStart', 'Thời điểm đầu tư', null, false, undefined, undefined, 0, true),
                         new FromToSearch('amount', 'Số tiền đầu tư', null, 'number'),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Chờ phê duyệt', value: 1},
-                            {label: 'Đã phê duyệt', value: 2},
-                            {label: 'Từ chối', value: 3},
-                            {label: 'Đang đầu tư', value: 4},
-                            {label: 'Kết thúc đầu tư', value: 5},
+                            { label: 'Chờ phê duyệt', value: 1 },
+                            { label: 'Đã phê duyệt', value: 2 },
+                            { label: 'Từ chối', value: 3 },
+                            { label: 'Đang đầu tư', value: 4 },
+                            { label: 'Kết thúc đầu tư', value: 5 },
                         ], null),
                     ]
                 },

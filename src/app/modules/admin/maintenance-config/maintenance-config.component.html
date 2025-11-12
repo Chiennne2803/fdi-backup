@@ -1,0 +1,82 @@
+<div class="flex items-center justify-center">
+  <div class="max-w-5xl w-full p-6 sm:px-2 sm:py-6">
+    <h1 class="text-2xl font-bold">Cấu hình bảo trì</h1>
+
+    <form class="mt-4 flex flex-col gap-4" [formGroup]="maintenanceForm">
+      <!-- Toggle -->
+      <mat-slide-toggle color="primary" formControlName="isMaintenance">
+        Bật chế độ bảo trì
+      </mat-slide-toggle>
+
+      <!-- Thời gian -->
+      <div class="flex flex-row gap-x-4">
+        <!-- Start date -->
+        <mat-form-field floatLabel="always" class="w-full">
+          <mat-label>Ngày bắt đầu</mat-label>
+          <input  [min]="minDate" matInput [matDatepicker]="startPicker" formControlName="startDate" placeholder="Chọn ngày bắt đầu">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+          <mat-error *ngIf="maintenanceForm.get('startDate')?.hasError('required')">
+            Vui lòng chọn ngày bắt đầu
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Start time -->
+        <mat-form-field floatLabel="always" class="w-full">
+          <mat-label>Giờ bắt đầu (HH:mm)</mat-label>
+          <input [min]="minStartTime" matInput placeholder="HH:mm" formControlName="startTime">
+          <mat-error *ngIf="maintenanceForm.get('startTime')?.hasError('required')">
+            Vui lòng nhập giờ bắt đầu
+          </mat-error>
+          <mat-error *ngIf="maintenanceForm.get('startTime')?.hasError('pattern')">
+            Giờ không hợp lệ (định dạng HH:mm)
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-row gap-x-4">
+        <!-- End date -->
+        <mat-form-field floatLabel="always" class="w-full">
+          <mat-label>Ngày kết thúc</mat-label>
+          <input [min]="maintenanceForm.get('startDate')?.value || minDate" matInput [matDatepicker]="endPicker" formControlName="endDate" placeholder="Chọn ngày kết thúc">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+          <mat-error *ngIf="maintenanceForm.get('endDate')?.hasError('required')">
+            Vui lòng chọn ngày kết thúc
+          </mat-error>
+        </mat-form-field>
+
+        <!-- End time -->
+        <mat-form-field floatLabel="always" class="w-full">
+          <mat-label>Giờ kết thúc (HH:mm)</mat-label>
+          <input [min]="minEndTime" matInput placeholder="HH:mm" formControlName="endTime">
+          <mat-error *ngIf="maintenanceForm.get('endTime')?.hasError('required')">
+            Vui lòng nhập giờ kết thúc
+          </mat-error>
+          <mat-error *ngIf="maintenanceForm.get('endTime')?.hasError('pattern')">
+            Giờ không hợp lệ (định dạng HH:mm)
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Nội dung -->
+      <mat-form-field floatLabel="always" class="w-full">
+        <mat-label>Nội dung bảo trì</mat-label>
+        <textarea matInput rows="4" formControlName="content" placeholder="Nhập nội dung..."></textarea>
+        <mat-error *ngIf="maintenanceForm.get('content')?.hasError('required')">
+          Vui lòng nhập nội dung
+        </mat-error>
+        <mat-error *ngIf="maintenanceForm.get('content')?.hasError('minlength')">
+          Nội dung ít nhất 5 ký tự
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-2">
+        <button mat-stroked-button type="button">Hủy</button>
+        <button mat-flat-button color="primary" type="button" (click)="onSubmit()"
+                [disabled]="maintenanceForm.invalid">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>

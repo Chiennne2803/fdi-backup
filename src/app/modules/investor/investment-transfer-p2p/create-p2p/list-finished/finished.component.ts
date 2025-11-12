@@ -108,11 +108,11 @@ export class FinishedComponent implements OnInit {
                 searchConfig: {
                     config: [
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ', null, false),
-                        new FromToSearch('tranferAmount', 'Số tiền chuyển nhượng (VNĐ)', null, 'number'),
+                        new FromToSearch('tranferAmount', 'Số tiền chuyển nhượng (VND)', null, 'number'),
                         new DateTimeFromToSearch( 'investorTimeExpried', 'Ngày đáo hạn', null, false),
                         new DropListSearch('loanTimeCycle', 'Kỳ hạn(ngày)', this._dataTenor, null,false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Hoàn thành', value: 2},
                             {label: 'Huỷ chủ động', value: 3},
                             {label: 'Hết hạn niêm yết', value: 4},

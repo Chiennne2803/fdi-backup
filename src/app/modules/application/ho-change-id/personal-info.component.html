@@ -1,22 +1,15 @@
-<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
-    <mat-drawer class="w-full md:w-12/12 dark:bg-gray-900"
-                [mode]="'side'"
-                [opened]="false"
-                [position]="'end'"
-                [disableClose]="true"
-                #matDrawer>
-        <account-info-request [requestId]="detailId"
-                              (handleCloseDetailPanel)="handleCloseDetailPanel($event)"></account-info-request>
-    </mat-drawer>
-    <mat-drawer-content class="flex flex-col">
-        <app-datatable [dataSource]="_dataSource"
-                       [tableConfig]="_tableConfig"
-                       [taskbarConfig]="_taskBarConfig"
-                       [tableConfigBtns]="_btnConfig"
-                       (checkboxItemChange)="checkboxItemChange($event)"
-                       (tableEvent)="handleTableEvent($event)"
-                       (rowClick)="handleRowClick($event)"
-                       (handleSearch)="handleSearch($event)"
-                       (pageSwitch)="handlePageSwitch($event)"></app-datatable>
-    </mat-drawer-content>
-</mat-drawer-container>
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-auto" cdkScrollable>
+    <mat-drawer-container class="flex-auto h-full bg-white">
+        <mat-drawer class="w-full md:w-12/12" [mode]="'side'" [opened]="false" [position]="'end'" [disableClose]="true"
+            #matDrawer>
+            <account-info-request [requestId]="detailId"
+                (handleCloseDetailPanel)="handleCloseDetailPanel($event)"></account-info-request>
+        </mat-drawer>
+        <mat-drawer-content class="flex flex-col">
+            <app-datatable [dataSource]="_dataSource" [tableConfig]="_tableConfig" [taskbarConfig]="_taskBarConfig"
+                [tableConfigBtns]="_btnConfig" (checkboxItemChange)="checkboxItemChange($event)"
+                (tableEvent)="handleTableEvent($event)" (rowClick)="handleRowClick($event)"
+                (handleSearch)="handleSearch($event)" (pageSwitch)="handlePageSwitch($event)"></app-datatable>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

@@ -136,7 +136,7 @@ export class WithdrawComponent implements OnInit {
                 searchConfig: {
                     config: [
                         new DateTimeSearch('createdDate', 'Ngày rút tiền', null, false),
-                        new InputSearch('amount', 'Số tiền rút (VNĐ)', null, false, 'number'),
+                        new InputSearch('amount', 'Số tiền rút (VND)', null, false, 'number'),
                         new InputSearch('accNo', 'Số tài khoản', null, false),
                         new InputSearch('accName', 'Tên tài khoản thụ hưởng', null, false),
                         new DropListSearch('bankName', 'Tên ngân hàng', this.lstBank, '', false),

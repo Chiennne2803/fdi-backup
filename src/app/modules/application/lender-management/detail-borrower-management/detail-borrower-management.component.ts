@@ -106,8 +106,8 @@ export class DetailBorrowerManagementComponent implements OnInit {
     public legal_documents_Config: any[];
     public legal_documents_lst: string[] = [
         'Giấy chứng nhận đăng ký kinh doanh (bản thay đổi gần nhất)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
         'Đăng ký mẫu dấu, chứng chỉ ngành nghề hoặc giấy chứng nhận đủ điều kiện kinh doanh',
         'Quyết định bổ nhiệm kế toán trưởng',
         'Điều lệ công ty',
@@ -364,6 +364,8 @@ export class DetailBorrowerManagementComponent implements OnInit {
     public onClose(): void {
         this._managementLenderService.closeDetailDrawer();
         this.handleCloseDetailPanel.emit();
+        this.avatar = null;
+        this.deputyAvatar = null;
     }
 
     public onCloseSrcCollateral(): void {
@@ -433,7 +435,7 @@ export class DetailBorrowerManagementComponent implements OnInit {
 
     public onClickProcess(): void {
         const dialogRef = this._matDialog.open(ConfirmProcessingComponent, {
-            width: '450px',
+            // width: '450px',
             data: {
                 title: 'Xác nhận nội dung xử lý',
                 valueDefault: 2,
@@ -668,8 +670,8 @@ export class DetailBorrowerManagementComponent implements OnInit {
             new TextColumn('fsLoanProfilesId', 'Số hồ sơ', 10),
             new TextColumn('loanTimeCycle', 'Kỳ hạn(ngày)', 15),
             new TextColumn('reasonsName', 'Mục đích huy động vốn', 15),
-            new TextColumn('amount', 'Số tiền được yêu cầu (VNĐ)', 15, false, 3),
-            new TextColumn('totalLoan', 'Số tiền được huy động (VNĐ)', 15, false, 3),
+            new TextColumn('amount', 'Số tiền được yêu cầu (VND)', 15, false, 3),
+            new TextColumn('totalLoan', 'Số tiền được huy động (VND)', 15, false, 3),
             new TextColumn('createdDate', 'Ngày tạo', 10, false, 'DD/MM/YYYY - HH:mm:ss'),
             new TextColumn('statusName', 'Trạng thái', 10, false),
         ];

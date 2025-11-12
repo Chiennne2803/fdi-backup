@@ -5,8 +5,8 @@
                 <div class="relative w-full px-5">
                     <div class="flex items-center justify-between w-full mx-auto py-2">
                         <article class="prose break-words">
-                            <h3 class="uppercase">
-                                Chi tiết giao dịch hoàn trả tiền cho nhà đầu tư
+                            <h3 class="">
+                                Chi tiết giao dịch hoàn trả tiền cho khách hàng
                             </h3>
                         </article>
                         <div class="flex items-center justify-end">
@@ -34,7 +34,7 @@
                                     class="ml-2"
                                     *ngIf="!isCreate && fsTranspayInvestorDTO?.status == 1 && ( 'SFF_TRANSPAY_INVESTOR_TRANSACTION_UPDATE' | permission)"
                                     mat-flat-button
-                                    color="warn"
+                                    color="primary"
                                     matTooltip="Trình ký"
                                     (click)="doSign()"
                                 >
@@ -55,19 +55,19 @@
                 </div>
                 <ng-container *ngIf="isCreate">
                     <form [formGroup]="formGroup">
-                        <div class="grid grid-cols-4 gap-4 bg-gray-50 h-full p-5 "
-                             style="min-height: 720px !important;">
-                            <fuse-card class="h-full col-span-2 overflow-y-auto" cdkScrollable>
-                                <div class="w-screen p-5">
+                        <div class="grid grid-cols-4 gap-4 h-full p-5">
+                            <div class="border border-primary-grayLight-2 rounded-lg col-span-2 overflow-y-auto" cdkScrollable>
+                                <div class="p-5">
                                     <div class="font-bold text-lg pb-5 ">Thông tin hồ sơ thanh toán</div>
                                     <div class="grid grid-cols-2 w-full gap-3">
-                                        <mat-form-field>
+                                        <mat-form-field floatLabel="always">
                                             <mat-label>Hồ sơ huy động vốn</mat-label>
-                                            <mat-select formControlName="fsLoanProfilesId" fi
+                                            <mat-select placeholder="Chọn hồ sơ huy động" formControlName="fsLoanProfilesId" fi
                                                         (selectionChange)="onChangeSelect($event, 'loanProfile')">
                                                 <input
                                                     class="input-search-mat-select"
-                                                    (keydown)="$event.stopPropagation(); onKey($event.target)"
+                                                    (keyup)="$event.stopPropagation(); onKey($event.target)"
+                                                    (input)="$event.stopPropagation(); onKey($event.target)"
                                                     #mySearch
                                                 >
                                                 {{ mySearch?.focus() }}
@@ -83,9 +83,9 @@
                                                 {{ 'XLGD001' | transloco }}
                                             </mat-error>
                                         </mat-form-field>
-                                        <mat-form-field>
+                                        <mat-form-field floatLabel="always">
                                             <mat-label>Đợt giải ngân</mat-label>
-                                            <mat-select formControlName="fsCardDownId"
+                                            <mat-select placeholder="Chọn đợt giải ngân" formControlName="fsCardDownId"
                                                         (selectionChange)="onChangeSelect($event, 'cardDown')">
                                                 <mat-option
                                                     *ngFor="let card of lstCardDowns"
@@ -98,9 +98,9 @@
                                                 </mat-error>
                                             </mat-select>
                                         </mat-form-field>
-                                        <mat-form-field>
-                                            <mat-label>Mã yêu cầu hoàn trả</mat-label>
-                                            <mat-select formControlName="fsTranspayReqId"
+                                        <mat-form-field floatLabel="always">
+                                            <mat-label>Mã yêu cầu</mat-label>
+                                            <mat-select placeholder="Chọn mã yêu cầu" formControlName="fsTranspayReqId"
                                                         (selectionChange)="onChangeSelect($event, 'transpayReq')">
                                                 <mat-option
                                                     *ngFor="let transpayReq of lstTranspayReq"
@@ -114,9 +114,9 @@
                                                 </mat-error>
                                             </mat-select>
                                         </mat-form-field>
-                                        <mat-form-field>
-                                            <mat-label>Hình thức hoàn trả khách hàng</mat-label>
-                                            <mat-select formControlName="payType"
+                                        <mat-form-field floatLabel="always">
+                                            <mat-label>Hình thức hoàn trả</mat-label>
+                                            <mat-select placeholder="Chọn hình thức hoàn trả" formControlName="payType"
                                                         (selectionChange)="onChangeSelect($event, 'payType')"
                                             >
                                                 <mat-option *ngFor="let item of payTypes"
@@ -126,9 +126,10 @@
                                                 {{ 'XLGD030' | transloco }}
                                             </mat-error>
                                         </mat-form-field>
-                                        <mat-form-field class="col-span-2">
+                                        <mat-form-field floatLabel="always" class="col-span-2">
                                             <mat-label>Nội dung</mat-label>
                                             <textarea id="info"
+                                                        placeholder="Nội dung..."
                                                       matInput
                                                       trim="blur"
                                                       maxlength="150"
@@ -137,19 +138,19 @@
                                     </div>
                                     <div class="grid grid-cols-4 w-full gap-3 pb-5">
                                         <article class="prose break-words">
-                                            <p>Gốc còn lại phải trả(VNĐ):
+                                            <p>Gốc còn lại phải trả(VND):
                                                 <br><b>{{formGroup.get('transpayReqPrincipal').value | currencyFormatPipe: 10 }}</b>
                                         </article>
                                         <article class="prose break-words">
-                                            <p>Lãi còn lại phải trả(VNĐ):
+                                            <p>Lãi còn lại phải trả(VND):
                                                 <br><b>{{formGroup.get('transpayReqInterest').value | currencyFormatPipe: 10 }}</b>
                                         </article>
                                         <article class="prose break-words">
-                                            <p>Gốc hoàn trả(VNĐ):    
+                                            <p>Gốc hoàn trả(VND):    
                                                 <br><b>{{formGroup.get('amount').value | currencyFormatPipe: 10 }}</b>
                                         </article>
                                         <article class="prose break-words">
-                                            <p>Lãi hoàn trả(VNĐ):
+                                            <p>Lãi hoàn trả(VND):
                                                 <br><b>{{formGroup.get('interest').value | currencyFormatPipe: 10 }}</b>
                                         </article>
                                         <article class="prose break-words">
@@ -162,16 +163,16 @@
                                     <div class="grid grid-cols-1 pb-5">
                                         <div class="font-bold text-lg pb-5">Danh sách hoàn trả tiền đầu tư cho khách hàng</div>
                                         <div class="grid grid-cols-1 ">
-                                            <mat-table [dataSource]="lstTranspayInvestorDetail.controls" class="w-full grid overflow-auto">
+                                            <mat-table [dataSource]="lstTranspayInvestorDetail.controls" class="w-full border border-b-0 rounded-lg grid overflow-auto">
 
                                                 <ng-container matColumnDef="admAccountIdInvestorName">
-                                                    <mat-header-cell *matHeaderCellDef> Khách hàng </mat-header-cell>
+                                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Khách hàng </mat-header-cell>
                                                     <mat-cell *matCellDef="let element"> {{element.get('admAccountIdInvestorName').value}} </mat-cell>
                                                 </ng-container>
 
                                                 <!-- amount Column -->
                                                 <ng-container matColumnDef="amount">
-                                                    <mat-header-cell *matHeaderCellDef> Gốc phải trả </mat-header-cell>
+                                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Gốc phải trả </mat-header-cell>
                                                     <mat-cell *matCellDef="let element;" [formGroup]="element">
                                                         <mat-form-field appearance="standard" class=" min-w-50 mx-0 ">
                                                             <input id="amount"
@@ -188,7 +189,7 @@
                                                 </ng-container>
                                                 <!-- interest Column -->
                                                 <ng-container matColumnDef="interest">
-                                                    <mat-header-cell *matHeaderCellDef> Lãi phải trả </mat-header-cell>
+                                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Lãi phải trả </mat-header-cell>
                                                     <mat-cell *matCellDef="let element;" [formGroup]="element">
                                                         <mat-form-field appearance="standard" class=" min-w-50 mx-0 ">
                                                             <input id="interest"
@@ -205,19 +206,19 @@
                                                 </ng-container>
 
                                                 <ng-container matColumnDef="total">
-                                                    <mat-header-cell *matHeaderCellDef> Tổng tiền hoàn trả </mat-header-cell>
+                                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Tổng tiền hoàn trả </mat-header-cell>
                                                     <mat-cell *matCellDef="let element"> {{(element.get('amount').value + element.get('interest').value)  | currencyFormatPipe: 10 }} </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="perTax">
-                                                    <mat-header-cell *matHeaderCellDef> Thuế TNCN</mat-header-cell>
+                                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Thuế TNCN</mat-header-cell>
                                                     <mat-cell *matCellDef="let element"> {{element.get('perTax').value  | currencyFormatPipe: 10 }} </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="fee">
-                                                    <mat-header-cell *matHeaderCellDef> Phí đầu tư thành công </mat-header-cell>
+                                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Phí đầu tư thành công </mat-header-cell>
                                                     <mat-cell *matCellDef="let element"> {{element.get('fee').value  | currencyFormatPipe: 10 }} </mat-cell>
                                                 </ng-container>
                                                 <ng-container matColumnDef="createdDate">
-                                                    <mat-header-cell *matHeaderCellDef> Ngày hoàn trả </mat-header-cell>
+                                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Ngày hoàn trả </mat-header-cell>
                                                     <mat-cell *matCellDef="let element"> {{element.get('createdDate').value | datetimeformat: 'DD/MM/YYYY' }} </mat-cell>
                                                 </ng-container>
 
@@ -230,8 +231,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </fuse-card>
-                            <fuse-card class=" h-full col-span-2 overflow-y-auto" cdkScrollable>
+                            </div>
+                            <div class="border border-primary-grayLight-2 rounded-lg col-span-2 overflow-y-auto" cdkScrollable>
                                 <div class="grid grid-cols-1 w-full gap-4 p-5 max-h-15">
                                     <div class="font-bold text-lg pb-5 ">Danh sách khách hàng</div>
 
@@ -313,12 +314,12 @@
                                     </div>
                                     <div class="grid grid-cols-1 p-5"></div>
                                 </div>
-                            </fuse-card>
+                            </div>
                         </div>
                     </form>
                 </ng-container>
                 <ng-container *ngIf="!isCreate && fsTranspayInvestorDTO">
-                    <div class="grid grid-cols-4 gap-5 p-5 ">
+                    <div class="grid grid-cols-4 gap-5 p-5 border border-primary-grayLight-2 rounded-lg mb-4">
                         <article class="prose break-words">
                             <p>Mã yêu cầu <br> <b>{{ fsTranspayInvestorDTO.transCode }}</b>
                             </p>
@@ -346,16 +347,16 @@
                             <p>Người lập <br> <b>{{ fsTranspayInvestorDTO.createdByName }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Gốc đã thanh toán (VNĐ)<br> <b>{{ fsTranspayInvestorDTO.transpayReqPrincipal | currencyFormatPipe : 10}}</b></p>
+                            <p>Gốc đã thanh toán (VND)<br> <b>{{ fsTranspayInvestorDTO.transpayReqPrincipal | currencyFormatPipe : 10}}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Lãi đã thanh toán (VNĐ)<br> <b>{{ fsTranspayInvestorDTO.transpayReqInterest | currencyFormatPipe : 10}}</b></p>
+                            <p>Lãi đã thanh toán (VND)<br> <b>{{ fsTranspayInvestorDTO.transpayReqInterest | currencyFormatPipe : 10}}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Gốc hoàn trả NĐT (VNĐ)<br> <b>{{ fsTranspayInvestorDTO.amount | currencyFormatPipe : 10}}</b></p>
+                            <p>Gốc hoàn trả NĐT (VND)<br> <b>{{ fsTranspayInvestorDTO.amount | currencyFormatPipe : 10}}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Lãi hoàn trả NĐT (VNĐ)<br> <b>{{ fsTranspayInvestorDTO.interest | currencyFormatPipe : 10}}</b></p>
+                            <p>Lãi hoàn trả NĐT (VND)<br> <b>{{ fsTranspayInvestorDTO.interest | currencyFormatPipe : 10}}</b></p>
                         </article>
                         <article class="prose break-words">
                             <p>Người xử lý <br> <b>{{ fsTranspayInvestorDTO.approvalByName }}</b></p>
@@ -367,42 +368,42 @@
                             <p>Trạng thái <br> <b>{{ fsTranspayInvestorDTO.statusName }}</b></p>
                         </article>
                     </div>
-                    <div class="grid grid-cols-1 pb-5">
+                    <div class="grid grid-cols-1 p-5 border border-primary-grayLight-2 rounded-lg">
                         <div class="font-bold text-lg pb-5">Danh sách hoàn trả tiền đầu tư cho nhà đầu tư
                         </div>
                         <div class="grid grid-cols-1 ">
-                            <mat-table [dataSource]="lstTranspayInvestorDetail.controls" class="w-full">
+                            <mat-table [dataSource]="lstTranspayInvestorDetail.controls" class="w-full border rounded-lg">
 
                                 <ng-container matColumnDef="admAccountIdInvestorName">
-                                    <mat-header-cell *matHeaderCellDef> Nhà đầu tư </mat-header-cell>
+                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Nhà đầu tư </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.get('admAccountIdInvestorName').value}} </mat-cell>
                                 </ng-container>
 
                                 <!-- amount Column -->
                                 <ng-container matColumnDef="amount">
-                                    <mat-header-cell *matHeaderCellDef> Gốc phải trả (VNĐ)</mat-header-cell>
+                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Gốc phải trả (VND)</mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.get('amount').value | currencyFormatPipe: 10 }} </mat-cell>
                                 </ng-container>
                                 <!-- interest Column -->
                                 <ng-container matColumnDef="interest">
-                                    <mat-header-cell *matHeaderCellDef> Lãi phải trả (VNĐ)</mat-header-cell>
+                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Lãi phải trả (VND)</mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.get('interest').value | currencyFormatPipe: 10 }} </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="total">
-                                    <mat-header-cell *matHeaderCellDef> Tổng tiền hoàn trả </mat-header-cell>
+                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Tổng tiền hoàn trả </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{(element.get('amount').value + element.get('interest').value)  | currencyFormatPipe: 10 }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="perTax">
-                                    <mat-header-cell *matHeaderCellDef> Thuế TNCN (VNĐ)</mat-header-cell>
+                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Thuế TNCN (VND)</mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.get('perTax').value  | currencyFormatPipe: 10 }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="fee">
-                                    <mat-header-cell *matHeaderCellDef> Phí đầu tư (VNĐ)</mat-header-cell>
+                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Phí đầu tư (VND)</mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.get('fee').value  | currencyFormatPipe: 10 }} </mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="createdDate">
-                                    <mat-header-cell *matHeaderCellDef> Ngày hoàn trả </mat-header-cell>
+                                    <mat-header-cell class="bg-primary-grayLight-2" *matHeaderCellDef> Ngày hoàn trả </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.get('createdDate').value | datetimeformat: 'DD/MM/YYYY' }} </mat-cell>
                                 </ng-container>
 

@@ -1,71 +1,120 @@
-<div class="relative">
-    <mat-icon mat-dialog-close
-              class="cursor-pointer absolute right-0 top-[4px] hover:text-gray-900">
-        close
-    </mat-icon>
-    <h2 mat-dialog-title
-        class="text-center">Nhập địa chỉ</h2>
-    <div mat-dialog-content
-         [formGroup]="formGroup">
-        <mat-form-field class="w-full">
-            <mat-label>Tỉnh / thành phố</mat-label>
-            <mat-select formControlName="province"
-                        [required]="true"
-                        (selectionChange)="onChangeProvince()">
-                <mat-option *ngFor="let province of provinces"
-                            [value]="province">
-                    {{ province.categoriesName }}
-                </mat-option>
-            </mat-select>
+<div class="flex flex-col max-h-screen -m-6">
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-14 px-4 sm:pr-5 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-base sm:text-lg font-medium">Nhập địa chỉ</div>
+    <button mat-icon-button tabindex="-1" class="!min-w-[40px]">
+      <mat-icon class="text-current" mat-dialog-close [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <mat-tab-group class="overflow-y-auto address-dialog-tabs" [(selectedIndex)]="selectedTab" (selectedTabChange)="onTabChange($event)">
+    <!-- TAB 1: Địa chỉ cũ -->
+    <mat-tab label="Địa chỉ trước sáp nhập">
+      <div class="flex flex-col flex-auto p-4 sm:p-6 pt-2 sm:pt-0 pb-2" [formGroup]="formGroup">
+        <div mat-dialog-content class="flex flex-col gap-2 sm:gap-0">
+
+          <!-- Province -->
+          <mat-form-field class="w-full" floatLabel="always">
+            <mat-label>Tỉnh/Thành phố</mat-label>
+            <input type="text" matInput placeholder="Chọn Tỉnh/Thành phố" [formControl]="provinceFormControl"
+              [matAutocomplete]="autoProvince" (blur)="onProvinceBlur()" />
+            <mat-autocomplete #autoProvince="matAutocomplete" [displayWith]="displayFn"
+              (optionSelected)="loadDistrict()">
+              <mat-option *ngFor="let province of filteredProvinces" [value]="province">
+                {{ province.categoriesName }}
+              </mat-option>
+              <mat-option *ngIf="filteredProvinces.length === 0 && provinceFormControl.value" disabled>
+                Không tìm thấy tỉnh/thành phố
+              </mat-option>
+            </mat-autocomplete>
             <mat-error *ngIf="provinceFormControl.invalid">{{ message.form.errors.required }}</mat-error>
-        </mat-form-field>
+          </mat-form-field>
 
-        <mat-form-field class="w-full">
-            <mat-label>Quận / Huyện</mat-label>
-            <mat-select (selectionChange)="loadCommune()"
-                        [required]="true"
-                        formControlName="district">
-                <mat-option *ngFor="let district of districts"
-                            [value]="district">
-                    {{ district.categoriesName }}
-                </mat-option>
-            </mat-select>
+          <!-- District -->
+          <mat-form-field class="w-full" floatLabel="always">
+            <mat-label>Quận/Huyện</mat-label>
+            <input type="text" matInput placeholder="Chọn Quận/Huyện" [formControl]="districtFormControl"
+              [matAutocomplete]="autoDistrict" (blur)="onDistrictBlur()" />
+            <mat-autocomplete #autoDistrict="matAutocomplete" [displayWith]="displayFn"
+              (optionSelected)="loadCommune()">
+              <mat-option *ngFor="let district of filteredDistricts" [value]="district">
+                {{ district.categoriesName }}
+              </mat-option>
+              <mat-option *ngIf="filteredDistricts.length === 0 && districtFormControl.value" disabled>
+                Không tìm thấy quận/huyện
+              </mat-option>
+            </mat-autocomplete>
             <mat-error *ngIf="districtFormControl.invalid">{{ message.form.errors.required }}</mat-error>
-        </mat-form-field>
+          </mat-form-field>
 
-        <mat-form-field class="w-full">
-            <mat-label>Xã / Phường</mat-label>
-            <mat-select [required]="true" formControlName="commune">
-                <mat-option *ngFor="let commune of communes"
-                            [value]="commune.categoriesName">
-                    {{ commune.categoriesName }}
-                </mat-option>
-            </mat-select>
+          <!-- Commune -->
+          <mat-form-field class="w-full" floatLabel="always">
+            <mat-label>Xã/Phường</mat-label>
+            <input type="text" matInput placeholder="Chọn Xã/Phường" [formControl]="communeFormControl"
+              [matAutocomplete]="autoCommune" (blur)="onCommuneBlur()" />
+            <mat-autocomplete #autoCommune="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let commune of filteredCommunes" [value]="commune">
+                {{ commune.categoriesName }}
+              </mat-option>
+              <mat-option *ngIf="filteredCommunes.length === 0 && communeFormControl.value" disabled>
+                Không tìm thấy xã/phường
+              </mat-option>
+            </mat-autocomplete>
             <mat-error *ngIf="communeFormControl.invalid">{{ message.form.errors.required }}</mat-error>
+          </mat-form-field>
+
+          <!-- Street -->
+          <mat-form-field class="w-full" floatLabel="always">
+            <mat-label>Địa chỉ chi tiết</mat-label>
+            <input matInput formControlName="street" placeholder="Số nhà, tên đường..." />
+            <mat-error *ngIf="streetAddressFormControl.invalid">{{ message.form.errors.required }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-tab>
+    <!-- TAB 2: Địa chỉ mới -->
+    <mat-tab label="Địa chỉ sau sáp nhập">
+      <div class="flex flex-col flex-auto p-4 sm:p-6 pt-2 sm:pt-0 pb-2" [formGroup]="formGroupNew">
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 p-3 sm:p-4 mb-5 sm:mb-4 rounded-md text-xs sm:text-sm space-y-1.5 sm:space-y-1">
+          <p class="font-bold text-sm sm:text-base">⚠️ Lưu ý:</p>
+          <p class="leading-relaxed">
+            Vui lòng nhập địa chỉ đầy đủ và đúng định dạng theo thứ tự:<br class="hidden sm:block">
+            <strong>  Số nhà, tên đường, thôn/xóm (nếu có), xã/phường, tỉnh/thành phố.</strong>
+          </p>
+          <p class="leading-relaxed">
+            Nếu địa chỉ nhập không đúng định dạng hoặc thiếu thông tin hành chính,
+            hệ thống sẽ từ chối xác minh tài khoản.
+          </p>
+        </div>
+        <!-- Input địa chỉ -->
+        <mat-form-field class="w-full" floatLabel="always">
+          <mat-label>Nhập địa chỉ</mat-label>
+          <input matInput placeholder="Nhập địa chỉ đầy đủ..." formControlName="newAddress" />
+          <mat-error *ngIf="formGroupNew.get('newAddress')?.invalid && formGroupNew.get('newAddress')?.touched">
+            {{ message.form.errors.required }}
+          </mat-error>
+          <mat-error
+            *ngIf="formGroupNew.get('newAddress')?.hasError('invalidFullAddress') && formGroupNew.get('newAddress')?.touched">
+            Địa chỉ không đúng định dạng.
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="w-full">
-            <mat-label>Địa chỉ chi tiết</mat-label>
-            <input matInput
-                   formControlName="street"
-                   trim="blur"
-                   inputMask
-                   [required]="true"
-                   autocomplete="off"
-                   maskType="address-detail">
-            <mat-error *ngIf="streetAddressFormControl.invalid">{{ message.form.errors.required }}</mat-error>
-        </mat-form-field>
-    </div>
-    <mat-dialog-actions align="center">
-        <button mat-flat-button
-                (click)="resetForm()">
-            Nhập lại
-        </button>
-        <button mat-flat-button
-                color="primary"
-                (click)="onSubmit()"
-                cdkFocusInitial>
-            Xác nhận
-        </button>
-    </mat-dialog-actions>
+        <!-- Thông báo hướng dẫn -->
+
+      </div>
+    </mat-tab>
+
+
+  </mat-tab-group>
+
+  <!-- Buttons -->
+  <div class="flex flex-col sm:flex-row justify-center items-stretch sm:items-center mt-2 sm:mt-0 gap-3 sm:gap-4 px-4 sm:px-0 mb-4 sm:mb-6">
+    <button mat-stroked-button (click)="resetForm()" class="w-full sm:w-auto order-2 sm:order-1">
+      Nhập lại
+    </button>
+    <button mat-flat-button color="primary" (click)="onSubmit()" cdkFocusInitial class="w-full sm:w-auto order-1 sm:order-2">
+      Xác nhận
+    </button>
+  </div>
 </div>

@@ -18,7 +18,7 @@ import {
     InputSearch
 } from 'app/shared/components/group-search/search-config.models';
 import {MatDialog} from '@angular/material/dialog';
-import {FsTopupMailTransferDTO, FsTransWithdrawCashDTO} from "../../../../models/service";
+import {FsTopupMailTransferDTO} from "../../../../models/service";
 
 @Component({
     selector: 'success-charge-transaction',
@@ -103,10 +103,10 @@ export class SuccessChargeTransactionComponent implements OnInit {
                         new InputSearch('transCode', 'Mã giao dịch', null, false),
                         new InputSearch('fullNameReceiver', 'Người thụ hưởng', null, false),
                         // new InputSearch('fullNameSent', 'Tên người chuyển', null, false),
-                        new InputSearch('amount', 'Số tiền nạp (VNĐ)', null, false, 'number'),
+                        new InputSearch('amount', 'Số tiền nạp (VND)', null, false, 'number'),
                         new DateTimeSearch( 'transDate', 'Thời gian giao dịch', null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Thành công', value: 0},
                             {label: 'Giao dịch không xác định được người thụ hưởng', value: 2},
                             {label: 'Số tiền giao dịch không hợp lệ', value: 3},

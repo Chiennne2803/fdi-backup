@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import {BaseRequest, BaseResponse} from 'app/models/base';
+import { BaseRequest, BaseResponse } from 'app/models/base';
 import { DialogService } from 'app/service/common-service/dialog.service';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import {
     TABLE_STATISTICAL_REPORT_INVESTOR_TOPUP_CONFIG,
     TASK_BAR_STATISTICAL_REPORT_CONFIG
 } from './report-investor.config';
-import {ButtonTableEvent} from '../../../../shared/models/datatable/table-config.model';
-import {GroupSearchComponent} from '../../../../shared/components/group-search/group-search.component';
+import { ButtonTableEvent } from '../../../../shared/models/datatable/table-config.model';
+import { GroupSearchComponent } from '../../../../shared/components/group-search/group-search.component';
 import {
     DateTimeFromToSearch, DropListSearch,
     FromToSearch, IDropList,
     InputSearch
 } from '../../../../shared/components/group-search/search-config.models';
-import {MatDialog} from '@angular/material/dialog';
-import {ReportInvestorService} from '../../../../service';
-import {PageEvent} from '@angular/material/paginator';
-import {AdmAccountDetailDTO} from "../../../../models/admin";
+import { MatDialog } from '@angular/material/dialog';
+import { ReportInvestorService } from '../../../../service';
+import { PageEvent } from '@angular/material/paginator';
+import { AdmAccountDetailDTO } from "../../../../models/admin";
 
 @Component({
-  selector: 'app-report-investor-topup',
-  templateUrl: './report-investor.component.html',
-  styleUrls: ['./report-investor.component.scss']
+    selector: 'app-report-investor-topup',
+    templateUrl: './report-investor.component.html',
+    styleUrls: ['./report-investor.component.scss']
 })
 export class ReportInvestorComponent implements OnInit {
     dataSource$: Observable<BaseResponse>;
@@ -29,14 +29,13 @@ export class ReportInvestorComponent implements OnInit {
     taskBarConfig = TASK_BAR_STATISTICAL_REPORT_CONFIG;
     _btnConfig = {
         commonBtn: [
-            {type : 'export', role : 'SFF_STATISTIC_EXPORT', fileName : 'Bao_cao_nha_dau_tu_ca_nhan'},
+            { type: 'export', role: 'SFF_STATISTIC_EXPORT', fileName: 'Bao_cao_nha_dau_tu_ca_nhan' },
         ],
     };
 
     private lstStaff: IDropList[] = [];
     private _dataSearchDialog: object;
     private searchPayload: BaseRequest = new BaseRequest();
-    private isFirstLoad = true;
 
     constructor(
         private _dialogService: DialogService,
@@ -49,7 +48,7 @@ export class ReportInvestorComponent implements OnInit {
         this._investorService.getPrepareLoadingPage().subscribe(ret => {
             if (ret) {
                 this.lstStaff = [];
-                this.lstStaff.push({label: 'Tẩt cả', value: null});
+                this.lstStaff.push({ label: 'Tẩt cả', value: '' });
                 ret.payload.lstStaff.forEach(el => this.lstStaff.push({
                     label: el.fullName,
                     value: el.admAccountDetailId
@@ -57,11 +56,7 @@ export class ReportInvestorComponent implements OnInit {
             }
         });
         this._investorService.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
-                this.dataSource$ =  this._investorService.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
+            this.dataSource$ = this._investorService.lazyLoad;
         });
 
     }

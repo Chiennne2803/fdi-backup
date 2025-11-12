@@ -1,113 +1,122 @@
 <mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
     <mat-drawer-content class="flex flex-col">
-        <div class="w-full px-5">
-            <div class="flex items-center justify-between w-full mx-auto py-2">
+        <div class="w-full px-5 space-y-4">
+            <div class="flex items-center justify-between w-full mx-auto pt-3 pb-2">
                 <article class="w-2/4 prose break-words">
-                    <h3>
+                    <h3 class="flex flex-col sm:flex-row items-center justify-start gap-3">
+                        <span
+                            [matTooltip]="'Đóng'"
+                            (click)="closeDrawer()"
+                            class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                            <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                                svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                            Quay lại
+                        </span>
                         Thông Tin Yêu Cầu Nạp Tiền
                     </h3>
                 </article>
-                <div class="flex items-center justify-end"  *ngIf="!isShowBtnUpdate">
-                    <a (click)="closeDrawer()"
+                <div class="flex items-center justify-end" *ngIf="!isShowBtnUpdate">
+                    <!-- <a (click)="closeDrawer()"
                        class="ml-auto sm:ml-0"
                        mat-stroked-button
                        [matTooltip]="'Đóng'">
                         Đóng
-                    </a>
+                    </a> -->
                     <!-- Handle data -->
-                    <button class="order-first sm:order-last ml-2"
-                            @fadeInRight
-                            *ngIf="this.detailRecord && this.detailRecord.status !== 0 && ('SFF_RECHARGE_TRANSACTION_APPROVE' | permission)"
-                            (click)="openDialog()"
-                            mat-flat-button
-                            [color]="'primary'">
+                    <button class="order-first sm:order-last ml-2" @fadeInRight
+                        *ngIf="this.detailRecord && this.detailRecord.status !== 0 && ('SFF_RECHARGE_TRANSACTION_APPROVE' | permission)"
+                        (click)="openDialog()" mat-flat-button [color]="'primary'">
                         Xử lý
                     </button>
                 </div>
                 <div class="flex items-center justify-end" *ngIf="isShowBtnUpdate">
-                    <a (click)="cancelUpdate()"
-                       class="ml-auto sm:ml-0"
-                       mat-stroked-button
-                       [matTooltip]="'Huỷ'">
+                    <a (click)="cancelUpdate()" class="ml-auto sm:ml-0" mat-stroked-button [matTooltip]="'Huỷ'">
                         Huỷ
                     </a>
                     <!-- Submit -->
-                    <button class="order-first sm:order-last ml-2"
-                            @fadeInRight
-                            *ngIf="isShowBtnUpdate && this.detailRecord && this.detailRecord.status !== 0 && ('SFF_RECHARGE_TRANSACTION_APPROVE' | permission)"
-                            (click)="openDialogSubmit()"
-                            mat-flat-button
-                            [color]="'primary'">
+                    <button class="order-first sm:order-last ml-2" @fadeInRight
+                        *ngIf="isShowBtnUpdate && this.detailRecord && this.detailRecord.status !== 0 && ('SFF_RECHARGE_TRANSACTION_APPROVE' | permission)"
+                        (click)="openDialogSubmit()" mat-flat-button [color]="'primary'">
                         Lưu
                     </button>
                 </div>
             </div>
-        </div>
+
+            <div class="grid grid-cols-4 gap-4 border border-primary-grayLight-2 rounded-lg p-4">
+                <article class="prose break-words">
+                    <p>Mã giao dịch: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
+                            this.detailRecord.fsTopupDTO.fsTopupCode : '' }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Người tạo yêu cầu nạp tiền: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
+                            this.detailRecord.fsTopupDTO.createdByName : '' }}</b></p>
+                </article>
+                <article class="prose break-words">
+                    <p>Ngày tạo: <br> <b>{{ (this.detailRecord && this.detailRecord.fsTopupDTO ?
+                            this.detailRecord.fsTopupDTO.createdDate : 0) | datetimeformat : 'DD/MM/YYYY HH:mm:ss'
+                            }}</b>
+                    </p>
+                </article>
+                <article class="prose break-words">
+                    <p>Trạng thái giao dịch: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
+                            this.detailRecord.fsTopupDTO.statusName : '' }}</b></p>
+                </article>
+            </div>
+            <!-- <mat-divider class="pb-5"></mat-divider> -->
+            <div class="border border-primary-grayLight-2 rounded-lg p-4">
+                <article class="prose">
+                    <h3 class="w-full">Thông Tin Giao Dịch Tại Ngân Hàng</h3>
+                </article>
+                <div class="grid grid-cols-4 gap-4">
+                    <article class="prose break-words">
+                        <p>Người nhận: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
+                                this.detailRecord.fsTopupDTO.accName : '' }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Số tài khoản: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
+                                this.detailRecord.fsTopupDTO.accNo : '' }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Ngân hàng: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
+                                this.detailRecord.fsTopupDTO.bankName : '' }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Chi nhánh: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
+                                this.detailRecord.fsTopupDTO.branchName : '' }}</b></p>
+                    </article>
+                </div>
+                <div class="grid grid-cols-1 py-4">
+                    <table class="min-w-full text-left text-sm font-light border rounded-xl">
+                        <thead
+                            class="border-b bg-neutral-50 font-medium">
+                            <tr>
+                                <th scope="col" class="px-6 py-4">Ngày chuyển tiền</th>
+                                <th scope="col" class="px-6 py-4">Số tiền chuyển</th>
+                                <th scope="col" class="px-6 py-4">Nội dung giao dịch</th>
+                                <th scope="col" class="px-6 py-4">Trạng thái giao dịch</th>
+                            </tr>
+                        </thead>
+                        <tbody class=" text-gray-700  my-2 ">
+                            <tr class="border-b dark:border-neutral-500 font-bold text-lg ">
+                                <td class=" px-6 py-4 font-medium">{{ (this.detailRecord ? this.detailRecord.transDate :
+                                    0)
+                                    |
+                                    datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</td>
+                                <td class=" px-6 py-4">{{ (this.detailRecord ? this.detailRecord.amount : 0) |
+                                    currencyFormatPipe: 10 }}</td>
+                                <td class=" px-6 py-4 font-medium">{{ this.detailRecord ? this.detailRecord.info : '' }}
+                                </td>
+                                <td class=" px-6 py-4 font-medium">{{ this.detailRecord ? this.detailRecord.statusName :
+                                    ''
+                                    }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
 
-        <div class="grid grid-cols-4 gap-5 p-5">
-            <article class="prose break-words">
-                <p>Mã giao dịch: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
-                    this.detailRecord.fsTopupDTO.fsTopupCode : '' }}</b></p>
-            </article>
-            <article class="prose break-words">
-                <p>Người tạo yêu cầu nạp tiền: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
-                    this.detailRecord.fsTopupDTO.createdByName : '' }}</b></p>
-            </article>
-            <article class="prose break-words">
-                <p>Ngày tạo: <br> <b>{{ (this.detailRecord && this.detailRecord.fsTopupDTO ?
-                    this.detailRecord.fsTopupDTO.createdDate : 0) | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</b>
-                </p>
-            </article>
-            <article class="prose break-words">
-                <p>Trạng thái giao dịch: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
-                    this.detailRecord.fsTopupDTO.statusName : '' }}</b></p>
-            </article>
-        </div>
-        <mat-divider class="pb-5"></mat-divider>
-        <article class="prose">
-            <h3 class="px-5 w-full">Thông Tin Giao Dịch Tại Ngân Hàng:</h3>
-        </article>
-        <div class="grid grid-cols-4 gap-5 p-5">
-            <article class="prose break-words">
-                <p>Người nhận: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
-                    this.detailRecord.fsTopupDTO.accName : '' }}</b></p>
-            </article>
-            <article class="prose break-words">
-                <p>Số tài khoản: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
-                    this.detailRecord.fsTopupDTO.accNo : '' }}</b></p>
-            </article>
-            <article class="prose break-words">
-                <p>Ngân hàng: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
-                    this.detailRecord.fsTopupDTO.bankName : '' }}</b></p>
-            </article>
-            <article class="prose break-words">
-                <p>Chi nhánh: <br> <b>{{ this.detailRecord && this.detailRecord.fsTopupDTO ?
-                    this.detailRecord.fsTopupDTO.branchName : '' }}</b></p>
-            </article>
-        </div>
-        <div class="grid grid-cols-1 gap-5 p-5">
-            <table class="min-w-full text-left text-sm font-light  rounded-xl">
-                <thead class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
-                <tr>
-                    <th scope="col" class="px-6 py-4">Ngày chuyển tiền</th>
-                    <th scope="col" class="px-6 py-4">Số tiền chuyển</th>
-                    <th scope="col" class="px-6 py-4">Nội dung giao dịch</th>
-                    <th scope="col" class="px-6 py-4">Trạng thái giao dịch</th>
-                </tr>
-                </thead>
-                <tbody class=" text-gray-700  my-2 ">
-                <tr class="border-b dark:border-neutral-500 font-bold text-lg ">
-                    <td class=" px-6 py-4 font-medium">{{ (this.detailRecord ? this.detailRecord.transDate : 0) |
-                        datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</td>
-                    <td class=" px-6 py-4">{{ (this.detailRecord ? this.detailRecord.amount : 0) | currencyFormatPipe: 10 }}</td>
-                    <td class=" px-6 py-4 font-medium">{{ this.detailRecord ? this.detailRecord.info : '' }}</td>
-                    <td class=" px-6 py-4 font-medium">{{ this.detailRecord ? this.detailRecord.statusName : '' }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- <div class="grid grid-cols-4 gap-5 p-5">
+            <!-- <div class="grid grid-cols-4 gap-5 p-5">
            <article class="prose break-words">
                 <p>Tên tài khoản chuyển tiền: <br> <b>{{ this.detailRecord ? this.detailRecord.fullNameSent : ''
                         }}</b></p>
@@ -125,7 +134,7 @@
                         datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</b></p>
             </article>
         </div>-->
-        <!--<div class="grid grid-cols-4 gap-5 p-5">
+            <!--<div class="grid grid-cols-4 gap-5 p-5">
             <article class="prose break-words">
                 <p>Tên tài khoản thụ hưởng: <br> <b>{{ this.detailRecord ? this.detailRecord.fullNameReceiver : ''
                         }}</b></p>
@@ -157,23 +166,28 @@
             </article>
         </div>
 -->
-<!--        <mat-divider class="pb-5"></mat-divider>-->
-        <article class="prose">
-            <h3 class="px-5 w-full">Thông Tin giao dịch tiền ví:</h3>
-        </article>
-        <div class="grid grid-cols-4 gap-5 p-5">
-            <article class="prose break-words">
-                <p>Người thụ hưởng: <br> <b>{{ this.detailRecord ? this.detailRecord.admAccountName : ''
-                    }}</b></p>
-            </article>
-            <article class="prose break-words">
-                <p>Số tiền nạp: <br> <b>{{ (this.detailRecord ? this.detailRecord.amount : 0) |
-                    currencyFormatPipe: 10 }}</b></p>
-            </article>
-            <article class="prose break-words">
-                <p>Nhân viên phụ trách: <br>
-                    <b>{{ this.detailRecord ? this.detailRecord.admAccountIdManagerName : ''}}</b></p>
-            </article>
+            <!--        <mat-divider class="pb-5"></mat-divider>-->
+            <div class="border border-primary-grayLight-2 rounded-lg p-4">
+                <article class="prose">
+                    <h3 class="w-full">Thông Tin giao dịch tiền ví:</h3>
+                </article>
+                <div class="grid grid-cols-4 gap-4">
+                    <article class="prose break-words">
+                        <p>Người thụ hưởng: <br> <b>{{ this.detailRecord ? this.detailRecord.admAccountName : ''
+                                }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Số tiền nạp: <br> <b>{{ (this.detailRecord ? this.detailRecord.amount : 0) |
+                                currencyFormatPipe: 10 }}</b></p>
+                    </article>
+                    <article class="prose break-words">
+                        <p>Nhân viên phụ trách: <br>
+                            <b>{{ this.detailRecord ? this.detailRecord.admAccountIdManagerName : ''}}</b>
+                        </p>
+                    </article>
+                </div>
+            </div>
         </div>
+
     </mat-drawer-content>
 </mat-drawer-container>

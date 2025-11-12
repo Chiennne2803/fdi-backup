@@ -192,7 +192,7 @@ export class DraftTransComponent implements OnInit {
                         new InputSearch('approvalBy', 'Người xử lý', null, false),
                         new InputSearch('transComment', 'Ngội dung xử lý ', null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Soạn thảo', value: FS_TRANSPAY_INVESTOR_STATUS.DRAFT},
                             {label: 'Chờ xử lý', value: FS_TRANSPAY_INVESTOR_STATUS.WAITING_PROGRESSING},
                             {label: 'Phê duyệt', value: FS_TRANSPAY_INVESTOR_STATUS.APPROVE},

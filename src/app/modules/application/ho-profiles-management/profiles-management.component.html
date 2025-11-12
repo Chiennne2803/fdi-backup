@@ -2,11 +2,10 @@
     class="flex-auto h-full bg-card dark:bg-transparent">
     <mat-drawer
         class="w-60"
-        [mode]="drawerMode"
-        [opened]="true"
-        [opened]="drawerOpened"
+        [mode]="isMobile ? 'over' : 'side'"
+        [opened]="!isMobile"
         [position]="'start'"
-        [disableClose]="drawerMode !== 'over'"
+        [disableClose]="!isMobile"
         #matDrawer>
         <fuse-vertical-navigation
             [navigation]="menuData"
@@ -17,41 +16,11 @@
             [opened]="true"></fuse-vertical-navigation>
     </mat-drawer>
     <mat-drawer-content class="flex flex-col">
+        <button *ngIf="isMobile" mat-icon-button (click)="matDrawer.toggle()" class="ml-4 mt-4">
+            <mat-icon>menu</mat-icon>
+        </button>
         <router-outlet></router-outlet>
     </mat-drawer-content>
 </mat-drawer-container>
-<!-- <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
-
-    <mat-drawer-container class="flex-auto h-full">
-
-        <mat-drawer
-            class="flex w-60 min-w-60"
-            [autoFocus]="false"
-            [position]="'start'"
-            [disableClose]="true"   
-            [mode]="drawerMode"
-            [opened]="drawerOpened"
-            #matDrawer>
-            <fuse-vertical-navigation
-                [navigation]="menuData"
-                [inner]="true"
-                [mode]="'side'"
-                [name]="'docs-core-features-navigation'"
-                [opened]="true"></fuse-vertical-navigation>
-        </mat-drawer>
-
-        <mat-drawer-content
-            class="flex flex-col"
-            fuseScrollReset>
-
-            <div class="flex-auto">
-                <router-outlet></router-outlet>
-            </div>
-
-        </mat-drawer-content>
-
-    </mat-drawer-container>
-
-</div> -->
 
 

@@ -1,101 +1,92 @@
 <mat-drawer-container class="relative flex h-full min-w-0 md:w-full ">
-    <mat-drawer
-        class="w-full sm:w-100"
-        [mode]="'side'"
-        [opened]="false"
-        [position]="'end'"
-        #fileDrawer>
-        <file-detail
-            containerClass="relative"
-            backgroundClass="min-h-[250px]"
-            [fileDrawer]="fileDrawer"
-            [selectedFile]="selectedFile"
-            [replaceBtnV2]="true"
-            (handleReplaceFile)="onReplaceFile($event)"
-        ></file-detail>
+    <mat-drawer class="w-full sm:w-100" [mode]="'side'" [opened]="false" [position]="'end'" #fileDrawer>
+        <file-detail containerClass="relative" backgroundClass="min-h-[250px]" [fileDrawer]="fileDrawer"
+            [selectedFile]="selectedFile" [replaceBtnV2]="true"
+            (handleReplaceFile)="onReplaceFile($event)"></file-detail>
     </mat-drawer>
-    <mat-drawer-content class="flex-auto ">
+    <mat-drawer-content class="flex-auto bg-white ">
         <change-id-gpkd></change-id-gpkd>
-        <fuse-card class="flex flex-col p-6 m-5" [formGroup]="economicForm">
-            <div class="flex mb-5 justify-between items-center">
-                <h3 class="text-2xl font-bold">Thông tin tài chính</h3>
-                <div class="flex justify-end">
-                    <ng-container *ngIf="isEditable else viewOnly">
-                        <button mat-stroked-button class="mr-2" (click)="cancelEditing()">Đóng</button>
-                        <button mat-flat-button color="primary" (click)="saveData()">Lưu</button>
+        <div class="p-4 space-y-6">
+            <div class="flex flex-col border border-primary-grayLight-2 rounded-lg p-4" [formGroup]="economicForm">
+                <div class="flex mb-5 justify-between items-center">
+                    <h3 class="text-2xl font-bold">Thông tin tài chính</h3>
+                    <div class="flex justify-end">
+                        <ng-container *ngIf="isEditable else viewOnly">
+                            <button mat-stroked-button class="mr-2" (click)="cancelEditing()">Đóng</button>
+                            <button mat-flat-button color="primary" (click)="saveData()">Lưu</button>
+                        </ng-container>
+                        <ng-template #viewOnly>
+                            <button mat-flat-button color="primary" (click)="isEditing()">Cập nhật</button>
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    <ng-container *ngIf="isEditable else fieldsReadOnly">
+                        <mat-form-field>
+                            <mat-label>Báo cáo tài chính được kiểm toán chưa ?</mat-label>
+                            <mat-select formControlName="financeCheck">
+                                <mat-option *ngFor="let bctc of bctcCodeList" [value]="bctc.admCategoriesId">
+                                    {{ bctc.categoriesName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="isInvalidForm('financeCheck')">
+                                {{ message.form.errors.required }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Có sử dụng báo cáo lưu chuyển tiền tệ trực tiếp ?</mat-label>
+                            <mat-select formControlName="moneyTranferReportCheck">
+                                <mat-option *ngFor="let bclt of bcltList" [value]="bclt.admCategoriesId">
+                                    {{ bclt.categoriesName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="isInvalidForm('moneyTranferReportCheck')">
+                                {{ message.form.errors.required }}
+                            </mat-error>
+                        </mat-form-field>
+                        <date-picker-year-only label="BCTC năm liền kề" formControlName="financeLastTime"
+                            [maxYear]="maxYear"></date-picker-year-only>
+                        <date-picker-year-only label="BCTC năm gần nhất" formControlName="financeTime"
+                            [maxYear]="maxYear"></date-picker-year-only>
                     </ng-container>
-                    <ng-template #viewOnly>
-                        <button mat-flat-button color="primary" (click)="isEditing()">Cập nhật</button>
+                    <ng-template #fieldsReadOnly>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <label>Báo cáo tài chính được kiểm toán chưa?</label>
+                                <span class="text-default font-bold mt-2">{{ economicInfo?.financeCheckName
+                                    }}</span>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <label>Có sử dụng báo cáo lưu chuyển tiền tệ trực tiếp?</label>
+                                <span class="text-default font-bold mt-2">{{
+                                    economicInfo?.moneyTranferReportCheckName }}</span>
+                            </div>
+                            <div class="flex flex-col col-span-1">
+                                <label>BCTC năm liền kề</label>
+                                <span class="text-default font-bold mt-2">{{ economicInfo?.financeLastTime
+                                    }}</span>
+                            </div>
+                            <div class="flex flex-col col-span-1">
+                                <label>BCTC năm gần nhất</label>
+                                <span class="text-default font-bold mt-2">{{ economicInfo?.financeTime
+                                    }}</span>
+                            </div>
                     </ng-template>
                 </div>
             </div>
-            <div class="flex grid sm:grid-cols-2 md:grid-cols-6 sm:grid-cols-2 grid-cols-6 gap-2 mb-4">
-                <ng-container *ngIf="isEditable else fieldsReadOnly">
-                    <mat-form-field class="col-span-2">
-                        <mat-label>Báo cáo tài chính được kiểm toán chưa ?</mat-label>
-                        <mat-select formControlName="financeCheck">
-                            <mat-option *ngFor="let bctc of bctcCodeList" [value]="bctc.admCategoriesId">
-                                {{ bctc.categoriesName }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="isInvalidForm('financeCheck')">
-                            {{ message.form.errors.required }}
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="col-span-2">
-                        <mat-label>Có sử dụng báo cáo lưu chuyển tiền tệ trực tiếp ?</mat-label>
-                        <mat-select formControlName="moneyTranferReportCheck">
-                            <mat-option *ngFor="let bclt of bcltList" [value]="bclt.admCategoriesId">
-                                {{ bclt.categoriesName }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="isInvalidForm('moneyTranferReportCheck')">
-                            {{ message.form.errors.required }}
-                        </mat-error>
-                    </mat-form-field>
-                    <date-picker-year-only
-                        label="BCTC năm liền kề"
-                        formControlName="financeLastTime"
-                        [maxYear]="maxYear"
-                    ></date-picker-year-only>
-                    <date-picker-year-only
-                        label="BCTC năm gần nhất"
-                        formControlName="financeTime"
-                        [maxYear]="maxYear"
-                    ></date-picker-year-only>
-                </ng-container>
-                <ng-template #fieldsReadOnly>
-                    <div class="flex flex-col col-span-2">
-                        <label>Báo cáo tài chính được kiểm toán chưa ?</label>
-                        <span class="text-default opacity-80 font-bold mt-2">{{ economicInfo?.financeCheckName }}</span>
-                    </div>
-                    <div class="flex flex-col col-span-2">
-                        <label>Có sử dụng báo cáo lưu chuyển tiền tệ trực tiếp ?</label>
-                        <span class="text-default opacity-80 font-bold mt-2">{{ economicInfo?.moneyTranferReportCheckName }}</span>
-                    </div>
-                    <div class="flex flex-col col-span-1">
-                        <label>BCTC năm liền kề</label>
-                        <span class="text-default opacity-80 font-bold mt-2">{{ economicInfo?.financeLastTime }}</span>
-                    </div>
-                    <div class="flex flex-col col-span-1">
-                        <label>BCTC năm gần nhất</label>
-                        <span class="text-default opacity-80 font-bold mt-2">{{ economicInfo?.financeTime }}</span>
-                    </div>
-                </ng-template>
+            <div class="flex flex-col border border-primary-grayLight-2 rounded-lg p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold">Báo cáo tài chính</h3>
+                    <button mat-flat-button color="primary" class="min-w-26" (click)="uploadEconomicInfoDocuments()">
+                        <span class="flex items-center gap-1.5">
+                            <img src="assets/icons/file-up.svg" alt="Icon" />
+                            Tải file lên
+                        </span>
+                    </button>
+                </div>
+                <div class="flex flex-wrap gap-4">
+                    <file-ui *ngFor="let file of economicInfoFiles" [file]="file" (click)="onClickFile(file)"></file-ui>
+                </div>
             </div>
-        </fuse-card>
-        <fuse-card class="flex flex-col p-6 m-5 max-h-full overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold">Báo cáo thuế</h3>
-                <button mat-flat-button color="primary" (click)="uploadEconomicInfoDocuments()">Tải file lên</button>
-            </div>
-            <div class="flex flex-wrap">
-                <file-ui
-                    *ngFor="let file of economicInfoFiles"
-                    [file]="file"
-                    (click)="onClickFile(file)"
-                ></file-ui>
-            </div>
-        </fuse-card>
+        </div>
     </mat-drawer-content>
 </mat-drawer-container>

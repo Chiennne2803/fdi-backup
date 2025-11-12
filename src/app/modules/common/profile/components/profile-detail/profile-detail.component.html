@@ -1,348 +1,222 @@
 <change-id-gpkd></change-id-gpkd>
-<mat-drawer
-    class="w-full sm:w-100"
-    [mode]="'side'"
-    [opened]="false"
-    [position]="'end'"
-    #fileDrawer>
-    <file-detail
-        [fileDrawer]="fileDrawer"
-        [selectedFile]="selectedFile"
-    ></file-detail>
+<mat-drawer class="w-full sm:w-100" [mode]="'side'" [opened]="false" [position]="'end'" #fileDrawer>
+    <file-detail [fileDrawer]="fileDrawer" [selectedFile]="selectedFile"></file-detail>
 </mat-drawer>
-<div class="relative flex overflow-hidden h-full min-w-0 md:w-full p-4">
-    <div class="flex-auto ">
-        <div class="flex flex-col p-4 h-full">
-            <ng-container *ngIf="isEditable; else viewTemplate">
-                <div class="flex flex-col flex-auto overflow-y-auto mt-4 gap-3"
-                     [formGroup]="accountDetailForm">
-                    <div class="flex flex-row flex-auto overflow-hidden gap-8 px-8">
-                        <avatar-component-shared
-                            styleClass="h-[220px] aspect-[9/6]"
-                            [formGroup]="accountDetailForm"
-                            field="avatar"
-                        ></avatar-component-shared>
-                        <div class="flex flex-col w-1/4 gap-4">
-                            <mat-form-field class="w-full">
-                                <mat-label>Họ và tên</mat-label>
-                                <input id="fullName"
-                                       matInput
-                                       formControlName="fullName">
-                            </mat-form-field>
-                            <mat-form-field class="w-full">
-                                <mat-label>CCCD/Hộ Chiếu</mat-label>
-                                <input id="identification"
-                                       matInput
-                                       formControlName="identification">
-                            </mat-form-field>
-                            <mat-form-field class="w-full">
-                                <mat-label>Giới tính</mat-label>
-                                <mat-select formControlName="gender" (selectionChange)="changeGender($event)">
-                                    <mat-option *ngFor="let item of genders"
-                                                [value]="item.id">{{ item.label }}</mat-option>
+<div class="relative flex min-w-0 p-4">
+    <div class="flex-auto">
+        <ng-container *ngIf="isEditable; else viewTemplate">
+            <div class="flex flex-col flex-auto mt-4" [formGroup]="accountDetailForm">
+                <div class="border border-primary-grayLight-2 rounded-lg p-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-x-4">
+                        <div class="row-span-1 col-span-4 md:row-span-3 md:col-span-1">
+                            <avatar-component-shared styleClass="h-[220px] aspect-[9/6] mb-4" [formGroup]="accountDetailForm"
+                                field="avatar"></avatar-component-shared>
+                        </div>
+                        <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                            <mat-label>Họ và tên</mat-label>
+                            <input id="fullName" matInput formControlName="fullName">
+                        </mat-form-field>
+                        <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                            <mat-label>SĐT liên hệ</mat-label>
+                            <input id="mobile" matInput inputMask maskType="number" maxlength="11"
+                                formControlName="mobile">
+                        </mat-form-field>
+                        <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                            <mat-label>Email</mat-label>
+                            <input id="email" matInput maxlength="100" formControlName="email">
+                        </mat-form-field>
+                        <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                            <mat-label>CCCD/Hộ chiếu</mat-label>
+                            <input id="identification" matInput formControlName="identification">
+                        </mat-form-field>
+                        <app-date-picker class="col-span-4 sm:col-span-1" label="Ngày cấp" [maxDate]="{'days': 0}"
+                            formControlName="dateOfIdnumber"></app-date-picker>
+                        <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                            <mat-label>Nơi cấp</mat-label>
+                            <input id="placeOfIdnumber" matInput formControlName="placeOfIdnumber">
+                        </mat-form-field>
+                        <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                            <mat-label>Giới tính</mat-label>
+                            <mat-select formControlName="gender" (selectionChange)="changeGender($event)">
+                                <mat-option *ngFor="let item of genders" [value]="item.id">{{ item.label
+                                    }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="accountDetailForm.get('gender').hasError('required')">
+                                {{ 'TKDT040' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <app-date-picker class="col-span-4 sm:col-span-1" label="Ngày sinh" [maxDate]="{'months': -216}" [validationType]="['upper18']"
+                            formControlName="dateOfBirth" [isRequired]="true" requiredMsg="TKDT042" fomatMsg="HSVV043"
+                            y18Msg="KYCV043"></app-date-picker>
+                        <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                            <mat-label>MST cá nhân</mat-label>
+                            <input id="taxCode" inputMask maskType="number" matInput maxlength="13"
+                                formControlName="taxCode"
+                                placeholder=" Nhập '0' nếu chưa có Mã số thuế">
+                        </mat-form-field>
+                        <ng-container *ngIf="this.authService.authenticatedUser.accountType === 2">
+                            <!--                        HUY DONG VON-->
+                            <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                                <mat-label>Tình trạng hôn nhân</mat-label>
+                                <mat-select formControlName="marital">
+                                    <mat-option *ngFor="let item of marriageList" [value]="item.admCategoriesId">
+                                        {{ item.categoriesName }}
+                                    </mat-option>
                                 </mat-select>
-                                <mat-error *ngIf="accountDetailForm.get('gender').hasError('required')">
-                                    {{ 'TKDT040' | transloco }}
+                                <mat-error *ngIf="accountDetailForm.get('marital').hasError('required')">
+                                    Dữ liệu chưa được nhập
                                 </mat-error>
                             </mat-form-field>
-                        </div>
-                        <div class="flex flex-col w-1/4 gap-4">
-                            <mat-form-field class="w-full">
-                                <mat-label>SĐT liên hệ</mat-label>
-                                <input id="mobile"
-                                       matInput
-                                       inputMask
-                                       maskType="number"
-                                       maxlength="11"
-                                       formControlName="mobile">
+                            <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                                <mat-label>Nghề nghiệp</mat-label>
+                                <mat-select formControlName="job">
+                                    <mat-option *ngFor="let job of listJob" [value]="job.admCategoriesId">
+                                        {{ job.categoriesName }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="accountDetailForm.get('job').hasError('required')">
+                                    {{ 'HSVV125' | transloco }}
+                                </mat-error>
                             </mat-form-field>
-                            <app-date-picker
-                                label="Ngày cấp"
-                                [maxDate]="{'days': 0}"
-                                formControlName="dateOfIdnumber"
-                            ></app-date-picker>
-                            <app-date-picker
-                                label="Ngày sinh"
-                                [maxDate]="{'months': -216}"
-                                [validationType]="['upper18']"
-                                formControlName="dateOfBirth"
-                                [isRequired]="true"
-                                requiredMsg="TKDT042"
-                                fomatMsg="HSVV043"
-                                y18Msg="KYCV043"
-                            ></app-date-picker>
-                        </div>
-                        <div class="flex flex-col w-1/4 gap-4">
-                            <mat-form-field class="w-full">
-                                <mat-label>Email</mat-label>
-                                <input id="email"
-                                       matInput
-                                       maxlength="100"
-                                       formControlName="email">
+                            <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                                <mat-label>Đơn vị công tác</mat-label>
+                                <input id="jobAddress" matInput [maxlength]="100" formControlName="jobAddress">
                             </mat-form-field>
-                            <mat-form-field class="w-full">
-                                <mat-label>Nơi cấp</mat-label>
-                                <input id="placeOfIdnumber"
-                                       matInput
-                                       formControlName="placeOfIdnumber">
+                            <mat-form-field class="w-full col-span-4 sm:col-span-1">
+                                <mat-label>Trang Facebook</mat-label>
+                                <input id="facebook" matInput [maxlength]="100" formControlName="facebook">
                             </mat-form-field>
+                        </ng-container>
 
-                            <mat-form-field class="w-full">
-                                <mat-label>MST cá nhân</mat-label>
-                                <input id="taxCode"
-                                       inputMask
-                                       maskType="number"
-                                       matInput
-                                       maxlength="13"
-                                       formControlName="taxCode"
-                                       required="true"
-                                       requiredMsg="TKDT051"
-                                       placeholder=" Nhập '0' nếu chưa có Mã số thuế"
-                                >
-                               <mat-error *ngIf="accountDetailForm.get('taxCode').hasError('required')">
-                                    {{ 'TKDT051' | transloco }}
-                                </mat-error>
-<!--                                check validate chien 12092023-->
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <ng-container *ngIf="this.authService.authenticatedUser.accountType === 2">
-<!--                        HUY DONG VON-->
-                        <div class="w-full flex flex-row overflow-hidden gap-8 px-8 mt-2">
-                           <div class="w-[340px]">
-                               <mat-form-field class="w-full">
-                                   <mat-label>Tình trạng hôn nhân</mat-label>
-                                   <mat-select formControlName="marital">
-                                       <mat-option *ngFor="let item of marriageList" [value]="item.admCategoriesId">
-                                           {{ item.categoriesName }}
-                                       </mat-option>
-                                   </mat-select>
-                                   <mat-error *ngIf="accountDetailForm.get('marital').hasError('required')">
-                                       Dữ liệu chưa được nhập
-                                   </mat-error>
-                               </mat-form-field>
-                           </div>
-                            <div class="flex flex-col w-1/4 gap-4">
-                                <mat-form-field class="w-full">
-                                    <mat-label>Nghề nghiệp</mat-label>
-                                    <mat-select formControlName="job">
-                                        <mat-option *ngFor="let job of listJob" [value]="job.admCategoriesId">
-                                            {{ job.categoriesName }}
-                                        </mat-option>
-                                    </mat-select>
-                                    <mat-error *ngIf="accountDetailForm.get('job').hasError('required')">
-                                        {{ 'HSVV125' | transloco }}
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-                            <div class="flex flex-col w-1/4 gap-4">
-                                <mat-form-field class="w-full">
-                                    <mat-label>Đơn vị công tác</mat-label>
-                                    <input id="jobAddress"
-                                           matInput
-                                           [maxlength]="100"
-                                           formControlName="jobAddress">
-                                </mat-form-field>
-                            </div>
-                                <div class="flex flex-col w-1/4 gap-4">
-                                <mat-form-field class="w-full">
-                                    <mat-label>Trang Facebook</mat-label>
-                                    <input id="facebook"
-                                           matInput
-                                           [maxlength]="100"
-                                           formControlName="facebook"
-                                    >
-                                </mat-form-field>
-                                </div>
-                        </div>
-                    </ng-container>
-                    <div class="flex flex-row overflow-hidden sm:overflow-y-auto gap-8 px-8 mt-2">
-                        
-                        <mat-form-field class="w-full">
-                            <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
-                            <input id="address2"
-                                   class="cursor-pointer"
-                                   matInput
-                                   readonly
-                                   formControlName="address2"
-                                   (click)="openAddressDialog()"
-                            >
+                        <mat-form-field class="w-full col-span-4 sm:col-span-2">
+                            <mat-label>Địa chỉ thường trú</mat-label>
+                            <input class="cursor-pointer" matInput readonly formControlName="address1">
+                            <mat-error *ngIf="accountDetailForm.get('address1').hasError('required')">
+                                {{ 'TKDT052' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="col-span-4 sm:col-span-2">
+                            <mat-label>Địa chỉ hiện tại</mat-label>
+                            <input id="address2" class="cursor-pointer" matInput readonly formControlName="address2"
+                                (click)="openAddressDialog()">
                             <mat-error *ngIf="accountDetailForm.get('address2').hasError('required')">
                                 {{ 'TKDT052' | transloco }}
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field style="width: calc(100% - 75px)">
-                            <mat-label>Địa chỉ hiện tại</mat-label>
-                            <input
-                                class="cursor-pointer"
-                                matInput
-                                readonly
-                                formControlName="address1"
-                            >
-                        </mat-form-field>
                     </div>
-<!--                    <div class="flex flex-row flex-auto overflow-hidden sm:overflow-y-auto gap-8 px-8 mt-2">-->
-<!--                        <div style="width: calc(100% - 75px)">-->
-<!--                        <app-dropzone-->
-<!--                            inputId="frontPhotoIdentication"-->
-<!--                            styleClass="max-h-[46px]"-->
-<!--                            [multiple]="true"-->
-<!--                            [isRequired]="true"-->
-<!--                            [maxFile]="1"-->
-<!--                            topTitle="Ảnh CCCD/Hộ Chiếu mặt trước"-->
-<!--                            title="Tải ảnh lên"-->
-<!--                            [formGroup]="accountDetailForm"-->
-<!--                            [maxFileSize]="5"-->
-<!--                            accept="image/png, image/jpg, image/jpeg"-->
-<!--                            field="frontPhotoIdentication"-->
-<!--                            requiredMsg="QLDT053"-->
-<!--                            typeMsg="QLDT054"-->
-<!--                            sizeMsg="QLDT055"-->
-<!--                        ></app-dropzone>-->
-<!--                        </div>-->
-<!--                        <div class="w-full">-->
-<!--                            <app-dropzone-->
-<!--                                inputId="backsitePhotoIdentication"-->
-<!--                                styleClass="max-h-[46px]"-->
-<!--                                [multiple]="true"-->
-<!--                                [isRequired]="true"-->
-<!--                                [maxFile]="1"-->
-<!--                                topTitle="Ảnh CCCD/Hộ Chiếu mặt sau"-->
-<!--                                title="Tải ảnh lên"-->
-<!--                                [formGroup]="accountDetailForm"-->
-<!--                                [maxFileSize]="5"-->
-<!--                                field="backsitePhotoIdentication"-->
-<!--                                accept="image/png, image/jpg, image/jpeg"-->
-<!--                                requiredMsg="QLDT057"-->
-<!--                                typeMsg="QLDT058"-->
-<!--                                sizeMsg="QLDT059"-->
-<!--                            ></app-dropzone>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
                 </div>
-                <div class="flex flex-row justify-end flex-auto overflow-hidden mt-4 px-8">
-                    <!-- Discard -->
-                    <button class="ml-auto sm:ml-0"
-                            mat-stroked-button
-                            (click)="cancel()">
-                        Đóng
-                    </button>
-                    <!-- Submit -->
-                    <button class="order-first sm:order-last ml-2"
-                            mat-flat-button
-                            [color]="'primary'"
-                            (click)="update()">
-                        Lưu
-                    </button>
-                </div>
-            </ng-container>
-            <ng-template #viewTemplate>
+            </div>
+            <div class="flex flex-row justify-end my-4">
+                <!-- Discard -->
+                <button mat-stroked-button (click)="cancel()">
+                    Đóng
+                </button>
+                <!-- Submit -->
+                <button class="ml-2" mat-flat-button [color]="'primary'" (click)="update()">
+                    Lưu
+                </button>
+            </div>
+        </ng-container>
+        <ng-template #viewTemplate>
+            <div class="border border-primary-grayLight-2 rounded-lg p-4" *ngIf="accountDetail">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="row-span-1 col-span-2 md:row-span-3 md:col-span-1">
+                        <avatar-component-shared styleClass="h-[220px] " [fileFromServer]="accountDetail?.avatar"
+                            [showFileButton]="false"></avatar-component-shared>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>Họ và tên</mat-label>
+                        <strong>{{accountDetail.fullName}}</strong>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>SĐT liên hệ</mat-label>
+                        <strong>{{accountDetail.mobile}}</strong>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>Email</mat-label>
+                        <strong class="text-blue-500 underline">
+                            <a [href]="'mailto:' + accountDetail.email">{{accountDetail.email}}</a>
+                        </strong>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>CCCD/Hộ chiếu</mat-label>
+                        <strong>{{accountDetail.identification}}</strong>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>Ngày cấp</mat-label>
+                        <strong>{{accountDetail.dateOfIdnumber | datetimeformat: 'DD/MM/YYYY'}}</strong>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>Nơi cấp</mat-label>
+                        <strong>{{accountDetail.placeOfIdnumber}}</strong>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>Giới tính</mat-label>
+                        <strong>{{accountDetail.genderName}}</strong>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>Ngày sinh</mat-label>
+                        <strong>{{accountDetail.dateOfBirth | datetimeformat: 'DD/MM/YYYY'}}</strong>
+                    </div>
+                    <div class="flex flex-col">
+                        <mat-label>MST cá nhân</mat-label>
+                        <strong>{{accountDetail.taxCode}}</strong>
+                    </div>
+                    <ng-container *ngIf="this.authService.authenticatedUser.accountType === 2">
+                        <!--                        HUY DONG VON-->
+                        <div class="flex flex-col">
+                            <mat-label>Tình trạng hôn nhân</mat-label>
+                            <strong>{{accountDetail.maritalName}}</strong>
+                        </div>
+                        <div class="flex flex-col">
+                            <mat-label>Nghề nghiệp</mat-label>
+                            <strong>{{accountDetail.jobName}}</strong>
+                        </div>
+                        <div class="flex flex-col">
+                            <mat-label>Đơn vị công tác</mat-label>
+                            <strong>{{accountDetail.jobAddress}}</strong>
+                        </div>
+                        <div class="flex flex-col">
+                            <mat-label>Trang facebook</mat-label>
+                           <a 
+                                [matTooltip]="isValidFacebookLink(accountDetail.facebook) ? '' : 'Link không hợp lệ'"
+                                class="text-blue-500 underline" 
+                                target="_blank" 
+                                  [href]="isValidFacebookLink(accountDetail.facebook) ? sanitizeFacebookLink(accountDetail.facebook) : null">
+                                <strong>{{ shortenLink(accountDetail.facebook, 30) }}</strong>
+                            </a>
 
-                <div class="flex flex-col flex-auto  mt-4 gap-3" *ngIf="accountDetail">
-                    <div class="grid grid-flow-row-dense grid-cols-4 gap-8 ...">
-                        <div class="row-span-3 ">
-                            <avatar-component-shared
-                                styleClass="h-[220px] "
-                                [fileFromServer]="accountDetail?.avatar"
-                                [showFileButton]="false"
-                            ></avatar-component-shared>
                         </div>
-                        <div class="flex flex-col border-b-2">
-                            <mat-label>Họ và tên</mat-label>
-                            <strong>{{accountDetail.fullName}}</strong>
-                        </div>
-                        <div class="flex flex-col border-b-2">
-                            <mat-label>SĐT liên hệ</mat-label>
-                            <strong>{{accountDetail.mobile}}</strong>
-                        </div>
-                        <div class="flex flex-col border-b-2">
-                            <mat-label>Email</mat-label>
-                            <strong class="text-blue-500 underline">
-                                <a [href]="'mailto:' + accountDetail.email">{{accountDetail.email}}</a>
-                            </strong>
-                        </div>
-                        <div class="flex flex-col border-b-2">
-                            <mat-label>CCCD/Hộ chiếu</mat-label>
-                            <strong>{{accountDetail.identification}}</strong>
-                        </div>
-                        <div class="flex flex-col border-b-2 "border-b-2>
-                            <mat-label>Ngày cấp</mat-label>
-                            <strong>{{accountDetail.dateOfIdnumber | datetimeformat: 'DD/MM/YYYY'}}</strong>
-                        </div>
-                        <div class="flex flex-col border-b-2 ">
-                            <mat-label>Nơi cấp</mat-label>
-                            <strong>{{accountDetail.placeOfIdnumber}}</strong>
-                        </div>
-                        <div class="flex flex-col border-b-2 ">
-                            <mat-label>Giới tính</mat-label>
-                            <strong>{{accountDetail.genderName}}</strong>
-                        </div>
-                        <div class="flex flex-col border-b-2 ">
-                            <mat-label>Ngày sinh</mat-label>
-                            <strong>{{accountDetail.dateOfBirth | datetimeformat: 'DD/MM/YYYY'}}</strong>
-                        </div>
-                        <div class="flex flex-col border-b-2 ">
-                            <mat-label>MST cá nhân</mat-label>
-                            <strong>{{accountDetail.taxCode}}</strong>
-                        </div>
-                        <ng-container *ngIf="this.authService.authenticatedUser.accountType === 2">
-                            <!--                        HUY DONG VON-->
-                            <div class="flex flex-col border-b-2 ">
-                                <mat-label>Tình trạng hôn nhân</mat-label>
-                                <strong>{{accountDetail.maritalName}}</strong>
-                            </div>
-                            <div class="flex flex-col border-b-2 ">
-                                <mat-label>Nghề nghiệp</mat-label>
-                                <strong>{{accountDetail.jobName}}</strong>
-                            </div>
-                            <div class="flex flex-col border-b-2 ">
-                                <mat-label>Đơn vị công tác</mat-label>
-                                <strong>{{accountDetail.jobAddress}}</strong>
-                            </div>
-                            <div class="flex flex-col border-b-2 ">
-                                <mat-label>Trang facebook</mat-label>
-                                <a class="text-blue-500 underline" target="_blank" [href]="accountDetail.facebook">
-                                    <strong>{{accountDetail.facebook}}</strong>
-                                </a>
-                            </div>
-                        </ng-container>
-                        <div class="flex flex-col  col-span-2 border-b-2">
-                            <mat-label>Địa chỉ thường trú</mat-label>
-                            <strong>{{accountDetail.address2}}</strong>
-                        </div>
-                        <div class="flex flex-col col-span-2 border-b-2">
-                            <mat-label>Địa chỉ hiện tại</mat-label>
-                            <strong>{{accountDetail.address1}}</strong>
-                        </div>
-
-                        <div class="flex flex-col col-span-2 border-b-2">
-                            <mat-label>Ảnh CCCD/Hộ chiếu(Mặt trước):</mat-label>
-                            <a href="javascript:void(0)" class="text-primary underline"
-                                   (click)="clickViewImage(accountDetail?.frontPhotoIdentication)">Xem
-                                    file</a>
-                        </div>
-                        <div class="flex flex-col  col-span-2 border-b-2">
-                                <mat-label>Ảnh CCCD/Hộ chiếu(Mặt sau):</mat-label>
-                                <a href="javascript:void(0)" class="text-primary underline"
-                                   (click)="clickViewImage(accountDetail?.backsitePhotoIdentication)">Xem
-                                    file</a>
-                        </div>
-
+                    </ng-container>
+                    <div class="flex flex-col col-span-2">
+                        <mat-label>Địa chỉ thường trú</mat-label>
+                        <strong>{{accountDetail.address1}}</strong>
+                    </div>
+                    <div class="flex flex-col col-span-2">
+                        <mat-label>Địa chỉ hiện tại</mat-label>
+                        <strong>{{accountDetail.address2}}</strong>
                     </div>
 
-
+                    <div class="flex flex-col col-span-2">
+                        <mat-label>Ảnh CCCD/Hộ chiếu(Mặt trước):</mat-label>
+                        <a href="javascript:void(0)" class="text-primary underline"
+                            (click)="clickViewImage(accountDetail?.frontPhotoIdentication)">Xem
+                            file</a>
+                    </div>
+                    <div class="flex flex-col col-span-2">
+                        <mat-label>Ảnh CCCD/Hộ chiếu(Mặt sau):</mat-label>
+                        <a href="javascript:void(0)" class="text-primary underline"
+                            (click)="clickViewImage(accountDetail?.backsitePhotoIdentication)">Xem
+                            file</a>
+                    </div>
 
                 </div>
-                <div class="flex flex-row justify-end flex-auto overflow-hidden gap-4 px-8 mb-6 mt-8">
-                    <button
-                        mat-flat-button
-                        [color]="'primary'"
-                        (click)="edit()">
-                        <span>Cập nhật</span>
-                    </button>
-                </div>
-            </ng-template>
-        </div>
+            </div>
+            <div class="flex justify-end my-4">
+                <button mat-flat-button [color]="'primary'" (click)="edit()">
+                    <span>Cập nhật</span>
+                </button>
+            </div>
+        </ng-template>
     </div>
 </div>

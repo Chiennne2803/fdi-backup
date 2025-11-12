@@ -1,6 +1,6 @@
 <!-- Header -->
 <div mat-dialog-title
-     class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-color-vnv text-on-primary -m-6 mb-4">
+     class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 text-on-primary -m-6 mb-4">
     <div class="text-lg font-medium">Lập yêu cầu rút tiền từ ví HO</div>
     <button mat-icon-button>
         <mat-icon class="text-current"
@@ -29,7 +29,7 @@
             </div>
             <div class="flex flex-row w-full gap-4 m-5">
                 <article class="prose  w-full">
-                    <p>Số dư khả dụng (VNĐ) <br>
+                    <p>Số dư khả dụng (VND) <br>
                         <span
                             class="text-2xl">{{ requestWithdrawForm.get('availableBalances').value | currencyFormatPipe: 10}}
                             VND</span></p>
@@ -95,7 +95,7 @@
             </div>
             <div class="flex flex-row w-full gap-4">
                 <mat-form-field class="w-1/2">
-                    <mat-label>Số tiền giao dịch (VNĐ)</mat-label>
+                    <mat-label>Số tiền giao dịch (VND)</mat-label>
                     <input id="amount"
                            matInput
                            currencyMask autocomplete="off"

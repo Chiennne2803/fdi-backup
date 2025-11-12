@@ -1,16 +1,15 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { interval, Subject, Subscription } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationItem, FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { FuseAlertService } from "../../../../../@fuse/components/alert";
-import { FuseUtilsService } from "../../../../../@fuse/services/utils";
 import { AdmAccountType, User } from "../../../../core/user/user.types";
-import { UserService } from "../../../../core/user/user.service";
 import { AuthService } from "../../../../core/auth/auth.service";
 import { AlertDTO } from '../../../../models/base/alert';
+import { MaintenanceService } from 'app/service';
 
 @Component({
     selector: 'compact-layout',
@@ -20,36 +19,35 @@ import { AlertDTO } from '../../../../models/base/alert';
 export class CompactLayoutComponent implements OnInit, OnDestroy {
     isScreenSmall: boolean = false;
     navigation: Navigation;
-    userInfo: User;
-    // showMenu = true;
-    // hiddenRoutes = ['/investor/kyc', '/borrower/kyc'];
+    userInfo: User | null = null;
+    maintenanceMessage: string | null = null;
+    maintenanceTime: string | null = null;
     public isShowHeader = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public mainMenu: FuseNavigationItem[];
     public lstNotify: Array<AlertDTO>;
+    remindTimes = [30, 20, 10, 5];
+    reminded: number[] = [];
+    checkInterval: Subscription | null = null;
 
     /**
      * Constructor
      */
     constructor(
-        private _activatedRoute: ActivatedRoute,
         private _router: Router,
         private _navigationService: NavigationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseAlertService: FuseAlertService,
-        private _fuseUtilsService: FuseUtilsService,
-        private _userService: UserService,
         private _authService: AuthService,
+        private maintenanceService: MaintenanceService,
+        private _changeDetectorRef: ChangeDetectorRef
+
     ) {
         this._fuseAlertService.lstNotify.subscribe(res => this.lstNotify = res);
-        // this._router.events.pipe(
-        //     filter(event => event instanceof NavigationEnd)
-        // ).subscribe((event: NavigationEnd) => {
-        //     console.log(event.urlAfterRedirects, event)
-        //     this.showMenu = !this.hiddenRoutes.includes(event.urlAfterRedirects);
-        // });
     }
+
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -127,6 +125,7 @@ export class CompactLayoutComponent implements OnInit, OnDestroy {
                     return this.navigation.horizontalBorrower;
             }
         }
+        // console.log(this.navigation.compact)
         return this.navigation.compact;
     }
 
@@ -184,6 +183,16 @@ export class CompactLayoutComponent implements OnInit, OnDestroy {
         });
         return _p;
     }
+    private formatDate(dateString: string): string {
+        const date = new Date(dateString);
+        return date.toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -223,8 +232,76 @@ export class CompactLayoutComponent implements OnInit, OnDestroy {
                 }
             }
         })
+
+        // const dismissed = localStorage.getItem('maintenanceDismissed');
+        // if (!dismissed) {
+        //     this.maintenanceService.getMaintenance(true).subscribe((res) => {
+        //         if (res && res.status && res.status === 1) {
+        //             const now = new Date().getTime();
+        //             const start = new Date(res.startTime).getTime();
+        //             const diffHours = (start - now) / (1000 * 60 * 60);
+
+        //             if (diffHours <= 24 && diffHours > 0) {
+        //                 this.maintenanceMessage = res.message;
+        //                 // Hiển thị khung thời gian
+        //                 const startStr = this.formatDate(res.startTime);
+        //                 const endStr = this.formatDate(res.endTime);
+        //                 this.maintenanceTime = `<b>${startStr} - ${endStr}</b>`;
+        //                 // Kiểm tra ngay lập tức
+        //                 this.checkRemind(res.startTime);
+        //                 // Kiểm tra mỗi phút
+        //                 this.checkInterval = interval(60 * 1000).subscribe(() => {
+        //                     this.checkRemind(res.startTime);
+        //                 });
+        //             }
+        //         }
+        //     });
+        // }
     }
 
+    checkRemind(startTime: string): void {
+        const now = new Date().getTime();
+        const start = new Date(startTime).getTime();
+        const diffMinutes = Math.floor((start - now) / (1000 * 60));
+
+        // Hết thời gian
+        if (diffMinutes <= 0) {
+            this.clearRemind();
+            return;
+        }
+
+        // Nếu trùng mốc và chưa nhắc
+        if (this.remindTimes.includes(diffMinutes) && !this.reminded.includes(diffMinutes)) {
+            this.reminded.push(diffMinutes);
+            this.maintenanceTime = `Hệ thống sẽ bảo trì sau <b>${diffMinutes} phút</b>.`;
+            this._changeDetectorRef.markForCheck();
+
+            // Tự ẩn sau 10 giây
+            setTimeout(() => {
+                this.maintenanceTime = null;
+                this._changeDetectorRef.markForCheck();
+            }, 10000);
+        }
+
+        // 🟢 Hiển thị thời gian đếm ngược từng phút còn lại
+        // if (diffMinutes <= Math.max(...this.remindTimes) && diffMinutes > 0) {
+        //     this.maintenanceTime = `Hệ thống sẽ bảo trì sau <b>${diffMinutes} phút</b>.`;
+        //     this._changeDetectorRef.markForCheck();
+        // }
+    }
+
+    onCloseAlert(): void {
+        this.maintenanceMessage = null;
+        localStorage.setItem('maintenanceDismissed', 'true');
+        this.clearRemind();
+    }
+
+    clearRemind(): void {
+        if (this.checkInterval) {
+            this.checkInterval.unsubscribe();
+            this.checkInterval = null;
+        }
+    }
     /**
      * On destroy
      */
@@ -232,6 +309,8 @@ export class CompactLayoutComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
+        this.clearRemind();
+
     }
 
     // -----------------------------------------------------------------------------------------------------

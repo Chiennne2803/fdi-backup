@@ -1,87 +1,122 @@
-<div mat-dialog-title
-     class="mb-0">
-    <div class="flex justify-between">
-        <h2 mat-dialog-title
-            class="mb-0">
-            Nhập mã xác thực OTP
-        </h2>
-        <a class="mt-[-5px]"
-           mat-dialog-close
-           mat-icon-button>
-            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
-        </a>
+<div class="flex flex-col max-h-screen -m-6">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Nhập mã xác thực OTP </div>
+        <button mat-dialog-close mat-icon-button [tabIndex]="-1">
+            <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
     </div>
-</div>
-<mat-dialog-content class="mat-typography" [style]="{maxWidth: '450px'}">
-    <div>
-        <!-- Alert -->
-        <fuse-alert
-            class="mt-8 -mb-4"
-            *ngIf="showAlert"
-            [appearance]="'outline'"
-            [showIcon]="false"
-            [type]="alert.type"
-            [@shake]="alert.type === 'error'"
-        >
-            {{alert.message}}
-        </fuse-alert>
-    </div>
-
-    <!-- Email OTP form -->
-    <form class="mt-8" [formGroup]="emailOtpForm">
-        <div class="font-medium mb-1">
-            Hệ thống đã gửi mã OTP xác thực đến địa chỉ <a class="text-primary-500 hover:underline cursor-pointer">{{ userInfo.email }}</a> bạn đã đăng ký. Vui lòng kiểm tra và điền mã xác nhận để hoàn tất đăng ký!
+    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="emailOtpForm">
+        
+        <div class="font-medium">
+            Hệ thống đã gửi mã OTP xác thực đến địa chỉ <a class="text-primary">{{
+                userInfo.email }}</a> bạn đã đăng ký. Vui lòng kiểm tra và điền mã xác nhận để hoàn tất
+            đăng ký!
         </div>
 
-        <!-- OTP field -->
-        <mat-form-field class="w-full" formGroupName="payload">
+        <fuse-alert class="mt-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false" [type]="alert.type"
+            [@shake]="alert.type === 'error'">
+            {{alert.message}}
+        </fuse-alert>
+        <!-- <mat-form-field class="w-full" formGroupName="payload" floatLabel="always">
             <mat-label>Nhập mã OTP được gửi qua Email</mat-label>
-            <input matInput id="emailOtp" formControlName="mailOtp" [maxlength]="4" inputMask maskType="number">
+            <input matInput id="emailOtp" formControlName="mailOtp" [maxlength]="4" inputMask maskType="number"
+                placeholder="Nhập mã OTP...">
             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail-open'"></mat-icon>
             <mat-error *ngIf="emailOtpForm.get('payload').get('mailOtp')?.hasError('required')">
                 Dữ liệu chưa được nhập
             </mat-error>
-            <mat-error
-                *ngIf="emailOtpForm.get('payload').get('mailOtp')?.hasError('forbiddenOtp')
-                            && !emailOtpForm.get('payload').get('mailOtp')?.hasError('required')"
-            >
+            <mat-error *ngIf="emailOtpForm.get('payload').get('mailOtp')?.hasError('forbiddenOtp')
+                            && !emailOtpForm.get('payload').get('mailOtp')?.hasError('required')">
                 Mã OTP không hợp lệ
             </mat-error>
-        </mat-form-field>
-        <div class="flex items-baseline mt-0.5 font-medium">
+        </mat-form-field> -->
+        <div class="w-full mt-4 text-center">
+            <label class="block mb-2 font-medium">Nhập mã OTP được gửi qua Email</label>
+            <div #otpInputWrapper>
+                <ng-otp-input [config]="otpConfig" (onInputChange)="onOtpChange($event)">
+                </ng-otp-input>
+            </div>
+        </div>
+        <!-- Hiển thị phần gửi lại và countdown -->
+        <div class="flex justify-center items-baseline mt-1 font-medium" 
+             *ngIf="!isResendLimitReached">
             <div>Bạn chưa nhận được mã?</div>
-            <a
-                class="ml-1 text-primary-500 hover:underline cursor-pointer"
-                *ngIf="!resendTime" (click)="resendOtp(180)"
-            >
+            <!-- Chỉ hiển thị nút gửi lại khi chưa hết lượt -->
+            <a class="ml-1 text-primary hover:underline cursor-pointer" 
+               *ngIf="!resendTime && !isResendingOtp && !hasUsedAllResends" 
+               (click)="resendOtp(180)"
+               [attr.aria-label]="'Gửi lại mã OTP'"
+               role="button"
+               tabindex="0"
+               (keydown.enter)="resendOtp(180)"
+               (keydown.space)="resendOtp(180)">
                 Gửi lại
             </a>
-            <a class="ml-1 text-primary-500 hover:underline" *ngIf="resendTime">
-                {{resendTime}}
+            <!-- Luôn hiển thị countdown nếu còn thời gian -->
+            <a class="ml-1 text-primary hover:underline" *ngIf="resendTime">
+                {{resendTime}}s
             </a>
+            <div class="ml-1 flex items-center" *ngIf="isResendingOtp">
+                <mat-progress-spinner [diameter]="16" [mode]="'indeterminate'"></mat-progress-spinner>
+                <span class="ml-1 text-sm">Đang gửi...</span>
+            </div>
+        </div>
+        
+        <!-- Hiển thị số lần còn lại -->
+        <div class="flex justify-center items-center mt-2 text-sm text-gray-600" 
+             *ngIf="!isResendLimitReached && resendCount > 0 && !hasUsedAllResends">
+            <span>Số lần gửi lại còn lại: {{maxResendAttempts - resendCount}}</span>
+        </div>
+        
+        <!-- Thông báo khi đã sử dụng hết lượt gửi lại nhưng vẫn có thể nhập OTP -->
+        <div class="flex justify-center items-center mt-2 text-sm text-orange-600" 
+             *ngIf="hasUsedAllResends">
+            <span>Bạn đã sử dụng hết số lần gửi lại OTP. Vui lòng nhập mã OTP hiện tại.</span>
         </div>
 
-        <!-- Submit button -->
+
         <div class="text-center mt-6">
-            <a mat-dialog-close
-               mat-button
-               class="mr-2"
-               [matTooltip]="'Huỷ'">
-                Huỷ
-            </a>
-            <button mat-flat-button
-                    color="primary"
-                    (click)="submitOtp()"
-                    [disabled]="emailOtpForm.disabled">
-                <span *ngIf="!emailOtpForm.disabled">
-                    Xác nhận
-                </span>
-                <mat-progress-spinner *ngIf="emailOtpForm.disabled"
-                                      [diameter]="24"
-                                      [mode]="'indeterminate'">
-                </mat-progress-spinner>
-            </button>
+            <!-- Hiển thị nút Huỷ và Xác nhận khi chưa hết lượt -->
+            <div *ngIf="!hasUsedAllResends" class="flex justify-center gap-2">
+                <a mat-dialog-close mat-stroked-button class="mr-2" [matTooltip]="'Huỷ'">
+                    Huỷ
+                </a>
+                <button mat-flat-button color="primary" (click)="submitOtp()" [disabled]="emailOtpForm.disabled">
+                    <span *ngIf="!emailOtpForm.disabled">
+                        Xác nhận
+                    </span>
+                    <mat-progress-spinner *ngIf="emailOtpForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                    </mat-progress-spinner>
+                </button>
+            </div>
+            
+            <!-- Hiển thị nút Xác nhận và Đóng khi đã hết lượt gửi lại -->
+            <div *ngIf="hasUsedAllResends" class="flex justify-center gap-2">
+                <button mat-flat-button color="primary" (click)="submitOtp()" [disabled]="emailOtpForm.disabled">
+                    <span *ngIf="!emailOtpForm.disabled">
+                        Xác nhận
+                    </span>
+                    <mat-progress-spinner *ngIf="emailOtpForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                    </mat-progress-spinner>
+                </button>
+                <button mat-stroked-button mat-dialog-close>
+                    Đóng
+                </button>
+            </div>
         </div>
     </form>
-</mat-dialog-content>
-
+    <!-- <div class="flex flex-row items-center justify-center gap-3 sm:gap-2 w-auto mb-4 sm:mb-6">
+        <button class="w-auto"
+                mat-stroked-button
+                (click)="changePasswordForm.reset()">
+            Nhập lại
+        </button>
+        <button class="w-auto"
+                mat-flat-button
+                [disabled]="!canSubmit"
+                (click)="changePassword()"
+                [color]="'primary'">
+            Xác nhận
+        </button>
+    </div> -->
+</div>

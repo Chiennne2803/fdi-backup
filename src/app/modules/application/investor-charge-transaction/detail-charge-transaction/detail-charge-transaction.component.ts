@@ -56,7 +56,7 @@ export class DetailChargeTransactionComponent
             disableClose: true,
             data: {
                 lstTopupWait: this.detailRecord.lstTopupWait,
-                title: this.detailRecord.status == 3 ? 'XỬ LÝ YÊU CẦU NẠP TIÊN' : 'DANH SÁCH YÊU CẦU NẠP TIỀN',
+                title: 'Xử lý yêu cầu nạp tiền',
                 status: this.detailRecord.status,
                 transCode: this.detailRecord.transCode,
                 complete: () => {
@@ -128,4 +128,5 @@ export class DetailChargeTransactionComponent
     back(): void {
         this._router.navigate([ROUTER_CONST.config.application.investorChargeTransaction.link]);
     }
+
 }

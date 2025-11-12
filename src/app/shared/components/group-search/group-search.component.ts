@@ -30,6 +30,8 @@ export class GroupSearchComponent implements OnInit {
     public searchGroup: FormGroup = new FormGroup({});
     distanceDate = 180;
     groupDate = {};
+    today: Date = new Date();
+
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: {

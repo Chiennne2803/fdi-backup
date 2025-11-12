@@ -5,21 +5,22 @@ import { UserType } from 'app/enum';
 import { AdmCategoriesDTO } from 'app/models/admin';
 import { FsConfRateDTO } from 'app/models/service/FsConfRateDTO.model';
 import { LoanProfilesService } from 'app/service';
-import {APP_TEXT, ROUTER_CONST} from 'app/shared/constants';
-import {debounceTime, distinctUntilChanged, Observable} from 'rxjs';
-import {CurrencyFormatPipe} from '../../../shared/components/pipe/string-format.pipe';
-import {FuseConfirmationService} from '../../../../@fuse/services/confirmation';
-import {OtpSmsConfirmComponent} from '../../../shared/components/otp-sms-confirm/otp-sms-confirm.component';
-import {MatDialog} from '@angular/material/dialog';
-import {Router} from '@angular/router';
-import {FuseAlertService} from '../../../../@fuse/components/alert';
+import { APP_TEXT, ROUTER_CONST } from 'app/shared/constants';
+import { debounceTime, distinctUntilChanged, Observable } from 'rxjs';
+import { CurrencyFormatPipe } from '../../../shared/components/pipe/string-format.pipe';
+import { FuseConfirmationService } from '../../../../@fuse/services/confirmation';
+import { OtpSmsConfirmComponent } from '../../../shared/components/otp-sms-confirm/otp-sms-confirm.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { FuseAlertService } from '../../../../@fuse/components/alert';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'borrower-create-loan',
     templateUrl: './create-loan.component.html',
     styleUrls: ['create-loan.component.css'],
     encapsulation: ViewEncapsulation.None,
-    providers: [CurrencyFormatPipe]
+    providers: [CurrencyFormatPipe, CdkScrollable]
 })
 export class CreateLoanComponent implements OnInit {
     _lstCollateralType: Observable<AdmCategoriesDTO[]>;
@@ -44,11 +45,11 @@ export class CreateLoanComponent implements OnInit {
         "application/rar",
         "application/x-rar-compressed",
         "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "application/vnd.ms-excel",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "application/vnd.ms-powerpoint",
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/VND.openxmlformats-officedocument.wordprocessingml.document",
+        "application/VND.ms-excel",
+        "application/VND.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/VND.ms-powerpoint",
+        "application/VND.openxmlformats-officedocument.presentationml.presentation",
     ].join(",");
 
     /**
@@ -72,14 +73,44 @@ export class CreateLoanComponent implements OnInit {
         this._confRates = this.loanProfilesService.confRates;
         this._lstReasons = this.loanProfilesService.lstReasons;
         this._lstRates = this.loanProfilesService.lstRates;
+        this.listenToAmountChanges();
+        this.loanProfileForm.valueChanges.subscribe(() => {
+            this.updateRateError();
+        });
+    }
+    private updateRateError(): void {
+        const rateControl = this.loanProfileForm.get('rate');
+        const raisingCapital = this.loanProfileForm.get('raisingCapital')?.value;
+        const fsConfRateId = this.loanProfileForm.get('fsConfRateId')?.value;
+
+        if (!raisingCapital || !fsConfRateId) {
+            // Nếu chưa chọn 2 trường kia → lỗi THSV013
+            rateControl.setErrors({ thsv013: true });
+        } else if (!rateControl.value) {
+            // Nếu 2 trường đã chọn nhưng chưa chọn rate → lỗi required
+            rateControl.setErrors({ required: true });
+        } else {
+            // Nếu hợp lệ → clear lỗi
+            rateControl.setErrors(null);
+        }
     }
 
     public getAmountData(typeChange): void {
         this.loanProfileForm.get(typeChange)
             .valueChanges.pipe(
-            debounceTime(300),
-            distinctUntilChanged(),
-        )
+                debounceTime(300),
+                distinctUntilChanged(),
+            )
+            .subscribe(() => {
+                this.prepareCreateLoan();
+            });
+    }
+    private listenToAmountChanges(): void {
+        this.loanProfileForm.get('amount')?.valueChanges
+            .pipe(
+                debounceTime(500),           // chờ 0.5s sau khi dừng nhập
+                distinctUntilChanged(),      // chỉ gọi nếu giá trị thực sự đổi
+            )
             .subscribe(() => {
                 this.prepareCreateLoan();
             });
@@ -204,7 +235,7 @@ export class CreateLoanComponent implements OnInit {
                                         otpType: 'LOAN_PROFILES',
                                     },
                                     title: 'Điền mã xác nhận OTP',
-                                    content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                                    content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                         'Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất tạo hồ sơ huy động!',
                                     complete: () => {
                                         dialogOtpRef.close();

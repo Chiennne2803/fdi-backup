@@ -1,0 +1,72 @@
+// Address Dialog Responsive Styles
+::ng-deep {
+  .address-dialog-responsive {
+    @media (max-width: 640px) {
+      width: calc(100vw - 32px) !important;
+      max-width: calc(100vw - 32px) !important;
+      margin: 16px !important;
+      max-height: calc(100vh - 32px) !important;
+    }
+  }
+
+  .address-dialog-tabs {
+    @media (max-width: 640px) {
+      .mat-tab-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      }
+
+      .mat-tab-label {
+        min-width: 0 !important;
+        padding: 12px 8px !important;
+        font-size: 13px !important;
+        flex: 1;
+      }
+
+      .mat-tab-label-content {
+        white-space: normal !important;
+        line-height: 1.3 !important;
+        text-align: center;
+      }
+
+      .mat-tab-header-pagination {
+        display: none !important;
+      }
+    }
+  }
+
+  // Form fields responsive
+  .address-dialog-responsive {
+    .mat-form-field {
+      @media (max-width: 640px) {
+        font-size: 16px !important; // Prevent zoom on iOS
+      }
+    }
+
+    .mat-form-field-wrapper {
+      @media (max-width: 640px) {
+        padding-bottom: 0.5em !important;
+      }
+    }
+
+    // Ensure buttons are full width on mobile
+    .mat-button,
+    .mat-raised-button,
+    .mat-stroked-button,
+    .mat-flat-button {
+      @media (max-width: 640px) {
+        min-width: 120px;
+      }
+    }
+  }
+}
+
+// Ensure dialog content is scrollable
+.address-dialog-tabs {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+
+  @media (max-width: 640px) {
+    max-height: calc(100vh - 180px);
+  }
+}
+

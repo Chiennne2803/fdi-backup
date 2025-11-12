@@ -70,7 +70,7 @@
                                 <p>Mã yêu cầu <br> <b>{{ detail.transCode }}</b></p>
                             </article>
                             <article class="w-1/4 prose break-words">
-                                <p>Số tiền tiếp quỹ (VNĐ) <br> <b>{{ detail.amount | currencyFormatPipe: 3 }}</b></p>
+                                <p>Số tiền tiếp quỹ (VND) <br> <b>{{ detail.amount | currencyFormatPipe: 3 }}</b></p>
                             </article>
                             <article class="w-1/4 prose break-words">
                                 <p>Trạng thái<br> <b>{{ detail.statusName }}</b></p>
@@ -171,7 +171,7 @@
                             <h3 class="font-semibold">Thông tin giao dịch tại ngân hàng</h3>
                             <div class="w-full flex gap-5 p-5 pb-2 border-b border-solid ">
                                 <article class="w-1/4 prose break-words">
-                                    <p>Số tiền chuyển khoản (VNĐ)<br><b>{{ detail?.topupMailTransferDTO?.amount | currencyFormatPipe: 3 }}</b>
+                                    <p>Số tiền chuyển khoản (VND)<br><b>{{ detail?.topupMailTransferDTO?.amount | currencyFormatPipe: 3 }}</b>
                                     </p>
                                 </article>
                                 <article class="w-1/4 prose break-words">
@@ -193,7 +193,7 @@
                                     <p>Tài khoản ví thụ hưởng<br><b>{{ detail.toWallet }}</b></p>
                                 </article>
                                 <article class="w-1/4 prose break-words">
-                                    <p>Số tiền nạp (VNĐ)<br> <b>{{ detail.amount | currencyFormatPipe: 3 }}</b></p>
+                                    <p>Số tiền nạp (VND)<br> <b>{{ detail.amount | currencyFormatPipe: 3 }}</b></p>
                                 </article>
                                 <article class="w-1/4 prose break-words">
                                 </article>

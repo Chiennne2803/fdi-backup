@@ -1,111 +1,89 @@
-<mat-drawer-container
-    class="flex-auto h-full bg-card dark:bg-transparent ">
-
-    <mat-drawer
-        class="w-full sm:w-100"
-        [mode]="'side'"
-        [opened]="false"
-        [position]="'end'"
-        #fileDrawer>
-        <file-detail
-            [fileDrawer]="fileDrawer"
-            [selectedFile]="selectedFile"
-            [hasReplaceBtn]="false"
-            [replaceBtnV2]="false"
-            (handleReplaceFile)="onReplaceFile($event)"
-        ></file-detail>
+<mat-drawer-container class="flex-auto h-full bg-white">
+    <mat-drawer class="w-full sm:w-100" [mode]="'side'" [opened]="false" [position]="'end'" #fileDrawer>
+        <file-detail [fileDrawer]="fileDrawer" [selectedFile]="selectedFile"></file-detail>
     </mat-drawer>
-    <mat-drawer
-        id="okvip"
-        class="w-full md:w-12/12 dark:bg-gray-900"
-        [mode]="'side'"
-        [opened]="false"
-        [position]="'end'"
-        [disableClose]="true"
-        #matDrawer>
-        <profiles-management-detail
-        ></profiles-management-detail>
+    <mat-drawer id="okvip" class="w-full md:w-12/12" [mode]="'side'" [opened]="false" [position]="'end'"
+        [disableClose]="true" #matDrawer>
+        <profiles-management-detail></profiles-management-detail>
     </mat-drawer>
 
-    <mat-drawer-content class="flex flex-col">
-        <div *ngIf="(detail | async) as detailData"
-             class="sm:absolute flex flex-col flex-auto min-w-0 bg-card dark:bg-transparent"
-             [ngStyle]="{width: '-webkit-fill-available'}"
-        >
+    <mat-drawer-content>
+        <div *ngIf="(detail | async) as detailData" class="sm:absolute flex flex-col flex-auto min-w-0"
+            [ngStyle]="{width: '-webkit-fill-available'}">
             <div class="relative w-full px-5">
-                <div class="flex items-center justify-between w-full mx-auto py-2">
+                <div
+                    class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full mx-auto pt-3 pb-2">
                     <article class="prose break-words">
-                        <h3 *ngIf="!isSrcCollateral">
-                            Thông tin chi tiết bên huy động vốn
+                        <h3 class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3">
+                            <span (click)="onClose()"
+                                *ngIf="!(isSrcCollateral && (collateralUpdateMode === 'add' || collateralUpdateMode === 'view' || collateralUpdateMode === 'edit'))"
+                                class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                                <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                                    svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                                Quay lại
+                            </span>
+                            <ng-container *ngIf="!isSrcCollateral">
+                                Thông tin chi tiết bên huy động vốn
+                            </ng-container>
+                            <ng-container *ngIf="isSrcCollateral && collateralUpdateMode == 'add'">
+                                Thêm mới tài sản bảo đảm
+                            </ng-container>
+                            <ng-container *ngIf="isSrcCollateral && collateralUpdateMode == 'view'">
+                                Thông tin tài sản bảo đảm
+                            </ng-container>
+                            <ng-container *ngIf="isSrcCollateral && collateralUpdateMode == 'edit'">
+                                Cập nhật tài sản bảo đảm
+                            </ng-container>
                         </h3>
-                        <h3 *ngIf="isSrcCollateral && collateralUpdateMode == 'add'">
-                            Thêm mới tài sản bảo đảm 
-                        </h3>
-                        <h3 *ngIf="isSrcCollateral && collateralUpdateMode == 'view'">
-                            Thông tin tài sản bảo đảm 
-                        </h3>
-                        <h3 *ngIf="isSrcCollateral && collateralUpdateMode == 'edit'">
-                            Cập nhật tài sản bảo đảm 
-                        </h3>
+
                     </article>
-                    <div class="flex items-center justify-end" *ngIf="!isSrcCollateral">
-                        <button @fadeOutLeft @slideInLeft
+                    <div class="flex items-center justify-end gap-2 mt-3" *ngIf="!isSrcCollateral">
+                        <!-- <button @fadeOutLeft @slideInLeft
                                 class="order-first sm:order-last ml-2"
                                 mat-stroked-button
                                 (click)="onClose()"
                         >
                             Đóng
-                        </button>
-                        <button
-                            @fadeOutLeft @slideInLeft
-                            *ngIf="('SFF_BORROWER_UPDATE' | permission)"
-                            class="order-first sm:order-last ml-2"
-                            mat-flat-button
-                            [color]="'primary'"
-                            (click)="setManageStaff()"
-                        >
+                        </button> -->
+                        <button @fadeOutLeft @slideInLeft *ngIf="('SFF_BORROWER_UPDATE' | permission)"
+                            class="order-first sm:order-last" mat-flat-button [color]="'primary'"
+                            (click)="setManageStaff()">
                             Phân phụ trách
                         </button>
-                        <button
-                            @fadeOutLeft @slideInLeft
+                        <button @fadeOutLeft @slideInLeft
                             *ngIf="detailData.status === accountDetailStatus.WAIT_APPROVE && ('SFF_BORROWER_APPROVE' | permission)"
-                            class="order-first sm:order-last ml-2"
-                            mat-flat-button
-                            [color]="'primary'"
-                            (click)="onClickProcess()"
-                        >
+                            class="order-first sm:order-last" mat-flat-button [color]="'primary'"
+                            (click)="onClickProcess()">
                             Xử lý
                         </button>
                     </div>
                     <div class="flex items-center justify-end" *ngIf="isSrcCollateral">
                         <button @fadeOutLeft @slideInLeft *ngIf="collateralUpdateMode == 'view'"
-                                class="order-first sm:order-last ml-2"
-                                mat-stroked-button
-                                (click)="onCloseSrcCollateral()"
-                        >
+                            class="order-first sm:order-last ml-2" mat-stroked-button (click)="onCloseSrcCollateral()">
                             Đóng
                         </button>
-                        <button @fadeOutLeft @slideInLeft *ngIf="collateralUpdateMode == 'view' && ('SFF_PRICING_INSERT' | permission)"
-                                mat-flat-button
-                                color="primary"
-                                class="ml-5"
-                                (click)="openValuationHistoryDialog()">
+                        <button @fadeOutLeft @slideInLeft
+                            *ngIf="collateralUpdateMode == 'view' && ('SFF_PRICING_INSERT' | permission)"
+                            mat-flat-button color="primary" class="ml-5" (click)="openValuationHistoryDialog()">
                             Định giá tài sản
                         </button>
-                        <button @fadeOutLeft @slideInLeft *ngIf="collateralUpdateMode == 'view' && ('SFF_COLLATERAL_UPDATE' | permission)"
-                                mat-flat-button
-                                color="primary"
-                                class="ml-5"
-                                (click)="setModeEditCollateral()">
+                        <button @fadeOutLeft @slideInLeft
+                            *ngIf="collateralUpdateMode == 'view' && ('SFF_COLLATERAL_UPDATE' | permission)"
+                            mat-flat-button color="primary" class="ml-5" (click)="setModeEditCollateral()">
                             Cập nhật
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col flex-auto sm:overflow-y-auto p-8 gap-5">
-                <div *ngIf="!isSrcCollateral" @fadeOutLeft @slideInLeft class="flex flex-col flex-auto w-full ">
-                    <strong class="mb-6 text-lg">Thông tin tài khoản đăng nhập</strong>
-                    <div class="grid grid-cols-4 gap-5 pt-0 pb-0 px-5">
+            <div class="p-5">
+                <div *ngIf="!isSrcCollateral" @fadeOutLeft @slideInLeft
+                    class="border border-primary-grayLight-2 rounded-lg p-4">
+                    <strong class="text-lg font-semibold">Thông tin tài khoản đăng nhập</strong>
+                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
+                        <div class="flex flex-col">
+                            <mat-label>ID tài khoản</mat-label>
+                            <strong>{{detailData.admAccountId}}</strong>
+                        </div>
                         <div class="flex flex-col">
                             <mat-label>Tên tài khoản</mat-label>
                             <strong>{{detailData.accountName}}</strong>
@@ -114,10 +92,11 @@
                             <mat-label>SĐT liên hệ</mat-label>
                             <strong>{{detailData.mobile}}</strong>
                         </div>
-                        <div class="flex flex-col">
-                            <mat-label>Email</mat-label>
-                            <strong>{{detailData.email}}</strong>
-                        </div>
+                        <article class="break-words">
+                            <p>Email<br>
+                                <b>{{ detailData.email }}</b>
+                            </p>
+                        </article>
                         <div class="flex flex-col">
                             <mat-label>Đối tượng huy động vốn</mat-label>
                             <strong>{{accTypeCN ? 'Cá nhân' : 'Doanh nghiệp'}}</strong>
@@ -142,11 +121,24 @@
                         <div class="flex flex-col">
                             <mat-label>Ngày đánh giá</mat-label>
                             <strong
-                                *ngIf="detailData.admCustomerRankDTOS?.length > 0">{{detailData.admCustomerRankDTOS[0].createdDate | datetimeformat: 'DD/MM/YYYY' }}</strong>
+                                *ngIf="detailData.admCustomerRankDTOS?.length > 0">{{detailData.admCustomerRankDTOS[0].createdDate
+                                | datetimeformat: 'DD/MM/YYYY' }}</strong>
+                        </div>
+                        <div class="flex flex-col">
+                            <mat-label>Người giới thiệu</mat-label>
+                            <strong>{{detailData.presenter}}</strong>
+                        </div>
+                        <div class="flex flex-col">
+                            <mat-label>Người phê duyệt</mat-label>
+                            <strong>{{detailData.reviewer}}</strong>
                         </div>
                         <div class="flex flex-col">
                             <mat-label>Nhân viên phụ trách</mat-label>
                             <strong>{{detailData.manageStaffName}}</strong>
+                        </div>
+                        <div class="flex flex-col">
+                            <mat-label>Nhân viên giới thiệu</mat-label>
+                            <strong>{{detailData.guide}}</strong>
                         </div>
                         <div class="flex flex-col">
                             <mat-label>Người tạo</mat-label>
@@ -169,16 +161,12 @@
 
                 <!--                //add or edit Tai san dam bao-->
                 <div *ngIf="isSrcCollateral && collateralUpdateMode !== 'view'" @fadeOutLeft @slideInLeft>
-                    <div class="grid grid-flow-row-dense grid-cols-4 gap-6 ..." [formGroup]="formGroupCollateral">
-                        <mat-form-field class="w-full">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 w-full border border-primary-grayLight-2 rounded-lg p-4"
+                        [formGroup]="formGroupCollateral">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
                             <mat-label>Tên tài sản</mat-label>
-                            <input
-                                maxlength="100"
-                                trim="blur"
-                                matInput
-                                formControlName="collateralName"
-                                id="collateralName"
-                            >
+                            <input maxlength="100" trim="blur" matInput formControlName="collateralName"
+                                id="collateralName" placeholder="Nhập tên tài sản...">
                             <mat-error *ngIf="formGroupCollateral.get('collateralName').hasError('required')">
                                 {{ 'QLVV172' | transloco }}
                             </mat-error>
@@ -186,13 +174,11 @@
                                 {{ 'QLVV171' | transloco }}
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field class="w-full">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
                             <mat-label>Hình thức bảo đảm </mat-label>
-                            <mat-select formControlName="collateralType">
-                                <mat-option
-                                    *ngFor="let collateralType of collateralType"
-                                    [value]="collateralType.admCategoriesId"
-                                >
+                            <mat-select placeholder="Chọn hình thức bảo đảm" formControlName="collateralType">
+                                <mat-option *ngFor="let collateralType of collateralType"
+                                    [value]="collateralType.admCategoriesId">
                                     {{ collateralType.categoriesName }}
                                 </mat-option>
                             </mat-select>
@@ -200,13 +186,10 @@
                                 {{ 'QLVV173' | transloco }}
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field class="w-full">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
                             <mat-label>Loại tài sản</mat-label>
-                            <mat-select formControlName="raisingCapital">
-                                <mat-option
-                                    *ngFor="let assetType of assetType"
-                                    [value]="assetType.admCategoriesId"
-                                >
+                            <mat-select placeholder="Chọn loại tài sản" formControlName="raisingCapital">
+                                <mat-option *ngFor="let assetType of assetType" [value]="assetType.admCategoriesId">
                                     {{ assetType.categoriesName }}
                                 </mat-option>
                             </mat-select>
@@ -214,16 +197,13 @@
                                 {{ 'QLVV212' | transloco }}
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field class="w-full">
-                            <mat-label>Giá trị định giá tài sản (VNĐ)</mat-label>
-                            <input id="amount"
-                                   [maxlength]="15" [required]="true"
-                                   matInput
-                                   currencyMask autocomplete="off"
-                                   (ngModelChange)="upadteRate(detailData.maxLoan, $event)"
-                                   class="text-left"
-                                   [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
-                                   formControlName="amount">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
+                            <mat-label>Giá trị định giá tài sản (VND)</mat-label>
+                            <input id="amount" placeholder="Nhập giá trị..." [maxlength]="15" [required]="true" matInput
+                                currencyMask autocomplete="off" (ngModelChange)="upadteRate(detailData.maxLoan, $event)"
+                                class="text-left"
+                                [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
+                                formControlName="amount">
                             <mat-error *ngIf="formGroupCollateral.get('amount').hasError('required')">
                                 {{ 'QLVV214' | transloco }}
                             </mat-error>
@@ -232,722 +212,601 @@
                                 {{ 'QLVV214' | transloco }}
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field class="w-full">
-                            <mat-label>Tỷ lệ bảo đảm  (%)</mat-label>
-                            <input id="guaranteedRate"
-                                   matInput
-                                   readonly
-                                   class="text-left"
-                                   formControlName="guaranteedRate">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
+                            <mat-label>Tỷ lệ bảo đảm (%)</mat-label>
+                            <input placeholder="Nhập tỷ lệ bảo đảm..." id="guaranteedRate" matInput readonly
+                                class="text-left" formControlName="guaranteedRate">
                             <mat-error *ngIf="formGroupCollateral.get('guaranteedRate').hasError('required')">
                                 Tỷ lệ bảo đảm không được bỏ trống
                             </mat-error>
                         </mat-form-field>
-                        <mat-form-field class="w-full">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
                             <mat-label>Trạng thái</mat-label>
-                            <mat-select formControlName="status">
-                                <mat-option *ngFor="let stt of status"
-                                            [value]="stt.id">
+                            <mat-select placeholder="Chọn trạng thái" formControlName="status">
+                                <mat-option *ngFor="let stt of status" [value]="stt.id">
                                     {{ stt.label }}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <div class="w-full mb-4">
-                            <app-dropzone
-                                topTitle="Hồ sơ pháp lý liên quan đến tài sản"
-                                title="Tải tệp lên"
-                                styleClass="h-12 mt-[3px]"
-                                class="w-full"
-                                previewClass="max-w-fit w-full"
-                                [formGroup]="formGroupCollateral"
-                                field="fileId"
-                                [isRequired]="true"
-                                [multiple]="true"
-                                [maxFile]="10"
-                                [maxFileSize]="10"
-                                requiredMsg="QLVV176"
-                            ></app-dropzone>
+                        <div class="w-full mb-4 col-span-2">
+                            <app-dropzone topTitle="Hồ sơ pháp lý liên quan đến tài sản" title="Tải tệp lên"
+                                styleClass="h-[48px] mt-[3px]" class="w-full" previewClass="max-w-fit w-full"
+                                [formGroup]="formGroupCollateral" field="fileId" [isRequired]="true" [multiple]="true"
+                                [maxFile]="10" [maxFileSize]="10" requiredMsg="QLVV176"></app-dropzone>
                         </div>
-                        <div></div>
-                        <mat-form-field class="w-full">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
                             <mat-label>Ngày tạo</mat-label>
-                            <input id="createdDate"
-                                   matInput
-                                   readonly
-                                   formControlName="createdDate">
+                            <input id="createdDate" matInput readonly formControlName="createdDate">
                         </mat-form-field>
-                        <mat-form-field class="w-full">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
                             <mat-label>Người tạo</mat-label>
-                            <input id="createdByName"
-                                   matInput
-                                   readonly
-                                   formControlName="createdByName">
+                            <input id="createdByName" matInput readonly formControlName="createdByName">
                         </mat-form-field>
-                        <mat-form-field class="w-full">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
                             <mat-label>Ngày cập nhật</mat-label>
-                            <input id="lastUpdatedDate"
-                                   matInput
-                                   readonly
-                                   formControlName="lastUpdatedDate">
+                            <input id="lastUpdatedDate" matInput readonly formControlName="lastUpdatedDate">
                         </mat-form-field>
-                        <mat-form-field class="w-full">
+                        <mat-form-field class="w-full col-span-2 sm:col-span-1" floatLabel="always">
                             <mat-label>Người cập nhật</mat-label>
-                            <input id="lastUpdatedByName"
-                                   matInput
-                                   readonly
-                                   formControlName="lastUpdatedByName">
+                            <input id="lastUpdatedByName" matInput readonly formControlName="lastUpdatedByName">
                         </mat-form-field>
                     </div>
                     <div class="flex items-center justify-end pt-5">
-                        <button
-                            class="ml-2"
-                            *ngIf="collateralUpdateMode !== 'view'"
-                            mat-stroked-button
-                            (click)="onCloseSrcCollateral()"
-                        >
+                        <button class="ml-2" *ngIf="collateralUpdateMode !== 'view'" mat-stroked-button
+                            (click)="onCloseSrcCollateral()">
                             Đóng
                         </button>
-                        <button @fadeInRight
-                                *ngIf=" 'SFF_COLLATERAL_INSERT' | permission"
-                                mat-flat-button
-                                color="primary"
-                                class="ml-5"
-                                (click)="createOrUpdateCollateral()">
+                        <button @fadeInRight *ngIf=" 'SFF_COLLATERAL_INSERT' | permission" mat-flat-button
+                            color="primary" class="ml-5" (click)="createOrUpdateCollateral()">
                             Lưu
                         </button>
                     </div>
                 </div>
 
-                <mat-tab-group class="py-5" style="min-height:600px" #matTabGroup>
+                <mat-tab-group class="pt-5" #matTabGroup>
                     <mat-tab *ngIf="!isSrcCollateral" label="Thông tin chi tiết">
-                        <div class="flex flex-col flex-auto sm:overflow-y-auto gap-5 p-1">
-                            <fuse-card class="flex flex-col flex-auto w-full border-b p-8 ">
+                        <div class="flex flex-col flex-auto gap-5">
+                            <div class="p-4 border border-primary-grayLight-2 rounded-lg">
                                 <ng-container *ngIf="accTypeCN; else elseTemplate">
-                                    <div class="flex flex-col flex-auto w-full">
-                                        <div class="flex flex-row w-full mb-5 pb-4 gap-4">
-                                            <div class="flex w-1/4">
-                                                <div class="flex flex-col justify-center w-full rounded-md">
-                                                    <img
-                                                        [src]="avatar && avatar.contentBase64 ? (avatar.contentBase64 | safeHtml) : 'assets/images/avatars/defaut-avatar-man.png'"
-                                                        alt=""
-                                                        class="p-4 rounded-md">
-                                                    <div class="flex justify-center w-full pb-2">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="flex flex-col w-3/4 justify-between">
-                                                <div class="flex flex-row w-full pb-4 px-2">
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Họ và tên</mat-label>
-                                                        <strong>{{detailData.fullName}}</strong>
-                                                    </div>
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>CCCD/Hộ Chiếu</mat-label>
-                                                        <strong>{{detailData.identification}}</strong>
-                                                    </div>
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Ngày cấp</mat-label>
-                                                        <strong>{{detailData.dateOfIdnumber | datetimeformat: 'DD/MM/YYYY' }}</strong>
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-row w-full pb-4 px-2">
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Nơi cấp</mat-label>
-                                                        <strong>{{detailData.placeOfIdnumber}}</strong>
-                                                    </div>
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Giới tính</mat-label>
-                                                        <strong>{{detailData.genderName}}</strong>
-                                                    </div>
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Ngày sinh</mat-label>
-                                                        <strong>{{detailData.dateOfBirth | datetimeformat: 'DD/MM/YYYY' }}</strong>
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-row w-full pb-4">
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>SĐT liên hệ</mat-label>
-                                                        <strong>{{detailData.mobile}}</strong>
-                                                    </div>
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Email</mat-label>
-                                                        <strong>{{detailData.email}}</strong>
-                                                    </div>
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>MST cá nhân</mat-label>
-                                                        <strong>{{detailData.taxCode}}</strong>
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-row w-full pb-4">
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Tình trạng hôn nhân</mat-label>
-                                                        <strong>{{detailData.maritalName}}</strong>
-                                                    </div>
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Nghề nghiệp</mat-label>
-                                                        <strong>{{detailData.jobName}}</strong>
-                                                    </div>
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Đơn vị công tác</mat-label>
-                                                        <strong>{{detailData.jobAddress}}</strong>
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-row w-full pb-4">
-                                                    <div class="flex flex-col w-1/3 gap-5">
-                                                        <mat-label>Trang facebook</mat-label>
-                                                        <strong>{{detailData.facebook}}</strong>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        <div class="row-span-1 col-span-2 md:row-span-3 md:col-span-1">
+                                            <avatar-preview [avatar]="avatar?.contentBase64"></avatar-preview>
                                         </div>
-                                        <div class="flex flex-row w-full pb-4 gap-4">
-                                            <div class="flex flex-col w-1/2 gap-5">
-                                                <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
-                                                <strong>{{detailData.address2}}</strong>
-                                            </div>
-                                            <div class="flex flex-col w-1/2 gap-5">
-                                                <mat-label>Địa chỉ hiện tại</mat-label>
-                                                <strong>{{detailData.address1}}</strong>
-                                            </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Họ và tên</mat-label>
+                                            <strong>{{detailData.fullName}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>CCCD/Hộ chiếu</mat-label>
+                                            <strong>{{detailData.identification}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Ngày cấp</mat-label>
+                                            <strong>{{detailData.dateOfIdnumber | datetimeformat:
+                                                'DD/MM/YYYY' }}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Nơi cấp</mat-label>
+                                            <strong>{{detailData.placeOfIdnumber}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Giới tính</mat-label>
+                                            <strong>{{detailData.genderName}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Ngày sinh</mat-label>
+                                            <strong>{{detailData.dateOfBirth | datetimeformat: 'DD/MM/YYYY'
+                                                }}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>SĐT liên hệ</mat-label>
+                                            <strong>{{detailData.mobile}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2 break-words">
+                                            <mat-label>Email</mat-label>
+                                            <strong>{{detailData.email}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>MST cá nhân</mat-label>
+                                            <strong>{{detailData.taxCode}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Tình trạng hôn nhân</mat-label>
+                                            <strong>{{detailData.maritalName}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Nghề nghiệp</mat-label>
+                                            <strong>{{detailData.jobName}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Đơn vị công tác</mat-label>
+                                            <strong>{{detailData.jobAddress}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Trang facebook</mat-label>
+                                            <strong>{{detailData.facebook}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2 col-span-2">
+                                            <mat-label>Địa chỉ thường trú</mat-label>
+                                            <strong>{{detailData.address1}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2 col-span-2">
+                                            <mat-label>Địa chỉ hiện tại</mat-label>
+                                            <strong>{{detailData.address2}}</strong>
                                         </div>
                                     </div>
                                 </ng-container>
                                 <ng-template #elseTemplate>
-                                    <div class="flex flex-row w-full mb-5 pb-4">
-                                        <div class="flex flex-col w-1/4 gap-5">
+                                    <div
+                                        class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-4">
+                                        <div class="flex flex-col gap-2">
                                             <mat-label>Tên công ty</mat-label>
                                             <strong>{{detailData.fullName}}</strong>
                                         </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
+                                        <div class="flex flex-col gap-2">
                                             <mat-label>MST danh nghiệp</mat-label>
                                             <strong>{{detailData.businessCode}}</strong>
                                         </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
-                                            <mat-label>Ngày được cấp phép</mat-label>
-                                            <strong>{{detailData.businessLicenseDate | datetimeformat: 'DD/MM/YYYY'}}</strong>
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Ngày cấp</mat-label>
+                                            <strong>{{detailData.businessLicenseDate | datetimeformat:
+                                                'DD/MM/YYYY'}}</strong>
                                         </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
+                                        <div class="flex flex-col gap-2">
                                             <mat-label>Nơi cấp</mat-label>
                                             <strong>{{detailData.placeOfBusinessLicense}}</strong>
                                         </div>
-                                    </div>
-                                    <div class="flex flex-row w-full mb-5 pb-4">
-                                        <div class="flex flex-col w-1/4 gap-5">
+                                        <div class="flex flex-col gap-2">
                                             <mat-label>GPKD số</mat-label>
                                             <strong>{{detailData.businessLicense}}</strong>
                                         </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
+                                        <div class="flex flex-col gap-2">
                                             <mat-label>SĐT liên hệ</mat-label>
                                             <strong>{{detailData.landline}}</strong>
                                         </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
-                                            <mat-label>Lĩnh vực hoạt động</mat-label>
-                                            <strong>{{detailData.admCategoriesName}}</strong>
-                                        </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
-                                            <mat-label>Địa chỉ hoạt động</mat-label>
-                                            <strong>{{detailData.address2}}</strong>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-row w-full mb-5 pb-4">
-                                        <div class="flex flex-col w-1/4 gap-5">
+
+                                        <div class="flex flex-col gap-2">
                                             <mat-label>Trang facebook</mat-label>
                                             <strong>{{detailData.facebook}}</strong>
                                         </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
+                                        <div class="flex flex-col gap-2">
                                             <mat-label>Địa chỉ website</mat-label>
                                             <strong>{{detailData.website}}</strong>
                                         </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
+                                        <div class="flex flex-col gap-2">
+                                            <mat-label>Ảnh giấy phép kinh doanh:</mat-label>
+                                            <a href="javascript:void(0)" class="text-primary underline"
+                                                (click)="clickViewImage(detailData.photoOfBusiness)">Xem file</a>
+                                        </div>
+                                        <div class="flex flex-col gap-2 col-span-2 sm:col-span-1">
+                                            <mat-label>Lĩnh vực hoạt động</mat-label>
+                                            <strong>{{detailData.admCategoriesName}}</strong>
+                                        </div>
+                                        <div class="flex flex-col gap-2 col-span-2 sm:col-span-1">
                                             <mat-label>Địa chỉ theo GPKD</mat-label>
                                             <strong>{{detailData.address3}}</strong>
                                         </div>
-                                    </div>
-                                    <div class="flex flex-col flex-auto w-full pb-5">
-                                        <div class="flex flex-col w-1/2 gap-5">
-                                            <mat-label>Ảnh giấy phép kinh doanh:</mat-label>
-                                            <a href="javascript:void(0)" class="text-primary underline"
-                                               (click)="clickViewImage(detailData.photoOfBusiness)">Xem file</a>
+                                        <div class="flex flex-col gap-2 col-span-2 sm:col-span-1">
+                                            <mat-label>Địa chỉ hoạt động</mat-label>
+                                            <strong>{{detailData.address2}}</strong>
                                         </div>
+
                                     </div>
                                 </ng-template>
-                            </fuse-card>
-                            <fuse-card class="flex flex-col flex-auto w-full border-b p-8 ">
-                                <div class="flex flex-col flex-auto w-full pb-10">
-                                    <strong class="mb-6 text-lg">Thông tin khác:</strong>
-                                    <div class="flex flex-row w-full pb-4 px-2 gap-4">
-                                        <div class="flex flex-col w-1/4 gap-5">
-                                            <mat-label>Người tạo</mat-label>
-                                            <strong>{{detailData.createdByName}}</strong>
-                                        </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
-                                            <mat-label>Ngày tạo</mat-label>
-                                            <strong>{{detailData.createdDate | datetimeformat: 'DD/MM/YYYY' }}</strong>
-                                        </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
-                                            <mat-label>Người cập nhật</mat-label>
-                                            <strong>{{detailData.lastUpdatedByName}}</strong>
-                                        </div>
-                                        <div class="flex flex-col w-1/4 gap-5">
-                                            <mat-label>Ngày cập nhật</mat-label>
-                                            <strong>{{detailData.lastUpdatedDate | datetimeformat: 'DD/MM/YYYY' }}</strong>
-                                        </div>
+                            </div>
+                            <div class="p-4 border border-primary-grayLight-2 rounded-lg">
+                                <strong class="mb-6 text-lg">Thông tin khác:</strong>
+                                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                    <div class="flex flex-col gap-2">
+                                        <mat-label>Người tạo</mat-label>
+                                        <strong>{{detailData.createdByName}}</strong>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <mat-label>Ngày tạo</mat-label>
+                                        <strong>{{detailData.createdDate | datetimeformat: 'DD/MM/YYYY' }}</strong>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <mat-label>Người cập nhật</mat-label>
+                                        <strong>{{detailData.lastUpdatedByName}}</strong>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <mat-label>Ngày cập nhật</mat-label>
+                                        <strong>{{detailData.lastUpdatedDate | datetimeformat: 'DD/MM/YYYY'
+                                            }}</strong>
                                     </div>
                                 </div>
-                            </fuse-card>
+                            </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeDN" label="Ảnh Giấy phép kinh doanh">
-                        <div class="flex flex-col flex-auto w-full py-5">
-                            <div class="flex flex-wrap">
-                                <file-ui *ngFor="let file of photoOfBusiness" [file]="file"
-                                         colume
-                                         (click)="onClickFile(file)"></file-ui>
+                        <div class="px-2 py-4 sm:p-4 border border-primary-grayLight-2 rounded-lg">
+                            <div class="flex flex-wrap gap-4">
+                                <file-ui *ngFor="let file of photoOfBusiness" [file]="file" colume
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeCN" label="Ảnh CCCD/Hộ chiếu">
-                        <div class="flex flex-col flex-auto w-full py-5">
-                            <div class="flex flex-wrap">
-                                <file-ui *ngFor="let file of cmnd" [file]="file"
-                                         colume
-                                         (click)="onClickFile(file)"></file-ui>
+                        <div class="px-2 py-4 sm:p-4 border border-primary-grayLight-2 rounded-lg">
+                            <div class="flex flex-wrap gap-4">
+                                <file-ui *ngFor="let file of cmnd" [file]="file" colume
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeCN" label="Hợp đồng lao động">
-                        <div class="flex flex-col flex-auto w-full py-5">
-                            <div class="flex flex-wrap">
-                                <file-ui *ngFor="let file of laborContract" [file]="file"
-                                         colume
-                                         (click)="onClickFile(file, 'laborContract')"></file-ui>
+                        <div class="px-2 py-4 sm:p-4 border border-primary-grayLight-2 rounded-lg">
+                            <div class="flex flex-wrap gap-4">
+                                <file-ui *ngFor="let file of laborContract" [file]="file" colume
+                                    (click)="onClickFile(file, 'laborContract')"></file-ui>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeCN" label="Hợp đồng cho thuê tài sản">
-                        <div class="flex flex-col flex-auto w-full py-5">
-                            <div class="flex flex-wrap">
-                                <file-ui *ngFor="let file of rentalContract" [file]="file"
-                                         colume
-                                         (click)="onClickFile(file, 'rentalContract')"></file-ui>
+                        <div class="px-2 py-4 sm:p-4 border border-primary-grayLight-2 rounded-lg">
+                            <div class="flex flex-wrap gap-4">
+                                <file-ui *ngFor="let file of rentalContract" [file]="file" colume
+                                    (click)="onClickFile(file, 'rentalContract')"></file-ui>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeCN" label="Giấy chứng minh thu nhập khác">
-                        <div class="flex flex-col flex-auto w-full py-5">
-                            <div class="flex flex-wrap">
-                                <file-ui *ngFor="let file of fileValues1" [file]="file"
-                                         colume
-                                         (click)="onClickFile(file, 'fileValues1')"></file-ui>
+                        <div class="px-2 py-4 sm:p-4 border border-primary-grayLight-2 rounded-lg">
+                            <div class="flex flex-wrap gap-4">
+                                <file-ui *ngFor="let file of fileValues1" [file]="file" colume
+                                    (click)="onClickFile(file, 'fileValues1')"></file-ui>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeCN" label="Giấy tờ có giá trị khác">
-                        <div class="flex flex-col flex-auto w-full py-5">
-                            <div class="flex flex-wrap">
-                                <file-ui *ngFor="let file of fileValues2" [file]="file"
-                                         colume
-                                         (click)="onClickFile(file, 'fileValues2')"></file-ui>
+                        <div class="px-2 py-4 sm:p-4 border border-primary-grayLight-2 rounded-lg">
+                            <div class="flex flex-wrap gap-4">
+                                <file-ui *ngFor="let file of fileValues2" [file]="file" colume
+                                    (click)="onClickFile(file, 'fileValues2')"></file-ui>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral"
-                             [label]="accTypeDN ? 'Thông tin người đại diện' : 'Thông tin người liên hệ'">
-                        <div *ngIf="accTypeDN && detailData.representative">
-                            <div class="flex flex-row w-full mb-5 pb-4 gap-4">
-                                <div class="flex w-1/4 justify-center">
-                                    <div *ngIf="deputyAvatar" class="w-full h-50 avatar"
-                                         [ngStyle]="{
-                                                 'background-image':'url('+deputyAvatar.contentBase64+')',
-                                                 'background-size':     'contain',
-                                                'background-repeat':   'no-repeat',
-                                                'background-position': 'center center'
-                                             }"></div>
+                        [label]="accTypeDN ? 'Thông tin người đại diện' : 'Thông tin người liên hệ'">
+                        <div class="p-4 border border-primary-grayLight-2 rounded-lg"
+                            *ngIf="accTypeDN && detailData.representative">
+                            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                <div class="row-span-1 col-span-2 md:row-span-3 md:col-span-1">
+                                    <avatar-preview [avatar]="deputyAvatar?.contentBase64"></avatar-preview>
                                 </div>
-                                <div class="flex flex-col w-3/4 justify-between">
-                                    <div class="flex flex-row w-full pb-4 px-2">
-                                        <div class="flex flex-col w-1/3 gap-5">
-                                            <mat-label>Họ và tên</mat-label>
-                                            <strong>{{detailData.representative.fullName}}</strong>
-                                        </div>
-                                        <div class="flex flex-col w-1/3 gap-5">
-                                            <mat-label>CCCD/Hộ Chiếu</mat-label>
-                                            <strong>{{detailData.representative.identification}}</strong>
-                                        </div>
-                                        <div class="flex flex-col w-1/3 gap-5">
-                                            <mat-label>Ngày cấp</mat-label>
-                                            <strong>{{detailData.representative.idDate | datetimeformat: 'DD/MM/YYYY' }}</strong>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-row w-full pb-4">
-                                        <div class="flex flex-col w-1/3 gap-5">
-                                            <mat-label>Nơi cấp</mat-label>
-                                            <strong>{{detailData.representative.idAddress}}</strong>
-                                        </div>
-                                        <div class="flex flex-col w-1/3 gap-5">
-                                            <mat-label>Giới tính</mat-label>
-                                            <strong>{{detailData.representative.genderName}}</strong>
-                                        </div>
-                                        <div class="flex flex-col w-1/3 gap-5">
-                                            <mat-label>Ngày sinh</mat-label>
-                                            <strong>{{detailData.representative.dateOfBirth | datetimeformat: 'DD/MM/YYYY' }}</strong>
-                                        </div>
-                                    </div>
+                                <div class="flex flex-col gap-2">
+                                    <mat-label>Họ và tên</mat-label>
+                                    <strong>{{detailData.representative.fullName}}</strong>
                                 </div>
-                            </div>
-                            <div class="flex flex-row w-full pb-4 px-2 gap-4 mb-8">
-                                <div class="flex flex-col w-1/4 gap-5">
+                                <div class="flex flex-col gap-2">
+                                    <mat-label>CCCD/Hộ chiếu</mat-label>
+                                    <strong>{{detailData.representative.identification}}</strong>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <mat-label>Ngày cấp</mat-label>
+                                    <strong>{{detailData.representative.idDate | datetimeformat: 'DD/MM/YYYY'
+                                        }}</strong>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <mat-label>Nơi cấp</mat-label>
+                                    <strong>{{detailData.representative.idAddress}}</strong>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <mat-label>Giới tính</mat-label>
+                                    <strong>{{detailData.representative.genderName}}</strong>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <mat-label>Ngày sinh</mat-label>
+                                    <strong>{{detailData.representative.dateOfBirth | datetimeformat:
+                                        'DD/MM/YYYY' }}</strong>
+                                </div>
+                                <div class="flex flex-col gap-2">
                                     <mat-label>SĐT liên hệ</mat-label>
                                     <strong>{{detailData.representative.mobile}}</strong>
                                 </div>
-                                <div class="flex flex-col w-1/4 gap-5">
+                                <div class="flex flex-col gap-2">
                                     <mat-label>Email</mat-label>
                                     <strong>{{detailData.representative.email}}</strong>
                                 </div>
-                                <div class="flex flex-col w-1/4 gap-5">
+                                <div class="flex flex-col gap-2">
                                     <mat-label>MST cá nhân</mat-label>
                                     <strong>{{detailData.representative.taxCode}}</strong>
                                 </div>
-                                <div class="flex flex-col w-1/4 gap-5">
+                                <div class="flex flex-col gap-2">
                                     <mat-label>Chức vụ</mat-label>
                                     <strong>{{detailData.representative.positionCompany}}</strong>
                                 </div>
-                            </div>
-                            <div class="flex flex-row w-full pb-4 gap-4">
-                                <div class="flex flex-col w-1/4 gap-5">
+                                <div class="flex flex-col gap-2">
                                     <mat-label>Trang facebook</mat-label>
                                     <strong>{{detailData.representative.facebook}}</strong>
                                 </div>
-                                <div class="flex flex-col w-1/4 gap-5">
-                                    <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
-                                    <strong>{{detailData.representative.address2}}</strong>
+                                <div class="flex flex-col gap-2">
+                                    <mat-label>Ảnh CCCD/Hộ chiếu(Mặt trước):</mat-label>
+                                    <a href="javascript:void(0)" class="text-primary underline"
+                                        (click)="clickViewImage(detailData.representative.frontPhotoIdentication)">Xem
+                                        file</a>
                                 </div>
-                                <div class="flex flex-col w-2/4 gap-5">
-                                     <mat-label>Địa chỉ hiện tại</mat-label>
+                                <div class="flex flex-col gap-2">
+                                    <mat-label>Ảnh CCCD/Hộ chiếu(Mặt sau):</mat-label>
+                                    <a href="javascript:void(0)" class="text-primary underline"
+                                        (click)="clickViewImage(detailData.representative.backsitePhotoIdentication)">Xem
+                                        file</a>
+                                </div>
+                                <div class="flex flex-col gap-2 col-span-2">
+                                    <mat-label>Địa chỉ thường trú</mat-label>
                                     <strong>{{detailData.representative.address1}}</strong>
                                 </div>
-                            </div>
-                            <div class="flex flex-col flex-auto w-full py-5">
-                                <div class="grid grid-cols-2 gap-5">
-                                    <div class="flex flex-col w-1/2 gap-5">
-                                        <mat-label>Ảnh CCCD/Hộ chiếu(Mặt trước):</mat-label>
-                                        <a href="javascript:void(0)" class="text-primary underline"
-                                           (click)="clickViewImage(detailData.representative.frontPhotoIdentication)">Xem
-                                            file</a>
-                                    </div>
-                                    <div class="flex flex-col w-1/2 gap-5">
-                                        <mat-label>Ảnh CCCD/Hộ chiếu(Mặt sau):</mat-label>
-                                        <a href="javascript:void(0)" class="text-primary underline"
-                                           (click)="clickViewImage(detailData.representative.backsitePhotoIdentication)">Xem
-                                            file</a>
-                                    </div>
+                                <div class="flex flex-col gap-2 col-span-2">
+                                    <mat-label>Địa chỉ hiện tại</mat-label>
+                                    <strong>{{detailData.representative.address2}}</strong>
                                 </div>
+
                             </div>
+
                         </div>
                         <div *ngIf="accTypeCN">
-                            <admin-lender-contact-info
-                                [allowAdd]="false"
-                                [allowUpdate]="false"
+                            <admin-lender-contact-info [allowAdd]="false" [allowUpdate]="false"
                                 [contact]="detailData.contact || []"
                                 [detailLender]="detailData"></admin-lender-contact-info>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeDN" label="Người góp vốn lớn nhất" tabindex="3">
-                        <admin-lender-contributor-info
-                            [allowAdd]="false"
-                            [allowUpdate]="false"
+                        <admin-lender-contributor-info [allowAdd]="false" [allowUpdate]="false"
                             [contactType]="deputyType.CAPITAL_CONTRIBUTOR"
-                            [contact]="detailData.capitalContributors || []"
-                            [detailLender]="detailData">
+                            [contact]="detailData.capitalContributors || []" [detailLender]="detailData">
                         </admin-lender-contributor-info>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeDN" label="Báo cáo tài chính chi tiết">
-                        <fuse-card class="flex flex-col p-6  my-5">
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4">
                             <div class="flex mb-5 justify-between items-center">
                                 <h3 class="text-2xl font-bold">Báo cáo tài chính chi tiết</h3>
                             </div>
-                            <div class="grid sm:grid-cols-2 md:grid-cols-6 grid-cols-6 gap-2 mb-4">
-                                <div class="flex flex-col col-span-2">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-4">
+                                <div class="flex flex-col col-span-2 sm:col-span-1">
                                     <label>Báo cáo tài chính được kiểm toán chưa ?</label>
-                                    <span
-                                        class="text-default opacity-80 font-bold mt-2">{{ detailData?.financeCheckName }}</span>
+                                    <span class="text-default opacity-80 font-bold mt-2">{{ detailData?.financeCheckName
+                                        }}</span>
                                 </div>
-                                <div class="flex flex-col col-span-2">
+                                <div class="flex flex-col col-span-2 sm:col-span-1">
                                     <label>Có sử dụng báo cáo lưu chuyển tiền tệ trực tiếp ?</label>
-                                    <span
-                                        class="text-default opacity-80 font-bold mt-2">{{ detailData?.moneyTranferReportCheckName }}</span>
+                                    <span class="text-default opacity-80 font-bold mt-2">{{
+                                        detailData?.moneyTranferReportCheckName }}</span>
                                 </div>
                                 <div class="flex flex-col col-span-1">
                                     <label>BCTC năm liền kề</label>
-                                    <span
-                                        class="text-default opacity-80 font-bold mt-2">{{ detailData?.financeLastTime }}</span>
+                                    <span class="text-default opacity-80 font-bold mt-2">{{ detailData?.financeLastTime
+                                        }}</span>
                                 </div>
                                 <div class="flex flex-col col-span-1">
                                     <label>BCTC năm gần nhất</label>
-                                    <span
-                                        class="text-default opacity-80 font-bold mt-2">{{ detailData?.financeTime }}</span>
+                                    <span class="text-default opacity-80 font-bold mt-2">{{ detailData?.financeTime
+                                        }}</span>
                                 </div>
                             </div>
-                        </fuse-card>
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto">
-                            <div class="flex flex-wrap">
-                                <file-ui
-                                    *ngFor="let file of economicInfoDocuments" [file]="file"
-                                    colume
-                                    (click)="onClickFile(file)"
-                                ></file-ui>
+                        </div>
+                        <div class="flex flex-col px-2 py-4 sm:p-4 border border-primary-grayLight-2 rounded-lg">
+                            <div class="flex flex-wrap gap-4">
+                                <file-ui *ngFor="let file of economicInfoDocuments" [file]="file" colume
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
-                        <!--<div class="flex flex-col flex-auto w-full py-5">
-                            <div class="flex flex-wrap">
-                                <file-ui *ngFor="let file of economicInfoDocuments" [file]="file"
-                                         colume
-                                         (click)="onClickFile(file)"></file-ui>
-                            </div>
-                        </div>-->
+                        </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeDN" label="Hồ sơ pháp lý">
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto my-5"
-                                   *ngFor="let conf of legal_documents_Config">
-                            <div class="flex justify-between">
-                                <div class="text-1xl font-semibold leading-tight">
-                                    {{conf.title}}
-                                </div>
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4"
+                            *ngFor="let conf of legal_documents_Config">
+                            <div class="text-base mb-3 font-semibold leading-tight">
+                                {{conf.title}}
                             </div>
-                            <div class="flex flex-wrap">
+                            <div class="flex flex-wrap gap-4">
                                 <file-ui *ngFor="let file of conf.lstFile" [file]="file"
-                                         (click)="onClickFile(file)"></file-ui>
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
+                        </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeDN" label="Hồ sơ tài chính">
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto my-5">
-                            <div class="flex justify-between">
-                                <div class="text-1xl font-semibold leading-tight">
-                                    Báo cáo tài chính thuế 2 năm gần nhất với xác nhận của cơ quan thuế hoặc BCTC đã
-                                    kiểm toán bao gồm: Bảng cân đối kế toán, Báo cáo kết quả hoạt động kinh doanh, Báo
-                                    cáo lưu chuyển tiền tệ, Bản thuyết minh BCTC, ...
-                                </div>
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4">
+                            <div class="text-base mb-3 font-semibold leading-tight">
+                                Báo cáo tài chính thuế 2 năm gần nhất với xác nhận của cơ quan thuế hoặc BCTC đã
+                                kiểm toán bao gồm: Bảng cân đối kế toán, Báo cáo kết quả hoạt động kinh doanh, Báo
+                                cáo lưu chuyển tiền tệ, Bản thuyết minh BCTC, ...
                             </div>
-                            <div class="flex flex-wrap">
+                            <div class="flex flex-wrap gap-4">
                                 <file-ui *ngFor="let file of financialDocuments" [file]="file"
-                                         (click)="onClickFile(file)"></file-ui>
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto my-5">
-                            <div class="flex justify-between">
-                                <div class="text-1xl font-semibold leading-tight">
-                                    Chi tiết các sổ phải thu, phải trả, hàng tồn kho, tài sản cố định
-                                </div>
+                        </div>
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4">
+                            <div class="text-base mb-3 font-semibold leading-tight">
+                                Chi tiết các sổ phải thu, phải trả, hàng tồn kho, tài sản cố định
                             </div>
-                            <div class="flex flex-wrap">
+                            <div class="flex flex-wrap gap-4">
                                 <file-ui *ngFor="let file of financialDocuments1" [file]="file"
-                                         (click)="onClickFile(file)"></file-ui>
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto my-5">
-                            <div class="flex justify-between">
-                                <div class="text-1xl font-semibold leading-tight">
-                                    Tờ khai VAT
-                                </div>
+                        </div>
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4">
+                            <div class="text-base mb-3 font-semibold leading-tight">
+                                Tờ khai VAT
                             </div>
-                            <div class="flex flex-wrap">
+                            <div class="flex flex-wrap gap-4">
                                 <file-ui *ngFor="let file of financialDocuments2" [file]="file"
-                                         (click)="onClickFile(file)"></file-ui>
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto my-5">
-                            <div class="flex justify-between">
-                                <div class="text-1xl font-semibold leading-tight">
-                                    Sao kê tài khoản ngân hàng
-                                </div>
+                        </div>
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4">
+                            <div class="text-base mb-3 font-semibold leading-tight">
+                                Sao kê tài khoản ngân hàng
                             </div>
-                            <div class="flex flex-wrap">
+                            <div class="flex flex-wrap gap-4">
                                 <file-ui *ngFor="let file of financialDocuments3" [file]="file"
-                                         (click)="onClickFile(file)"></file-ui>
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
+                        </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral && accTypeDN" label="Tài liệu hoạt động kinh doanh">
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto my-5">
-                            <div class="flex justify-between">
-                                <div class="text-1xl font-semibold leading-tight">
-                                    Ít nhất 03 hợp đồng kinh tế - Hóa đơn mua bán đầu vào với các đối tác tài chính
-                                    trong vòng 12 tháng gần nhất
-                                </div>
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4">
+                            <div class="text-base mb-3 font-semibold leading-tight">
+                                Ít nhất 03 hợp đồng kinh tế - Hóa đơn mua bán đầu vào với các đối tác tài chính
+                                trong vòng 12 tháng gần nhất
                             </div>
-                            <div class="flex flex-wrap">
+                            <div class="flex flex-wrap gap-4">
                                 <file-ui *ngFor="let file of businessDocumentation" [file]="file"
-                                         (click)="onClickFile(file)"></file-ui>
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto my-5">
-                            <div class="flex justify-between">
-                                <div class="text-1xl font-semibold leading-tight">
-                                    Ít nhất 03 hợp đồng kinh tế - Hóa đơn mua bán đầu ra với các đối tác tài chính trong
-                                    vòng 12 tháng gần nhất
-                                </div>
+                        </div>
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4">
+                            <div class="text-base mb-3 font-semibold leading-tight">
+                                Ít nhất 03 hợp đồng kinh tế - Hóa đơn mua bán đầu ra với các đối tác tài chính trong
+                                vòng 12 tháng gần nhất
                             </div>
-                            <div class="flex flex-wrap">
+                            <div class="flex flex-wrap gap-4">
                                 <file-ui *ngFor="let file of businessDocumentation1" [file]="file"
-                                         (click)="onClickFile(file)"></file-ui>
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
-                        <fuse-card class="flex flex-col p-6 max-h-full overflow-y-auto my-5">
-                            <div class="flex justify-between">
-                                <div class="text-1xl font-semibold leading-tight">
-                                    Khác
-                                </div>
+                        </div>
+                        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg my-4">
+                            <div class="text-base mb-3 font-semibold leading-tight">
+                                Khác
                             </div>
-                            <div class="flex flex-wrap">
+                            <div class="flex flex-wrap gap-4">
                                 <file-ui *ngFor="let file of businessDocumentation2" [file]="file"
-                                         (click)="onClickFile(file)"></file-ui>
+                                    (click)="onClickFile(file)"></file-ui>
                             </div>
-                        </fuse-card>
+                        </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral" label="Hồ sơ huy động vốn">
                         <div class="min-h-50">
-                            <div
-                                @fadeOutTop
-                                @slideInTop
-                                class="mb-5"
-                                *ngIf="checkDispalyBtnExportLoan">
-                                <button mat-flat-button color="primary"
-                                        *ngIf="'SFF_BORROWER_EXPORT' | permission"
-                                        (click)="onExportLoan()">
+                            <div @fadeOutTop @slideInTop class="mb-5" *ngIf="checkDispalyBtnExportLoan">
+                                <button mat-flat-button color="primary" *ngIf="'SFF_BORROWER_EXPORT' | permission"
+                                    (click)="onExportLoan()">
                                     <mat-icon class="mr-2">check</mat-icon>
                                     Export
                                 </button>
                             </div>
-                            <table mat-table [dataSource]="detailData.fsLoanProfilesDTOS" class="w-full">
-                                <ng-container matColumnDef="select">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <mat-checkbox
-                                            (change)="$event ? masterToggle() : null"
-                                            [checked]="selectionLoan.hasValue() && isAllLoanSelected()"
-                                            [indeterminate]="selectionLoan.hasValue() && !isAllLoanSelected()"
-                                            color="primary"
-                                        >
-                                        </mat-checkbox>
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                        <mat-checkbox
-                                            (click)="$event.stopPropagation()"
-                                            (change)="$event ? selectionLoan.toggle(row) : null"
-                                            [checked]="selectionLoan.isSelected(row)"
-                                            color="primary"
-                                        >
-                                        </mat-checkbox>
-                                    </td>
-                                </ng-container>
+                            <div class="flex flex-col flex-auto overflow-x-auto">
+                                <table mat-table [dataSource]="detailData.fsLoanProfilesDTOS"
+                                    class="min-w-[650px] w-full">
+                                    <ng-container matColumnDef="select">
+                                        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+                                            <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                [checked]="selectionLoan.hasValue() && isAllLoanSelected()"
+                                                [indeterminate]="selectionLoan.hasValue() && !isAllLoanSelected()"
+                                                color="primary">
+                                            </mat-checkbox>
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <mat-checkbox (click)="$event.stopPropagation()"
+                                                (change)="$event ? selectionLoan.toggle(row) : null"
+                                                [checked]="selectionLoan.isSelected(row)" color="primary">
+                                            </mat-checkbox>
+                                        </td>
+                                    </ng-container>
 
-                                <ng-container matColumnDef="fsLoanProfilesId">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">
-                                            Số hồ sơ
-                                        </div>
-                                    </th>
-                                    <td (click)="getDetailProfile(element)" mat-cell *matCellDef="let element">
-                                        <div class="hover:cursor-pointer text-blue-500">
-                                            {{ element.fsLoanProfilesId }}
-                                        </div>
-                                    </td>
-                                </ng-container>
+                                    <ng-container matColumnDef="fsLoanProfilesId">
+                                        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+                                            <div class="cell-overflow table-header">
+                                                Số hồ sơ
+                                            </div>
+                                        </th>
+                                        <td (click)="getDetailProfile(element)" mat-cell *matCellDef="let element">
+                                            <div class="hover:cursor-pointer text-blue-500">
+                                                {{ element.fsLoanProfilesId }}
+                                            </div>
+                                        </td>
+                                    </ng-container>
 
-                                <ng-container matColumnDef="loanTimeCycle">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">
-                                            Kỳ hạn(ngày)
-                                        </div>
-                                    </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="cell-overflow">
-                                            {{ element.loanTimeCycle }}
-                                        </div>
-                                    </td>
-                                </ng-container>
+                                    <ng-container matColumnDef="loanTimeCycle">
+                                        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+                                            <div class="cell-overflow table-header">
+                                                Kỳ hạn(ngày)
+                                            </div>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <div class="cell-overflow">
+                                                {{ element.loanTimeCycle }}
+                                            </div>
+                                        </td>
+                                    </ng-container>
 
-                                <ng-container matColumnDef="reasons">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">
-                                            Mục đích huy động vốn
-                                        </div>
-                                    </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="cell-overflow">
-                                            {{ element.reasonsName }}
-                                        </div>
-                                    </td>
-                                </ng-container>
+                                    <ng-container matColumnDef="reasons">
+                                        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+                                            <div class="cell-overflow table-header">
+                                                Mục đích huy động vốn
+                                            </div>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <div class="cell-overflow">
+                                                {{ element.reasonsName }}
+                                            </div>
+                                        </td>
+                                    </ng-container>
 
-                                <ng-container matColumnDef="totalAmount">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">
-                                            Số tiền được yêu cầu (VNĐ)
-                                        </div>
-                                    </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="cell-overflow">
-                                            {{ element.amount | currencyFormatPipe : 10 }}
-                                        </div>
-                                    </td>
-                                </ng-container>
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+                                            <div class="cell-overflow table-header">
+                                                Số tiền được yêu cầu (VND)
+                                            </div>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <div class="cell-overflow">
+                                                {{ element.amount | currencyFormatPipe : 10 }}
+                                            </div>
+                                        </td>
+                                    </ng-container>
 
-                                <ng-container matColumnDef="amount">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">
-                                            Số tiền được huy động (VNĐ)
-                                        </div>
-                                    </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="cell-overflow">
-                                            {{ element.totalLoan | currencyFormatPipe : 10 }}
-                                        </div>
-                                    </td>
-                                </ng-container>
+                                    <ng-container matColumnDef="amount">
+                                        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+                                            <div class="cell-overflow table-header">
+                                                Số tiền được huy động (VND)
+                                            </div>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <div class="cell-overflow">
+                                                {{ element.totalLoan | currencyFormatPipe : 10 }}
+                                            </div>
+                                        </td>
+                                    </ng-container>
 
-                                <ng-container matColumnDef="createdDate">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">
-                                            Ngày tạo
-                                        </div>
-                                    </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="cell-overflow">
-                                            {{ element.createdDate | datetimeformat : 'DD/MM/YYYY' }}
-                                        </div>
-                                    </td>
-                                </ng-container>
+                                    <ng-container matColumnDef="createdDate">
+                                        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+                                            <div class="cell-overflow table-header">
+                                                Ngày tạo
+                                            </div>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <div class="cell-overflow">
+                                                {{ element.createdDate | datetimeformat : 'DD/MM/YYYY' }}
+                                            </div>
+                                        </td>
+                                    </ng-container>
 
-                                <ng-container matColumnDef="statusName">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">
-                                            Trạng thái
-                                        </div>
-                                    </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="cell-overflow">
-                                            {{ element.statusName }}
-                                        </div>
-                                    </td>
-                                </ng-container>
+                                    <ng-container matColumnDef="statusName">
+                                        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+                                            <div class="cell-overflow table-header">
+                                                Trạng thái
+                                            </div>
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <div class="cell-overflow">
+                                                {{ element.statusName }}
+                                            </div>
+                                        </td>
+                                    </ng-container>
 
-                                <tr mat-header-row
-                                    *matHeaderRowDef="['select', 'fsLoanProfilesId', 'loanTimeCycle', 'reasons', 'totalAmount', 'amount', 'createdDate', 'statusName']"></tr>
-                                <tr mat-row
-                                    *matRowDef="let row; columns: ['select', 'fsLoanProfilesId', 'loanTimeCycle', 'reasons', 'totalAmount', 'amount', 'createdDate', 'statusName'];"
-                                ></tr>
-                            </table>
+                                    <tr mat-header-row
+                                        *matHeaderRowDef="['select', 'fsLoanProfilesId', 'loanTimeCycle', 'reasons', 'totalAmount', 'amount', 'createdDate', 'statusName']">
+                                    </tr>
+                                    <tr mat-row
+                                        *matRowDef="let row; columns: ['select', 'fsLoanProfilesId', 'loanTimeCycle', 'reasons', 'totalAmount', 'amount', 'createdDate', 'statusName'];">
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral" label="Thông tin tài sản bảo đảm " tabindex="22">
                         <div class="flex justify-end">
-                            <button
-                                class="ml-4"
-                                mat-flat-button
-                                *ngIf="'SFF_COLLATERAL_INSERT' | permission"
-                                (click)="openCreateCollateralDialog()"
-                                [color]="'primary'">
+                            <button class="ml-4 mb-4" mat-flat-button *ngIf="'SFF_COLLATERAL_INSERT' | permission"
+                                (click)="openCreateCollateralDialog()" [color]="'primary'">
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Thêm mới</span>
                             </button>
@@ -955,7 +814,7 @@
                         <div class="min-h-50">
                             <table mat-table [dataSource]="detailData.admCollateralDTOS" class="w-full">
                                 <ng-container matColumnDef="index">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             STT
                                         </div>
@@ -968,22 +827,22 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="collateralName">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
-                                            Tên tài sản bảo đảm 
+                                            Tên tài sản bảo đảm
                                         </div>
                                     </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <div class="cell-overflow cursor-pointer" style="color: blue"
-                                             (click)="updateCollateralMode(element)">
+                                        <div class="cell-overflow cursor-pointer text-link"
+                                            (click)="updateCollateralMode(element)">
                                             {{ element.collateralName}}
                                         </div>
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="amount">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
-                                            Giá trị định giá tài sản (VNĐ)
+                                            Giá trị định giá tài sản (VND)
                                         </div>
                                     </th>
                                     <td mat-cell *matCellDef="let element">
@@ -993,7 +852,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="guaranteedRate">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Tỷ lệ bảo đảm(%)
                                         </div>
@@ -1005,7 +864,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="lastUpdatedDate">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Ngày định giá
                                         </div>
@@ -1017,7 +876,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="lastUpdatedByName">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Người định giá
                                         </div>
@@ -1029,7 +888,8 @@
                                     </td>
                                 </ng-container>
                                 <tr mat-header-row
-                                    *matHeaderRowDef="['index', 'collateralName', 'amount', 'guaranteedRate', 'lastUpdatedDate', 'lastUpdatedByName']"></tr>
+                                    *matHeaderRowDef="['index', 'collateralName', 'amount', 'guaranteedRate', 'lastUpdatedDate', 'lastUpdatedByName']">
+                                </tr>
                                 <tr mat-row
                                     *matRowDef="let row; columns: ['index', 'collateralName', 'amount', 'guaranteedRate', 'lastUpdatedDate', 'lastUpdatedByName'];"
                                     class="hover:bg-accent-50 hover:cursor-pointer"></tr>
@@ -1038,12 +898,8 @@
                     </mat-tab>
                     <mat-tab *ngIf="!isSrcCollateral" label="Xếp hạng khách hàng">
                         <div class="flex justify-end">
-                            <button
-                                class="ml-4"
-                                mat-flat-button
-                                *ngIf="'SFF_RANK_INSERT' | permission"
-                                (click)="openCreateCustomerRankDialog()"
-                                [color]="'primary'">
+                            <button class="ml-4 mb-4" mat-flat-button *ngIf="'SFF_RANK_INSERT' | permission"
+                                (click)="openCreateCustomerRankDialog()" [color]="'primary'">
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Cập nhật xếp hạng</span>
                             </button>
@@ -1051,7 +907,7 @@
                         <div class="min-h-50">
                             <table mat-table [dataSource]="detailData.admCustomerRankDTOS" class="w-full">
                                 <ng-container matColumnDef="index">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             STT
                                         </div>
@@ -1064,7 +920,7 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="admCustomerRankId">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Xếp hạng khách hàng
                                         </div>
@@ -1076,7 +932,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="scores">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Tổng điềm
                                         </div>
@@ -1088,7 +944,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="lastUpdatedDate">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Ngày cập nhật
                                         </div>
@@ -1100,7 +956,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="lastUpdatedByName">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Người cập nhật
                                         </div>
@@ -1112,21 +968,18 @@
                                     </td>
                                 </ng-container>
                                 <tr mat-header-row
-                                    *matHeaderRowDef="['index', 'admCustomerRankId', 'scores', 'lastUpdatedDate', 'lastUpdatedByName']"></tr>
+                                    *matHeaderRowDef="['index', 'admCustomerRankId', 'scores', 'lastUpdatedDate', 'lastUpdatedByName']">
+                                </tr>
                                 <tr mat-row
                                     *matRowDef="let row; columns: ['index', 'admCustomerRankId', 'scores', 'lastUpdatedDate', 'lastUpdatedByName'];"
                                     class="hover:bg-accent-50 hover:cursor-pointer"></tr>
                             </table>
                         </div>
                     </mat-tab>
-                    <mat-tab *ngIf="!isSrcCollateral" label="Hạn mức tín dụng">
+                    <mat-tab *ngIf="!isSrcCollateral" label="Hạn mức huy động vốn">
                         <div class="flex justify-end">
-                            <button
-                                class="ml-4"
-                                mat-flat-button
-                                *ngIf=" 'SFF_CREDIT_LIMIT_INSERT' | permission"
-                                (click)="openCreateCreditLimitDialog()"
-                                [color]="'primary'">
+                            <button class="ml-4 mb-4" mat-flat-button *ngIf=" 'SFF_CREDIT_LIMIT_INSERT' | permission"
+                                (click)="openCreateCreditLimitDialog()" [color]="'primary'">
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Cấp hạn mức</span>
                             </button>
@@ -1134,7 +987,7 @@
                         <div class="min-h-50">
                             <table mat-table [dataSource]="detailData.admCreditLimitDTOS" class="w-full">
                                 <ng-container matColumnDef="index">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             STT
                                         </div>
@@ -1147,9 +1000,9 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="creditLimit">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
-                                            Hạn mức tín dụng (VNĐ)
+                                            Hạn mức huy động vốn(VND)
                                         </div>
                                     </th>
                                     <td mat-cell *matCellDef="let element">
@@ -1159,44 +1012,42 @@
                                     </td>
                                 </ng-container>
 
-<!--                                <ng-container matColumnDef="finDocumentsId">-->
-<!--                                    <th mat-header-cell *matHeaderCellDef>-->
-<!--                                        <div class="cell-overflow table-header">-->
-<!--                                            File tờ trình cấp hạn mức-->
-<!--                                        </div>-->
-<!--                                    </th>-->
-<!--                                    <td mat-cell *matCellDef="let element">-->
-<!--                                        <div class="cell-overflow">-->
-<!--                                            <div class="flex flex-wrap ">-->
-<!--                                                <file-ui *ngFor="let file of safeListFsDocuments(element.fsDocumentsDTOS)" [file]="file"-->
-<!--                                                         colume-->
-<!--                                                         (click)="onClickFile(file)"></file-ui>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </td>-->
-<!--                                </ng-container>-->
+                                <!--                                <ng-container matColumnDef="finDocumentsId">-->
+                                <!--                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>-->
+                                <!--                                        <div class="cell-overflow table-header">-->
+                                <!--                                            File tờ trình cấp hạn mức-->
+                                <!--                                        </div>-->
+                                <!--                                    </th>-->
+                                <!--                                    <td mat-cell *matCellDef="let element">-->
+                                <!--                                        <div class="cell-overflow">-->
+                                <!--                                            <div class="flex flex-wrap ">-->
+                                <!--                                                <file-ui *ngFor="let file of safeListFsDocuments(element.fsDocumentsDTOS)" [file]="file"-->
+                                <!--                                                         colume-->
+                                <!--                                                         (click)="onClickFile(file)"></file-ui>-->
+                                <!--                                            </div>-->
+                                <!--                                        </div>-->
+                                <!--                                    </td>-->
+                                <!--                                </ng-container>-->
 
                                 <ng-container matColumnDef="finDocumentsId">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             File tờ trình cấp hạn mức
                                         </div>
                                     </th>
                                     <td mat-cell *matCellDef="let element">
                                         <div class="cell-overflow" *ngIf="element.fsDocumentsDTOS">
-                                        <span
-                                            class="text-blue-400"
-                                            *ngFor="let file of element.fsDocumentsDTOS; let j = index"
-                                            (click)="onClickFile(file)"
-                                        >
-                                            <mat-icon [svgIcon]="'heroicons_outline:document'"></mat-icon>
-                                        </span>
+                                            <span class="text-blue-400"
+                                                *ngFor="let file of element.fsDocumentsDTOS; let j = index"
+                                                (click)="onClickFile(file)">
+                                                <mat-icon [svgIcon]="'heroicons_outline:document'"></mat-icon>
+                                            </span>
                                         </div>
                                     </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="lastUpdatedDate">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Ngày tạo
                                         </div>
@@ -1209,7 +1060,7 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="lastUpdatedByName">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Người tạo
                                         </div>
@@ -1221,7 +1072,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="statusName">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Trạng thái
                                         </div>
@@ -1234,7 +1085,8 @@
                                 </ng-container>
 
                                 <tr mat-header-row
-                                    *matHeaderRowDef="['index', 'creditLimit', 'finDocumentsId', 'lastUpdatedDate', 'lastUpdatedByName', 'statusName']"></tr>
+                                    *matHeaderRowDef="['index', 'creditLimit', 'finDocumentsId', 'lastUpdatedDate', 'lastUpdatedByName', 'statusName']">
+                                </tr>
                                 <tr mat-row
                                     *matRowDef="let row; columns: ['index', 'creditLimit', 'finDocumentsId', 'lastUpdatedDate', 'lastUpdatedByName', 'statusName'];"
                                     class="hover:bg-accent-50 hover:cursor-pointer"></tr>
@@ -1248,21 +1100,24 @@
                             </article>
                             <article class="prose break-words">
                                 <p>Loại tài sản: <br>
-                                    <b>{{ getCollateralTypeName(selectedAdmCollateral?.collateralType) }}</b></p>
+                                    <b>{{ getCollateralTypeName(selectedAdmCollateral?.collateralType) }}</b>
+                                </p>
                             </article>
                             <article class="prose break-words">
                                 <p>Hình thức bảo đảm : <br>
-                                    <b>{{getRaisingCapitalName(selectedAdmCollateral?.raisingCapital) }}</b></p>
+                                    <b>{{getRaisingCapitalName(selectedAdmCollateral?.raisingCapital) }}</b>
+                                </p>
                             </article>
                             <article class="prose break-words">
-                                <p>Giá trị định giá tài sản (VNĐ): <br>
-                                    <b>{{ selectedAdmCollateral?.amount | currencyFormatPipe : 10 }}</b></p>
+                                <p>Giá trị định giá tài sản (VND): <br>
+                                    <b>{{ selectedAdmCollateral?.amount | currencyFormatPipe : 10 }}</b>
+                                </p>
                             </article>
                         </div>
                         <mat-divider class="pb-5"></mat-divider>
                         <div class="grid grid-cols-4 gap-5 p-5">
                             <article class="prose break-words">
-                                <p>Tỷ lệ bảo đảm  (%): <br> <b>{{ selectedAdmCollateral?.guaranteedRate }}</b></p>
+                                <p>Tỷ lệ bảo đảm (%): <br> <b>{{ selectedAdmCollateral?.guaranteedRate }}</b></p>
                             </article>
                             <article class="prose break-words">
                                 <p>Trạng thái: <br> <b>{{ selectedAdmCollateral?.statusName }}</b></p>
@@ -1272,10 +1127,9 @@
                         <div class="grid grid-cols-1 gap-5 p-5">
                             <article class="prose break-words">
                                 <p>Hồ sơ pháp lý liên quan đến tài sản: </p>
-                                <div class="flex flex-wrap">
-                                    <file-ui *ngFor="let file of collateralFileId" [file]="file"
-                                             colume
-                                             (click)="onClickFile(file)"></file-ui>
+                                <div class="flex flex-wrap gap-4">
+                                    <file-ui *ngFor="let file of collateralFileId" [file]="file" colume
+                                        (click)="onClickFile(file)"></file-ui>
                                 </div>
                             </article>
                         </div>
@@ -1287,7 +1141,8 @@
                             </div>
                             <div class="flex flex-col">
                                 <mat-label>Ngày tạo</mat-label>
-                                <strong>{{selectedAdmCollateral.createdDate  | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</strong>
+                                <strong>{{selectedAdmCollateral.createdDate | datetimeformat : 'DD/MM/YYYY HH:mm:ss'
+                                    }}</strong>
                             </div>
                             <div class="flex flex-col">
                                 <mat-label>Người cập nhật</mat-label>
@@ -1295,15 +1150,16 @@
                             </div>
                             <div class="flex flex-col">
                                 <mat-label>Ngày cập nhật</mat-label>
-                                <strong>{{selectedAdmCollateral.lastUpdatedDate  | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</strong>
+                                <strong>{{selectedAdmCollateral.lastUpdatedDate | datetimeformat : 'DD/MM/YYYY HH:mm:ss'
+                                    }}</strong>
                             </div>
                         </div>
                     </mat-tab>
                     <mat-tab *ngIf="isSrcCollateral && collateralUpdateMode === 'view'" label="Lịch sử đánh giá">
-                        <fuse-card class="flex flex-col flex-auto w-full border-b ">
+                        <div class="flex flex-col flex-auto w-full border-b ">
                             <table mat-table [dataSource]="valuationHistoryDataSource" class="w-full">
                                 <ng-container matColumnDef="valuationName">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Lần định giá
                                         </div>
@@ -1315,7 +1171,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="admCollateralName">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Tên tài sản
                                         </div>
@@ -1327,9 +1183,9 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="amount">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
-                                            Giá trị định giá tài sản (VNĐ)
+                                            Giá trị định giá tài sản (VND)
                                         </div>
                                     </th>
                                     <td mat-cell *matCellDef="let element">
@@ -1339,7 +1195,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="guaranteedRate">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Tỷ lệ đảm báo (%)
                                         </div>
@@ -1352,7 +1208,7 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="valuationDate">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Ngày định giá
                                         </div>
@@ -1364,7 +1220,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="fileIdObj">
-                                    <th mat-header-cell *matHeaderCellDef>
+                                    <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
                                         <div class="cell-overflow table-header">
                                             Hồ sơ pháp lý liên quan đến tài sản
                                         </div>
@@ -1372,16 +1228,14 @@
                                     <td mat-cell *matCellDef="let element">
                                         <div class="cell-overflow">
                                             <div class="flex flex-wrap ">
-                                                <file-ui *ngFor="let file of element.fileIdObj" [file]="file"
-                                                         colume
-                                                         (click)="onClickFile(file, 'fileValues2')"></file-ui>
+                                                <file-ui *ngFor="let file of element.fileIdObj" [file]="file" colume
+                                                    (click)="onClickFile(file, 'fileValues2')"></file-ui>
                                             </div>
                                         </div>
                                     </td>
                                 </ng-container>
 
-                                <tr mat-header-row
-                                    *matHeaderRowDef="[
+                                <tr mat-header-row *matHeaderRowDef="[
                                             'valuationName',
                                             'admCollateralName',
                                             'amount',
@@ -1389,24 +1243,20 @@
                                             'valuationDate',
                                             'fileIdObj',
                                              ]"></tr>
-                                <tr mat-row
-                                    *matRowDef="let row; columns: [
+                                <tr mat-row *matRowDef="let row; columns: [
                                             'valuationName',
                                             'admCollateralName',
                                             'amount',
                                             'guaranteedRate',
                                             'valuationDate',
                                             'fileIdObj',
-                                                ];"
-                                    class="hover:bg-accent-50 hover:cursor-pointer"></tr>
+                                                ];" class="hover:bg-accent-50 hover:cursor-pointer"></tr>
                             </table>
-                            <mat-paginator #valuationHistoryPaginator
-                                           [pageSizeOptions]="pageSizeOptions"
-                                           [length]="valuationHistoryLengthRecords"
-                                           [pageSize]="valuationHistoryPageSize"
-                                           [showFirstLastButtons]="true">
+                            <mat-paginator #valuationHistoryPaginator [pageSizeOptions]="pageSizeOptions"
+                                [length]="valuationHistoryLengthRecords" [pageSize]="valuationHistoryPageSize"
+                                [showFirstLastButtons]="true">
                             </mat-paginator>
-                        </fuse-card>
+                        </div>
                     </mat-tab>
                 </mat-tab-group>
             </div>

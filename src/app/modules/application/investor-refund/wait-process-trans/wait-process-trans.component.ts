@@ -114,7 +114,7 @@ export class WaitProcessTransComponent implements OnInit {
                 this._investorTransService.prepare().subscribe((resPrepare) => {
                     const dialogRef = this._dialog.open(ConfirmProcessingComponent, {
                         disableClose: true,
-                        width: '50%',
+                        // width: '50%',
                         data: {
                             title: 'Xác nhận nội dung xử lý?',
                             valueDefault: 3,
@@ -173,7 +173,7 @@ export class WaitProcessTransComponent implements OnInit {
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ huy động vốn', null, false),
                         new InputSearch('admAccountId', 'Bên huy động vốn', null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Soạn thảo', value: 1},
                             {label: 'Chờ xử lý', value: 2},
                             {label: 'Phê duyệt', value: 3},

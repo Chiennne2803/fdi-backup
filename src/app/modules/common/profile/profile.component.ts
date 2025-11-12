@@ -1,15 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {Router} from '@angular/router';
-import {fuseAnimations} from '@fuse/animations';
-import {FuseNavigationItem} from '../../../../@fuse/components/navigation';
-import {AuthService} from '../../../core/auth/auth.service';
-import {AdmAccountType} from '../../../core/user/user.types';
-import {ROUTER_CONST} from '../../../shared/constants';
-import {ProfileService} from '../../../service/common-service';
-import {MatDialog} from '@angular/material/dialog';
-import {ChangeIdentificationComponent} from './components/change-identification-dialog/change-identification.component';
-import {ChangeGpkdDialogComponent} from './components/change-gpkd-dialog/change-gpkd-dialog.component';
-import {UserType} from '../../../models/admin';
+import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseNavigationItem } from '../../../../@fuse/components/navigation';
+import { AuthService } from '../../../core/auth/auth.service';
+import { AdmAccountType } from '../../../core/user/user.types';
+import { ROUTER_CONST } from '../../../shared/constants';
+import { UserType } from '../../../models/admin';
 
 @Component({
     selector: 'profile',
@@ -22,10 +17,7 @@ export class EnterpriseComponent implements OnInit {
 
 
     constructor(
-        private _route: Router,
         public authService: AuthService,
-        private _profileService: ProfileService,
-        private _matDialog: MatDialog
     ) {
         switch (this.authService?.authenticatedUser.accountType) {
             case AdmAccountType.ADMIN:
@@ -44,11 +36,12 @@ export class EnterpriseComponent implements OnInit {
                 ];
                 break;
             case AdmAccountType.INVESTOR:
-                switch ( this.authService.authenticatedUser.type ) {
+                switch (this.authService.authenticatedUser.type) {
                     case UserType.COMPANY:
                         this.menuData = [
                             {
                                 type: 'group',
+                                title: "Hồ sơ của tôi",
                                 children: [
                                     {
                                         title: 'Quản lí tài khoản',
@@ -75,11 +68,13 @@ export class EnterpriseComponent implements OnInit {
                                 ]
                             },
                         ];
-                    break;
+                        break;
                     case UserType.INDIVIDUAL:
                         this.menuData = [
                             {
                                 type: 'group',
+                                title: "Hồ sơ của tôi",
+
                                 children: [
                                     {
                                         title: 'Quản lí tài khoản',
@@ -101,17 +96,18 @@ export class EnterpriseComponent implements OnInit {
                                 ]
                             },
                         ];
-                    break;
+                        break;
                 }
                 break;
             case AdmAccountType.BORROWER:
-                switch ( this.authService.authenticatedUser.type ) {
+                switch (this.authService.authenticatedUser.type) {
                     case UserType.COMPANY:
                         this.menuData = [
                             {
                                 type: 'group',
+                                title: "Hồ sơ của tôi",
                                 children: [
-                                    {
+                                    {   
                                         title: 'Quản lí tài khoản',
                                         type: 'basic',
                                         link: ROUTER_CONST.config.common.profile.link,
@@ -133,7 +129,7 @@ export class EnterpriseComponent implements OnInit {
                                         link: ROUTER_CONST.config.common.profile.biggestCapitalContributor.link,
                                     },
                                     {
-                                        title: 'Thông tin tài chính chi tiết',
+                                        title: 'Báo cáo tài chính chi tiết',
                                         type: 'basic',
                                         link: ROUTER_CONST.config.common.profile.economicInfo.link,
                                     },
@@ -155,11 +151,12 @@ export class EnterpriseComponent implements OnInit {
                                 ]
                             },
                         ];
-                    break;
+                        break;
                     case UserType.INDIVIDUAL:
                         this.menuData = [
                             {
                                 type: 'group',
+                                title: "Hồ sơ của tôi",
                                 children: [
                                     {
                                         title: 'Quản lí tài khoản',
@@ -200,14 +197,28 @@ export class EnterpriseComponent implements OnInit {
                                 ]
                             },
                         ];
-                    break;
+                        break;
                 }
-            break;
+                break;
         }
+        this.checkScreenSize();
+
     }
+    isMobile = false;
+
+    @HostListener('window:resize', [])
+    onResize() {
+        this.checkScreenSize();
+    }
+
+    private checkScreenSize() {
+        this.isMobile = window.innerWidth < 1024; // < 1024px thì coi là mobile/tablet
+    }
+
 
     ngOnInit(): void {
         // this._profileService.titlePage$.subscribe(t => this.titlePage = t);
     }
+
 
 }

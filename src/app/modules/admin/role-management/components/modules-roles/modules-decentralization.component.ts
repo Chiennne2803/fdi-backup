@@ -30,7 +30,6 @@ export class ModulesDecentralizationComponent implements OnInit, OnChanges, Afte
     ) { }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log("okk")
         if ('roles' in changes) {
             this.listModules = [];
             this.initData();

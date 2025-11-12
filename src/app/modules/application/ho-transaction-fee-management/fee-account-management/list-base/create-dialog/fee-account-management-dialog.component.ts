@@ -26,7 +26,7 @@ export class FeeAccountManagementDialogComponent implements OnInit {
         columnDefinition: [
             new TextColumn('admAccountIdBeneficiaryName', 'Nhà đầu tư', 10),
             new TextColumn('transactionCode', 'Giao dịch thu phí', 10, ),
-            new TextColumn('amount', 'Tiền hoa hồng (VNĐ)', 10, false, 3),
+            new TextColumn('amount', 'Tiền hoa hồng (VND)', 10, false, 3),
         ],
         isViewDetail: false
     };

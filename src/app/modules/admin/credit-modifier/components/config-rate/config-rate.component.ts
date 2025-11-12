@@ -53,7 +53,7 @@ export class ConfigRateComponent implements OnInit {
         this._dataSource = this._confRateService.lazyLoad;
         this._confRateService.getPrepareLoadingPage().subscribe((res) => {
             if (res.payload.listInvestmentTime != undefined && res.payload.listInvestmentTime.length > 0) {
-                this.listInvestmentTime.push({label: 'Tẩt cả', value: null});
+                this.listInvestmentTime.push({label: 'Tẩt cả', value: ''});
                 res.payload.listInvestmentTime.forEach(x => this.listInvestmentTime.push({label: x, value: x}));
             }
         });

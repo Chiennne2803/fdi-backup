@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 import {FuseAlertService} from '@fuse/components/alert';
 import {FuseConfirmationConfig, FuseConfirmationService} from '@fuse/services/confirmation';
 import {AdmAccountDetailDTO, FsDocuments} from 'app/models/admin';
@@ -60,7 +60,7 @@ export class StaffDetailComponent implements OnInit {
         {id: 9, label: 'Admin'},
     ];
 
-    public avatar: string | SafeResourceUrl = 'assets/images/avatars/defaut-avatar.png';
+    public avatar: string | SafeResourceUrl = '';
 
     constructor(
         private _staffService: ManagementStaffService,
@@ -70,8 +70,6 @@ export class StaffDetailComponent implements OnInit {
         private _confirmService: FuseConfirmationService,
         private _fuseAlertService: FuseAlertService,
         private _matDialog: MatDialog,
-        private translocoService: TranslocoService,
-        private _authService: AuthService,
     ) {
     }
 
@@ -79,7 +77,6 @@ export class StaffDetailComponent implements OnInit {
         this.initForm();
         this._staffService.staffDetail$.subscribe((res) => {
             this.staffDetail = undefined;
-            this.avatar = 'assets/images/avatars/defaut-avatar.png';
             if (res) {
                 this.staffDetail = res;
                 if (this.staffDetail.role) {
@@ -102,6 +99,9 @@ export class StaffDetailComponent implements OnInit {
         })
     }
 
+    getSafeImageUrl(base64: string): SafeUrl {
+        return this._domSanitizer.bypassSecurityTrustUrl(base64);
+    }
     public onFileInput(event: FileList): void {
         if (!(event[0].size / 1024 / 1024 <= 5)) {
             this._fuseAlertService.showMessageError("QLNV002");

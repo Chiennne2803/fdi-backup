@@ -1,229 +1,159 @@
 <change-id-gpkd></change-id-gpkd>
-<div class="relative flex h-full min-w-0 md:w-full p-4">
-    <div class="flex-auto ">
-        <div class="flex flex-col p-4 h-full">
-            <div class="flex h-full">
-                <div class="flex flex-col p-2 w-6/12">
-                    <div class="flex">
-                        <mat-form-field class="w-9/12">
-                            <mat-icon>search</mat-icon>
-                            <input
-                                class="ml-1"
-                                matInput
-                                autocomplete="off"
-                                type="text"
-                                (input)="searchContact($event)"
-                                placeholder="Nhập để tìm kiếm..."
-                            >
-                        </mat-form-field>
-                        <div class="w-3/12 ml-3 mt-1">
-                            <button
-                                mat-flat-button
-                                color="primary"
-                                (click)="initFormToEditing('Thêm người góp vốn lớn nhất')"
-                            >
-                                Thêm
-                            </button>
-                        </div>
-                    </div>
-                    <ul class="flex-auto overflow-y-auto h-50">
-                        <li
-                            *ngFor="let contact of contactInfoData"
-                            [class.bg-gray-100]="contact === contactSelected"
-                            class="pb-1 border-b flex flex-col cursor-pointer
-                                   hover:bg-gray-100 dark:hover:bg-hover p-2"
-                            (click)="viewDetail(contact)"
-                        >
-                            <span class="font-bold">{{ contact?.fullName }}</span>
-                            <span>{{ contact?.positionCompany }}</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="flex flex-col w-6/12 p-2">
-                    <ng-container *ngIf="isEditing else readOnlyView">
-                        <h4 class="leading-tight text-xl mt-0 mb-7 text-center font-bold">
-                            {{ titleEditing }}
-                        </h4>
-                        <div class="flex-auto grid grid-cols-2
-                                    sm:grid-cols-1 md:grid-cols-2 gap-2
-                                    overflow-y-auto h-50"
-                             [formGroup]="contactForm">
-                            <mat-form-field class="mb-2">
-                                <mat-label>Họ và tên</mat-label>
-                                <input
-                                    matInput
-                                    autocomplete="off"
-                                    type="text"
-                                    formControlName="fullName"
-                                    maxlength="50"
-                                >
-                                <mat-error *ngIf="isRequiredFormControl('fullName')">
-                                   {{ 'HSVV191' | transloco }}
-                                </mat-error>
-                            </mat-form-field>
-                            <app-date-picker
-                                class="mb-2"
-                                label="Ngày sinh"
-                                [maxDate]="{'months': -216}"
-                                [validationType]="['upper18']"
-                                formControlName="dateOfBirth"
-                                [isRequired]="true"
-                                requiredMsg="HSVV195"
-                                fomatMsg="HSVV196"
-                                maxMsg="HSVV194"
-                            ></app-date-picker>
-
-                            <mat-form-field class="mb-2">
-                                <mat-label>Giới tính</mat-label>
-                                <mat-select formControlName="gender">
-                                    <mat-option
-                                        *ngFor="let gender of genders"
-                                        [value]="gender.admCategoriesId"
-                                    >
-                                        {{ gender.categoriesName }}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error *ngIf="isRequiredFormControl('gender')">
-                                   {{ 'HSVV197' | transloco }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field class="mb-2">
-                                <mat-label>CCCD/Hộ chiếu</mat-label>
-                                <input
-                                    matInput
-                                    inputMask
-                                    maskType="number"
-                                    trim="blur"
-                                    maxlength="12"
-                                    formControlName="identification"
-                                >
-                                <mat-error *ngIf="isRequiredFormControl('identification')">
-                                    {{ 'HSVV193' | transloco }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field class="mb-2">
-                                <mat-label>SĐT liên hệ</mat-label>
-                                <input
-                                    matInput
-                                    inputMask
-                                    maskType="number"
-                                    formControlName="mobile"
-                                    maxlength="11"
-                                >
-                                <mat-error *ngIf="!!getErrorMobile()">
-                                    {{ getErrorMobile() | transloco }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field class="mb-2">
-                                <mat-label>Email</mat-label>
-                                <input
-                                    matInput
-                                    autocomplete="off"
-                                    type="text"
-                                    formControlName="email"
-                                    maxlength="100"
-                                >
-                                <mat-error *ngIf="contactForm.get('email').hasError('required')">
-                                    {{ 'HSVV202' | transloco }}
-                                </mat-error>
-                                <mat-error *ngIf="contactForm.get('email').hasError('email')">
-                                    {{ 'HSVV203' | transloco }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field class="col-span-2 mb-2">
-                                <mat-label>Chức vụ</mat-label>
-                                <input
-                                    matInput
-                                    autocomplete="off"
-                                    type="text"
-                                    formControlName="positionCompany"
-                                    maxlength="100"
-                                >
-                                <mat-error *ngIf="isRequiredFormControl('positionCompany')">
-                                    {{ 'HSVV205' | transloco }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field class="col-span-2 mb-2">
-                                <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
-                                <input
-                                    (click)="openAddressDialog('address2')"
-                                    class="cursor-pointer"
-                                    matInput
-                                    readonly
-                                    formControlName="address2"
-                                >
-                                <mat-error *ngIf="isRequiredFormControl('address2')">
-                                   {{ 'HSVV206' | transloco }}
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="flex justify-end">
-                            <button class="mr-2" mat-flat-button (click)="cancelEditing()">Hủy</button>
-                            <button mat-flat-button color="primary" (click)="onSubmit()">Lưu</button>
-                        </div>
-                    </ng-container>
-                    <ng-template #readOnlyView>
-                        <ng-container *ngIf="contactSelected">
-                            <div class="flex items-center justify-between mb-8">
-                                <span class="font-bold text-xl">{{ contactSelected?.fullName }}</span>
-                                <button
-                                    mat-flat-button
-                                    color="primary"
-                                    (click)="initFormToEditing('Cập nhật người góp vốn lớn nhất', contactSelected)"
-                                >
-                                    Cập nhật
-                                </button>
-                            </div>
-                            <ul class="flex-auto overflow-y-auto h-50">
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Chức vụ</span>
-                                    <span class="font-bold">{{ contactSelected.positionCompany }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Ngày sinh</span>
-                                    <span class="font-bold">{{ contactSelected.dateOfBirth | date: 'dd/MM/YYYY' }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Giới tính</span>
-                                    <span class="font-bold">{{ contactSelected.genderName }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>CCCD/Hộ Chiếu</span>
-                                    <span class="font-bold">{{ contactSelected.identification }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>SĐT liên hệ</span>
-                                    <span class="font-bold">{{ contactSelected.mobile }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Email</span>
-                                    <span class="font-bold">{{ contactSelected.email }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Địa chỉ (theo CCCD/Hộ chiếu)</span>
-                                    <span class="font-bold">{{ contactSelected.address2 }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Người tạo</span>
-                                    <span class="font-bold">{{ contactSelected?.createdByName }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Ngày tạo</span>
-                                    <span class="font-bold">{{ contactSelected?.createdDate | date: 'dd/MM/YYYY' }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Người cập nhật</span>
-                                    <span class="font-bold">{{ contactSelected.lastUpdatedByName }}</span>
-                                </li>
-                                <li class="pb-1 border-b flex justify-between mb-8">
-                                    <span>Ngày cập nhật</span>
-                                    <span class="font-bold">{{ contactSelected.lastUpdatedDate | date: 'dd/MM/YYYY' }}</span>
-                                </li>
-                            </ul>
-                        </ng-container>
-                    </ng-template>
-                </div>
+<div class="relative flex flex-col md:flex-row min-w-0 md:w-full p-4 gap-4">
+    <div class="flex flex-col w-full md:w-1/2">
+        <div class="flex items-center justify-center space-x-3">
+            <mat-form-field class="relative flex-1 input-search">
+                <mat-icon>search</mat-icon>
+                <input class="ml-1" matInput autocomplete="off" type="text" (input)="searchContact($event)"
+                    placeholder="Nhập để tìm kiếm...">
+            </mat-form-field>
+            <div >
+                <button mat-flat-button color="primary" (click)="initFormToEditing('Thêm người góp vốn lớn nhất')">
+                    Thêm
+                </button>
             </div>
         </div>
+        <ul class="flex-auto overflow-y-auto h-auto md:h-100 pt-5">
+            <li 
+            *ngFor="let contact of contactInfoData" 
+            [class.bg-primary-blue-6]="contact === contactSelected" 
+            class="pb-1 border-b flex flex-col cursor-pointer hover:bg-gray-100 p-2" 
+            (click)="viewDetail(contact)">
+                <span class="font-bold">{{ contact?.fullName }}</span>
+                <span>{{ contact?.positionCompany }}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="flex flex-col w-full md:w-1/2">
+        <ng-container *ngIf="isEditing else readOnlyView">
+            <h4 class="leading-tight text-xl mt-0 mb-7 text-center font-bold">
+                {{ titleEditing }}
+            </h4>
+            <div class="flex-auto grid grid-cols-2 gap-2 overflow-y-auto h-[440px]" [formGroup]="contactForm">
+                <mat-form-field floatLabel="always">
+                    <mat-label>Họ và tên</mat-label>
+                    <input placeholder="Nhập họ và tên..." matInput autocomplete="off" type="text" formControlName="fullName" maxlength="50">
+                    <mat-error *ngIf="isRequiredFormControl('fullName')">
+                        {{ 'HSVV191' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <app-date-picker label="Ngày sinh" [maxDate]="{'months': -216}"
+                    [validationType]="['upper18']" formControlName="dateOfBirth" [isRequired]="true"
+                    requiredMsg="HSVV195" fomatMsg="HSVV196" maxMsg="HSVV194"></app-date-picker>
+
+                <mat-form-field  floatLabel="always">
+                    <mat-label>Giới tính</mat-label>
+                    <mat-select placeholder="Chọn giới tính" formControlName="gender">
+                        <mat-option *ngFor="let gender of genders" [value]="gender.admCategoriesId">
+                            {{ gender.categoriesName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isRequiredFormControl('gender')">
+                        {{ 'HSVV197' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field floatLabel="always">
+                    <mat-label>CCCD/Hộ chiếu</mat-label>
+                    <input placeholder="Nhập CCCC/Hộ chiếu..." matInput inputMask maskType="number" trim="blur" maxlength="12"
+                        formControlName="identification">
+                    <mat-error *ngIf="isRequiredFormControl('identification')">
+                        {{ 'HSVV193' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field floatLabel="always">
+                    <mat-label>SĐT liên hệ</mat-label>
+                    <input placeholder="Nhập số điện thoại..." matInput inputMask maskType="number" formControlName="mobile" maxlength="11">
+                    <mat-error *ngIf="!!getErrorMobile()">
+                        {{ getErrorMobile() | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field floatLabel="always">
+                    <mat-label>Email</mat-label>
+                    <input placeholder="Nhập email..." matInput autocomplete="off" type="text" formControlName="email" maxlength="100">
+                    <mat-error *ngIf="contactForm.get('email').hasError('required')">
+                        {{ 'HSVV202' | transloco }}
+                    </mat-error>
+                    <mat-error *ngIf="contactForm.get('email').hasError('email')">
+                        {{ 'HSVV203' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field floatLabel="always" class="col-span-2">
+                    <mat-label>Chức vụ</mat-label>
+                    <input placeholder="Nhập chức vụ..." matInput autocomplete="off" type="text" formControlName="positionCompany" maxlength="100">
+                    <mat-error *ngIf="isRequiredFormControl('positionCompany')">
+                        {{ 'HSVV205' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="col-span-2" floatLabel="always">
+                    <mat-label>Địa chỉ thường trú</mat-label>
+                    <input placeholder="Nhập địa chỉ..." (click)="openAddressDialog('address2')" class="cursor-pointer" matInput readonly
+                        formControlName="address2">
+                    <mat-error *ngIf="isRequiredFormControl('address2')">
+                        {{ 'HSVV206' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-row justify-end my-2">
+                <button class="mr-2" mat-stroked-button (click)="cancelEditing()">Hủy</button>
+                <button mat-flat-button color="primary" (click)="onSubmit()">Lưu</button>
+            </div>
+        </ng-container>
+        <ng-template #readOnlyView>
+            <ng-container *ngIf="contactSelected">
+                <div class="flex items-center justify-between mb-8">
+                    <span class="font-bold text-xl">{{ contactSelected?.fullName }}</span>
+                    <button mat-flat-button color="primary"
+                        (click)="initFormToEditing('Cập nhật người góp vốn lớn nhất', contactSelected)">
+                        Cập nhật
+                    </button>
+                </div>
+                <ul class="flex-auto overflow-y-auto h-[440px]">
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Chức vụ</span>
+                        <span class="font-bold">{{ contactSelected.positionCompany }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Ngày sinh</span>
+                        <span class="font-bold">{{ contactSelected.dateOfBirth | date: 'dd/MM/YYYY' }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Giới tính</span>
+                        <span class="font-bold">{{ contactSelected.genderName }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>CCCD/Hộ chiếu</span>
+                        <span class="font-bold">{{ contactSelected.identification }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>SĐT liên hệ</span>
+                        <span class="font-bold">{{ contactSelected.mobile }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Email</span>
+                        <span class="font-bold">{{ contactSelected.email }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Địa chỉ thường trú</span>
+                        <span class="font-bold">{{ contactSelected.address2 }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Người tạo</span>
+                        <span class="font-bold">{{ contactSelected?.createdByName }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Ngày tạo</span>
+                        <span class="font-bold">{{ contactSelected?.createdDate | date: 'dd/MM/YYYY' }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Người cập nhật</span>
+                        <span class="font-bold">{{ contactSelected.lastUpdatedByName }}</span>
+                    </li>
+                    <li class="pb-1 border-b flex justify-between mb-8">
+                        <span>Ngày cập nhật</span>
+                        <span class="font-bold">{{ contactSelected.lastUpdatedDate | date: 'dd/MM/YYYY' }}</span>
+                    </li>
+                </ul>
+            </ng-container>
+        </ng-template>
     </div>
 </div>

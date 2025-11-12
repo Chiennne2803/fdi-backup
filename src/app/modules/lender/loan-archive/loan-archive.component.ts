@@ -46,11 +46,11 @@ export class LoanArchiveComponent implements OnInit {
         this._loanProfilesStoreService.setDrawer(this.matDrawer);
         this._loanProfilesStoreService.getPrepareLoadingPage().subscribe((res) => {
             if (res.payload.lstLoanTimeCycle != undefined && res.payload.lstLoanTimeCycle.length > 0) {
-                this.listInvestmentTime.push({label: 'Tẩt cả', value: null});
+                this.listInvestmentTime.push({label: 'Tẩt cả', value: ''});
                 res.payload.lstLoanTimeCycle.forEach(x => this.listInvestmentTime.push({label: x, value: x}));
             }
             if (res.payload.lstReasons != undefined && res.payload.lstReasons.length > 0) {
-                this.lstReasons.push({label: 'Tẩt cả', value: null});
+                this.lstReasons.push({label: 'Tẩt cả', value: ''});
                 res.payload.lstReasons.forEach(x => this.lstReasons.push({label: x.categoriesName, value: x.admCategoriesId}));
             }
         });

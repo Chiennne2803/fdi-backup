@@ -78,7 +78,7 @@ export class ChangeMobileDialogComponent implements OnInit {
                             otpType: 'USER_CHANGE_VERIFY_MOBILE',
                         },
                         title: 'Điền mã xác nhận OTP',
-                        content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                        content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                             'Vui lòng kiểm tra và điền vào mã xác nhận!',
                         complete: () => {
                             dialogRef.close();
@@ -111,7 +111,7 @@ export class ChangeMobileDialogComponent implements OnInit {
                                 otpType: 'USER_CHANGE_MOBILE',
                             },
                             title: 'Điền mã xác nhận OTP',
-                            content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                            content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                 'Vui lòng kiểm tra và điền vào mã xác nhận!',
                             complete: () => {
                                 this.changeMobileStep = 0;

@@ -3,6 +3,8 @@ import {
     OnDestroy,
     ViewEncapsulation,
 } from '@angular/core';
+import { FuseAlertService } from '@fuse/components/alert';
+import { AlertDTO } from 'app/models/base/alert';
 import { Subject } from 'rxjs';
 @Component({
     selector: 'auth-layout',
@@ -11,13 +13,19 @@ import { Subject } from 'rxjs';
 })
 export class AuthLayoutComponent implements OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    public lstNotifyAuth: Array<AlertDTO>;
+    
 
     /**
      * Constructor
      */
     constructor(
+        private _fuseAlertService: FuseAlertService,
        
-    ) {}
+    ) {
+        this._fuseAlertService.lstNotifyAuth.subscribe(res => this.lstNotifyAuth = res);
+
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks

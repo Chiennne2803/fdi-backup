@@ -88,8 +88,8 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     public legal_documents_config: any[];
     public legal_documents_lst: string[] = [
         'Giấy chứng nhận đăng ký kinh doanh (bản thay đổi gần nhất)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
         'Đăng ký mẫu dấu, chứng chỉ ngành nghề hoặc giấy chứng nhận đủ điều kiện kinh doanh',
         'Quyết định bổ nhiệm kế toán trưởng',
         'Điều lệ công ty',
@@ -472,6 +472,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
                 this.assetType = res.payload.assetType;
             }
         })
+        // console.log(this.loanProfile)
 
     }
 
@@ -484,8 +485,13 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
             outstandInterestOfOrigin: new FormControl(fsConfigLoanOfdDTO?.outstandInterestOfOrigin),
             outstandInterestOfInterest: new FormControl(fsConfigLoanOfdDTO?.outstandInterestOfInterest),
             taxDeclarationType: new FormControl(fsConfigLoanOfdDTO?.taxDeclarationType),
-            fee: new FormControl(fsConfigLoanOfdDTO ? fsConfigLoanOfdDTO.fee : null, [Validators.required, Validators.min(0)])
-
+            fee: new FormControl(
+                { 
+                    value: fsConfigLoanOfdDTO ? fsConfigLoanOfdDTO.fee : null, 
+                    disabled: true 
+                }, 
+                [Validators.required, Validators.min(0)]
+            )
         });
     }
 
@@ -579,6 +585,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     public onClose(): void {
         this._profilesManagementService.closeDetailDrawer();
         this.handleCloseDetailPanel.emit();
+        this.selectionInvestor.clear()
     }
 
     public downloadFile(id: string): void {
@@ -586,6 +593,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     }
 
     public clickViewImage(id: string): void {
+        console.log('getDetailFiles', id)
         this._fileService
             .getDetailFiles(id)
             .subscribe((res) => {
@@ -947,7 +955,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
 
     onApproveInvestor() {
         const dialogRef = this.matDialog.open(ConfirmProcessingComponent, {
-            width: '450px',
+            // width: '450px',
             data: {
                 title: 'Xác nhận nội dung xử lý',
                 valueDefault: 2,

@@ -48,7 +48,7 @@ export class ListProfileComponent implements OnInit, OnDestroy {
             if (res.payload) {
                 this.listInvestmentTime = res.payload.listInvestmentTime;
                 if (res.payload.lstReasons != undefined && res.payload.lstReasons.length > 0) {
-                    this.lstReasons.push({label: 'Tẩt cả', value: null});
+                    this.lstReasons.push({label: 'Tẩt cả', value: ''});
                     res.payload.lstReasons.forEach(admCategoriesDTO => {
                         this.lstReasons.push({
                             label: admCategoriesDTO.categoriesName,
@@ -114,13 +114,13 @@ export class ListProfileComponent implements OnInit, OnDestroy {
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ', null, false),
                         new InputSearch('createdByName', 'Bên huy động vốn', null, false),
                         new InputSearch('identification', 'Số GPKD', null, false),
-                        new FromToSearch('amount', 'Số tiền cần huy động (VNĐ)', null, 'number'),
+                        new FromToSearch('amount', 'Số tiền cần huy động (VND)', null, 'number'),
                         new DropListSearch('loanTimeCycle', 'Kỳ hạn(ngày)', this.listInvestmentTime.map(item => ({
                             label: item.toString(),
                             value: item,
                         })), null),
                         new DropListSearch('reasons', 'Mục đích huy động vốn', this.lstReasons, null),
-                        new FromToSearch('remainingAmount', 'Số tiền có thể đầu tư (VNĐ)', null, 'number'),
+                        new FromToSearch('remainingAmount', 'Số tiền có thể đầu tư (VND)', null, 'number'),
                     ]
                 },
                 complete: () => {

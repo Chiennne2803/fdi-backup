@@ -53,11 +53,11 @@ export class CloseAccountComponent implements OnInit, AfterViewInit {
                                 otpType: 'CLOSE_ACCOUNT_INVESTOR',
                             },
                             title: 'Điền mã xác nhận OTP',
-                            content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                            content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                             complete: () => {
                                 dialogRef.close();
                                 this._fuseAlertService.showMessageSuccess('Đóng tài khoản thành công');
-                                this._authService.signOut();
+                                this._authService.signOut(false).subscribe();
                             },
                         }
                     });

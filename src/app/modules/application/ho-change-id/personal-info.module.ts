@@ -8,6 +8,7 @@ import { PersonalInfoRoutingModule } from './personal-info-routing.module';
 import { PersonalInfoComponent } from './personal-info.component';
 import { AccountInfoRequestComponent } from './account-info-request/account-info-request.component';
 import {TranslocoModule} from "@ngneat/transloco";
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -18,6 +19,7 @@ import {TranslocoModule} from "@ngneat/transloco";
     ],
     imports: [
         SharedModule,
+        MatIconModule,
         PersonalInfoRoutingModule,
         MatSidenavModule,
         MatFormFieldModule,

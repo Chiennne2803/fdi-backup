@@ -23,7 +23,8 @@ export class AutoInvestmentRechargeComponent implements OnInit {
         private _dialogRef: MatDialogRef<AutoInvestmentRechargeComponent>,
         private _configInvestorService: ConfigInvestorService,
         private _fuseAlertService: FuseAlertService,
-        private _matDialog: MatDialog
+        private _matDialog: MatDialog,
+        
     ) {
         this._dialogRef.disableClose = true;
     }
@@ -65,11 +66,18 @@ export class AutoInvestmentRechargeComponent implements OnInit {
         }
     }
 
+    generateActionKey(prefix: string = 'REG'): string {
+        const random = Math.floor(Math.random() * 1000); // random 0-999
+        const millis = Date.now(); // milliseconds since epoch
+        return `${prefix}${random}${millis}`;
+    }
     onSubmit(): void {
+        const actionKey = this.generateActionKey()
         this.topupAmount.markAsTouched();
         if (this.topupAmount.valid) {
             const payload = {
-                topupAmount: this.topupAmount.value
+                topupAmount: this.topupAmount.value,
+                actionKey: actionKey
             };
             this._configInvestorService.topupAutoInvest(payload).subscribe(
                 (res) => {
@@ -79,9 +87,10 @@ export class AutoInvestmentRechargeComponent implements OnInit {
                             data: {
                                 payload: {
                                     otpType: 'TOPUP_AUTO_INVEST_OTP',
+                                    actionKey: actionKey
                                 },
                                 title: 'Điền mã xác nhận OTP',
-                                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                     'Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất nạp tiền đầu tư tự động!',
                                 complete: () => {
                                     this._dialogRef.close();

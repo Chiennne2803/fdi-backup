@@ -125,7 +125,7 @@ export class AreaDialogComponent implements OnInit {
             admCategoriesId: new FormControl(data.admCategoriesId ? data.admCategoriesId : null),
             parentId: new FormControl(data.parentId ? data.parentId : null, [Validators.required]),
             categoriesCode: new FormControl(data.categoriesCode ? data.categoriesCode : null, [Validators.required]),
-            categoriesName: new FormControl(data.categoriesName ? data.categoriesName : null, [Validators.required, Validators.maxLength(50)]),
+            categoriesName: new FormControl(data.categoriesName ? data.categoriesName : null, [Validators.required, Validators.maxLength(255)]),
             parentCategoriesCode: new FormControl(data.parentCategoriesCode ? data.parentCategoriesCode : null),
             parentCategoriesName: new FormControl(data.parentCategoriesName ? data.parentCategoriesName : null),
             status: new FormControl((data?.status == 0) ? 0 : 1, [Validators.required]),

@@ -51,7 +51,7 @@ export const TABLE_FEE_ACCOUNT_MANAGEMENT_LIST: ITableConfig = {
         new TextColumn('transDate', 'Ngày ghi nhận', 25, false, 'DD/MM/YYYY HH:mm:ss'),
         new TextColumn('admAccountIdPresenterName', 'Nhà đầu tư', 25, false),
         new TextColumn('transactionCode', 'Giao dịch thu phí', 25, false),
-        new TextColumn('amount', 'Phí(VNĐ)', 25, false, 1),
+        new TextColumn('amount', 'Phí(VND)', 25, false, 1),
     ],
     title: 'Danh sách giao dịch', isViewDetail: false
 };

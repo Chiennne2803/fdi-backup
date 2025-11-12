@@ -24,7 +24,7 @@ export const TASK_BAR_CONFIG_RATE_TENURE: TaskBarConfig = {
     searchBar: new SearchBar('Nhập để tìm kiếm', true),
     otherBtn: [
         new ButtonConfig('SFF_CUSTOM_CREDIT_PRODUCTS_INSERT', true, false, 'Thêm', 'feather:plus-circle', 'add'),
-        new ButtonConfig('SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE', true, false, 'Cập nhật lãi suất vay tín chấp', 'heroicons_outline:cog', 'update-rate'),
+        new ButtonConfig('SFF_CUSTOM_CREDIT_PRODUCTS_UPDATE', true, false, 'Cập nhật lãi suất', 'heroicons_outline:cog', 'update-rate'),
         new ButtonConfig('', false, true, '', 'heroicons_outline:cog')
     ]
 };

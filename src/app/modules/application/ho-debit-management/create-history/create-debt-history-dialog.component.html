@@ -1,23 +1,17 @@
-<div class="flex flex-col max-w-240 md:min-w-160 -m-6" style="max-height: 90vh">
+<div class="flex flex-col max-w-240 md:min-w-160 -m-6 max-h-screen">
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium">Tạo ghi nhận xử lý công nợ</div>
-        <button mat-icon-button>
-            <mat-icon class="text-current"
-                      [svgIcon]="'heroicons_outline:x'"
-                      (click)="closeDialog()"></mat-icon>
+        <button [tabIndex]="-1" mat-icon-button>
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'" (click)="closeDialog()"></mat-icon>
         </button>
     </div>
 
     <!-- Content -->
-    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="formGroup">
-        <mat-form-field class="w-full">
+    <div class="flex flex-col flex-auto p-4 sm:p-6 overflow-y-auto" [formGroup]="formGroup">
+        <mat-form-field class="w-full" floatLabel="always">
             <mat-label>Tên ghi nhận xử lý công nợ</mat-label>
-            <input
-                matInput
-                formControlName="name"
-                id="name"
-            >
+            <input placeholder="Nhập tên ghi nhận..." matInput formControlName="name" id="name">
             <mat-error *ngIf="formGroup.get('name').hasError('required')">
                 {{ 'QLCN014' | transloco }}
             </mat-error>
@@ -25,15 +19,11 @@
                 {{ 'QLCN015' | transloco }}
             </mat-error>
         </mat-form-field>
-        <mat-form-field
-            class="w-full">
+        <mat-form-field floatLabel="always" class="w-full">
             <mat-label>Đợt giải ngân</mat-label>
-            <mat-select formControlName="fsCardDownIds" multiple>
-                <mat-option
-                    *ngFor="let fsCardDownDTO of data.lstFsCardDown"
-                    [value]="fsCardDownDTO.fsCardDownId"
-                    class="min-h-15"
-                >
+            <mat-select formControlName="fsCardDownIds" multiple placeholder="Chọn đợt giải ngân">
+                <mat-option *ngFor="let fsCardDownDTO of data.lstFsCardDown" [value]="fsCardDownDTO.fsCardDownId"
+                    class="min-h-15">
                     {{fsCardDownDTO.transCode}}
                 </mat-option>
             </mat-select>
@@ -41,13 +31,10 @@
                 {{ 'QLCN001' | transloco }}
             </mat-error>
         </mat-form-field>
-        <mat-form-field class="col-span-2">
+        <mat-form-field class="col-span-2" floatLabel="always">
             <mat-label>Nội dung</mat-label>
-            <textarea id="processingContent"
-                      matInput
-                      maxlength="500"
-                      value=""
-                      formControlName="processingContent"></textarea>
+            <textarea id="processingContent" matInput maxlength="500" value="" placeholder="Nhập nôi dung..."
+                formControlName="processingContent"></textarea>
 
             <mat-error *ngIf="formGroup.get('processingContent').hasError('required')">
                 {{ 'QLCN005' | transloco }}
@@ -57,74 +44,30 @@
             </mat-error>
         </mat-form-field>
         <div class="w-full mb-4">
-            <app-dropzone
-                topTitle="File đính kèm"
-                title="Tải tệp lên"
-                styleClass="h-12 mt-[3px]"
-                class="w-full"
-                previewClass="max-w-fit w-full"
-                [formGroup]="formGroup"
-                field="finDocumentsId"
-                [isRequired]="true"
-                [multiple]="true"
-                [maxFile]="10"
-                [maxFileSize]="10"
-                requiredMsg="QLCN007"
-                typeMsg="QLCN017"
-                sizeMsg="QLCN018"
-            ></app-dropzone>
+            <app-dropzone topTitle="File đính kèm" title="Tải tệp lên" styleClass="h-[48px] mt-[3px]" class="w-full"
+                previewClass="max-w-fit w-full" [formGroup]="formGroup" field="finDocumentsId" [isRequired]="true"
+                [multiple]="true" [maxFile]="10" [maxFileSize]="10" requiredMsg="QLCN007" typeMsg="QLCN017"
+                sizeMsg="QLCN018"></app-dropzone>
         </div>
-        <div class="flex flex-row w-full gap-4">
+        <div class="flex flex-row w-full gap-2 sm:gap-4">
             <mat-form-field class="w-1/2">
                 <mat-label>Ngày tạo</mat-label>
-                <input id="createdDate"
-                       matInput
-                       readonly
-                       formControlName="createdDate">
+                <input id="createdDate" matInput readonly formControlName="createdDate">
             </mat-form-field>
             <mat-form-field class="w-1/2">
                 <mat-label>Người tạo</mat-label>
-                <input id="createdByName"
-                       matInput
-                       readonly
-                       formControlName="createdByName">
+                <input id="createdByName" matInput readonly formControlName="createdByName">
             </mat-form-field>
         </div>
-        <!--<div class="flex flex-row w-full gap-4">
-            <mat-form-field class="w-1/2">
-                <mat-label>Ngày cập nhật</mat-label>
-                <input id="lastUpdatedDate"
-                       matInput
-                       readonly
-                       formControlName="lastUpdatedDate">
-            </mat-form-field>
-            <mat-form-field class="w-1/2">
-                <mat-label>Người cập nhật</mat-label>
-                <input id="lastUpdatedByName"
-                       matInput
-                       readonly
-                       formControlName="lastUpdatedByName">
-            </mat-form-field>
-        </div>-->
     </div>
 
     <!-- Action -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-end mb-4 sm:mb-6 pr-8 sm:pr-8">
-        <div class="flex items-center mt-4 sm:mt-0">
-            <button class="ml-2"
-                    mat-stroked-button
-                    (click)="closeDialog()"
-            >
-                Đóng
-            </button>
-            <button
-                mat-flat-button
-                color="primary"
-                class="ml-2"
-                (click)="onSubmit()"
-            >
-                Lưu
-            </button>
-        </div>
+    <div class="flex flex-row items-center justify-center gap-3 sm:gap-2 w-auto mb-4 sm:mb-6">
+        <button class="w-auto" mat-stroked-button (click)="closeDialog()">
+            Đóng
+        </button>
+        <button mat-flat-button color="primary" class="w-auto" (click)="onSubmit()">
+            Lưu
+        </button>
     </div>
 </div>

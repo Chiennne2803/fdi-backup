@@ -36,6 +36,7 @@ const offerRoutes: Route[] = [
                 },
             },
             {
+                data: { title: 'Đã kết thúc' },
                 path: 'finished',
                 component: FinishedComponent,
                 resolve: {

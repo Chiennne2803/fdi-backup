@@ -22,7 +22,7 @@ export const TABLE_PROCESSED_TRANS_CONFIG: ITableConfig = {
         new TextColumn('transCode', 'Mã giao dịch', 20, true),
         new TextColumn('fsLoanProfilesId', 'Số hồ sơ huy động vốn', 20),
         new TextColumn('admAccountName', 'Bên huy động vốn', 20),
-        new TextColumn('paidBankAmount', 'Tổng số tiền thanh toán (VNĐ)', 20, false, 3),
+        new TextColumn('paidBankAmount', 'Tổng số tiền thanh toán (VND)', 20, false, 3),
         new TextColumn('createdByName', 'Người lập', 20),
         new TextColumn('statusName', 'Trạng thái', 20),
     ],

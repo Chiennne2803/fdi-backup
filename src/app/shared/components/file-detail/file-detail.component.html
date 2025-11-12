@@ -10,13 +10,17 @@
     <div class="mt-5 aspect-[9/6]" [class]="backgroundClass">
         <div *ngIf="selectedFile.contentBase64 !== null && selectedFile.contentBase64 && selectedFile.contentBase64 !== '' "
              @zoomIn
-             style="background-size: cover;"
+             [matTooltip]="'Click để xem lớn'"
+             (click)="openImagePreview()"
+             style="background-repeat: no-repeat;
+                 background-position: center;
+                 background-size: contain"
              [ngStyle]="{'background-image':'url('+selectedFile.contentBase64+')'}"
-             class="flex items-center justify-center h-full border rounded-lg bg-gray-50 dark:bg-card">
+             class="flex items-center justify-center h-full border rounded-lg bg-gray-50 cursor-pointer">
         </div>
         <div *ngIf="selectedFile.contentBase64 === null || !selectedFile.contentBase64 || selectedFile.contentBase64 === '' "
 
-             class="flex items-center justify-center h-full border rounded-lg bg-gray-50 dark:bg-card">
+             class="flex items-center justify-center h-full border rounded-lg bg-gray-50">
             <ng-container >
                 <mat-icon
                     class="icon-size-24 text-hint"
@@ -77,7 +81,7 @@
                (change)="onFileSelected($event)" #fileUpload>
         <button
             *ngIf="hasReplaceBtn"
-            class="flex-auto bg-amber-600 text-white"
+            class="flex-auto bg-primary-orange-1 text-white"
             mat-flat-button
             (click)="fileUpload.click()"
         >
@@ -85,7 +89,7 @@
         </button>
         <button
             *ngIf="replaceBtnV2"
-            class="flex-auto bg-amber-600 text-white"
+            class="flex-auto bg-primary-orange-1 text-white"
             mat-flat-button
             (click)="onClickBtnReplace()"
         >

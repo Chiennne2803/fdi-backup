@@ -12,9 +12,9 @@ const route: Route[] = [
             fundingProcess: FundingProcessResolver,
         }, children: [
             { path: '', pathMatch: 'full', redirectTo: 'waiting' },
-            { path: 'success', component: SuccessListComponent },
-            { path: 'error', component: ErrorListComponent },
-            { path: 'waiting', component: WaitingListComponent },
+            { path: 'success',data: { title: 'Danh sách đã phê duyệt yêu cầu tiền quỹ' }, component: SuccessListComponent },
+            { path: 'error',data: { title: 'Danh sách lỗi yêu cầu tiền quỹ' }, component: ErrorListComponent },
+            { path: 'waiting',data: { title: 'Danh sách chờ phê duyệt yêu cầu tiền quỹ' }, component: WaitingListComponent },
         ]
     }
 ];

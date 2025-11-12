@@ -1,15 +1,18 @@
 <ngx-dropzone-label class="flex" *ngIf="topTitle">
-    <span class="mr-1">{{ topTitle }}
+    <span class="mr-1 font-medium">{{ topTitle }}
         <bold *ngIf="isRequired" [ngClass]="{'dropzone-error': isInvalidFormControl()}" [style]="{'color' : 'red'}">*
         </bold>
     </span>
 </ngx-dropzone-label>
-<div ngx-dropzone [id]="inputId" class="custom-dropzone" [class]="styleClass"
-    [ngClass]="{'dropzone-error': isInvalidFormControl()}" (change)="onSelect($event)" [multiple]="multiple"
-    (click)="onClick()" [accept]="accept">
+<div ngx-dropzone 
+ [disabled]="disabled"
+     [class.opacity-50]="disabled"
+     [class.pointer-events-none]="disabled"
+    [id]="inputId" class="custom-dropzone" [class]="styleClass" [ngClass]="{'dropzone-error': isInvalidFormControl()}"
+    (change)="onSelect($event)" [multiple]="multiple" [accept]="regexToExtensions(accept)">
     <ngx-dropzone-label>
-        <span class="flex items-center justify-center gap-2">
-            <mat-icon svgIcon="feather:upload"></mat-icon>
+        <span class="flex items-center justify-center gap-2" [ngClass]="{ 'text-[#dc2626]': isInvalidRequired() }">
+            <mat-icon [ngClass]="{ 'text-[#dc2626]': isInvalidRequired() }" svgIcon="feather:upload"></mat-icon>
             <!-- {{title}} -->Tải lên
         </span>
     </ngx-dropzone-label>

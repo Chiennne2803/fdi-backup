@@ -31,6 +31,7 @@ const investedProfileRoutes: Route[] = [
         path     : '',
         children: [
             {
+                data: { title: 'Danh sách phí kết nối huy động vốn' },
                 path: 'list',
                 component: FeeLoanArrangementListComponent,
                 resolve: {
@@ -38,6 +39,7 @@ const investedProfileRoutes: Route[] = [
                 },
             },
             {
+                data: { title: 'Yêu cầu phí kết nối huy động vốn' },
                 path: 'request',
                 component: FeeLoanArrangementRequestComponent,
                 resolve: {

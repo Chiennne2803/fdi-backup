@@ -51,7 +51,7 @@ export const TABLE_FEE_INVESTMENT_TRANSACTION_LIST: ITableConfig = {
         new TextColumn('transDate', 'Ngày ghi nhận', 25, false, 'DD/MM/YYYY HH:mm:ss'),
         new TextColumn('admAccountIdPresenterName', 'Nhà đầu tư', 10, false),
         new TextColumn('fsLoanProfilesId', 'Số hồ sơ', 20, false),
-        new TextColumn('amount', 'Phí(VNĐ)', 20, false, 1),
+        new TextColumn('amount', 'Phí(VND)', 20, false, 1),
     ],
     title: 'Danh sách giao dịch', isViewDetail: false
 };

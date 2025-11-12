@@ -88,7 +88,7 @@ export class PersonalInfoComponent implements OnInit {
             case 'approve':
                 const dialogRef = this._dialog.open(ConfirmProcessingComponent, {
                     disableClose: true,
-                    width: '450px',
+                    // width: '450px',
                     data: {
                         title: 'Xác nhận nội dung xử lý',
                         valueDefault: 2,
@@ -156,13 +156,13 @@ export class PersonalInfoComponent implements OnInit {
                         new InputSearch('transCode', 'Mã yêu cầu', null, false),
                         new InputSearch('createdByName', 'Người yêu cầu', null, false),
                         new DropListSearch('type', 'Loại yêu cầu', [
-                            {label: 'Tẩt cả', value: null},
-                            {label: 'CCCD/Hộ Chiếu', value: 1},
+                            {label: 'Tẩt cả', value: ''},
+                            {label: 'CCCD/Hộ chiếu', value: 1},
                             {label: 'Giấy phép kinh doanh', value: 2}
                         ], null),
                         new DateTimeSearch('createdDate','Ngày yêu cầu',null,false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Chờ xử lý', value: FS_ACCOUNT_INFO_REQ_STATUS.WAITING_PROGRESSING},
                             {label: 'Phê duyệt', value: FS_ACCOUNT_INFO_REQ_STATUS.APPROVE},
                             {label: 'Từ chối', value: FS_ACCOUNT_INFO_REQ_STATUS.REJECT}

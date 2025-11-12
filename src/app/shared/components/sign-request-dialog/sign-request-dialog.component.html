@@ -1,53 +1,33 @@
 <h1 mat-dialog-title
-    class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary -m-6 mb-2">
+    class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary -m-6 mb-2">
     Xác nhận trình ký yêu cầu này?
     <button mat-icon-button>
-        <mat-icon class="text-current"
-                  [svgIcon]="'heroicons_outline:x'"
-                  (click)="discard()"></mat-icon>
+        <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'" (click)="discard()"></mat-icon>
     </button>
 </h1>
-<div mat-dialog-content
-     class="flex flex-col w-full m-0"
-     [formGroup]="signRequestForm">
+<div mat-dialog-content class="flex flex-col pt-2 w-full m-0" [formGroup]="signRequestForm">
     <div class="w-full flex flex-row gap-3 align-center">
-        <div class="w-full">
-            <mat-form-field class="w-full">
-                <mat-label class="w-full">Người phê duyệt</mat-label>
-                <mat-select formControlName="assignTo">
-                    <mat-option *ngFor="let item of lstApprovalAccount"
-                                [value]="item.id">{{ item.label }}</mat-option>
-                </mat-select>
-                <mat-error *ngIf="signRequestForm.get('assignTo').hasError('required')">
-                    {{ assignToReqMsg | transloco }}
-                </mat-error>
-            </mat-form-field>
-        </div>
+        <mat-form-field class="w-full" floatLabel="always">
+            <mat-label class="w-full">Người phê duyệt</mat-label>
+            <mat-select placeholder="Chọn người phê duyệt" formControlName="assignTo">
+                <mat-option *ngFor="let item of lstApprovalAccount" [value]="item.id">{{ item.label }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="signRequestForm.get('assignTo').hasError('required')">
+                {{ assignToReqMsg | transloco }}
+            </mat-error>
+        </mat-form-field>
     </div>
     <div class="w-full flex flex-row gap-3 align-center">
-        <div class="w-full">
-            <mat-form-field class="w-full">
-                <mat-label class="w-full">Nội dung trình ký</mat-label>
-                <textarea id="info"
-                          matInput
-                          trim="blur"
-                          [required]="assignCommentReqMsg"
-                          [maxLength]="assignCommentMaxlen"
-                          formControlName="assignComment"></textarea>
-            </mat-form-field>
-        </div>
+        <mat-form-field class="w-full" floatLabel="always">
+            <mat-label class="w-full">Nội dung trình ký</mat-label>
+            <textarea id="info" matInput placeholder="Nôi dung..." trim="blur" [required]="assignCommentReqMsg"
+                [maxLength]="assignCommentMaxlen" formControlName="assignComment"></textarea>
+        </mat-form-field>
     </div>
 </div>
-<div mat-dialog-actions
-     class="flex flex-row justify-center mmy-4 pr-8 sm:pr-8">
-    <button mat-stroked-button
-            (click)="discard()"
-            cdkFocusInitial>Huỷ
+<div mat-dialog-actions class="flex flex-row justify-center mmy-4 pr-8 sm:pr-8">
+    <button mat-stroked-button (click)="discard()" cdkFocusInitial>Huỷ
     </button>
-    <button mat-flat-button
-            (click)="submit()"
-            *ngIf="permission | permission"
-            color="primary"
-            cdkFocusInitial>Trình ký
+    <button mat-flat-button (click)="submit()" *ngIf="permission | permission" color="primary" cdkFocusInitial>Trình ký
     </button>
 </div>

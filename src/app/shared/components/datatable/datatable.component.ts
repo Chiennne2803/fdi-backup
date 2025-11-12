@@ -5,7 +5,9 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Component,
+    ElementRef,
     EventEmitter,
+    HostListener,
     Input,
     OnChanges,
     OnDestroy,
@@ -20,7 +22,6 @@ import { BaseRequest, BaseResponse } from 'app/models/base';
 import { IDisplayColumn } from 'app/shared/models/datatable/display-column.model';
 import { ButtonTableEvent, IFooterTable, ITableConfig } from 'app/shared/models/datatable/table-config.model';
 import { DataTableButtonConfig, TaskBarConfig } from 'app/shared/models/datatable/task-bar.model';
-
 import { fuseAnimations } from '@fuse/animations';
 import { TableConfigDTO } from 'app/models/TableConfigDTO.model';
 import { CommonService } from 'app/service/common-service/common.service';
@@ -32,9 +33,7 @@ import * as XLSX from 'xlsx';
 import { DataTableUtils } from '../datatable.utils';
 import { DateTimeformatPipe } from "../pipe/date-time-format.pipe";
 import { CurrencyFormatPipe } from "../pipe/string-format.pipe";
-import { AuthService } from "../../../core/auth/auth.service";
 import * as _ from 'lodash'
-import { HashMap } from "@ngneat/transloco";
 
 @Component({
     selector: 'app-datatable[dataSource]',
@@ -67,6 +66,8 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
 
     @ViewChild('matTable', { static: false }) public matTable!: MatTable<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('configPanel') configPanel!: ElementRef;
+
     // #endregion
 
     public pageSizeOptions = environment.pageSizeOptions;
@@ -92,7 +93,7 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
     private readonly searchSubject = new Subject<Event | undefined>();
     private searchSubscription?: Subscription;
 
-    private fileType: string = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    private fileType: string = 'application/VND.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     private fileExtension: string = '.xlsx';
     private cellName: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
@@ -103,7 +104,6 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
     public constructor(
         private cdr: ChangeDetectorRef,
         private _commonService: CommonService,
-        private _authService: AuthService,
     ) {
     }
 
@@ -557,7 +557,45 @@ export class DatatableComponent implements OnChanges, AfterViewInit, AfterViewCh
         }
         return {};
     }
+    toggleConfig(event: Event): void {
+        event.stopPropagation(); // tránh đóng ngay khi click icon
+        this.isShowConfig = !this.isShowConfig;
 
+        if (!this.isShowConfig) {
+            this.saveConfig();
+        }
+    }
+
+    @HostListener('document:click', ['$event'])
+    onClickOutside(event: Event): void {
+        const target = event.target as HTMLElement;
+        if (this.isShowConfig) {
+            // Nếu click nằm ngoài panel và KHÔNG phải nút bật panel
+            const clickedOutside =
+                this.configPanel &&
+                !this.configPanel.nativeElement.contains(target) &&
+                !target.closest('.btn-open-config'); // class cho nút mở panel
+
+            if (clickedOutside) {
+                this.isShowConfig = false;
+                this.saveConfig();
+            }
+        }
+    }
+
+    private saveConfig() {
+        const request: TableConfigDTO = {
+            key: this.tableConfig.key,
+            colume: this.displayColumns
+        };
+        if (!isEqual(this.displayColumns, this.displayColumnsClone)) {
+            this._commonService.saveTableConfig(request).subscribe((res) => {
+                if (res.errorCode === '0') {
+                    this.displayColumnsClone = cloneDeep(this.displayColumns);
+                }
+            });
+        }
+    }
     public showBtnConfig(): void {
         this.isShowConfig = !this.isShowConfig;
         if (!this.isShowConfig) {

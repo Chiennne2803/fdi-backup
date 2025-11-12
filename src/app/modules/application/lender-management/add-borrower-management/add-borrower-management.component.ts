@@ -13,13 +13,13 @@ import {environment} from '../../../../../environments/environment';
 import {FormGroup} from '@angular/forms';
 import {FuseAlertService} from '../../../../../@fuse/components/alert';
 import {ManagementLenderService} from '../../../../service';
-import {OtpConfirmComponent} from "../../../../shared/components/otp-confirm/otp-confirm.component";
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'app-add-borrower-management',
     templateUrl: './add-borrower-management.component.html',
     styleUrls: ['./add-borrower-management.component.scss'],
-    providers: [DateTimeformatPipe]
+    providers: [DateTimeformatPipe, CdkScrollable]
 })
 export class AddBorrowerManagementComponent implements OnInit {
     @ViewChild(PersonalBorrowerComponent) personal: PersonalBorrowerComponent;
@@ -93,7 +93,7 @@ export class AddBorrowerManagementComponent implements OnInit {
                     otpType: "ACCOUNT_LENDER_REQUEST",
                 },
                 title: 'Điền mã xác nhận OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                 complete: () => {
                     dialogRef.close();
                     const dialogEmailRef = this._dialog.open(OtpSmsConfirmComponent, {
@@ -106,7 +106,7 @@ export class AddBorrowerManagementComponent implements OnInit {
                             content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                 'Vui lòng kiểm tra và điền vào mã xác nhận!',
                             type: 'Email',
-                            resendTime: 300,
+                            resendTime: 180,
                             complete: () => {
                                 this._fuseAlertService.showMessageSuccess('Tạo mới bên huy động vốn thành công');
                                 this.back();

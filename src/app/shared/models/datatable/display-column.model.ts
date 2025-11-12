@@ -51,6 +51,26 @@ export class TextColumn implements IDisplayColumn {
     ) { }
 }
 
+export class TransactionAmountColumn implements IDisplayColumn {
+    public type = 'transaction-amount';
+    public constructor(
+        public id: string,
+        public name: string,
+        public weight?: number,
+        public viewDetail: boolean = false,
+        public format?: string | number,
+        public showTooltip: boolean = false,
+        public alignRight: boolean = false,
+        public tooltipAlign?: string,
+        public sticky?: boolean,
+        public alignCenter: boolean = false,
+        public className?: string,
+        public stickyEnd?: boolean,
+        public orderable: boolean = true,
+        public isShow: boolean = true,
+    ) { }
+}
+
 export class TextToolTipColumn implements IDisplayColumn {
     public type = 'text-tool-tip';
     public constructor(

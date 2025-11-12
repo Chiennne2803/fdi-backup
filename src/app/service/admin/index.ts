@@ -25,4 +25,5 @@ export * from './managementTransactionFee/personal-income-tax.service';
 export * from './managementTransactionFee/transfer-transaction-fee.service';
 export * from './managementTransactionFee/withdrawal-transaction-fee.service';
 export * from './access-log.service';
+export * from './maintenance.service';
 

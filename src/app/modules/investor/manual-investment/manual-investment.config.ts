@@ -7,10 +7,10 @@ export const TABLE_MANUAL_INVESTMENT_CONFIG: ITableConfig = {
         new TextColumn('fsLoanProfilesId', 'Số hồ sơ', 10, true),
         new TextColumn('createdByName', 'Bên huy động vốn', 15),
         new TextColumn('certificationNumber', 'Số GPKD', 10),
-        new TextColumn('amount', 'Tổng số tiền(VNĐ)', 15, false, 1),
+        new TextColumn('amount', 'Tổng số tiền(VND)', 15, false, 1),
         new TextColumn('loanTimeCycle', 'Kỳ hạn(ngày)', 10, false),
         new TextColumn('reasons', 'Mục đích', 10, false),
-        new TextColumn('remainingAmount', 'Số tiền có thể đầu tư(VNĐ)', 10, false, 1),
+        new TextColumn('remainingAmount', 'Số tiền có thể đầu tư(VND)', 10, false, 1),
         new TextColumn('remainAmount', 'Tỉ lệ đã được đầu tư(%)', 10, false),
     ],
     title: 'Danh sách hồ sơ',isViewDetail: false

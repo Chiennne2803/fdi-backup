@@ -1,0 +1,53 @@
+::ng-deep .password-input .mat-form-field-wrapper{
+    margin-bottom: 0px !important;
+}
+
+.promo-text {
+  background: linear-gradient(
+    106.46deg,
+    #2854f2 18.36%,
+    #394ee4 27.43%,
+    #6641c1 42.73%,
+    #ba219d 65.37%,
+    #ff6c0e 92.94%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.promo-banner {
+  position: relative;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+/* Container chứa 2 đoạn nối liền */
+.marquee {
+  display: flex;
+  width: 200%;
+  animation: marquee-scroll 6s linear infinite; /* tốc độ nhanh */
+}
+
+/* Hover dừng lại */
+// .promo-banner:hover .marquee {
+//   animation-play-state: paused;
+// }
+
+/* Mỗi phần chiếm 50% */
+.marquee__inner {
+  flex: 0 0 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Chạy liền mạch từ phải qua trái */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}

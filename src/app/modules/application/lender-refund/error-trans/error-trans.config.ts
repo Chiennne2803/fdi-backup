@@ -20,7 +20,7 @@ export const TABLE_ERROR_TRANS_CONFIG: ITableConfig = {
         new CheckboxColumn(),
         new IndexColumn('no', 'STT', 10),
         new TextColumn('info', 'Mã giao dịch', 30, true),
-        new TextColumn('amount', 'Số tiền chuyển khoản (VNĐ)', 15, false, 3),
+        new TextColumn('amount', 'Số tiền chuyển khoản (VND)', 15, false, 3),
         new TextColumn('createdDate', 'Ngày chuyển tiền', 15, false, 'DD/MM/YYYY hh:mm:ss'),
         new TextColumn('statusName', 'Trạng thái', 30),
     ],

@@ -1,148 +1,118 @@
 <change-id-gpkd></change-id-gpkd>
-<div class="relative flex h-full min-w-0 md:w-full p-4">
-    <div class="flex-auto ">
-        <div class="flex flex-col p-4 h-full">
-            <form class="flex flex-col flex-auto overflow-y-auto"
-                  [formGroup]="accountForm">
-                <fuse-card class="flex flex-col p-4 border rounded-md mb-5">
-                    <div class="grid grid-cols-4 gap-4">
-                        <div>
-                            <mat-label>Tên tài khoản</mat-label>
-                            <div class=" mt-5 mout" >
-                                {{accountForm.get('accountName').value}}
-                            </div>
-                        </div>
-                        <div>
-                            <mat-label>Mật khẩu</mat-label>
-                            <div class="text-blue-500 hover:underline mt-5 cursor-pointer" (click)="changePassword()">
-                                Đổi mật khẩu
-                            </div>
-                        </div>
-                        <div>
-                            <mat-label>SĐT liên hệ</mat-label>
-                            <div class="" >
-                                {{accountForm.get('accPhoneNumber').value}}
-                                <button mat-button (click)="changeMobileNumber()">
-                                    <mat-icon svgIcon="feather:edit" class="icon-size-5" ></mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                        <div>
-                            <mat-label>Email</mat-label>
-                            <div class=" ">
-                                {{accountForm.get('accEmail').value}}
-                                <button mat-button (click)="changeEmail()">
-                                    <mat-icon svgIcon="feather:edit" class="icon-size-5 ql-bg-blue" ></mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </fuse-card>
-                <fuse-card class="flex flex-col p-4 border rounded-md mb-5"  *ngIf="isNotAdmin">
-                    <div class="grid grid-cols-4 gap-4">
-                        <mat-form-field>
-                            <mat-label>Tên ngân hàng</mat-label>
-                            <mat-select panelClass="mt-[40px]" formControlName="bankId" (selectionChange)="changeBank($event)">
-                                <input
-                                    class="input-search-mat-select"
-                                    (keydown)="$event.stopPropagation(); onKey($event.target)"
-                                    #mySearch
-                                >
-                                {{ mySearch?.focus() }}
-                                <mat-option *ngIf="listBankFilter.length === 0">Không có dữ liệu</mat-option>
-                                <mat-option *ngFor="let item of listBankFilter"
-                                            [value]="item.admCategoriesId">{{ item.categoriesName }}</mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="accountForm.get('bankId').hasError('required')">
-                                {{ 'TKDT001' | transloco }}
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field *ngIf="isNotAdmin">
-                            <mat-label>Số tài khoản</mat-label>
-                            <input matInput
-                                   inputMask
-                                   trim="blur"
-                                   maskType="number"
-                                   [maxLength]="100"
-                                   formControlName="accNo">
-                            <mat-error *ngIf="accountForm.get('accNo').hasError('required')">
-                                {{ 'TKDT003' | transloco }}
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field *ngIf="isNotAdmin">
-                            <mat-label>Chi nhánh</mat-label>
-                            <input matInput
-                                   trim="blur"
-                                   [maxLength]="100" trim="blur"
-                                   formControlName="bankBranch">
-                            <mat-error *ngIf="accountForm.get('bankBranch').hasError('required')">
-                                {{ 'TKDT005' | transloco }}
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field *ngIf="isNotAdmin">
-                            <mat-label>Chủ tài khoản</mat-label>
-                            <input matInput
-                                   trim="blur"
-                                   [maxLength]="50"
-                                   formControlName="accName">
-                            <mat-error *ngIf="accountForm.get('accName').hasError('required')">
-                               {{ 'TKDT007' | transloco }}
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </fuse-card>
-                <fuse-card class="flex flex-col p-4 border rounded-md">
-                    <div class="text-lg font-bold mb-3">Thông tin khác</div>
-                    <div class="grid grid-cols-4 gap-4">
-                        <mat-form-field>
-                            <mat-label>Người tạo</mat-label>
-                            <input readonly
-                                   matInput
-                                   formControlName="createdByName">
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Ngày tạo</mat-label>
-                            <input readonly
-                                   matInput
-                                   formControlName="createdDate">
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Người cập nhật</mat-label>
-                            <input readonly
-                                   matInput
-                                   formControlName="lastUpdatedByName">
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Ngày cập nhật</mat-label>
-                            <input readonly
-                                   matInput
-                                   formControlName="lastUpdatedDate">
-                        </mat-form-field>
-                    </div>
-                </fuse-card>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 pr-8 sm:pr-8 mt-6">
-                    <div class="-ml-2">
-                    </div>
+<div class="relative min-w-0 md:w-full p-4">
+    <form class="flex flex-col space-y-5" [formGroup]="accountForm">
+        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg">
+            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="col-span-1">
+                    <mat-label>Tên tài khoản:</mat-label>
+                    <p class="flex items-center font-semibold h-10 truncate"
+                        [matTooltip]="accountForm.get('accountName').value" matTooltipPosition="above">
+                        {{ accountForm.get('accountName').value }}
+                    </p>
+                </div>
 
-                    <div class="flex items-center mt-4 sm:mt-0" *ngIf="admAccountType !== 3">
-                        <!-- Discard -->
-                        <button class="ml-auto sm:ml-0"
-                                mat-stroked-button
-                                [disabled]="!canSubmit"
-                                (click)="cancel()">
-                            Huỷ
-                        </button>
-                        <!-- Submit -->
-                        <button class="order-first sm:order-last ml-2"
-                                mat-flat-button
-                                [color]="'primary'"
-                                [disabled]="!canSubmit"
-                                (click)="update()">
-                            Cập nhật
+                <div class="col-span-1">
+                    <mat-label>Mật khẩu:</mat-label>
+                    <p class="flex items-center text-primary hover:underline cursor-pointer font-semibold h-10"
+                        (click)="changePassword()">
+                        Đổi mật khẩu
+                    </p>
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <mat-label>SĐT liên hệ:</mat-label>
+                    <div class="font-semibold flex items-center justify-start">
+                        {{accountForm.get('accPhoneNumber').value}}
+                        <button type="button" mat-icon-button (click)="changeMobileNumber()">
+                            <img src="assets/icons/notepad-edit.svg" class="h-5 w-5" alt="notepad-edit">
                         </button>
                     </div>
                 </div>
-            </form>
+                <div class="col-span-2 sm:col-span-1">
+                    <mat-label>Email</mat-label>
+                    <div class="font-semibold flex items-center justify-start">
+                        <span class="truncate">
+                            {{accountForm.get('accEmail').value}}
+                        </span>
+                        <button type="button" mat-icon-button (click)="changeEmail()">
+                            <img src="assets/icons/notepad-edit.svg" class="h-5 w-5" alt="notepad-edit">
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg" *ngIf="isNotAdmin">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <mat-form-field floatLabel="always">
+                    <mat-label>Tên ngân hàng</mat-label>
+                    <mat-select [placeholder]="'Chọn tên ngân hàng'" panelClass="mt-[40px]" formControlName="bankId" (selectionChange)="changeBank($event)">
+                        <input class="input-search-mat-select" 
+                            (keydown)="$event.stopPropagation(); onKey($event.target)" #mySearch>
+                        {{ mySearch?.focus() }}
+                        <mat-option *ngIf="listBankFilter.length === 0">Không có dữ liệu</mat-option>
+                        <mat-option *ngFor="let item of listBankFilter" [matTooltip]="item.categoriesName" [value]="item.admCategoriesId">{{
+                            item.categoriesName }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="accountForm.get('bankId').hasError('required')">
+                        {{ 'TKDT001' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="isNotAdmin" floatLabel="always">
+                    <mat-label>Số tài khoản</mat-label>
+                    <input [placeholder]="'Nhập số tài khoản...'" matInput inputMask trim="blur" maskType="number"
+                        [maxLength]="100" formControlName="accNo">
+                    <mat-error *ngIf="accountForm.get('accNo').hasError('required')">
+                        {{ 'TKDT003' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="isNotAdmin" floatLabel="always">
+                    <mat-label>Chi nhánh</mat-label>
+                    <input [placeholder]="'Nhập chi nhánh...'" matInput trim="blur" [maxLength]="100" trim="blur"
+                        formControlName="bankBranch">
+                    <mat-error *ngIf="accountForm.get('bankBranch').hasError('required')">
+                        {{ 'TKDT005' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="isNotAdmin" floatLabel="always">
+                    <mat-label>Chủ tài khoản</mat-label>
+                    <input [placeholder]="'Nhập chủ tài khoản...'" matInput trim="blur" [maxLength]="120"
+                        formControlName="accName">
+                    <mat-error *ngIf="accountForm.get('accName').hasError('required')">
+                        {{ 'TKDT007' | transloco }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="flex flex-col p-4 border border-primary-grayLight-2 rounded-lg">
+            <div class="text-lg font-bold mb-3">Thông tin khác</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"> <mat-form-field>
+                    <mat-label>Người tạo</mat-label>
+                    <input readonly matInput formControlName="createdByName">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Ngày tạo</mat-label>
+                    <input readonly matInput formControlName="createdDate">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Người cập nhật</mat-label>
+                    <input readonly matInput formControlName="lastUpdatedByName">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Ngày cập nhật</mat-label>
+                    <input readonly matInput formControlName="lastUpdatedDate">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="flex flex-row  gap-3 sm:gap-2 w-full sm:w-auto sm:ml-auto mt-4 sm:mt-0"
+            *ngIf="admAccountType !== 3">
+            <!-- Discard -->
+            <button class="w-full sm:w-auto" mat-stroked-button [disabled]="!canSubmit" (click)="cancel()">
+                Huỷ
+            </button>
+            <!-- Submit -->
+            <button class="w-full sm:w-auto" mat-flat-button color="primary" (click)="update()">
+                Cập nhật
+            </button>
+
+        </div>
+    </form>
 </div>

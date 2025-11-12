@@ -11,7 +11,7 @@ export const TABLE_COMMISSIONS_CONFIG: ITableConfig = {
         new TextColumn('dateOfBirth', 'Ngày sinh', 10, false, 'DD/MM/YYYY'),
         new TextColumn('fsLoanProfilesId', 'Số hồ sơ', 15, false),
         new TextColumn('transDate', 'Ngày ghi nhận', 15, false, 'DD/MM/YYYY'),
-        new TextColumn('amount', 'Tiền hoa hồng (VNĐ)', 15, false, 3),
+        new TextColumn('amount', 'Tiền hoa hồng (VND)', 15, false, 3),
         new TextColumn('perTax', 'Thuế TNCN (%)', 15),
         new TextColumn('amountTax', 'Tiền thuế TNCN', 15, false, 3),
     ],

@@ -9,7 +9,6 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TransactionFeeManagementComponent} from './transaction-fee-management.component';
 import {AsyncPipe, NgIf, NgStyle} from '@angular/common';
-import {FeeTransactionManagementSearchComponent} from './dialog/search/fee-transaction-management-search.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
@@ -64,7 +63,6 @@ const investedProfileRoutes: Route[] = [
 @NgModule({
     declarations: [
         TransactionFeeManagementComponent,
-        FeeTransactionManagementSearchComponent,
         FeeTransactionManagementCreateComponent
     ],
     imports: [

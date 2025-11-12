@@ -36,7 +36,6 @@ export class ReportAccountInvestorComponent implements OnInit {
 
     private _dataSearchDialog: object;
     private searchPayload: BaseRequest = new BaseRequest();
-    private isFirstLoad = true;
     private lstStaff: IDropList[] = [];
 
     constructor(
@@ -52,7 +51,7 @@ export class ReportAccountInvestorComponent implements OnInit {
         this._reportInvestorService.getPrepareLoadingPage().subscribe(ret => {
             if (ret) {
                 this.lstStaff = [];
-                this.lstStaff.push({label: 'Tẩt cả', value: null});
+                this.lstStaff.push({label: 'Tẩt cả', value: ''});
                 ret.payload.lstStaff.forEach(el => this.lstStaff.push({
                     label: el.fullName,
                     value: el.admAccountDetailId
@@ -60,11 +59,7 @@ export class ReportAccountInvestorComponent implements OnInit {
             }
         });
         this._reportAccountInvestorService.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
-                this.dataSource$ =  this._reportAccountInvestorService.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
+            this.dataSource$ =  this._reportAccountInvestorService.lazyLoad;
         });
     }
 

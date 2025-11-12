@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import {  Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
     AddressKycDialogComponent
 } from '../../../../../shared/components/dialog/address-dialog/address-dialog.component';
@@ -15,6 +15,8 @@ import {OtpSmsConfirmComponent} from '../../../../../shared/components/otp-sms-c
 export class ChangeIdentificationComponent implements OnInit {
     changeIdentificationForm: FormGroup;
     today: Date = new Date();
+    addressModes:'new' | 'old';
+
 
     constructor(
         private _matDialogRef: MatDialogRef<ChangeIdentificationComponent>,
@@ -29,13 +31,19 @@ export class ChangeIdentificationComponent implements OnInit {
     }
 
     openAddressDialog(formControlName: string): void {
+        const type = this.addressModes || 'old';
+
         const dialogRef = this._matDialog.open(AddressKycDialogComponent, {
             disableClose: true,
             width: '450px',
-            data: this.changeIdentificationForm.get(formControlName).value,
+            data: {
+                type,
+                value: this.changeIdentificationForm.get(formControlName).value
+            },
         });
         dialogRef.afterClosed().subscribe((res: IAddressData) => {
-            if (res && res.payload) {
+            if (res && res.payload && res.type) {
+                this.addressModes = res.type
                 this.changeIdentificationForm.get(formControlName).patchValue(res.payload);
             }
         });
@@ -69,8 +77,8 @@ export class ChangeIdentificationComponent implements OnInit {
                                     otpType: 'CREATE_REQUEST_CHANGE_ID',
                                 },
                                 title: 'Điền mã xác nhận OTP',
-                                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký.' +
-                                    'Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất tạo hồ sơ huy động!',
+                                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký.' +
+                                    'Vui lòng kiểm tra và điền vào mã xác nhận để yêu cầu thay đổi CCCD/Hộ chiếu!',
                                 complete: () => {
                                     dialogRef.close();
                                     this._fuseAlertService.showMessageSuccess('Thay đổi thành công');

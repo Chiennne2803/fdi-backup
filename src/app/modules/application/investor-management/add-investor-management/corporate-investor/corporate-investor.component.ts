@@ -1,19 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {AuthService} from 'app/core/auth/auth.service';
-import {ManagementInvestorService} from 'app/service/admin/management-investor.service';
-import {FileService} from 'app/service/common-service/file.service';
-import {AddressDialogComponent} from 'app/shared/components/address-dialog/address-dialog.component';
-import {DateTimeformatPipe} from 'app/shared/components/pipe/date-time-format.pipe';
-import {ISelectModel} from 'app/shared/models/select.model';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AuthService } from 'app/core/auth/auth.service';
+import { ManagementInvestorService } from 'app/service/admin/management-investor.service';
+import { DateTimeformatPipe } from 'app/shared/components/pipe/date-time-format.pipe';
+import { ISelectModel } from 'app/shared/models/select.model';
 import {
     forbiddenPasswordValidator,
     forbiddenPhoneNumberValidator,
     forbiddenUserNameValidator
 } from '../../../../../shared/validator/forbidden';
-import {AdmAccountDetailDTO} from "../../../../../models/admin";
+import { AdmAccountDetailDTO } from "../../../../../models/admin";
 import moment from "moment";
+import { AddressKycDialogComponent } from 'app/shared/components/dialog/address-dialog/address-dialog.component';
 
 @Component({
     selector: 'app-corporate-investor',
@@ -28,6 +27,7 @@ export class CorporateInvestorComponent implements OnInit {
     public lstManagerStaff: AdmAccountDetailDTO[];
     yearLate = moment().subtract(216, 'months');
     yesterday = moment().subtract(1, 'days');
+    addressModes: { [key: string]: 'new' | 'old' } = {};
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -35,7 +35,6 @@ export class CorporateInvestorComponent implements OnInit {
         private _datetimePipe: DateTimeformatPipe,
         private _investorService: ManagementInvestorService,
         private _matDialog: MatDialog,
-        private _fileService: FileService,
     ) {
     }
 
@@ -58,10 +57,12 @@ export class CorporateInvestorComponent implements OnInit {
     }
 
     public choseAddress(event: string): void {
+        const type = this.addressModes[event] || 'old';
+
         const dialogConfig = new MatDialogConfig();
         dialogConfig.autoFocus = true;
         dialogConfig.disableClose = true;
-        dialogConfig.width = '500px';
+        dialogConfig.width = '450px';
         let dataInit = null;
         switch (event) {
             case 'address1':
@@ -79,23 +80,27 @@ export class CorporateInvestorComponent implements OnInit {
             default:
                 break;
         }
-        dialogConfig.data = dataInit;
+        dialogConfig.data = {
+            type,
+            value: dataInit,
+        };
         dialogConfig.disableClose = true;
-        const dialog = this._matDialog.open(AddressDialogComponent, dialogConfig);
+        const dialog = this._matDialog.open(AddressKycDialogComponent, dialogConfig);
         dialog.afterClosed().subscribe((res) => {
             if (res) {
+                this.addressModes[event] = res.type;
                 switch (event) {
                     case 'address1':
-                        (this.businessForm.controls.deputyContact as FormGroup).controls.address1.setValue(res);
+                        (this.businessForm.controls.deputyContact as FormGroup).controls.address1.setValue(res.payload);
                         break;
                     case 'address2':
-                        this.businessForm.controls.address2.setValue(res);
+                        this.businessForm.controls.address2.setValue(res.payload);
                         break;
                     case 'deputy-address2':
-                        (this.businessForm.controls.deputyContact as FormGroup).controls.address2.setValue(res);
+                        (this.businessForm.controls.deputyContact as FormGroup).controls.address2.setValue(res.payload);
                         break;
                     case 'address3':
-                        this.businessForm.controls.address3.setValue(res);
+                        this.businessForm.controls.address3.setValue(res.payload);
                         break;
                     default:
                         break;
@@ -167,8 +172,8 @@ export class CorporateInvestorComponent implements OnInit {
             deputyContact: this._formBuilder.group({
                 avatar: new FormControl(null),
                 fullName: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
-                identification: new FormControl(null, [Validators.required, Validators.maxLength(12) ,/*Validators.pattern('^[0-9]*$')*/]),
-                gender: new FormControl(this.genders[0].id, [Validators.required]),
+                identification: new FormControl(null, [Validators.required, Validators.maxLength(12),/*Validators.pattern('^[0-9]*$')*/]),
+                gender: new FormControl(null, [Validators.required]),
                 dateOfBirth: new FormControl(null, [Validators.required]),
                 taxCode: new FormControl(null, [Validators.maxLength(13)]),
                 mobile: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(11), forbiddenPhoneNumberValidator()]),

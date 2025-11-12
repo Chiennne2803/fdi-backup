@@ -21,8 +21,8 @@ export class LegalDocumentsComponent implements OnInit, OnDestroy, AfterViewInit
     public lstConfig: any[];
     public lstTitle: string[] = [
         'Giấy chứng nhận đăng ký kinh doanh (bản thay đổi gần nhất)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
         'Đăng ký mẫu dấu, chứng chỉ ngành nghề hoặc giấy chứng nhận đủ điều kiện kinh doanh',
         'Quyết định bổ nhiệm kế toán trưởng',
         'Điều lệ công ty',
@@ -48,7 +48,7 @@ export class LegalDocumentsComponent implements OnInit, OnDestroy, AfterViewInit
         private _matDialog: MatDialog,
         private _fuseAlert: FuseAlertService,
     ) {
-        // accept: 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        // accept: 'application/VND.ms-excel,application/VND.openxmlformats-officedocument.spreadsheetml.sheet'
 
         this.configFile = [{
             topTitle: this.lstTitle[0],
@@ -98,7 +98,7 @@ export class LegalDocumentsComponent implements OnInit, OnDestroy, AfterViewInit
             type: 'file',
             maxFile: 10,
             maxFileSize: 10,
-            accept: 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
+            accept: 'application/msword, application/VND.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
         }];
         this.configFile5 = [{
             topTitle: this.lstTitle[5],
@@ -108,7 +108,7 @@ export class LegalDocumentsComponent implements OnInit, OnDestroy, AfterViewInit
             type: 'file',
             maxFile: 10,
             maxFileSize: 20,
-            accept: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
+            accept: 'application/VND.ms-excel, application/VND.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/VND.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
         }];
         this.configFile6 = [{
             topTitle: this.lstTitle[6],
@@ -118,7 +118,7 @@ export class LegalDocumentsComponent implements OnInit, OnDestroy, AfterViewInit
             type: 'file',
             maxFile: 10,
             maxFileSize: 10,
-            accept: 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
+            accept: 'application/VND.ms-excel, application/VND.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/VND.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
         }];
         this.configFile7 = [{
             topTitle: this.lstTitle[7],
@@ -128,7 +128,7 @@ export class LegalDocumentsComponent implements OnInit, OnDestroy, AfterViewInit
             type: 'file',
             maxFile: 10,
             maxFileSize: 10,
-            accept: 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
+            accept: 'application/msword, application/VND.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
         }];
         this.configFile8 = [{
             topTitle: this.lstTitle[8],
@@ -138,7 +138,7 @@ export class LegalDocumentsComponent implements OnInit, OnDestroy, AfterViewInit
             type: 'file',
             maxFile: 10,
             maxFileSize: 10,
-            accept: 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
+            accept: 'application/msword, application/VND.openxmlformats-officedocument.wordprocessingml.document, application/pdf'
         }];
         this.configFile9 = [{
             topTitle: this.lstTitle[9],
@@ -148,7 +148,7 @@ export class LegalDocumentsComponent implements OnInit, OnDestroy, AfterViewInit
             type: 'file',
             maxFile: 10,
             maxFileSize: 10,
-            accept: 'image/png, image/jpg, image/jpeg, application/pdf,application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            accept: 'image/png, image/jpg, image/jpeg, application/pdf,application/msword, application/VND.openxmlformats-officedocument.wordprocessingml.document'
         }];
 
         this.lstConfig = [

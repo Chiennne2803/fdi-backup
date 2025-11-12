@@ -6,16 +6,14 @@ import { Observable, of, switchMap } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad
-{
+export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad {
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
         private _router: Router
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -28,8 +26,7 @@ export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad
      * @param route
      * @param state
      */
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean
-    {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
         return this._check();
     }
 
@@ -39,8 +36,7 @@ export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad
      * @param childRoute
      * @param state
      */
-    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
-    {
+    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         return this._check();
     }
 
@@ -50,8 +46,7 @@ export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad
      * @param route
      * @param segments
      */
-    canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean
-    {
+    canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
         return this._check();
     }
 
@@ -64,26 +59,19 @@ export class NoAuthGuard implements CanActivate, CanActivateChild, CanLoad
      *
      * @private
      */
-    private _check(): Observable<boolean>
-    {
-        // Check the authentication status
-        return this._authService.check()
-                   .pipe(
-                       switchMap((authenticated) => {
+    private _check(): Observable<boolean> {
+        return this._authService.check().pipe(
+            switchMap((authenticated) => {
 
-                           // If the user is authenticated...
-                           if (authenticated )
-                           {
-                               // Redirect to the root
-                               this._router.navigate(['sign-in']);
+                if (authenticated) {
+                    // Nếu đã đăng nhập, chuyển về trang admin
+                    this._router.navigate(['admin']);
 
-                               // Prevent the access
-                               return of(false);
-                           }
+                    return of(false); // chặn không cho vào sign-in, sign-up nữa
+                }
 
-                           // Allow the access
-                           return of(true);
-                       })
-                   );
+                return of(true); // cho phép vào nếu chưa đăng nhập
+            })
+        );
     }
 }

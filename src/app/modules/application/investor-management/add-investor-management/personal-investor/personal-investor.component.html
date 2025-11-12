@@ -1,13 +1,9 @@
-<form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+<form class="flex flex-col flex-auto"
       [formGroup]="personForm">
-    <div class="flex items-center justify-end text-2xl font-bold uppercase mb-4">
-        Tạo mới nhà đầu tư là cá nhân
-    </div>
-
     <!-- Info Login -->
-    <div class="flex flex-col p-4 border rounded-md mb-4">
+    <div class="flex flex-col p-4 border rounded-md mb-6">
         <strong class="mb-4 text-xl">Thông tin tài khoản đăng nhập</strong>
-        <div class="grid grid-flow-row-dense grid-cols-5 gap-6 ...">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4">
             <mat-form-field floatLabel="always" class="w-full">
                 <mat-label>Tên tài khoản</mat-label>
                 <input id="accountName"
@@ -89,15 +85,14 @@
     </div>
 
     <!-- Info  -->
-    <div class="flex flex-col p-4 border rounded-md mb-4">
+    <div class="flex flex-col p-4 border rounded-md mb-6">
         <strong class="mb-4 text-xl">Thông tin cá nhân</strong>
-
-        <div class="grid grid-flow-row-dense grid-cols-4 gap-6 ...">
-            <div class="row-span-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4">
+            <div class="row-span-1 col-span-2 md:row-span-3 md:col-span-1 mb-4 sm:mb-0">
                 <app-dropzone
                     [hasPreview]="true"
                     title="Ảnh đại diện"
-                    styleClass="justify-center w-full h-full"
+                    styleClass="justify-center w-full h-50 sm:h-full"
                     [formGroup]="personForm"
                     field="avatar"
                     [maxFile]="1"
@@ -105,7 +100,7 @@
                 >
                 </app-dropzone>
             </div>
-            <mat-form-field floatLabel="always" class="w-full">
+            <mat-form-field floatLabel="always" class="w-full col-span-2 sm:col-span-1">
                 <mat-label>Họ và tên</mat-label>
                 <input id="fullname"
                         placeholder="Nhập..."
@@ -120,7 +115,7 @@
                     {{ 'QLDT033' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field floatLabel="always" class="w-full">
+            <mat-form-field floatLabel="always" class="w-full col-span-2 sm:col-span-1">
                 <mat-label>MST cá nhân</mat-label>
                 <input id="taxCode"
                        matInput
@@ -139,9 +134,9 @@
                     {{ 'QLDT052' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field floatLabel="always" class="w-full">
+            <mat-form-field floatLabel="always" class="w-full col-span-2 sm:col-span-1">
                 <mat-label>Giới tính</mat-label>
-                <mat-select formControlName="gender " placeholder="Chọn ...">
+                <mat-select formControlName="gender" placeholder="Chọn ...">
                     <mat-option *ngFor="let item of genders"
                                 [value]="item.id">{{ item.label }}</mat-option>
                 </mat-select>
@@ -150,7 +145,7 @@
                 </mat-error>
             </mat-form-field>
 
-            <div class="w-full">
+            <div class="w-full col-span-2 sm:col-span-1">
                 <app-date-picker
                     label="Ngày sinh"
                     [maxDate]="{'months': -216}"
@@ -162,32 +157,9 @@
                 >
                 </app-date-picker>
             </div>
-            <!--<mat-form-field class="">
-                <mat-label>Ngày sinh</mat-label>
-                <input
-                    matInput
-                    autocomplete="off"
-                    [matDatepicker]="datepicker"
-                    [max]="yesterday"
-                    formControlName="dateOfBirth"
-                >
-                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-                <mat-datepicker #datepicker></mat-datepicker>
-                <mat-error
-                    *ngIf="personForm.get('dateOfBirth').touched && personForm.get('dateOfBirth').hasError('required')">
-                    {{ 'QLDT044' | transloco }}
-                </mat-error>
-                <mat-error
-                    *ngIf="personForm.get('dateOfBirth').touched && personForm.get('dateOfBirth').hasError('matDatepickerParse')">
-                    {{ 'QLDT045' | transloco }}
-                </mat-error>
-                <mat-error
-                    *ngIf="personForm.get('dateOfBirth').touched && personForm.get('dateOfBirth').hasError('matDatepickerMax')">
-                    {{ 'QLDT045' | transloco }}
-                </mat-error>
-            </mat-form-field>-->
-            <mat-form-field floatLabel="always" class="w-full">
-                <mat-label>CCCD/Hộ Chiếu</mat-label>
+            
+            <mat-form-field floatLabel="always" class="w-full col-span-2 sm:col-span-1">
+                <mat-label>CCCD/Hộ chiếu</mat-label>
                 <input id="identification"
                         placeholder="Nhập..."
                        matInput
@@ -201,7 +173,7 @@
                    {{ 'QLDT035' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <div class="w-full">
+            <div class="w-full col-span-2 sm:col-span-1">
                 <app-date-picker
                     label="Ngày cấp"
                     [maxDate]="{'days': 0}"
@@ -213,7 +185,7 @@
                 >
                 </app-date-picker>
             </div>
-            <mat-form-field floatLabel="always" class="w-full col-span-3">
+            <mat-form-field floatLabel="always" class="w-full col-span-2 sm:col-span-1">
                 <mat-label>Nơi cấp</mat-label>
                 <input id="placeOfIdnumber"
                        maxlength="100"
@@ -228,20 +200,8 @@
                     {{ 'QLDT041' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field floatLabel="always" class="w-full col-span-2">
-                <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
-                <input id="address2"
-                       placeholder="Nhập..."
-                       matInput
-                       formControlName="address2"
-                       readonly
-                       (click)="choseAddress('address2')">
-                <mat-error *ngIf="personForm.get('address2')?.hasError('required')">
-                    {{ 'QLDT049' | transloco }}
-                </mat-error>
-            </mat-form-field>
-            <mat-form-field floatLabel="always" class="w-full col-span-2">
-                <mat-label>Địa chỉ hiện tại</mat-label>
+            <mat-form-field floatLabel="always" class="w-full col-span-2 sm:col-span-1">
+                <mat-label>Địa chỉ thường trú</mat-label>
                 <input #address1
                        placeholder="Nhập..."   
                        matInput
@@ -252,12 +212,24 @@
                     {{ 'HSVV154' | transloco }}
                 </mat-error>
             </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full col-span-2 sm:col-span-1">
+                <mat-label>Địa chỉ hiện tại</mat-label>
+                <input id="address2"
+                       placeholder="Nhập..."
+                       matInput
+                       formControlName="address2"
+                       readonly
+                       (click)="choseAddress('address2')">
+                <mat-error *ngIf="personForm.get('address2')?.hasError('required')">
+                    {{ 'QLDT049' | transloco }}
+                </mat-error>
+            </mat-form-field>
             <div class="w-full col-span-2">
                 <app-dropzone
                     inputId="frontPhotoIdentication"
-                    styleClass="max-h-15"
+                    styleClass="h-[48px] mt-[3px]"
                     [maxFile]="1"
-                    topTitle="Ảnh CCCD/Hộ Chiếu mặt trước"
+                    topTitle="Ảnh CCCD/Hộ chiếu mặt trước"
                     title="Tải lên"
                     [formGroup]="personForm"
                     [maxFileSize]="5"
@@ -272,9 +244,9 @@
             <div class="w-full col-span-2">
                 <app-dropzone
                     inputId="backsitePhotoIdentication"
-                    styleClass="max-h-15"
+                    styleClass="h-[48px] mt-[3px]"
                     [maxFile]="1"
-                    topTitle="Ảnh CCCD/Hộ Chiếu mặt sau"
+                    topTitle="Ảnh CCCD/Hộ chiếu mặt sau"
                     title="Tải lên"
                     [formGroup]="personForm"
                     [maxFileSize]="5"
@@ -292,7 +264,7 @@
     <!-- Another Info -->
     <div class="flex flex-col p-4 border rounded-md">
         <strong class="mb-4 text-xl">Thông tin khác</strong>
-        <div class="flex flex-row w-full gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4">
             <mat-form-field floatLabel="always" class="w-full">
                 <mat-label>Ngày tạo</mat-label>
                 <input id="createdDate"

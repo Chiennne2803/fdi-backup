@@ -1,7 +1,7 @@
 <!--
 <div class="flex flex-col max-w-240 md:min-w-160 -m-6" style="max-height: 90vh">
     &lt;!&ndash; Header &ndash;&gt;
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium">Lập yêu cầu thanh toán khoản huy động</div>
         <button mat-icon-button>
             <mat-icon class="text-current"
@@ -66,25 +66,25 @@
                     </mat-error>
                 </mat-form-field>
                 <article class="prose break-words">
-                    <p>Số tiền phải thanh toán(VNĐ):<br> <b>{{ transpayPeriodDetail?.amount || 0 | currencyFormatPipe: 10 }}</b></p>
+                    <p>Số tiền phải thanh toán(VND):<br> <b>{{ transpayPeriodDetail?.amount || 0 | currencyFormatPipe: 10 }}</b></p>
                 </article>
                 <article class="prose break-words">
-                    <p>Số tiền đã thanh toán(VNĐ):<br> <b>{{ transpayPeriodDetail?.paidAmount || 0 | currencyFormatPipe: 10 }}</b></p>
+                    <p>Số tiền đã thanh toán(VND):<br> <b>{{ transpayPeriodDetail?.paidAmount || 0 | currencyFormatPipe: 10 }}</b></p>
                 </article>
                 <article class="prose break-words">
-                    <p>Số tiền thanh toán(VNĐ):<br> <b>{{ transpayPeriodDetail?.amount | currencyFormatPipe: 10 }}</b></p>
+                    <p>Số tiền thanh toán(VND):<br> <b>{{ transpayPeriodDetail?.amount | currencyFormatPipe: 10 }}</b></p>
                 </article>
                 <article class="prose break-words">
                     <p>Ngày phải hoàn trả: <br> <b>{{ transpayPeriodDetail?.expirDate | date : 'dd/MM/YYYY, HH:mm:ss' }}</b></p>
                 </article>
                 <article class="prose break-words">
-                    <p>Tiền phạt(VNĐ):<br> <b>{{ transpayPeriodDetail?.expireRate | currencyFormatPipe: 10 }}</b></p>
+                    <p>Tiền phạt(VND):<br> <b>{{ transpayPeriodDetail?.expireRate | currencyFormatPipe: 10 }}</b></p>
                 </article>
                 <article class="prose break-words">
                     <p>Mã giao dịch: <br> <b>{{ transpayPeriodDetail?.transCode }}</b></p>
                 </article>
                 <article class="prose break-words">
-                    <p>Tổng tiền thanh toán(VNĐ):<br> <b>{{ transpayPeriodDetail?.amount + transpayPeriodDetail?.expireRate | currencyFormatPipe: 10 }}</b></p>
+                    <p>Tổng tiền thanh toán(VND):<br> <b>{{ transpayPeriodDetail?.amount + transpayPeriodDetail?.expireRate | currencyFormatPipe: 10 }}</b></p>
                 </article>
                 <article class="prose break-words">
                     <p>Người lập: <br> <b *ngIf="!isEmptyDetail()">{{ user.fullName }}</b></p>

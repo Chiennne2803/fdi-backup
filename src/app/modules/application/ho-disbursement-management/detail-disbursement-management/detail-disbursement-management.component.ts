@@ -118,7 +118,7 @@ export class DetailDisbursementManagementComponent implements OnInit {
     public approve(cardDownDTO: FsCardDownDTO): void {
         const dialogRef = this.matDialog.open(ConfirmProcessingComponent, {
             disableClose: true,
-            width: '50%',
+            // width: '50%',
             data: {
                 title: 'Xác nhận nội dung xử lý?',
                 valueDefault: 3,
@@ -129,10 +129,10 @@ export class DetailDisbursementManagementComponent implements OnInit {
                         name: 'Phê duyệt',
 
                     },
-                    // {
-                    //     value: 4,
-                    //     name: 'Từ chối(Ghi rõ lý do)',
-                    // }
+                    {
+                        value: 4,
+                        name: 'Từ chối(Ghi rõ lý do)',
+                    }
                 ],
                 maxlenNote: 200,
                 complete: () => {

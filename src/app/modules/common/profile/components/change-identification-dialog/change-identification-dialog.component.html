@@ -1,62 +1,39 @@
 <div class="flex flex-col max-w-240 md:min-w-160 sm:min-w-120 max-h-screen -m-6">
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">Yêu cầu thay đổi CCCD/Hộ Chiếu</div>
-        <button mat-icon-button>
-            <mat-icon
-                mat-dialog-close
-                class="text-current"
-                [svgIcon]="'heroicons_outline:x'"
-            ></mat-icon>
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Yêu cầu thay đổi CCCD/Hộ chiếu</div>
+        <button mat-icon-button mat-dialog-close tabindex="-1">
+            <mat-icon  class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
     </div>
-    <form
-        class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
-        [formGroup]="changeIdentificationForm"
-    >
-        <div class="flex flex-row w-full gap-4">
-            <mat-form-field class="w-full">
-                <mat-label>CCCD/Hộ Chiếu</mat-label>
-                <input id="identification"
-                       matInput
-                       maxlength="12"
-                       formControlName="identification">
+    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="changeIdentificationForm">
+        <div class="flex flex-row">
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>CCCD/Hộ chiếu</mat-label>
+                <input id="identification" matInput placeholder="Nhập số CCCD/Hộ chiếu..." maxlength="12"
+                    formControlName="identification">
                 <mat-error *ngIf="isInvalidRequired('identification')">
                     {{ 'TKDT055' | transloco }}
                 </mat-error>
             </mat-form-field>
         </div>
         <div class="flex flex-row w-full gap-4">
-            <mat-form-field class="w-1/2">
+            <mat-form-field class="w-1/2" floatLabel="always">
                 <mat-label>Nơi cấp</mat-label>
-                <input id="placeOfIdnumber"
-                       matInput
-                       maxlength="100"
-                       formControlName="placeOfIdnumber">
+                <input id="placeOfIdnumber" matInput placeholder="Nhập nơi cấp..." maxlength="100"
+                    formControlName="placeOfIdnumber">
                 <mat-error *ngIf="isInvalidRequired('placeOfIdnumber')">
                     {{ 'TKDT060' | transloco }}
                 </mat-error>
             </mat-form-field>
 
-            <app-date-picker
-                class="w-1/2"
-                label="Ngày cấp"
-                [maxDate]="{'days': 0}"
-                formControlName="dateOfIdnumber"
-                [isRequired]="true"
-                requiredMsg="TKDT056"
-                fomatMsg="TKDT148"
-                maxMsg="TKDT057"
-            ></app-date-picker>
+            <app-date-picker class="w-1/2" label="Ngày cấp" [maxDate]="{'days': 0}" formControlName="dateOfIdnumber"
+                [isRequired]="true" requiredMsg="TKDT056" fomatMsg="TKDT148" maxMsg="TKDT057"></app-date-picker>
         </div>
         <div class="flex flex-row w-full gap-4">
-            <mat-form-field class="w-full">
-                <mat-label>Địa chỉ (Theo CCCD/Hộ Chiếu)</mat-label>
-                <input id="address1"
-                       class="cursor-pointer"
-                       matInput
-                       readonly
-                       formControlName="address1"
-                       (click)="openAddressDialog('address1')">
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Địa chỉ thường trú</mat-label>
+                <input id="address1" class="cursor-pointer" matInput readonly placeholder="Nhập địa chỉ..."
+                    formControlName="address1" (click)="openAddressDialog('address1')">
                 <mat-error *ngIf="isInvalidRequired('address1')">
                     {{ 'TKDT061' | transloco }}
                 </mat-error>
@@ -64,53 +41,27 @@
         </div>
         <div class="flex flex-row w-full gap-4 mb-4">
             <!-- File -->
-            <app-dropzone
-                [multiple]="true"
-                topTitle="Ảnh CCCD/Hộ Chiếu mặt trước"
-                title="Tải ảnh lên"
-                styleClass="h-12 mt-[3px]"
-                class="w-full"
-                previewClass="max-w-fit w-full"
-                [formGroup]="changeIdentificationForm"
-                maxFileSize="5"
-                field="frontPhotoIdentication"
-                accept="image/png, image/jpg, image/jpeg,image/jpeg,application/pdf"
-                [isRequired]="true"
-                requiredMsg="TKDT064"
-                typeMsg="TKDT062"
-                sizeMsg="TKDT063"
-            ></app-dropzone>
+            <app-dropzone [multiple]="true" topTitle="Ảnh CCCD/Hộ chiếu mặt trước" title="Tải ảnh lên"
+                styleClass="h-[48px] mt-[3px]" class="w-full" previewClass="max-w-fit w-full"
+                [formGroup]="changeIdentificationForm" maxFileSize="5" field="frontPhotoIdentication"
+                accept="image/png, image/jpg, image/jpeg,image/jpeg,application/pdf" [isRequired]="true"
+                requiredMsg="TKDT064" typeMsg="TKDT062" sizeMsg="TKDT063"></app-dropzone>
         </div>
         <div class="flex flex-row w-full gap-4 mb-4">
             <!-- File -->
-            <app-dropzone
-                class="w-full"
-                [multiple]="true"
-                topTitle="Ảnh CCCD/Hộ Chiếu mặt sau"
-                previewClass="max-w-fit w-full"
-                title="Tải ảnh lên"
-                styleClass="h-12 mt-[3px]"
+            <app-dropzone class="w-full" [multiple]="true" topTitle="Ảnh CCCD/Hộ chiếu mặt sau"
+                previewClass="max-w-fit w-full" title="Tải ảnh lên" styleClass="h-[48px] mt-[3px]"
                 [formGroup]="changeIdentificationForm"
-                accept="image/png, image/jpg, image/jpeg,image/jpeg,application/pdf"
-                field="backsitePhotoIdentication"
-                [isRequired]="true"
-                maxFileSize="5"
-                requiredMsg="TKDT068"
-                typeMsg="TKDT066"
-                sizeMsg="TKDT067"
-            ></app-dropzone>
+                accept="image/png, image/jpg, image/jpeg,image/jpeg,application/pdf" field="backsitePhotoIdentication"
+                [isRequired]="true" maxFileSize="5" requiredMsg="TKDT068" typeMsg="TKDT066"
+                sizeMsg="TKDT067"></app-dropzone>
         </div>
     </form>
-    <div class="flex flex-col sm:flex-row sm:items-center justify-center mb-4 sm:mb-6 pr-8 sm:pr-8">
-        <button class="ml-auto sm:ml-0"
-                mat-flat-button
-                mat-dialog-close>
+    <div class="flex justify-center items-center mt-0 gap-4 mb-4 sm:mb-6">
+        <button mat-stroked-button mat-dialog-close>
             Quay lại
         </button>
-        <button class="order-first sm:order-last ml-2"
-                mat-flat-button
-                (click)="onSubmit()"
-                [color]="'primary'">
+        <button mat-flat-button (click)="onSubmit()" [color]="'primary'">
             Gửi yêu cầu
         </button>
     </div>

@@ -26,7 +26,7 @@ export class FeeLoanArrangementDialogComponent implements OnInit {
         columnDefinition: [
             new TextColumn('fsLoanProfilesId', 'Số hồ sơ', 10),
             new TextColumn('admAccountIdPresenterName', 'Bên huy động', 10),
-            new TextColumn('amount', 'Phí kết nối huy động vốn (VNĐ)', 10, false, 3),
+            new TextColumn('amount', 'Phí kết nối huy động vốn (VND)', 10, false, 3),
         ],
         isViewDetail: false
     };

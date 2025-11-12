@@ -74,7 +74,7 @@ export class DetailActionAuditComponent
     }
 
     public onRowClickDetail(row: any): void {
-        console.log(row)
+        // console.log(row)
         const dialog = this._matDialog.open(ActionDetailDialogComponent,
     {
             data: row,

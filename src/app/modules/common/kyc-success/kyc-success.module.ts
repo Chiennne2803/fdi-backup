@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import {TranslocoModule} from "@ngneat/transloco";
-import {SharedUIModule} from "../../../shared/components/shared-ui.module";
 import {CommonModule} from "@angular/common";
 import {Route, RouterModule} from "@angular/router";
 import {KycSuccessComponent} from "./kyc-success.component";
+import { MatButtonModule } from '@angular/material/button';
 
 const route: Route[] = [
     {
@@ -16,7 +16,7 @@ const route: Route[] = [
     declarations: [KycSuccessComponent],
     imports: [
         RouterModule.forChild(route),
-        SharedUIModule,
+        MatButtonModule,
         CommonModule,
         TranslocoModule,
     ]

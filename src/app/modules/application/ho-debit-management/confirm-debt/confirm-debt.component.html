@@ -1,117 +1,74 @@
 <div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
 
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium">Xử lý công nợ</div>
-        <button mat-icon-button>
-            <mat-icon class="text-current"
-                      [svgIcon]="'heroicons_outline:x'"
-                      (click)="close()"></mat-icon>
+        <button [tabIndex]="-1" mat-icon-button>
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'" (click)="close()"></mat-icon>
         </button>
     </div>
-    <div [formGroup]="confirmDebtForm" class="flex flex-col flex-auto p-6 sm:p-8  overflow-y-auto">
-        <mat-dialog-content>
-            <div class="grid grid-cols-2 gap-5">
-                <mat-form-field
-                    class="w-full">
-                    <mat-label>Đợt giải ngân</mat-label>
-                    <mat-select formControlName="fsCardDownIds" multiple (ngModelChange)="onSelectValue($event)">
-                        <mat-option
-                            *ngFor="let fsCardDownDTO of data.lstFsCardDown"
-                            [value]="fsCardDownDTO.fsCardDownId"
-                            class="min-h-15"
-                        >
-                            {{fsCardDownDTO.transCode}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="confirmDebtForm.get('fsCardDownIds').hasError('required')">
-                        {{ 'QLCN001' | transloco }}
-                    </mat-error>
-                </mat-form-field>
-                <mat-form-field
-                    class="w-full">
-                    <mat-label>Phương án xử lý</mat-label>
-                    <mat-select formControlName="solutionId" value="" multiple (ngModelChange)="onSelectValue($event)">
-                        <mat-option
-                            *ngFor="let solution of data.problemSolution"
-                            [value]="solution.admCategoriesId"
-                            class="min-h-15"
-                        >
-                            {{solution.categoriesName}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="confirmDebtForm.get('solutionId').hasError('required')">
-                       {{ 'QLCN003' | transloco }}
-                    </mat-error>
-                </mat-form-field>
-                <mat-form-field class="w-full">
-                    <mat-label>Nội dung xử lý: </mat-label>
-                    <input
-                        placeholder="Nội dung xử lý..."
-                        matInput
-                        trim="blur"
-                        maxlength="500"
-                        formControlName="processingContent"
-                        id="processingContent"
-                    >
-                    <mat-error *ngIf="confirmDebtForm.get('processingContent').hasError('required')">
-                        {{ 'QLCN005' | transloco }}
-                    </mat-error>
-                    <mat-error *ngIf="confirmDebtForm.get('processingContent').hasError('maxLength')">
-                        {{ 'QLCN006' | transloco }}
-                    </mat-error>
-                </mat-form-field>
-                <ng-container>
-                    <div>
-                        <app-dropzone
-                            topTitle="File đính kèm:"
-                            [isRequired]="true"
-                            [multiple]="true"
-                            [maxFile]="10"
-                            styleClass="max-h-15"
-                            title="Tải lên hồ sơ đính kèm"
-                            [formGroup]="confirmDebtForm"
-                            accept="image/png, image/jpg, image/jpeg,image/jpeg,application/pdf,application/rar,application/zip,application/ppt,application/pptx,application/xls,application/xlsx,application/doc,application/docx"
-                            requiredMsg="QLCN007"
-                            sizeMsg="QLCN018"
-                            typeMsg="QLCN017"
-                            field="finDocumentsId"
-                        ></app-dropzone>
-                    </div>
-                </ng-container>
-<!--                <ng-container>-->
-<!--                    <mat-checkbox class="example-margin"-->
-<!--                                  [color]="'primary'"-->
-<!--                                  formControlName="isCloseLoanProfiles"-->
-<!--                                  (change)="setClosedProfile($event.checked)">-->
-<!--                        Đóng hồ sơ123-->
-<!--                    </mat-checkbox>-->
-<!--                </ng-container>-->
+    <div [formGroup]="confirmDebtForm" class="flex flex-col flex-auto p-4 sm:p-6 overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Đợt giải ngân</mat-label>
+                <mat-select placeholder="Chọn đợt giải ngân" formControlName="fsCardDownIds" multiple
+                    (ngModelChange)="onSelectValue($event)">
+                    <mat-option *ngFor="let fsCardDownDTO of data.lstFsCardDown" [value]="fsCardDownDTO.fsCardDownId"
+                        class="min-h-15">
+                        {{fsCardDownDTO.transCode}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="confirmDebtForm.get('fsCardDownIds').hasError('required')">
+                    {{ 'QLCN001' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always" class="w-full">
+                <mat-label>Phương án xử lý</mat-label>
+                <mat-select placeholder="Chọn phương án xử lý" formControlName="solutionId" value="" multiple
+                    (ngModelChange)="onSelectValue($event)">
+                    <mat-option *ngFor="let solution of data.problemSolution" [value]="solution.admCategoriesId"
+                        class="min-h-15">
+                        {{solution.categoriesName}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="confirmDebtForm.get('solutionId').hasError('required')">
+                    {{ 'QLCN003' | transloco }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <mat-form-field floatLabel="always" class="w-full">
+            <mat-label>Nội dung xử lý: </mat-label>
+            <input placeholder="Nội dung xử lý..." matInput trim="blur" maxlength="500"
+                formControlName="processingContent" id="processingContent">
+            <mat-error *ngIf="confirmDebtForm.get('processingContent').hasError('required')">
+                {{ 'QLCN005' | transloco }}
+            </mat-error>
+            <mat-error *ngIf="confirmDebtForm.get('processingContent').hasError('maxLength')">
+                {{ 'QLCN006' | transloco }}
+            </mat-error>
+        </mat-form-field>
+        <app-dropzone topTitle="File đính kèm:" [isRequired]="true" [multiple]="true" [maxFile]="10"
+            styleClass="h-[48px] mt-[3px]" title="Tải lên hồ sơ đính kèm" [formGroup]="confirmDebtForm"
+            accept="image/png, image/jpg, image/jpeg,image/jpeg,application/pdf,application/rar,application/zip,application/ppt,application/pptx,application/xls,application/xlsx,application/doc,application/docx"
+            requiredMsg="QLCN007" sizeMsg="QLCN018" typeMsg="QLCN017" field="finDocumentsId"></app-dropzone>
 
-                <mat-form-field>
-                    <mat-label>Người tạo</mat-label>
-                    <input readonly
-                           matInput
-                           formControlName="createdByName">
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Ngày tạo</mat-label>
-                    <input readonly
-                           matInput
-                           formControlName="createdDate">
-                </mat-form-field>
-                <div></div>
-                <div></div>
-            </div>
-
-        </mat-dialog-content>
-        <mat-dialog-actions align="end">
-            <button class="ml-auto sm:ml-0"
-                    mat-stroked-button
-                    (click)="close()">
-                Đóng
-            </button>
-            <button mat-flat-button color="primary" (click)="submit()">Xác nhận</button>
-        </mat-dialog-actions>
+        <div class="grid grid-cols-2 gap-2 sm:gap-4 mt-4">
+            <mat-form-field>
+                <mat-label>Người tạo</mat-label>
+                <input readonly matInput formControlName="createdByName">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Ngày tạo</mat-label>
+                <input readonly matInput formControlName="createdDate">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="flex flex-row items-center justify-center gap-3 sm:gap-2 w-auto mb-4 sm:mb-6">
+        <button class="w-auto" mat-stroked-button (click)="close()">
+            Đóng
+        </button>
+        <button mat-flat-button color="primary" class="w-auto" (click)="submit()">
+            Xác nhận
+        </button>
     </div>
 </div>

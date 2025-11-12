@@ -70,10 +70,10 @@
                                 <thead
                                     class="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800 ">
                                 <tr>
-                                    <th scope="col" class="px-6 py-2">Tổng tiền giải ngân (VNĐ)</th>
-                                    <th scope="col" class="px-6 py-2">Tổng lãi phải trả (VNĐ)</th>
-                                    <th scope="col" class="px-6 py-2">Phí kết nối huy động vốn (VNĐ)</th>
-                                    <th scope="col" class="px-6 py-2">Tổng tiền thực nhận (VNĐ)</th>
+                                    <th scope="col" class="px-6 py-2">Tổng tiền giải ngân (VND)</th>
+                                    <th scope="col" class="px-6 py-2">Tổng lãi phải trả (VND)</th>
+                                    <th scope="col" class="px-6 py-2">Phí kết nối huy động vốn (VND)</th>
+                                    <th scope="col" class="px-6 py-2">Tổng tiền thực nhận (VND)</th>
                                 </tr>
 
                                 </thead>
@@ -176,7 +176,7 @@
 
                                 <ng-container matColumnDef="amount">
                                     <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">Số tiền đầu tư (VNĐ)</div>
+                                        <div class="cell-overflow table-header">Số tiền đầu tư (VND)</div>
                                     </th>
                                     <td mat-cell *matCellDef="let element">
                                         <div class="cell-overflow">{{ element.amount | currencyFormatPipe : 10 }}</div>
@@ -185,7 +185,7 @@
 
                                 <ng-container matColumnDef="interestAtimate">
                                     <th mat-header-cell *matHeaderCellDef>
-                                        <div class="cell-overflow table-header">Lãi phải trả (VNĐ)</div>
+                                        <div class="cell-overflow table-header">Lãi phải trả (VND)</div>
                                     </th>
                                     <td mat-cell *matCellDef="let element">
                                         <div

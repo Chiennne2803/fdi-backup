@@ -7,7 +7,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
 export const compactNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home',
+        title: 'Trang chủ',
         type: 'basic',
         icon: 'heroicons_outline:home',
         link: '/page/home',
@@ -15,7 +15,7 @@ export const compactNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'admin.dashboad',
-        title: 'Dashboad',
+        title: 'Thống kê',
         type: 'basic',
         icon: 'heroicons_outline:presentation-chart-line',
         link: '/admin/dashboard',
@@ -79,7 +79,7 @@ export const compactNavigation: FuseNavigationItem[] = [
                 id: 'manage.recharge-trans',
                 title: 'Giao dịch nạp tiền',
                 type: 'basic',
-                link: ROUTER_CONST.config.application.investorChargeTransaction.link,
+                link: `${ROUTER_CONST.config.application.investorChargeTransaction.link}/wait`,
                 code: 'SFF_RECHARGE_TRANSACTION'
             },
             {
@@ -190,6 +190,7 @@ export const compactNavigation: FuseNavigationItem[] = [
                 type: 'group',
                 code: 'SFF_STATISTIC',
                 children: [
+                    
                     {
                         id: 'manage.report-account-investor',
                         title: 'Báo cáo tài khoản nhà đầu tư',
@@ -310,6 +311,13 @@ export const compactNavigation: FuseNavigationItem[] = [
                         type: 'basic',
                         link: ROUTER_CONST.config.statisticalReport.transferTransaction.link,
                         code: 'Report_accountant_8'
+                    },
+                    {
+                        id: 'manage.report-promotional-statement',
+                        title: 'Báo cáo chương trình khuyến mại',
+                        type: 'basic',
+                        link: ROUTER_CONST.config.statisticalReport.reportPromotionalStatement.link,
+                        code: 'Report_accountant_7'
                     }
                 ]
             },
@@ -402,6 +410,20 @@ export const compactNavigation: FuseNavigationItem[] = [
                 title: 'Cấu hình tiến trình',
                 type: 'basic',
                 link: ROUTER_CONST.config.admin.processConfig.link,
+                code: 'SFF_PROCESS_CONFIG'
+            },
+            // {
+            //     id: 'manage.process',
+            //     title: 'Cấu hình bảo trì',
+            //     type: 'basic',
+            //     link: ROUTER_CONST.config.admin.maintenanceConfig.link,
+            //     code: 'SFF_PROCESS_CONFIG'
+            // },
+            {
+                id: 'manage.process',
+                title: 'Cấu hình Template',
+                type: 'basic',
+                link: ROUTER_CONST.config.admin.emailTemplate.link,
                 code: 'SFF_PROCESS_CONFIG'
             },
             {
@@ -426,7 +448,7 @@ export const futuristicNavigation: FuseNavigationItem[] = [
 export const horizontalNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home',
+        title: 'Trang chủ',
         type: 'basic',
         icon: 'heroicons_outline:home',
         link: '/page/home',
@@ -435,7 +457,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
 
     {
         id: 'admin.dashboad',
-        title: 'Dashboad',
+        title: 'Thống kê',
         type: 'basic',
         icon: 'heroicons_outline:presentation-chart-line',
         link: '/admin/dashboard',
@@ -499,7 +521,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
                 id: 'manage.recharge-trans',
                 title: 'Giao dịch nạp tiền',
                 type: 'basic',
-                link: ROUTER_CONST.config.application.investorChargeTransaction.link,
+                link: `${ROUTER_CONST.config.application.investorChargeTransaction.link}`,
                 code: 'SFF_RECHARGE_TRANSACTION'
             },
             {
@@ -610,6 +632,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
                 type: 'group',
                 code: 'SFF_STATISTIC',
                 children: [
+                    
                     {
                         id: 'manage.report-account-investor',
                         title: 'Báo cáo tài khoản nhà đầu tư',
@@ -730,7 +753,14 @@ export const horizontalNavigation: FuseNavigationItem[] = [
                         type: 'basic',
                         link: ROUTER_CONST.config.statisticalReport.transferTransaction.link,
                         code: 'Report_accountant_8'
-                    }
+                    },
+                    {
+                        id: 'manage.report-promotional-statement',
+                        title: 'Báo cáo chương trình khuyến mại',
+                        type: 'basic',
+                        link: ROUTER_CONST.config.statisticalReport.reportPromotionalStatement.link,
+                        code: 'Report_accountant_7'
+                    },
                 ]
             },
         ]
@@ -824,6 +854,13 @@ export const horizontalNavigation: FuseNavigationItem[] = [
                 link: ROUTER_CONST.config.admin.processConfig.link,
                 code: 'SFF_PROCESS_CONFIG'
             },
+            // {
+            //     id: 'manage.process',
+            //     title: 'Cấu hình bảo trì',
+            //     type: 'basic',
+            //     link: ROUTER_CONST.config.admin.maintenanceConfig.link,
+            //     code: 'SFF_PROCESS_CONFIG'
+            // },
             {
                 id: 'manage.process',
                 title: 'Cấu hình Ứng dụng khách hàng',
@@ -838,7 +875,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
 export const horizontalBorrowerNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home',
+        title: 'Trang chủ',
         type: 'basic',
         icon: 'heroicons_outline:home',
         link: '/page/home',
@@ -846,9 +883,9 @@ export const horizontalBorrowerNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'admin.dashboad',
-        title: 'Dashboad',
+        title: 'Thống kê',
         type: 'basic',
-        icon: 'heroicons_outline:presentation-chart-line',
+        icon: 'heroicons_outline:credit-card',
         link: '/borrower/dashboard',
         code: 'ALL'
     },
@@ -897,7 +934,7 @@ export const horizontalBorrowerNavigation: FuseNavigationItem[] = [
 export const horizontalInvestorNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home',
+        title: 'Trang chủ',
         type: 'basic',
         icon: 'heroicons_outline:home',
         link: '/page/home',
@@ -905,9 +942,9 @@ export const horizontalInvestorNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'admin.dashboad',
-        title: 'Dashboad',
+        title: 'Thống kê',
         type: 'basic',
-        icon: 'heroicons_outline:presentation-chart-line',
+        icon: 'heroicons_outline:credit-card',
         link: '/investor/dashboard',
         code: 'ALL',
     },

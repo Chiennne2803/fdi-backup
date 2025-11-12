@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MatDrawer} from '@angular/material/sidenav';
 import {FuseNavigationItem} from '../../../../@fuse/components/navigation';
 import {WithdrawCashManagerService} from 'app/service/admin/withdrawcash-transaction.service';
@@ -12,6 +12,7 @@ import {ROUTER_CONST} from 'app/shared/constants';
 export class WithdrawManagementComponent implements OnInit
 {
     menuData: FuseNavigationItem[];
+    isMobile = false;
     // @ViewChild('detailDrawer', { static: true }) detailDrawer: MatDrawer;
 
     /**
@@ -20,6 +21,7 @@ export class WithdrawManagementComponent implements OnInit
     constructor(
         private _withdrawCashManagerService: WithdrawCashManagerService,
     ) {
+        this.checkScreenSize();
         this.menuData = [
             {
                 title   : 'Giao dịch rút tiền khách hàng',
@@ -39,6 +41,15 @@ export class WithdrawManagementComponent implements OnInit
                 ]
             },
         ];
+    }
+
+    @HostListener('window:resize', [])
+    onResize() {
+        this.checkScreenSize();
+    }
+
+    private checkScreenSize() {
+        this.isMobile = window.innerWidth < 1024; // < 1024px thì coi là mobile/tablet
     }
 
     ngOnInit(): void {

@@ -185,7 +185,7 @@ export class DetailInvestmentTransferComponent implements OnInit, AfterViewInit 
                     otpType: otpType,
                 },
                 title: 'Điền mã xác nhận OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                 complete: () => {
                     this._fsReqTransP2PService.prepare().subscribe();
                     this._fsReqTransP2PService.getListSell().subscribe();

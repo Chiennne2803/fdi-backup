@@ -1,0 +1,99 @@
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  background-color: #f97316;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  margin-top: -4.1px;
+}
+
+input[type='range']::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  background-color: #f97316;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dropdown styles */
+.news-dropdown {
+  animation: fadeInDown 0.2s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.news-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #2563eb;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease-in-out;
+}
+
+.carousel {
+  width: 100%;
+  overflow: hidden;
+
+  .flickity-viewport {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .carousel-cell {
+    width: 100%; // mỗi cell full chiều rộng
+    height: auto;
+
+    img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+  }
+
+  // tùy chỉnh nút nếu cần
+
+}
+
+::ng-deep .flickity-button {
+  // background: rgba(255, 255, 255, 0.7);
+  height: 36px;
+  width: 36px;
+  color: #ffff;
+  border: 1.5px solid #ffff;
+  border-radius: 100%;
+  background-color: transparent;
+  &:hover {
+    background: #2563eb;
+  }
+}
+::ng-deep .flickity-button:focus{
+  box-shadow: none;
+}

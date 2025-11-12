@@ -1,10 +1,11 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {BaseResponse} from 'app/models/base';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { BaseResponse } from 'app/models/base';
 import CryptoJS from 'crypto-js';
-import {environment} from 'environments/environment';
-import {BehaviorSubject, Observable, tap} from 'rxjs';
-import {HttpService} from '../shared/services/common/http.service';
-import {FuseAlertService} from "../../@fuse/components/alert";
+import { environment } from 'environments/environment';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { HttpService } from '../shared/services/common/http.service';
+import { FuseAlertService } from "../../@fuse/components/alert";
+import moment from 'moment';
 
 export class BaseService extends HttpService {
     protected key;
@@ -61,7 +62,7 @@ export class BaseService extends HttpService {
         return this.post(this.url + '/' + path, payload).pipe(
             tap((res) => {
                 if (res == undefined || res.content == undefined || res.content.length <= 0) {
-                    if(!notShowMsg) {
+                    if (!notShowMsg) {
                         this._fuseAlertService.showMessageWarning("Không có dữ liệu");
                     }
                 }
@@ -86,7 +87,7 @@ export class BaseService extends HttpService {
 
     protected doPostOverlay(path: string, condition: any): Observable<BaseResponse> {
         const payload = this.buildBodyParams(condition);
-        return this.post(this.url + '/' + path, payload, {params: {overlay: 'load'}});
+        return this.post(this.url + '/' + path, payload, { params: { overlay: 'load' } });
     }
 
     protected doCreate(condition: any): Observable<BaseResponse> {
@@ -118,6 +119,7 @@ export class BaseService extends HttpService {
     }
 
     protected buildBodyParams(input: any): any {
+
         const condition = { payload: {}, signature: 'usb_key' };
         if (input) {
             if (input.payload !== undefined) {
@@ -127,12 +129,36 @@ export class BaseService extends HttpService {
                     if (input[k] || typeof input[k] === 'number') {
                         condition.payload[k] = input[k];
                     }
-                    if ((k == 'createdDate' || k == 'lastUpdatedDate') && input[k]) {
-                        if (typeof input[k] === 'string') {
+
+                    if ((k === 'createdDate' || k === 'lastUpdatedDate') && input[k]) {
+                        const dateValue = input[k];
+
+                        // Nếu là moment object
+                        if (moment.isMoment(dateValue)) {
+                            const year = dateValue.year();
+                            const month = String(dateValue.month() + 1).padStart(2, '0');
+                            const day = String(dateValue.date()).padStart(2, '0');
+
+                            condition.payload[k] = `${year}-${month}-${day}T00:00:00+07:00`;
+                            // console.log('Moment parsed:', condition.payload[k]);
+                        }
+                        // Nếu là Date object
+                        else if (dateValue instanceof Date) {
+                            const year = dateValue.getFullYear();
+                            const month = String(dateValue.getMonth() + 1).padStart(2, '0');
+                            const day = String(dateValue.getDate()).padStart(2, '0');
+
+                            condition.payload[k] = `${year}-${month}-${day}T00:00:00+07:00`;
+                            // console.log('Date parsed:', condition.payload[k]);
+                        }
+                        // Nếu là string
+                        else if (typeof dateValue === 'string') {
                             condition.payload[k] = undefined;
                         }
                     }
+
                 });
+
             }
         }
         //todo luongnk: change to rsa when deploy production

@@ -16,6 +16,7 @@ import {DetailWithdrawComponent} from './detail-withdraw/detail-withdraw.compone
 import {FuseAlertModule} from "../../../../@fuse/components/alert";
 import {MatTableModule} from "@angular/material/table";
 import {TranslocoModule} from "@ngneat/transloco";
+import { MatIconModule } from '@angular/material/icon';
 
 
 const withdrawRoutes: Route[] = [
@@ -24,6 +25,7 @@ const withdrawRoutes: Route[] = [
         component: WithdrawManagementComponent,
         children: [
             {
+                data: { title: 'Giao dịch chờ xử lý' },
                 path: '',
                 component: WaitingWithdrawComponent,
                 resolve: {
@@ -31,6 +33,7 @@ const withdrawRoutes: Route[] = [
                 },
             },
             {
+                data: { title: 'Giao dịch đã xử lý' },
                 path: 'processed',
                 component: ProcessedWithdrawComponent,
                 resolve: {
@@ -55,6 +58,7 @@ const withdrawRoutes: Route[] = [
         FuseNavigationModule,
         MatTabsModule,
         NgIf,
+        MatIconModule,
         AsyncPipe,
         MatDividerModule,
         MatButtonModule,

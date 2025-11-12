@@ -136,9 +136,9 @@ export class DetailInvestmentTransferOfferComponent implements OnInit, AfterView
 
     cancelInvest(data): void {
         const dialogConfirm = this._fuseConfirmationService.open({
-            title: 'Xác nhận hủy giao dịch chào bán?',
+            title: 'Xác nhận hủy giao dịch chuyển nhượng?',
             message: 'Đây là hành động vĩnh viễn, giao dịch sẽ không thể khôi phục sau khi huỷ.' +
-                ' Lập giao dịch chào bán mới nếu bạn muốn tiếp tục chuyển nhượng khoản đầu tư này',
+                ' Lập giao dịch chuyển nhượng mới nếu bạn muốn tiếp tục chuyển nhượng khoản đầu tư này',
             actions: {
                 confirm: {
                     label: 'Đồng ý huỷ'
@@ -227,7 +227,7 @@ export class DetailInvestmentTransferOfferComponent implements OnInit, AfterView
                     otpType: otpType,
                 },
                 title: 'Điền mã xác nhận OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                 complete: () => {
                     dialogRef.close();
                     this._fuseAlertService.showMessageSuccess(message);

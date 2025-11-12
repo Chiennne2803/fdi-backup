@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AuthService } from 'app/core/auth/auth.service';
-import { FileService } from 'app/service/common-service/file.service';
-import { AddressDialogComponent } from 'app/shared/components/address-dialog/address-dialog.component';
 import { DateTimeformatPipe } from 'app/shared/components/pipe/date-time-format.pipe';
 import { ISelectModel } from 'app/shared/models/select.model';
 import {ManagementLenderService} from '../../../../../service';
@@ -13,6 +11,7 @@ import {
     forbiddenUserNameValidator
 } from '../../../../../shared/validator/forbidden';
 import {AdmAccountDetailDTO} from "../../../../../models/admin";
+import { AddressKycDialogComponent } from 'app/shared/components/dialog/address-dialog/address-dialog.component';
 
 @Component({
     selector: 'app-corporate-borrower',
@@ -25,6 +24,7 @@ export class CorporateBorrowerComponent implements OnInit {
     public businessAreas: Array<ISelectModel> = [];
     public businessAreasFilter: Array<ISelectModel> = [];
     public lstManagerStaff: AdmAccountDetailDTO[];
+    addressModes: { [key: string]: 'new' | 'old' } = {};
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -32,7 +32,6 @@ export class CorporateBorrowerComponent implements OnInit {
         private _datetimePipe: DateTimeformatPipe,
         private _borrowerService: ManagementLenderService,
         private _matDialog: MatDialog,
-        private _fileService: FileService,
     ) { }
 
     ngOnInit(): void {
@@ -53,13 +52,15 @@ export class CorporateBorrowerComponent implements OnInit {
         this.buildBusinessForm();
     }
 
-    public choseAddress(type: string): void {
+    public choseAddress(event: string): void {
+        const type = this.addressModes[event] || 'old';
+
         const dialogConfig = new MatDialogConfig();
         dialogConfig.autoFocus = true;
         dialogConfig.disableClose = true;
-        dialogConfig.width = '500px';
+        dialogConfig.width = '450px';
         let dataInit = null;
-        switch (type) {
+        switch (event) {
             case 'address1':
                 break;
             case 'address2':
@@ -77,25 +78,29 @@ export class CorporateBorrowerComponent implements OnInit {
             default:
                 break;
         }
-        dialogConfig.data = dataInit;
-        const dialog = this._matDialog.open(AddressDialogComponent, dialogConfig);
+        dialogConfig.data = {
+            type,
+            value: dataInit,
+        };
+        const dialog = this._matDialog.open(AddressKycDialogComponent, dialogConfig);
         dialog.afterClosed().subscribe((res) => {
             if (res) {
-                switch (type) {
+                this.addressModes[event] = res.type;
+                switch (event) {
                     case 'address1':
                         // this.businessForm.controls.address1.setValue(res);
                         break;
                     case 'address2':
-                        this.businessForm.controls.address2.setValue(res);
+                        this.businessForm.controls.address2.setValue(res.payload);
                         break;
                     case 'address3':
-                        this.businessForm.controls.address3.setValue(res);
+                        this.businessForm.controls.address3.setValue(res.payload);
                         break;
                     case 'deputy-address1':
-                        this.deputyContactForm.controls.address1.setValue(res) ;
+                        this.deputyContactForm.controls.address1.setValue(res.payload);
                         break;
                     case 'deputy-address2':
-                        this.deputyContactForm.controls.address2.setValue(res) ;
+                        this.deputyContactForm.controls.address2.setValue(res.payload);
                         break;
                     default:
                         break;
@@ -126,15 +131,16 @@ export class CorporateBorrowerComponent implements OnInit {
             return 'QLVV014';
         }
     }
-    public getErrorMobile(): string {
-        if (this.businessForm.get('mobile')?.hasError('required')) {
-            return 'QLVV018';
+    public getErrorMobile(formControlName: string): string {
+        if (this.businessForm.get(formControlName)?.hasError('required')) {
+            return 'QLDT025';
         }
 
-        if (this.businessForm.get('mobile')?.hasError('forbiddenPhoneNumber') ||
-            this.businessForm.get('mobile')?.hasError('minlength') ||
-            this.businessForm.get('mobile')?.hasError('maxlength')) {
-            return 'QLVV016';
+        if (this.businessForm.get(formControlName)?.hasError('minlength') ||
+            this.businessForm.get(formControlName)?.hasError('maxlength') ||
+            this.businessForm.get(formControlName)?.hasError('forbiddenPhoneNumber')
+        ) {
+            return 'QLDT026';
         }
     }
     public getErrorMobileDeputy(): string {
@@ -164,7 +170,7 @@ export class CorporateBorrowerComponent implements OnInit {
             avatar: new FormControl(null),
             fullName: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
             businessCode: new FormControl(null, [Validators.required, Validators.maxLength(13)]),
-            landline: new FormControl(null, [Validators.maxLength(11)]),
+            landline: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(11), forbiddenPhoneNumberValidator()]),
             businessLicense: new FormControl(null, [Validators.required, Validators.maxLength(13)]),
             businessLicenseDate: new FormControl(null, [Validators.required]),
             placeOfBusinessLicense: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
@@ -179,7 +185,7 @@ export class CorporateBorrowerComponent implements OnInit {
                 avatar: new FormControl(null),
                 fullName: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
                 identification: new FormControl(null, [Validators.required, Validators.maxLength(12)]),
-                gender: new FormControl(this.genders[0].id, [Validators.required]),
+                gender: new FormControl(null, [Validators.required]),
                 dateOfBirth: new FormControl(null, [Validators.required]),
                 taxCode: new FormControl(null, [Validators.maxLength(13)]),
                 mobile: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(11), forbiddenPhoneNumberValidator()]),

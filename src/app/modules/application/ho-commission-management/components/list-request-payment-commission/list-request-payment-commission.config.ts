@@ -6,7 +6,7 @@ export const TABLE_REQ_PAYMENT_CONFIG: ITableConfig = {
     columnDefinition: [
         new CheckboxColumn(),
         new TextColumn('transCode', 'Mã yêu cầu', 20, true),
-        new TextColumn('amount', 'Tiền hoa hồng (VNĐ)', 15, false, 3),
+        new TextColumn('amount', 'Tiền hoa hồng (VND)', 15, false, 3),
         new TextColumn('createdDate', 'Ngày lập', 15, false, 'DD/MM/YYYY'),
         new TextColumn('statusName', 'Trạng thái', 10),
     ],

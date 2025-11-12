@@ -19,7 +19,7 @@
                                 mat-flat-button
                                 color="primary"
                                 class="ml-5"
-                                (click)="isEditable = true">
+                                (click)="onEdit()">
                             Cập nhật
                         </button>
                         <button (click)="isEditable = false"
@@ -124,7 +124,7 @@
                                 <mat-label>Tên chủ tài khoản</mat-label>
                                 <input id="accName"
                                        trim="blur"
-                                       maxlength="50"
+                                       maxlength="120"
                                        matInput
                                        formControlName="accName">
                                 <mat-error *ngIf="accountBankForm.get('accName').hasError('required')">
@@ -150,7 +150,7 @@
                                 <mat-label>Chi nhánh</mat-label>
                                 <input id="bankBranch"
                                        trim="blur"
-                                       maxlength="100"
+                                       maxlength="120"
                                        matInput
                                        formControlName="bankBranch">
                                 <mat-error *ngIf="accountBankForm.get('bankBranch').hasError('required')">

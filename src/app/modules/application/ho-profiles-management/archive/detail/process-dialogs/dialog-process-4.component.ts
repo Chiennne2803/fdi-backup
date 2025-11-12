@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../../../../../core/auth/auth.service';
-import {DateTimeformatPipe} from '../../../../../../shared/components/pipe/date-time-format.pipe';
-import {AdmAccountDetailDTO} from "../../../../../../models/admin";
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../../../../../core/auth/auth.service';
+import { DateTimeformatPipe } from '../../../../../../shared/components/pipe/date-time-format.pipe';
+import { AdmAccountDetailDTO } from "../../../../../../models/admin";
 
 @Component({
     selector: 'dialog-process-4',
@@ -20,7 +20,7 @@ export class DialogProcess4Component implements OnInit {
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
         private _datetimePipe: DateTimeformatPipe,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.formGroup = this._formBuilder.group({
@@ -39,22 +39,24 @@ export class DialogProcess4Component implements OnInit {
         });
         this.formGroup.get('status').valueChanges.subscribe((value) => {
             if (value === 0 || value === 2) {
-                this.isRq=false;
-                this.formGroup.removeControl('financialStatement');
-                this.formGroup.removeControl('finDocumentsId');
-                this.formGroup.addControl('financialStatement', new FormControl(null));
-                this.formGroup.addControl('finDocumentsId', new FormControl(null));
+                this.isRq = false;
+                this.formGroup.get('financialStatement')?.clearValidators();
+                this.formGroup.get('finDocumentsId')?.clearValidators();
             } else {
-                this.isRq=true;
-                this.formGroup.removeControl('financialStatement');
-                this.formGroup.removeControl('finDocumentsId');
-                this.formGroup.addControl('financialStatement', new FormControl(null, Validators.required));
-                this.formGroup.addControl('finDocumentsId', new FormControl(null, Validators.required));
+                this.isRq = true;
+                this.formGroup.get('financialStatement')?.setValidators(Validators.required);
+                this.formGroup.get('finDocumentsId')?.setValidators(Validators.required);
             }
+
+            // Cập nhật lại trạng thái validate
+            this.formGroup.get('financialStatement')?.updateValueAndValidity();
+            this.formGroup.get('finDocumentsId')?.updateValueAndValidity();
+
         });
     }
 
     onClickSubmit(): void {
+        console.log(this.formGroup.value)
         this.formGroup.markAllAsTouched();
         if (this.formGroup.valid) {
             this.onSubmit.emit(this.formGroup.value);

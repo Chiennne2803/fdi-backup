@@ -10,12 +10,29 @@ export class PWChangeValidators {
 
     // Our cross control validators are below
     // NOTE: They take in type FormGroup rather than FormControl
-    static newIsNotOld(group: FormGroup){
-        var newPW = group.controls['newPasswd'];
-        if(group.controls['passwd'].value == newPW.value)
-            newPW.setErrors({ newIsNotOld: true });
-        return null;
+static newIsNotOld(group: FormGroup) {
+  const oldPW = group.controls['passwd'].value;
+  const newPW = group.controls['newPasswd'];
+
+  if (!newPW.value) {
+    if (newPW.errors && newPW.errors['newIsNotOld']) {
+      const { newIsNotOld, ...otherErrors } = newPW.errors;
+      newPW.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
     }
+    return null;
+  }
+
+  if (oldPW && newPW.value === oldPW) {
+    newPW.setErrors({ ...newPW.errors, newIsNotOld: true });
+  } else {
+    if (newPW.errors && newPW.errors['newIsNotOld']) {
+      const { newIsNotOld, ...otherErrors } = newPW.errors;
+      newPW.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
+    }
+  }
+
+  return null;
+}
 
     static newMatchesConfirm(group: FormGroup){
         var confirm = group.controls['reNewPasswd'];

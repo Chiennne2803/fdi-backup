@@ -13,6 +13,21 @@
     <mat-icon class="text-white" svgIcon="heroicons_solid:bell"></mat-icon>
 </button>
 
+<!-- Alert Container (top-right corner) -->
+<div class="fixed top-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 flex flex-col gap-2 w-[90%] sm:w-80 md:w-96 px-2 sm:px-0">
+  <ng-container *ngFor="let alert of alerts">
+    <fuse-alert
+      [showIcon]="false"
+      [type]="alert.type"
+      class="w-full">
+      <span fuseAlertTitle>{{ alert.title  }}</span>
+      {{ alert.message }}
+    </fuse-alert>
+  </ng-container>
+</div>
+
+
+
 <!-- Notifications panel -->
 <ng-template #notificationsPanel>
 
@@ -30,7 +45,7 @@
                 </button>
             </div>
             <div class="text-lg font-medium leading-10">
-                <a class="ml-1 text-primary-500 " style="color: white !important;"
+                <a class="ml-1 text-white"
                    [routerLink]="['/page/notifications']">Thông báo
                 </a>
 
@@ -38,13 +53,21 @@
             <div class="ml-auto">
                 <button
                     mat-icon-button
-                    [matTooltip]="'Mark all as read'"
+                    [matTooltip]="'Đọc tất cả'"
                     [disabled]="unreadCount === 0"
                     (click)="markAllAsRead()">
                     <mat-icon
                         class="icon-size-5 text-current"
                         [svgIcon]="'heroicons_solid:mail-open'"></mat-icon>
                 </button>
+                <button
+                    mat-icon-button
+                    class="ml-2"
+                    [matTooltip]="'Xem tất cả'"
+                    (click)="markAllView()">
+                   <mat-icon class="icon-size-5 text-current" svgIcon="heroicons_outline:inbox"></mat-icon>
+                </button>
+
             </div>
         </div>
 
@@ -82,15 +105,6 @@
                                             'bg-primary': !notification.isRead}"></span>
                         </button>
                         <!-- Remove -->
-                        <!--<button
-                            class="w-6 h-6 min-h-6 sm:opacity-0 sm:group-hover:opacity-100"
-                            mat-icon-button
-                            (click)="delete(notification)"
-                            [matTooltip]="'Remove'">
-                            <mat-icon
-                                class="icon-size-4"
-                                [svgIcon]="'heroicons_solid:x'"></mat-icon>
-                        </button>-->
                     </div>
 
                 </div>

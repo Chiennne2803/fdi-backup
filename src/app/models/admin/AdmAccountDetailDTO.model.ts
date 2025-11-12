@@ -65,6 +65,9 @@ export class AdmAccountDetailDTO extends AuditModel {
     denyIps?: string;
     allowIps?: string;
     deputyContact?: AdmDeputyContactDTO;
+    presenter?: string;
+    guide?: string;
+    reviewer?: string;
 
     fsLoanProfilesDTOS?: FsLoanProfilesDTO[];//danh sach ho so huy dong von
     fsTransInvestorDTOS?: FsTransInvestorDTO[];//danh sach ho so dau tu

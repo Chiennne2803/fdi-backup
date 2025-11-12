@@ -1,15 +1,15 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {DashboardService} from 'app/service/common-service/dashboard.service';
-import {Observable} from 'rxjs';
-import {BaseResponse} from 'app/models/base';
-import {AuthService} from "../../../core/auth/auth.service";
-import {User} from "../../../core/user/user.types";
-import {ApexOptions} from 'ng-apexcharts';
-import {DateTimeformatPipe} from "../../../shared/components/pipe/date-time-format.pipe";
-import {CurrencyFormatPipe} from "../../../shared/components/pipe/string-format.pipe";
-import {DashboardDTO} from "../../../models/admin/DashboardDTO.model";
-import {FsDocuments} from "../../../models/admin";
-import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { DashboardService } from 'app/service/common-service/dashboard.service';
+import { Observable } from 'rxjs';
+import { BaseResponse } from 'app/models/base';
+import { AuthService } from "../../../core/auth/auth.service";
+import { User } from "../../../core/user/user.types";
+import { ApexOptions } from 'ng-apexcharts';
+import { DateTimeformatPipe } from "../../../shared/components/pipe/date-time-format.pipe";
+import { CurrencyFormatPipe } from "../../../shared/components/pipe/string-format.pipe";
+import { DashboardDTO } from "../../../models/admin/DashboardDTO.model";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { getInitials } from 'app/shared/utils/utils';
 
 @Component({
     selector: 'dashboard',
@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
     public dashBoardValue: Observable<BaseResponse>;
     public dashboardDTO: DashboardDTO;
     public user: User;
-    public avatar: string | SafeResourceUrl = 'assets/images/avatars/brian-hughes.jpg';
+    public avatar: string | SafeResourceUrl;
     chartConfigSales: ApexOptions = {};
     chartConfigAccount: ApexOptions = {};
     chartConfigPay: ApexOptions = {};
@@ -43,439 +43,11 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.chartOptions1 = {
-            series: [
-                {
-                name: 'Số tiền tài khoản đầu tư mới',
-                type: 'column',
-                data: [25, 65, 93, 52, 70, 38]
-                },
-                {
-                name: 'Số lượng tài khoản nhà đầu tư mới',
-                type: 'line',
-                data: [95, 65, 65, 78, 75, 45]
-                }
-            ],
-            chart: {
-                type: "line",
-                height: 350,
-                toolbar: {
-                    show: false,
-                },
-                zoom: {
-                    enabled: false,
-                },
-            },
-            markers: {
-                size: 6, // dấu chấm tròn to hơn tại điểm line
-                shape: 'circle'
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                 width: [0, 3], // Cột: 0, Line: 3
-                curve: 'smooth'
-            },
-            xaxis: {
-                categories: ['16', '17', '18', '19', '20', '21'
-                ],
-                labels: {
-                    style: {
-                        fontSize: "14px",
-                    },
-                },
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        fontSize: "14px",
-                    },
-                },
-            },
-            grid: {
-                show: true,
-                borderColor: "#E5E7EB", // Màu lưới (xám nhạt)
-                strokeDashArray: 4, // Tạo hiệu ứng nét đứt
-                xaxis: {
-                    lines: {
-                        show: false, // Không cần lưới theo chiều dọc (tuỳ chọn)
-                    },
-                },
-                yaxis: {
-                    lines: {
-                        show: true, // Hiển thị lưới theo chiều ngang
-                    },
-                },
-            },
-            tooltip: {
-                x: {
-                    format: "MM/yyyy",
-                },
-                y: {
-                    formatter: (val: number) => `${val}`,
-                },
-            },
-            plotOptions: {
-                bar: {
-                columnWidth: '30%' // ❗ cột nhỏ lại
-                }
-            },
-            colors: ["#1255FB", "#ED7632"],
-            fill: {
-                type: "gradient",
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.4,
-                    opacityTo: 0.1,
-                    stops: [0, 90, 100],
-                },
-            },
-            legend: {
-                position: "bottom",
-                horizontalAlign: "center",
-                fontSize: "14px",
-                itemMargin: {
-                    horizontal: 20,
-                    vertical: 8,
-                },
-                markers: {
-                    radius: 10,
-                },
-            },
-        }
-        this.chartCustomer = {
-            series: [
-                {
-                    name: "Khách hàng doanh nghiệp",
-                    data: [300, 322, 400, 270, 190, 310],
-                },
-                {
-                    name: "Khách hàng cá nhân",
-                    data: [250, 291, 300, 150, 120, 270],
-                },
-            ],
-            chart: {
-                type: "bar",
-                height: 350,
-                toolbar: { show: false },
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: "50%",
-                    borderRadius: 1.5,
-                },
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                show: true,
-                width: 4,
-                colors: ["transparent"],
-            },
-            xaxis: {
-                categories: [
-                    "02/2025",
-                    "03/2025",
-                    "04/2025",
-                    "05/2025",
-                    "06/2025",
-                    "07/2025",
-                ],
-                labels: {
-                    style: {
-                        fontSize: "14px",
-                    },
-                },
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        fontSize: "14px",
-                    },
-                },
-            },
-            grid: {
-                show: true,
-                borderColor: "#E5E7EB", // Màu lưới (xám nhạt)
-                strokeDashArray: 4, // Tạo hiệu ứng nét đứt
-                xaxis: {
-                    lines: {
-                        show: false, // Không cần lưới theo chiều dọc (tuỳ chọn)
-                    },
-                },
-                yaxis: {
-                    lines: {
-                        show: true, // Hiển thị lưới theo chiều ngang
-                    },
-                },
-            },
-
-            fill: {
-                opacity: 1,
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val: number) {
-                        return `${val}`;
-                    },
-                },
-            },
-            legend: {
-                position: "bottom",
-                horizontalAlign: "center",
-                fontSize: "14px",
-                markers: {
-                    radius: 10,
-                },
-                itemMargin: {
-                    horizontal: 20,
-                    // vertical: 10,
-                },
-            },
-            colors: ["#ED7632", "#1255FB"],
-            responsive: [
-                {
-                    breakpoint: 768,
-                    options: {
-                        plotOptions: {
-                            bar: {
-                                columnWidth: "60%",
-                            },
-                        },
-                    },
-                },
-            ],
-        };
-         this.chartTask = {
-            series: [
-                {
-                    name: "Khách hàng doanh nghiệp",
-                    data: [300, 322, 400, 270, 190, 310],
-                },
-                {
-                    name: "Khách hàng cá nhân",
-                    data: [250, 291, 300, 150, 120, 270],
-                },
-            ],
-            chart: {
-                type: "area",
-                height: 350,
-                toolbar: {
-                    show: false,
-                },
-                zoom: {
-                    enabled: false,
-                },
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                curve: "smooth", // ✅ Đường cong mượt
-                width: 2,
-            },
-            xaxis: {
-                categories: [
-                    "02/2025",
-                    "03/2025",
-                    "04/2025",
-                    "05/2025",
-                    "06/2025",
-                    "07/2025",
-                ],
-                labels: {
-                    style: {
-                        fontSize: "14px",
-                    },
-                },
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        fontSize: "14px",
-                    },
-                },
-            },
-            grid: {
-                show: true,
-                borderColor: "#E5E7EB", // Màu lưới (xám nhạt)
-                strokeDashArray: 4, // Tạo hiệu ứng nét đứt
-                xaxis: {
-                    lines: {
-                        show: false, // Không cần lưới theo chiều dọc (tuỳ chọn)
-                    },
-                },
-                yaxis: {
-                    lines: {
-                        show: true, // Hiển thị lưới theo chiều ngang
-                    },
-                },
-            },
-            tooltip: {
-                x: {
-                    format: "MM/yyyy",
-                },
-                y: {
-                    formatter: (val: number) => `${val}`,
-                },
-            },
-            colors: ["#ED7632", "#1255FB"],
-            fill: {
-                type: "gradient",
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.4,
-                    opacityTo: 0.1,
-                    stops: [0, 90, 100],
-                },
-            },
-            legend: {
-                position: "bottom",
-                horizontalAlign: "center",
-                fontSize: "14px",
-                itemMargin: {
-                    horizontal: 20,
-                    vertical: 8,
-                },
-                markers: {
-                    radius: 10,
-                },
-            },
-        };
-        this.chartProductTimeSeries = {
-            series: [
-                {
-                name: 'Nạp tiền',
-                data: [44, 55, 41, 64, 22]
-                },
-                {
-                name: 'Rút tiền',
-                data: [53, 32, 33, 52, 13]
-                }
-            ],
-            chart: {
-                type: 'bar',
-                height: 350,
-                stacked: false,
-                toolbar: {
-                    show: false,
-                },
-            },
-            plotOptions: {
-                bar: {
-                horizontal: true,
-                dataLabels: {
-                    position: 'top'
-                },
-                barHeight: '70%',
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                style: {
-                colors: ['#fff']
-                }
-            },
-            xaxis: {
-                categories: [ 
-                    "03/2025",
-                    "04/2025",
-                    "05/2025",
-                    "06/2025",
-                    "07/2025",
-                ],
-                labels: {
-                    style: {
-                        fontSize: "14px",
-                    },
-                },
-            },
-            colors: ["#ED7632", "#1255FB"],
-            legend: {
-                 position: "bottom",
-                horizontalAlign: "center",
-                fontSize: "14px",
-                itemMargin: {
-                    horizontal: 20,
-                    vertical: 8,
-                },
-                markers: {
-                    radius: 10,
-                },
-            },
-            // grid: {
-            //     borderColor: '#e0e0e0'
-            // }
-        };
-
-        this.chartNewVsReturning = {
-            chart      : {
-                animations: {
-                    speed           : 400,
-                    animateGradually: {
-                        enabled: false,
-                    },
-                },
-                fontFamily: 'inherit',
-                foreColor : 'inherit',
-                height    : '100%',
-                type      : 'donut',
-                sparkline : {
-                    enabled: true,
-                },
-            },
-            colors     : [ "#1255FB", "#ED7632"],
-            labels     : ['Thành công', 'Thất bại'],
-            plotOptions: {
-                pie: {
-                    customScale  : 0.9,
-                    expandOnClick: false,
-                    donut        : {
-                        size: '70%',
-                    },
-                },
-            },
-            series     : [80, 20],
-            states     : {
-                hover : {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-                active: {
-                    filter: {
-                        type: 'none',
-                    },
-                },
-            },
-            tooltip    : {
-                enabled        : true,
-                fillSeriesColor: false,
-                theme          : 'dark',
-                custom         : ({
-                    seriesIndex,
-                    w,
-                }): string => `<div class="flex items-center h-8 min-h-8 max-h-8 px-3">
-                                                    <div class="w-3 h-3 rounded-full" style="background-color: ${w.config.colors[seriesIndex]};"></div>
-                                                    <div class="ml-2 text-md leading-none">${w.config.labels[seriesIndex]}:</div>
-                                                    <div class="ml-2 text-md font-bold leading-none">${w.config.series[seriesIndex]}%</div>
-                                                </div>`,
-            },
-        };
-
-
         this.user = this._authService.authenticatedUser;
-        this.avatar = this._authService.loadDefaultAvatar();
         this._authService.getAvata.subscribe(res => {
             if (res) {
                 this.avatar = this._domSanitizer.bypassSecurityTrustResourceUrl(res);
-            } else {
-                this.avatar = this._authService.loadDefaultAvatar();
-                this._authService.loadAvataLocal();
-            }
+            } 
         })
 
         this._dashBoardService.dashboard$.subscribe((res) => {
@@ -492,6 +64,10 @@ export class DashboardComponent implements OnInit {
                 }
             }
         });
+    }
+
+    getInitials(name: string): string {
+        return getInitials(name);
     }
 
 
@@ -657,7 +233,7 @@ export class DashboardComponent implements OnInit {
                     color: 'var(--fuse-border)'
                 },
                 labels: {
-                    formatter: (value: number): string => value+'',
+                    formatter: (value: number): string => value + '',
                     style: {
                         colors: 'var(--fuse-text-secondary)'
                     }

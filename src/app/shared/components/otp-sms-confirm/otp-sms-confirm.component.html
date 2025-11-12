@@ -1,110 +1,30 @@
-<!-- <div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
-    <div mat-dialog-title class="mb-0">
-        <div class="flex justify-between">
-            <h2 mat-dialog-title class="mb-0">{{data.title}}</h2>
-            <a class="mt-[-5px]" *ngIf="!smsOtpForm.disabled" mat-dialog-close mat-icon-button>
-                <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
-            </a>
-        </div>
-    </div>
-    <mat-dialog-content class="mat-typography">
-        <div>
-            <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
-                [type]="alert.type" [@shake]="alert.type === 'error'">
-                {{alert.message}}
-            </fuse-alert>
-        </div>
-
-        <form class="mt-8" [formGroup]="smsOtpForm">
-            <div class="flex items-baseline mt-0.5 font-medium">
-                {{data.content}}
-            </div>
-
-            <mat-form-field class="w-full mt-5">
-                <mat-label>Nhập mã OTP được gửi qua {{typeOtp}}</mat-label>
-                <input matInput inputMask maskType="number" maxlength="4"
-                    onKeyPress="if(this.value.length==4) return false;" id="smsOtp" formControlName="smsOtp">
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
-                <mat-error *ngIf="smsOtpForm.get('smsOtp')?.hasError('required')">
-                    {{ 'BM000' | transloco }}
-                </mat-error>
-                <mat-error
-                    *ngIf="smsOtpForm.get('smsOtp')?.hasError('forbiddenOtp') && !smsOtpForm.get('smsOtp')?.hasError('required')">
-                    {{ 'BM001' | transloco }}
-                </mat-error>
-                <mat-error
-                    *ngIf="smsOtpForm.get('smsOtp')?.hasError('maxlength') && !smsOtpForm.get('smsOtp')?.hasError('required')">
-                    {{ 'BM001' | transloco }}
-                </mat-error>
-            </mat-form-field>
-            <div class="flex items-baseline mt-0.5 font-medium">
-                <div>Bạn chưa nhận được mã?</div>
-                <a class="ml-1 text-primary-500 hover:underline cursor-pointer" *ngIf="!resendTime"
-                    (click)="resendOtp()">
-                    Gửi lại
-                </a>
-                <a class="ml-1 text-primary-500 hover:underline" *ngIf="resendTime">
-                    {{resendTime}}s
-                </a>
-            </div>
-
-            <div class="text-center mt-6">
-                <a mat-dialog-close mat-button *ngIf="!smsOtpForm.disabled" [matTooltip]="'Huỷ'">
-                    Huỷ
-                </a>
-                <button mat-flat-button color="primary" (click)="submitOtp()" [disabled]="smsOtpForm.disabled">
-                    <span *ngIf="!smsOtpForm.disabled">
-                        Xác nhận
-                    </span>
-                    <mat-progress-spinner *ngIf="smsOtpForm.disabled" [diameter]="24" [mode]="'indeterminate'">
-                    </mat-progress-spinner>
-                </button>
-            </div>
-        </form>
-    </mat-dialog-content>
-</div> -->
-
-<div class="flex flex-col max-w-160 md:min-w-128 max-h-screen -m-6">
-
+<div class="flex flex-col sm:w-120 max-h-screen -m-6">
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary-blue-2 text-on-primary-blue-2">
-        <!-- <div mat-dialog-title class="mb-0"> -->
-        <!-- <div class="flex justify-between"> -->
-        <h2 mat-dialog-title class="mb-0">{{data.title}}</h2>
-        <a  *ngIf="!smsOtpForm.disabled" mat-dialog-close mat-icon-button>
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <h2 class="text-lg font-medium">{{data.title}}</h2>
+        <a *ngIf="!smsOtpForm.disabled" mat-dialog-close mat-icon-button>
             <mat-icon class="text-white" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </a>
-        <!-- </div> -->
-        <!-- </div> -->
     </div>
 
     <!-- Compose form -->
-    <!-- <mat-dialog-content class="mat-typography ">
-        <div>
-           
-        </div> -->
-
     <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="smsOtpForm">
-        <fuse-alert class="mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false" [type]="alert.type"
-            [@shake]="alert.type === 'error'">
-            {{alert.message}}
-        </fuse-alert>
-        <div class="flex text-center items-baseline mt-0.5 font-medium">
+
+        <div class="flex text-start items-baseline font-medium">
             {{data.content}}
         </div>
 
-        <mat-form-field class="w-full mt-5">
+        <fuse-alert class="mt-4" *ngIf="showAlert" [@shake]="alertAnimationKey" [appearance]="'outline'"
+            [showIcon]="false" [type]="alert.type">
+            {{ alert.message }}
+        </fuse-alert>
+
+        <!-- <mat-form-field class="w-full mt-5">
             <mat-label class="text-center">Nhập mã OTP được gửi qua {{typeOtp}}</mat-label>
             <input matInput inputMask maskType="number" maxlength="4"
                 onKeyPress="if(this.value.length==4) return false;" id="smsOtp" formControlName="smsOtp">
-                <!-- <ng-otp-input 
-                    [config]="{
-                        length: 4,
-                        allowNumbersOnly: true,
-                        inputClass: 'otp-input focus:border-blue-500 border-gray-300 rounded-md transition-all'
-                    }">
-                </ng-otp-input> -->
-            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail-open'"></mat-icon>
             <mat-error *ngIf="smsOtpForm.get('smsOtp')?.hasError('required')">
                 {{ 'BM000' | transloco }}
             </mat-error>
@@ -116,29 +36,76 @@
                 *ngIf="smsOtpForm.get('smsOtp')?.hasError('maxlength') && !smsOtpForm.get('smsOtp')?.hasError('required')">
                 {{ 'BM001' | transloco }}
             </mat-error>
-        </mat-form-field>
-        <div class="flex justify-center items-baseline mt-0.5 font-medium">
-            <div>Bạn chưa nhận được mã?</div>
-            <a class="ml-1 text-primary-blue-2 hover:underline cursor-pointer" *ngIf="!resendTime" (click)="resendOtp()">
+        </mat-form-field> -->
+        <div class="w-full mt-4 text-center">
+            <label class="block mb-2 font-medium">Nhập mã OTP được gửi qua {{typeOtp}}</label>
+            <div #otpInputWrapper>
+                <ng-otp-input [config]="otpConfig" (onInputChange)="onOtpChange($event)">
+                </ng-otp-input>
+            </div>
+        </div>
+
+        <!-- Hiển thị phần gửi lại và countdown -->
+        <div class="flex justify-center items-baseline mt-1 font-medium" *ngIf="!isResendLimitReached">
+            <div>Bạn chưa nhận được mã ?</div>
+            <!-- Chỉ hiển thị nút gửi lại khi chưa hết lượt -->
+            <a class="ml-1 text-primary-blue-2 hover:underline cursor-pointer"
+                *ngIf="!resendTime && !isResendingOtp && !hasUsedAllResends" (click)="resendOtp()"
+                [attr.aria-label]="'Gửi lại mã OTP'" role="button" tabindex="0" (keydown.enter)="resendOtp()"
+                (keydown.space)="resendOtp()">
                 Gửi lại
             </a>
+            <!-- Luôn hiển thị countdown nếu còn thời gian -->
             <a class="ml-1 text-primary-blue-2 hover:underline" *ngIf="resendTime">
                 {{resendTime}}s
             </a>
+            <div class="ml-1 flex items-center" *ngIf="isResendingOtp">
+                <mat-progress-spinner [diameter]="16" [mode]="'indeterminate'"></mat-progress-spinner>
+                <span class="ml-1 text-sm">Đang gửi...</span>
+            </div>
         </div>
 
-        <div class="flex justify-end items-center mt-6 gap-2">
-            <a mat-dialog-close mat-button *ngIf="!smsOtpForm.disabled">
-                Huỷ
-            </a>
-            <button mat-flat-button color="primary" (click)="submitOtp()" [disabled]="smsOtpForm.disabled">
-                <span *ngIf="!smsOtpForm.disabled">
-                    Xác nhận
-                </span>
-                <mat-progress-spinner *ngIf="smsOtpForm.disabled" [diameter]="24" [mode]="'indeterminate'">
-                </mat-progress-spinner>
-            </button>
+        <!-- Hiển thị số lần còn lại -->
+        <div class="flex justify-center items-center mt-2 text-sm text-gray-600"
+            *ngIf="!isResendLimitReached && resendCount > 0 && !hasUsedAllResends">
+            <span>Số lần gửi lại còn lại: {{maxResendAttempts - resendCount}}</span>
+        </div>
+
+        <!-- Thông báo khi đã sử dụng hết lượt gửi lại nhưng vẫn có thể nhập OTP -->
+        <div class="flex justify-center items-center mt-2 text-sm text-orange-600" *ngIf="hasUsedAllResends">
+            <span>Bạn đã sử dụng hết số lần gửi lại OTP. Vui lòng nhập mã OTP hiện tại.</span>
+        </div>
+
+        <div class="flex justify-center items-center mt-6 gap-2">
+            <!-- Hiển thị nút Huỷ và Xác nhận khi chưa hết lượt -->
+            <div *ngIf="!hasUsedAllResends" class="flex gap-2">
+                <a mat-dialog-close mat-stroked-button *ngIf="!smsOtpForm.disabled">
+                    Huỷ
+                </a>
+                <button type="submit" mat-flat-button color="primary" (click)="submitOtp()"
+                    [disabled]="smsOtpForm.disabled">
+                    <span *ngIf="!smsOtpForm.disabled">
+                        Xác nhận
+                    </span>
+                    <mat-progress-spinner *ngIf="smsOtpForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                    </mat-progress-spinner>
+                </button>
+            </div>
+
+            <!-- Hiển thị nút Xác nhận và Đóng khi đã hết lượt gửi lại -->
+            <div *ngIf="hasUsedAllResends" class="flex gap-2">
+                <button type="submit" mat-flat-button color="primary" (click)="submitOtp()"
+                    [disabled]="smsOtpForm.disabled">
+                    <span *ngIf="!smsOtpForm.disabled">
+                        Xác nhận
+                    </span>
+                    <mat-progress-spinner *ngIf="smsOtpForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                    </mat-progress-spinner>
+                </button>
+                <button mat-stroked-button mat-dialog-close>
+                    Đóng
+                </button>
+            </div>
         </div>
     </form>
-    <!-- </mat-dialog-content> -->
 </div>

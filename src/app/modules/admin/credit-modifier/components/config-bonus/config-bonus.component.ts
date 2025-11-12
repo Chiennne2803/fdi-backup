@@ -120,22 +120,22 @@ export class ConfigBonusComponent implements OnInit {
                 searchConfig: {
                     config: [
                         new DropListSearch('calcMethod', 'Hình thức tính hoa hồng', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Giá trị cố định', value: 1},
                             {label: 'Tính theo tỷ lệ', value: 2},], null, false),
                         new DropListSearch('conditionsBy', 'Điều kiện áp dụng', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Giao dịch đầu tiên', value: 1},
                             {label: 'Khoảng thời gian', value: 2},], null, false),
                         new DropListSearch('transType', 'Giao dịch hưởng hoa hồng', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Giao dịch Đầu tư', value: 1},
                             {label: 'Giao dịch Vay vốn', value: 2},], null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Áp dụng', value: 1},
                             {label: 'Ngưng áp dụng', value: 0},], null, false),
-                        new InputSearch('amount', 'Số tiền (VNĐ)', null, false, 'number'),
+                        new InputSearch('amount', 'Số tiền (VND)', null, false, 'number'),
                         new InputSearch('bonusRate', 'Tỉ lệ hoa hồng (%)', null, false),
                         new DateTimeSearch('startDateActive', 'Ngày hiệu lực', null, false),
                         new DateTimeSearch('endDateActive', 'Ngày hết hiệu lực', null, false),

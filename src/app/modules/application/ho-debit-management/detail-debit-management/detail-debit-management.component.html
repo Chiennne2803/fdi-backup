@@ -1,61 +1,44 @@
-<mat-drawer-container
-    class="flex-auto h-full bg-card dark:bg-transparent">
+<mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent">
 
-    <mat-drawer
-        class="w-11/12 sm:w-100"
-        [mode]="'side'"
-        [opened]="false"
-        [position]="'end'"
-        #fileDrawer>
-        <file-detail
-            [fileDrawer]="fileDrawer"
-            [selectedFile]="selectedFile"
-        ></file-detail>
+    <mat-drawer class="w-11/12 sm:w-100" [mode]="'side'" [opened]="false" [position]="'end'" #fileDrawer>
+        <file-detail [fileDrawer]="fileDrawer" [selectedFile]="selectedFile"></file-detail>
     </mat-drawer>
-    <mat-drawer-content class="flex flex-col" *ngIf="viewMode == 1"
-                        @fadeOutLeft
-                        @slideInLeft>
+    <mat-drawer-content class="flex flex-col" *ngIf="viewMode == 1" @fadeOutLeft @slideInLeft>
         <div class="flex flex-col w-full p-5">
             <ng-container *ngIf="(debtManagement | async) as debtManagementData">
-                <div class="relative w-full px-5">
-                    <div class="flex items-center justify-between w-full mx-auto py-2">
+                <div class="relative w-full">
+                    <div
+                        class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 w-full sm:w-auto mx-auto pb-4">
                         <article class="prose break-words">
-                            <h3>
+                            <h3 class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3">
+                                <span [matTooltip]="'Đóng'" (click)="onClose()"
+                                    class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                                    <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                                        svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                                    Quay lại
+                                </span>
                                 Thông tin chi tiết công nợ
                             </h3>
                         </article>
-                        <div class="flex items-center justify-end">
-                            <a
-                                (click)="onClose()"
-                                class="ml-auto sm:ml-0"
-                                mat-stroked-button
-                                [matTooltip]="'Đóng'"
-                            >
-                                Đóng
-                            </a>
-                            <a @fadeInRight
-                               *ngIf="fsReportDebtManagers.status == 1 && ( 'SFF_MANAGEMENT_DEBT_APPROVE' | permission)"
-                               (click)="onClickCreateHistory(debtManagementData)"
-                               mat-flat-button
-                               color="primary"
-                               class="ml-5"
-                               [matTooltip]="'Tạo ghi nhận xử lý'">
+                        <div class="flex items-center justify-end gap-5 w-full sm:w-auto">
+                            <button @fadeInRight
+                                *ngIf="fsReportDebtManagers.status == 1 && ( 'SFF_MANAGEMENT_DEBT_APPROVE' | permission)"
+                                (click)="onClickCreateHistory(debtManagementData)" mat-flat-button color="primary"
+                                class="w-full sm:w-auto" [matTooltip]="'Tạo ghi nhận xử lý'">
                                 Tạo ghi nhận xử lý
-                            </a>
+                            </button>
                             <a @fadeInRight
-                               *ngIf="fsReportDebtManagers.status == 1 && ( 'SFF_MANAGEMENT_DEBT_APPROVE' | permission)"
-                               (click)="onClickApprove(debtManagementData.fsLoanProfilesId)"
-                               mat-flat-button
-                               color="primary"
-                               class="ml-5"
-                               [matTooltip]="'Xử lý'">
+                                *ngIf="fsReportDebtManagers.status == 1 && ( 'SFF_MANAGEMENT_DEBT_APPROVE' | permission)"
+                                (click)="onClickApprove(debtManagementData.fsLoanProfilesId)" mat-flat-button
+                                color="primary" class="w-full sm:w-auto" [matTooltip]="'Xử lý'">
                                 Xử lý
                             </a>
                         </div>
                     </div>
                 </div>
-                <ng-container >
-                    <div class="grid grid-cols-4 gap-5 p-5 border-b">
+                <ng-container>
+                    <div
+                        class="p-4 border border-primary-grayLight-2 rounded-lg grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                         <article class="prose break-words">
                             <p>Hồ sơ huy động vốn: <br> <b>{{ debtManagementData.fsLoanProfilesId }}</b></p>
                         </article>
@@ -63,259 +46,290 @@
                             <p>Bên huy động vốn: <br> <b>{{ debtManagementData.fullName }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Lãi suất: <br> <b>{{ debtManagementData.rate }} %</b></p>
+                            <p>Lãi suất(%/năm): <br> <b>{{ debtManagementData.rate }} %</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Kỳ hạn vay(ngày): <br> <b>{{ debtManagementData.loanTimeCycle }}</b></p>
+                            <p>Kỳ hạn(ngày): <br> <b>{{ debtManagementData.loanTimeCycle }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Số tiền huy động (VNĐ): <br> <b>{{ debtManagementData.totalAmount | currencyFormatPipe : 10 }}</b></p>
+                            <p>Số tiền huy động(VND): <br> <b>{{ debtManagementData.totalAmount | currencyFormatPipe :
+                                    10 }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Lãi dự kiến (VNĐ): <br> <b>{{ debtManagementData.totalAmountInteres | currencyFormatPipe : 10 }}</b></p>
+                            <p>Lãi dự kiến(VND): <br> <b>{{ debtManagementData.totalAmountInteres | currencyFormatPipe
+                                    : 10 }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Gốc đã trả (VNĐ): <br> <b>{{ (debtManagementData.payAmount) | currencyFormatPipe : 10 }}</b></p>
+                            <p>Gốc đã trả(VND): <br> <b>{{ (debtManagementData.payAmount) | currencyFormatPipe : 10
+                                    }}</b></p>
                         </article>
                         <article class="prose break-words">
-                            <p>Nợ gốc còn lại (VNĐ): <br> <b>{{ debtManagementData.totalAmountDeb | currencyFormatPipe : 10 }}</b></p>
+                            <p>Nợ gốc còn lại(VND): <br> <b>{{ debtManagementData.totalAmountDeb | currencyFormatPipe :
+                                    10 }}</b></p>
                         </article>
                     </div>
                 </ng-container>
-                <div class="relative w-full px-5">
-                    <div class="flex items-center justify-between w-full mx-auto py-2">
-                        <article class="prose break-words">
-                            <h3>
-                                Chi tiết các kỳ thanh toán
-                            </h3>
-                        </article>
-                    </div>
-                </div>
-                <ng-container *ngIf="(debtManagement | async) as debtManagementData">
-                    <table mat-table [dataSource]="debtManagementData.lstFsCardDown" class="overflow-x-auto">
-                        <!-- No Column -->
-                        <ng-container matColumnDef="no">
-                            <th mat-header-cell *matHeaderCellDef> STT </th>
-                            <td mat-cell *matCellDef="let idx = index"> {{idx + 1}} </td>
-                        </ng-container>
-
-                        <!-- fsCardDownCode Column -->
-                        <ng-container matColumnDef="transCode">
-                            <th mat-header-cell *matHeaderCellDef> Đợt giải ngân </th>
-                            <td mat-cell *matCellDef="let fsCardDown"> {{fsCardDown.transCode}} </td>
-                        </ng-container>
-
-                        <!-- amount Column -->
-                        <ng-container matColumnDef="amount">
-                            <th mat-header-cell *matHeaderCellDef> Số tiền giải ngân(VNĐ) </th>
-                            <td mat-cell *matCellDef="let fsCardDown"> {{fsCardDown.amount | currencyFormatPipe : 10}} </td>
-                        </ng-container>
-
-                        <!-- amount Column -->
-                        <ng-container matColumnDef="amountInteresAtimate">
-                            <th mat-header-cell *matHeaderCellDef> Lãi dự kiến(VNĐ) </th>
-                            <td mat-cell *matCellDef="let fsCardDown"> {{fsCardDown.amountInteresAtimate | currencyFormatPipe : 10}} </td>
-                        </ng-container>
-
-                        <!-- payExpireDate Column -->
-                        <ng-container matColumnDef="expirDate">
-                            <th mat-header-cell *matHeaderCellDef> Ngày phải thanh toán </th>
-                            <td mat-cell *matCellDef="let fsCardDown"> {{fsCardDown.expirDate | datetimeformat: 'DD/MM/YYYY HH:mm:ss'}} </td>
-                        </ng-container>
-
-                        <!-- totalDebitPaid Column -->
-                        <ng-container matColumnDef="principalAmountDue">
-                            <th mat-header-cell *matHeaderCellDef> Gốc đã thanh toán(VNĐ) </th>
-                            <td mat-cell *matCellDef="let fsCardDown"> {{fsCardDown.principalAmountDue | currencyFormatPipe : 10}} </td>
-                        </ng-container>
-
-                        <!-- totalDebitPaid Column -->
-                        <ng-container matColumnDef="interestAmountDue">
-                            <th mat-header-cell *matHeaderCellDef> Lãi đã thanh toán(VNĐ) </th>
-                            <td mat-cell *matCellDef="let fsCardDown"> {{fsCardDown.interestAmountDue | currencyFormatPipe : 10}} </td>
-                        </ng-container>
-
-                        <!-- paidDate Column -->
-                        <ng-container matColumnDef="lastPaidDate">
-                            <th mat-header-cell *matHeaderCellDef> Ngày thanh toán gần nhất </th>
-                            <td mat-cell *matCellDef="let fsCardDown"> {{fsCardDown.lastPaidDate | datetimeformat: 'DD/MM/YYYY HH:mm:ss'}} </td>
-                        </ng-container>
-
-                        <!-- statusName Column -->
-                        <ng-container matColumnDef="paymentStatus">
-                            <th mat-header-cell *matHeaderCellDef> Trạng thái </th>
-                            <td mat-cell *matCellDef="let fsCardDown"> {{fsCardDown.paymentStatusName}} </td>
-                        </ng-container>
-
-                        <!-- penaltyCash Column -->
-                        <ng-container matColumnDef="detail1">
-                            <th mat-header-cell *matHeaderCellDef> Lịch sử ghi nhận xử lý</th>
-                            <td mat-cell *matCellDef="let fsCardDown">
-                                <a style="color: blue"
-                                    mat-icon-button
-                                    (click)="viewHistoryNote(fsCardDown.fsCardDownId)">
-                                    Xem chi tiết
-                                </a>
-                        </ng-container>
-
-                        <!-- expireAmount Column -->
-                        <ng-container matColumnDef="detail2">
-                            <th mat-header-cell *matHeaderCellDef> Lịch sử xử lý</th>
-                            <td mat-cell *matCellDef="let fsCardDown">
-                                <a style="color: blue" class="mx-5"
-                                    mat-icon-button
-                                    (click)="viewHistoryProcess(fsCardDown.fsCardDownId)">
-                                    Xem chi tiết</a>
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
-
-
-                </ng-container>
-            </ng-container>
-        </div>
-    </mat-drawer-content>
-    <mat-drawer-content class="flex flex-col" *ngIf="viewMode == 2"
-                        @fadeOutLeft
-                        @slideInLeft>
-        <ng-container *ngIf="(debtManagement | async) as debtManagementData">
-            <div class="relative w-full px-5">
-                <div class="flex items-center justify-between w-full mx-auto py-2">
-                    <article class="prose break-words">
-                        <h3>
-                            Chi tiết ghi nhận xử lý công nợ
-                        </h3>
-                    </article>
-                    <div class="flex items-center justify-end">
-                        <a
-                            (click)="onCloseHistory()"
-                            class="ml-auto sm:ml-0"
-                            mat-stroked-button
-                            [matTooltip]="'Đóng'"
-                        >
-                            Đóng
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <ng-container>
-                <ng-container>
-                    <div class="p-5 ">
-                        <mat-expansion-panel class="m-5" (opened)="setIndexShow(i)" (close)="setIndexShow(-1)"
-                                              *ngFor="let fsReportDebtHistory of fsReportDebtHistoryDTOS; let i = index"
-                                             [expanded]="i == indexShow">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    {{fsReportDebtHistory.name}}
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <div class="grid grid-cols-1 gap-5 p-5">
-                                <article class="prose break-words">
-                                    <p>Đợt giải ngân: <br>
-                                        <b>{{ fsReportDebtHistory.fsCardDownCode }}</b></p>
-                                </article>
-                            </div>
-                            <mat-divider></mat-divider>
-                            <div class="grid grid-cols-1 p-5">
-                                <article class="prose break-words">
-                                    <p>Nội dung xử lý: <br>
-                                        <b>{{ fsReportDebtHistory.processingContent }}</b></p>
-                                </article>
-                            </div>
-                            <mat-divider></mat-divider>
-                            <div class="grid grid-cols-1 p-5">
-                                <article class="file-document prose mt-5">
-                                    <p>Tài liệu đính kèm: </p> <br>
-                                    <div class="flex flex-wrap">
-                                        <file-ui *ngFor="let file of fsReportDebtHistory.finDocumentsIds" [file]="file"
-                                                 (click)="onClickFile(file)"></file-ui>
-                                    </div>
-                                </article>
-                            </div>
-                            <mat-divider></mat-divider>
-                            <div class="grid grid-cols-2 p-5">
-                                <article class="prose break-words">
-                                    <p>Người tạo: <br>
-                                        <b>{{ fsReportDebtHistory.createdByName }}</b></p>
-                                </article>
-                                <article class="w-1/2 prose break-words">
-                                    <p>Ngày lập<br>
-                                        <b>{{fsReportDebtHistory.createdDate | datetimeformat: 'DD/MM/YYYY'}}</b>
-                                    </p>
-                                </article>
-                            </div>
-                        </mat-expansion-panel>
-                    </div>
-                </ng-container>
-            </ng-container>
-        </ng-container>
-    </mat-drawer-content>
-    <mat-drawer-content class="flex flex-col" *ngIf="viewMode == 3"
-                        @fadeOutLeft
-                        @slideInLeft>
-        <ng-container *ngIf="(debtManagement | async) as debtManagementData">
-            <div class="relative w-full px-5">
-                <div class="flex items-center justify-between w-full mx-auto py-2">
-                    <article class="prose break-words">
-                        <h3>
-                            Chi tiết xử lý công nợ
-                        </h3>
-                    </article>
-                    <div class="flex items-center justify-end">
-                        <a
-                            (click)="onCloseHistory()"
-                            class="ml-auto sm:ml-0"
-                            mat-stroked-button
-                            [matTooltip]="'Đóng'"
-                        >
-                            Đóng
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <ng-container>
-                <div *ngIf="fsReportDebtDTO">
-                    <ng-container>
-                        <div class="border-b p-5">
-                            <div class="grid grid-cols-2 gap-5 mb-5">
-                                <article class="prose break-words">
-                                    <p>Đợt giải ngân: <br> <b>{{ fsReportDebtDTO.fsCardDownCode }}</b></p>
-                                </article>
-                                <article class="prose break-words">
-                                    <p>Phương án xử lý: <br> <b>{{ fsReportDebtDTO.solutionName }}</b></p>
-                                </article>
-                            </div>
-                            <mat-divider></mat-divider>
-                            <div class="grid grid-cols-2 gap-5  mb-5">
-                                <article class="prose break-words">
-                                    <p>Nội dung xử lý: <br> <b>{{ fsReportDebtDTO.processingContent }}</b></p>
-                                </article>
-                            </div>
-                            <mat-divider></mat-divider>
-                            <article class="file-document prose ">
-                                <p>Tài liệu đính kèm: </p> <br>
-                                <div class="flex flex-wrap">
-                                    <file-ui *ngFor="let file of finDocumentsId" [file]="file"
-                                             (click)="onClickFile(file)"></file-ui>
-                                </div>
+                <div class="p-4 border border-primary-grayLight-2 rounded-lg">
+                    <div class="relative w-full">
+                        <div class="flex items-center justify-between w-full mx-auto py-2">
+                            <article class="prose break-words">
+                                <h3>Chi tiết các kỳ thanh toán</h3>
                             </article>
-                            <mat-divider></mat-divider>
-                            <div class="grid grid-cols-2 gap-5 mb-5">
-                                <article class="prose break-words">
-                                    <p>Ngươi tạo: <br> <b>{{ fsReportDebtDTO.createdByName }}</b></p>
-                                </article>
-                                <article class="prose break-words">
-                                    <p>Ngày tạo: <br> <b>{{ fsReportDebtDTO.createdDate | datetimeformat: 'DD/MM/YYYY' }}</b></p>
-                                </article>
-                            </div>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="(debtManagement | async) as debtManagementData">
+                        <!-- Thêm scroll ngang -->
+                        <div class="overflow-x-auto">
+                            <table mat-table [dataSource]="debtManagementData.lstFsCardDown"
+                                class="border border-primary-grayLight-2 rounded-lg text-sm">
+                                <!-- No Column -->
+                                <ng-container matColumnDef="no">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[50px]">STT</th>
+                                    <td mat-cell *matCellDef="let idx = index">{{ idx + 1 }}</td>
+                                </ng-container>
+
+                                <!-- fsCardDownCode Column -->
+                                <ng-container matColumnDef="transCode">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 px-4 bg-gray-50 min-w-[200px]">
+                                        Đợt giải ngân
+                                    </th>
+                                    <td mat-cell *matCellDef="let fsCardDown" class="px-4 min-w-[200px]">
+                                        {{ fsCardDown.transCode }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- amount Column -->
+                                <ng-container matColumnDef="amount">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 px-4 bg-gray-50 min-w-[150px]">
+                                        Số tiền giải ngân (VND)
+                                    </th>
+                                    <td mat-cell *matCellDef="let fsCardDown" class="px-4">
+                                        {{ fsCardDown.amount | currencyFormatPipe : 10 }}
+                                    </td>
+                                </ng-container>
+                                s
+
+                                <!-- amountInteresAtimate Column -->
+                                <ng-container matColumnDef="amountInteresAtimate">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[150px]">Lãi dự
+                                        kiến(VND)
+                                    </th>
+                                    <td mat-cell *matCellDef="let fsCardDown">{{ fsCardDown.amountInteresAtimate |
+                                        currencyFormatPipe : 10 }}</td>
+                                </ng-container>
+
+                                <!-- expirDate Column -->
+                                <ng-container matColumnDef="expirDate">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[150px]">Ngày
+                                        phải thanh toán
+                                    </th>
+                                    <td mat-cell *matCellDef="let fsCardDown">{{ fsCardDown.expirDate | datetimeformat:
+                                        'DD/MM/YYYY HH:mm:ss' }}</td>
+                                </ng-container>
+
+                                <!-- principalAmountDue Column -->
+                                <ng-container matColumnDef="principalAmountDue">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[150px]">Gốc đã
+                                        thanh
+                                        toán(VND)</th>
+                                    <td mat-cell *matCellDef="let fsCardDown">{{ fsCardDown.principalAmountDue |
+                                        currencyFormatPipe : 10 }}</td>
+                                </ng-container>
+
+                                <!-- interestAmountDue Column -->
+                                <ng-container matColumnDef="interestAmountDue">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[150px]">Lãi đã
+                                        thanh
+                                        toán(VND)</th>
+                                    <td mat-cell *matCellDef="let fsCardDown">{{ fsCardDown.interestAmountDue |
+                                        currencyFormatPipe : 10 }}</td>
+                                </ng-container>
+
+                                <!-- lastPaidDate Column -->
+                                <ng-container matColumnDef="lastPaidDate">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[150px]">Ngày
+                                        thanh toán gần
+                                        nhất</th>
+                                    <td mat-cell *matCellDef="let fsCardDown">{{ fsCardDown.lastPaidDate |
+                                        datetimeformat: 'DD/MM/YYYY HH:mm:ss' }}</td>
+                                </ng-container>
+
+                                <!-- paymentStatus Column -->
+                                <ng-container matColumnDef="paymentStatus">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[150px]">Trạng
+                                        thái</th>
+                                    <td mat-cell *matCellDef="let fsCardDown">{{ fsCardDown.paymentStatusName }}</td>
+                                </ng-container>
+
+                                <!-- detail1 Column -->
+                                <ng-container matColumnDef="detail1">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[150px]">Lịch sử
+                                        ghi nhận xử lý</th>
+                                    <td mat-cell *matCellDef="let fsCardDown">
+                                        <a class="text-blue-500 hover:underline cursor-pointer"
+                                            (click)="viewHistoryNote(fsCardDown.fsCardDownId)">
+                                            Xem chi tiết
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <!-- detail2 Column -->
+                                <ng-container matColumnDef="detail2">
+                                    <th mat-header-cell *matHeaderCellDef class="py-1 bg-gray-50 min-w-[150px]">Lịch sử
+                                        xử lý</th>
+                                    <td mat-cell *matCellDef="let fsCardDown">
+                                        <a class="text-blue-500 hover:underline cursor-pointer"
+                                            (click)="viewHistoryProcess(fsCardDown.fsCardDownId)">
+                                            Xem chi tiết
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
                         </div>
                     </ng-container>
                 </div>
             </ng-container>
+        </div>
+    </mat-drawer-content>
+    <mat-drawer-content class="flex flex-col" *ngIf="viewMode == 2" @fadeOutLeft @slideInLeft>
+        <ng-container *ngIf="(debtManagement | async) as debtManagementData">
+            <div class="relative w-full p-5">
+                <div class="flex items-center justify-between w-full mx-auto py-2">
+                    <article class="prose break-words">
+                        <h3 class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3">
+                            <span [matTooltip]="'Đóng'" (click)="onCloseHistory()"
+                                class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                                <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                                    svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                                Quay lại
+                            </span>
+                            Chi tiết ghi nhận xử lý công nợ
+                        </h3>
+                    </article>
+                </div>
+            </div>
+            <div class="px-5 space-y-5">
+                <!-- <div class="p-5 border border-primary-grayLight-2 rounded-lg"
+                *ngFor="let fsReportDebtHistory of fsReportDebtHistoryDTOS; let i = index">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <article class="prose break-words">
+                            <p>Tên ghi nhận: <br> <b>{{ fsReportDebtHistory.name }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Đợt giải ngân: <br> <b>{{ fsReportDebtHistory.fsCardDownCode }}</b></p>
+                        </article>
+                        <article class="prose break-words col-span-2 sm:col-span-1">
+                            <p>Nội dung xử lý: <br> <b>{{ fsReportDebtHistory.processingContent }}</b></p>
+                        </article>
+                        <article class="file-document col-span-2 sm:col-span-1">
+                            <p>Tài liệu đính kèm: </p>
+                            <div class="flex flex-wrap mt-2">
+                                <file-ui *ngFor="let file of fsReportDebtHistory.finDocumentsIds" [file]="file"
+                                    (click)="onClickFile(file)"></file-ui>
+                            </div>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Ngươi tạo: <br> <b>{{ fsReportDebtHistory.createdByName }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Ngày tạo: <br> <b>{{ fsReportDebtHistory.createdDate | datetimeformat: 'DD/MM/YYYY'
+                                    }}</b></p>
+                        </article>
+                    </div>
+                </div> -->
+                <mat-expansion-panel (opened)="setIndexShow(i)" (close)="setIndexShow(-1)"
+                    *ngFor="let fsReportDebtHistory of fsReportDebtHistoryDTOS; let i = index"
+                    [expanded]="i == indexShow">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="font-medium">
+                            {{fsReportDebtHistory.name}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="grid grid-cols-2 gap-4">
+                        <article class="prose break-words">
+                            <p>Đợt giải ngân: <br>
+                                <b>{{ fsReportDebtHistory.fsCardDownCode }}</b>
+                            </p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Nội dung xử lý: <br>
+                                <b>{{ fsReportDebtHistory.processingContent }}</b>
+                            </p>
+                        </article>
+                        <article class="file-document col-span-2 sm:col-span-1">
+                            <p>Tài liệu đính kèm: </p>
+                            <div class="flex flex-wrap mt-2">
+                                <file-ui *ngFor="let file of fsReportDebtHistory.finDocumentsIds" [file]="file"
+                                    (click)="onClickFile(file)"></file-ui>
+                            </div>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Người tạo: <br>
+                                <b>{{ fsReportDebtHistory.createdByName }}</b>
+                            </p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Ngày tạo:<br>
+                                <b>{{fsReportDebtHistory.createdDate | datetimeformat: 'DD/MM/YYYY'}}</b>
+                            </p>
+                        </article>
+                    </div>
+                </mat-expansion-panel>
+            </div>
         </ng-container>
     </mat-drawer-content>
-    {{viewMode}}
+    <mat-drawer-content class="flex flex-col" *ngIf="viewMode == 3" @fadeOutLeft @slideInLeft>
+        <ng-container *ngIf="(debtManagement | async) as debtManagementData">
+            <div class="relative w-full p-5">
+                <div class="flex items-center justify-between w-full mx-auto py-2">
+                    <article class="prose break-words">
+                        <h3 class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3">
+                            <span [matTooltip]="'Đóng'" (click)="onCloseHistory()"
+                                class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
+                                <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                                    svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                                Quay lại
+                            </span>
+                            Chi tiết xử lý công nợ
+                        </h3>
+                    </article>
+                </div>
+            </div>
+            <ng-container *ngIf="fsReportDebtDTO">
+                <div class="p-5 mx-5 order border-primary-grayLight-2 rounded-lg">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <article class="prose break-words">
+                            <p>Đợt giải ngân: <br> <b>{{ fsReportDebtDTO.fsCardDownCode }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Phương án xử lý: <br> <b>{{ fsReportDebtDTO.solutionName }}</b></p>
+                        </article>
+                        <article class="prose break-words col-span-2 sm:col-span-1">
+                            <p>Nội dung xử lý: <br> <b>{{ fsReportDebtDTO.processingContent }}</b></p>
+                        </article>
+                        <article class="file-document col-span-2 sm:col-span-1">
+                            <p>Tài liệu đính kèm: </p>
+                            <div class="flex flex-wrap mt-2">
+                                <file-ui *ngFor="let file of finDocumentsId" [file]="file"
+                                    (click)="onClickFile(file)"></file-ui>
+                            </div>
+                        </article>
+
+                        <article class="prose break-words">
+                            <p>Ngươi tạo: <br> <b>{{ fsReportDebtDTO.createdByName }}</b></p>
+                        </article>
+                        <article class="prose break-words">
+                            <p>Ngày tạo: <br> <b>{{ fsReportDebtDTO.createdDate | datetimeformat: 'DD/MM/YYYY'
+                                    }}</b></p>
+                        </article>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </mat-drawer-content>
+    <!-- {{viewMode}} -->
 </mat-drawer-container>

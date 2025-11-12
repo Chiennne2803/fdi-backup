@@ -118,7 +118,7 @@ export class WaitingProcessTransactionComponent implements OnInit {
     public approveMany(investors: FsCardDownInvestorDTO[]): void{
         const dialogRef = this.matDialog.open(ConfirmProcessingComponent, {
             disableClose: true,
-            width: '50%',
+            // width: '50%',
             data: {
                 title: 'Xác nhận nội dung xử lý?',
                 valueDefault: 3,
@@ -128,10 +128,10 @@ export class WaitingProcessTransactionComponent implements OnInit {
                         value: 3,
                         name: 'Phê duyệt',
                     },
-                    /* {
-                         value: 0,
+                    {
+                         value: 4,
                          name: 'Từ chối(Ghi rõ lý do)',
-                     }*/
+                     }
                 ],
                 complete: () => {
                     dialogRef.close();

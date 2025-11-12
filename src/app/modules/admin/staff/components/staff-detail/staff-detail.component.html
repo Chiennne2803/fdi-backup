@@ -9,8 +9,8 @@
         </div>
     </div>
     <ng-container *ngIf="(screenMode === 0 || screenMode === 1) else viewTemplate">
-        <div class="grid grid-flow-row-dense grid-cols-4 gap-6 m-6 ..." [formGroup]="staffDetailForm">
-            <div class="row-span-3 ">
+        <div class="grid grid-flow-row-dense grid-cols-4 gap-6 m-6" [formGroup]="staffDetailForm">
+            <!-- <div class="row-span-3 ">
                 <img [src]="avatar"
                      alt=""
                      style="object-fit: contain!important;"
@@ -22,6 +22,35 @@
                        (change)="onFileInput(avatarPerson.files)"
                        class="hidden"
                        accept="image/png, image/jpg, image/jpeg"/>
+            </div> -->
+            <div  class="relative w-full h-60 mx-auto row-span-3">
+                <!-- Avatar -->
+                <div *ngIf="avatar" [@zoomIn]
+                    class="w-full h-full max-h-[300px] rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 flex items-center justify-center overflow-hidden py-1.5">
+                    <img [src]="avatar" alt="Avatar"
+                        class="w-[220px] h-auto max-h-full object-contain rounded-md" />
+                </div>
+
+                <div *ngIf="!avatar"
+                    class="w-full h-full rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 bg-center bg-contain bg-no-repeat"
+                    [ngStyle]="{
+                'background-image': 'url(assets/images/icon/user-avatar.svg)'
+                }"></div>
+
+                <!-- Button chọn ảnh -->
+                <ng-container>
+                    <button type="button"
+                        class="absolute bottom-2 right-2 px-2 py-1 flex items-center gap-1 bg-white text-black rounded shadow-sm"
+                        (click)="avatarPerson.click()">
+                        <mat-icon class="text-black icon-size-3.5" svgIcon="heroicons_outline:camera"></mat-icon> Chọn ảnh
+                    </button>
+                    <input #avatarPerson
+                       type="file"
+                       name="img"
+                       (change)="onFileInput(avatarPerson.files)"
+                       class="hidden"
+                       accept="image/png, image/jpg, image/jpeg"/>
+                </ng-container>
             </div>
             <mat-form-field class="w-full">
                 <mat-label>Tên tài khoản</mat-label>
@@ -238,15 +267,19 @@
 <ng-template #viewTemplate>
     <div class="flex flex-col flex-auto mt-4 gap-3" *ngIf="staffDetail">
         <div class="flex flex-row flex-auto gap-8 px-8 h-72 max-h-72">
-            <div class="w-1/4 h-3">
-                <div class="flex flex-col justify-center w-full bg-zinc-100 rounded-md h-72 max-h-72">
+            <div class="w-1/4 h-50">
+                <div *ngIf="avatar" class="flex flex-col justify-center w-full bg-zinc-100 rounded-md h-72 max-h-72">
                     <img [src]="avatar"
                          alt=""
                          style="object-fit: contain!important;"
                          class="p-4 rounded-md max-h-full max-w-full">
-                    <div class="flex justify-center w-full pb-2">
-                    </div>
+                   
                 </div>
+                <div *ngIf="!avatar"
+                    class="w-full h-full rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5 bg-center bg-contain bg-no-repeat"
+                    [ngStyle]="{
+                'background-image': 'url(assets/images/icon/user-avatar.svg)'
+                }"></div>
             </div>
             <div class="w-3/4 flex flex-col">
                 <div class="flex flex-row flex-auto border-b-2">

@@ -7,21 +7,15 @@ import { ROUTER_CONST } from 'app/shared/constants';
 import { KycGuard } from './core/auth/guards/kyc.guard';
 import { RoleGuard } from './core/auth/guards/role.guard';
 import { AdmAccountType } from './core/user/user.types';
-import {NotificationsModule} from "./modules/common/notifications/notifications.module";
+import { StatusGuard } from './core/auth/guards/status.guard';
 
-// @formatter:off
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const appRoutes: Route[] = [
 
-    // Redirect empty path to '/example'
+    // Redirect empty path to '/admin'
     { path: '', pathMatch: 'full', redirectTo: 'admin' },
+    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'admin'},
 
-    // Redirect signed in user to the '/example'
-    //
-    // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
-    // path. Below is another redirection for that path to redirect the user to the desired
-    // location. This is a small convenience to keep all main routes together here on this file.
+
     // Auth routes for guests
     {
         path: '',
@@ -32,14 +26,26 @@ export const appRoutes: Route[] = [
             layout: 'auth'
         },
         children: [
-            // { path: 'confirmation-required', loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.module').then(m => m.AuthConfirmationRequiredModule) },
-            { path: 'forgot-password', loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.module').then(m => m.AuthForgotPasswordModule) },
-            { path: 'reset-password/:token', loadChildren: () => import('app/modules/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule) },
-            { path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.module').then(m => m.AuthSignInModule) },
-            { path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.module').then(m => m.AuthSignUpModule) },
+            { path: 'forgot-password', data: { title: 'Quên mật khẩu' }, loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.module').then(m => m.AuthForgotPasswordModule) },
+            { path: 'reset-password/:token', data: { title: 'Đặt lại mật khẩu' }, loadChildren: () => import('app/modules/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule) },
+            { path: 'sign-in', data: { title: 'Đăng nhập' }, loadChildren: () => import('app/modules/auth/sign-in/sign-in.module').then(m => m.AuthSignInModule) },
+            { path: 'sign-up', data: { title: 'Đăng ký' }, loadChildren: () => import('app/modules/auth/sign-up/sign-up.module').then(m => m.AuthSignUpModule) },
         ]
     },
 
+    {
+        path: '',
+        canActivate: [NoAuthGuard],
+        canActivateChild: [NoAuthGuard],
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: 'maintenance', data: { title: 'Bảo trì' }, loadChildren: () => import('app/modules/pages/maintenance/maintenance.module').then(m => m.MaintenanceModule) },
+            { path: 'error', data: { title: 'Lỗi hệ thống' }, loadChildren: () => import('app/modules/pages/error-500/error-500.module').then(m => m.Error500Module) },
+        ]
+    },
     // Admin routes
     {
         path: ROUTER_CONST.config.admin.root,
@@ -115,8 +121,8 @@ export const appRoutes: Route[] = [
     // Common routes
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [AuthGuard, StatusGuard],
+        canActivateChild: [AuthGuard, StatusGuard],
         data: {
             layout: 'compact'
         },
@@ -125,9 +131,10 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         children: [
-            {path: 'page/home', loadChildren: ()=> import('app/modules/pages/home/home.module').then(m => m.PageHomeModule)},
-            { path: ROUTER_CONST.config.common.profile.root, loadChildren: () => import('app/modules/common/profile/profile.module').then(m => m.ProfileModule) },
-            { path: ROUTER_CONST.config.common.notifications.root, loadChildren: () => import('app/modules/common/notifications/notifications.module').then(m => m.NotificationsModule) },
+            { path: 'page/home',  data: { title: 'Trang chủ' }, loadChildren: () => import('app/modules/pages/home/home.module').then(m => m.PageHomeModule) },
+            { path: ROUTER_CONST.config.common.profile.root,  data: { title: 'Hồ sơ của tôi' }, loadChildren: () => import('app/modules/common/profile/profile.module').then(m => m.ProfileModule) },
+            { path: ROUTER_CONST.config.common.notifications.root,  data: { title: 'Thông báo' },loadChildren: () => import('app/modules/common/notifications/notifications.module').then(m => m.NotificationsModule) },
+           
         ]
     },
 
@@ -148,5 +155,5 @@ export const appRoutes: Route[] = [
             { path: '', loadChildren: () => import('./modules/investor/investor.module').then(m => m.InvestorModule) },
         ]
     },
-
+    
 ];

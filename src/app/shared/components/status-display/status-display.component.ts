@@ -7,7 +7,5 @@ import {Component, Input} from '@angular/core';
 export class StatusDisplayComponent {
     @Input() public statusName: string;
     @Input() public status: number = 0;
-    constructor() {
-    }
 
 }

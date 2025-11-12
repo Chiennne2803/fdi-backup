@@ -102,6 +102,7 @@ export class KycServices extends BaseService {
                     }
                     if(form.name == 'admAccountDetailDTO.email') {
                         columnObj[name[1]].setValue(form.defaultValue)
+                        columnObj[name[1]].disable();
                     }
                 }
             });
@@ -125,12 +126,8 @@ export class KycServices extends BaseService {
         if ( form.type === 'Datepicker' ) {
             switch(formControlName) {
                 case 'dateOfBirth':
-                    form.maxDate = { 'days': -1 };
-                    if ( payload.deputyType === DeputyType.CAPITAL_CONTRIBUTOR || payload.deputyType === DeputyType.REPRESENTATIVE ) {
+                        form.maxDate = { 'days': -1 };
                         form.dateValidation = ['upper18'];
-                    } else {
-                        form.dateValidation = ['today'];
-                    }
                     break;
                 default:
                     form.maxDate = { 'days': 0 };

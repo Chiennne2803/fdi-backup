@@ -311,15 +311,18 @@ export class DetailInvestorRefundComponent implements OnInit {
     }
 
     onKey(target): void {
-        if (target.value) {
-            this.lstLoanProfileFilter = this.search(target.value);
+        if (target.value && target.value.trim()) {
+            this.lstLoanProfileFilter = this.search(target.value.trim());
         } else {
             this.lstLoanProfileFilter = this.lstLoanProfile;
         }
     }
 
     search(value: string): any {
-        return this.lstLoanProfile.filter(option => option.fsLoanProfilesId.toString().toLowerCase().includes(value.toLowerCase()));
+        if (!this.lstLoanProfile) return [];
+        return this.lstLoanProfile.filter(option => 
+            option.fsLoanProfilesId.toString().toLowerCase().includes(value.toLowerCase())
+        );
     }
 
 

@@ -30,20 +30,30 @@ import {DialogProcess7Component} from "./archive/detail/process-dialogs/dialog-p
 
 const profilesManagementRoutes: Route[] = [
     {
+        
         path: '',
         component: ProfilesManagementComponent,
         children: [
             {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'tpkd',
+            },
+            {
+                data: { title: 'Hồ sơ tiếp nhận' },
                 path: ':key',
                 component: ProfilesReceptionComponent,
             }, {
+                data: { title: 'Hồ sơ rà soát' },
                 path: 'review/:key',
                 component: ProfilesReviewingComponent,
             }, {
+                data: { title: 'Hồ sơ rà soát lại' },
                 path: 're-review/:key',
                 component: ProfilesReReviewingComponent,
             },
             {
+                data: { title: 'Hồ sơ lưu trữ' },
                 path: 'archive',
                 loadChildren: () => import('./archive/archive.module').then(m => m.ArchiveModule),
             },

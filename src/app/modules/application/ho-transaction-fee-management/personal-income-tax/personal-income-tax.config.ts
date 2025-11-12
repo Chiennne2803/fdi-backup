@@ -51,7 +51,7 @@ export const TABLE_PERSONAL_INCOME_TAX_LIST: ITableConfig = {
         new TextColumn('transDate', 'Ngày giao dịch', 20, false, 'DD/MM/YYYY HH:mm:ss'),
         new TextColumn('fsLoanProfilesId', 'Hồ sơ đã đầu tư', 10, false),
         new TextColumn('admAccountIdPresenterName', 'Khách hàng', 20, false),
-        new TextColumn('amount', 'Tiền thuế TNCN (VNĐ)', 20, false, 1),
+        new TextColumn('amount', 'Tiền thuế TNCN (VND)', 20, false, 1),
         new TextColumn('originOfTransactionName', 'Loại', 20, false),
     ],
     title: 'Danh sách giao dịch', isViewDetail: false

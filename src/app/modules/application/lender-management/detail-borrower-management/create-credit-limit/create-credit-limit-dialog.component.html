@@ -1,8 +1,8 @@
 <div class="flex flex-col max-w-240 md:min-w-160 -m-6" style="max-height: 90vh">
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">Cấp hạn mức tín dụng</div>
-        <button mat-icon-button>
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Cấp hạn mức huy động vốn</div>
+        <button mat-icon-button tabindex="-1">
             <mat-icon class="text-current"
                       [svgIcon]="'heroicons_outline:x'"
                       (click)="closeDialog()"></mat-icon>
@@ -11,9 +11,9 @@
 
     <!-- Content -->
     <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="formGroup">
-        <div class="flex flex-row w-full gap-4">
-            <mat-form-field class="w-1/2">
-                <mat-label>Hạn mức tín dụng (VNĐ)</mat-label>
+        <!-- <div class="flex flex-col w-full gap-4"> -->
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Hạn mức huy động vốn (VND)</mat-label>
                 <input
                     matInput
                     maxlength="15"
@@ -22,6 +22,7 @@
                     [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
                     formControlName="creditLimit"
                     id="creditLimit"
+                    placeholder="Nhập hạn mức huy động vốn..."
                 >
                 <mat-error *ngIf="formGroup.get('creditLimit').hasError('required')">
                     {{ 'QLVV247' | transloco }}
@@ -33,11 +34,11 @@
                     {{ 'QLVV180' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <div class="w-1/2 mb-4">
+            <div class="w-full mb-4">
                 <app-dropzone
-                    topTitle="Tờ trình cấp hạn mức tín dụng"
+                    topTitle="Tờ trình cấp hạn mức huy động vốn"
                     title="Tải tệp lên"
-                    styleClass="h-12 mt-[3px]"
+                    styleClass="h-[48px] mt-[3px]"
                     class="w-full"
                     previewClass="max-w-fit w-full"
                     requiredMsg="QLVV184"
@@ -48,7 +49,7 @@
                     field="finDocumentsId"
                 ></app-dropzone>
             </div>
-        </div>
+        <!-- </div> -->
 
         <div class="flex flex-row w-full gap-4">
             <mat-form-field class="w-1/2">
@@ -69,8 +70,7 @@
     </div>
 
     <!-- Action -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-end mb-4 sm:mb-6 pr-8 sm:pr-8">
-        <div class="flex items-center mt-4 sm:mt-0">
+    <div class="flex flex-row items-center justify-center mb-4 sm:mb-6">
             <button mat-stroked-button mat-dialog-close> Đóng </button>
             <button
                 mat-flat-button
@@ -81,6 +81,5 @@
             >
                 Xác nhận
             </button>
-        </div>
     </div>
 </div>

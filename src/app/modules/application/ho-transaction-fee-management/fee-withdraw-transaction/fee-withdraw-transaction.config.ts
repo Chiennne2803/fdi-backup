@@ -51,7 +51,7 @@ export const TABLE_FEE_WITHDRAW_TRANSACTION_LIST: ITableConfig = {
         new TextColumn('transDate', 'Ngày ghi nhận', 20, false, 'DD/MM/YYYY HH:mm:ss'),
         new TextColumn('admAccountIdPresenterName', 'Nhà đâu tư', 10, false),
         new TextColumn('transactionCode', 'Giao dịch rút tiền', 20, false),
-        new TextColumn('amount', 'Phí(VNĐ)', 20, false, 1),
+        new TextColumn('amount', 'Phí(VND)', 20, false, 1),
     ],
     title: 'Danh sách giao dịch', isViewDetail: false
 };

@@ -4,7 +4,7 @@ import {fuseAnimations} from '@fuse/animations';
 import {FuseAlertType} from '@fuse/components/alert';
 import {AuthService} from 'app/core/auth/auth.service';
 import {finalize} from 'rxjs';
-import {forbiddenPhoneNumberValidator, forbiddenUserNameValidator} from 'app/shared/validator/forbidden';
+import {emailValidator, forbiddenPhoneNumberValidator, forbiddenUserNameValidator} from 'app/shared/validator/forbidden';
 import {DialogData, OtpSmsConfirmComponent} from 'app/shared/components/otp-sms-confirm/otp-sms-confirm.component';
 import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {ForgetPasswordService} from "../../../service/admin/forget-password.service";
@@ -46,7 +46,7 @@ export class AuthForgotPasswordComponent implements OnInit {
         // Create the form
         this.forgotPasswordForm = this._formBuilder.group({
             username: new FormControl(null, [Validators.required]),
-            mobile: new FormControl(null, [Validators.required,Validators.minLength(10), Validators.maxLength(11), forbiddenPhoneNumberValidator()])
+            email: new FormControl(null, [ Validators.required, emailValidator()]),
         });
         this.actionKey = "REG" +random(100) + "" + new Date().getMilliseconds();
     }
@@ -72,7 +72,7 @@ export class AuthForgotPasswordComponent implements OnInit {
 
         let payload = new AdmAccountDetailDTO();
         payload.accountName = this.forgotPasswordForm.value.username;
-        payload.mobile = this.forgotPasswordForm.value.mobile;
+        payload.email = this.forgotPasswordForm.value.email;
         payload.actionKey = this.actionKey;
 
         // Forgot password
@@ -115,12 +115,12 @@ export class AuthForgotPasswordComponent implements OnInit {
             data: {
                 service: this._forgetPasswordService,
                 payload: {
-                    otpType: "USER_FORGOTP_PASSWORD",
+                    otpType: "USER_FORGOT_PASSWORD",
                     userName: this.forgotPasswordForm.value.username,
                     actionKey : this.actionKey,
                 },
                 title: 'Nhập mã xác thực OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền mã xác nhận để hoàn tất lấy lại mật khẩu!',
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền mã xác nhận để hoàn tất lấy lại mật khẩu!',
                 complete: () => {
                     dialogRef.close();
                     const successDialogRef = this.dialog.open(SentUrlDialog, {

@@ -45,7 +45,7 @@ const createLoanRoutes: Route[] = [
     MatDatepickerModule,
     NgxDropzoneModule,
     CurrencyMaskModule,
-      TranslocoModule,
+    TranslocoModule,
   ]
 })
 export class CreateLoanModule

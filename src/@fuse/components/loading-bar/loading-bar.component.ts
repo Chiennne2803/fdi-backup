@@ -11,7 +11,7 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseLoadingService } from '@fuse/services/loading';
-import {Overlay, OverlayRef} from "@angular/cdk/overlay";
+import {Overlay} from "@angular/cdk/overlay";
 import {ComponentPortal} from "@angular/cdk/portal";
 import {ProgressOverlayComponent} from "../progress-overlay/progress-overlay.component";
 

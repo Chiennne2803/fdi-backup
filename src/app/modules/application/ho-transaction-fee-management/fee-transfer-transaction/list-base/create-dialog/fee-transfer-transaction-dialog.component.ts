@@ -26,7 +26,7 @@ export class FeeTransferTransactionDialogComponent implements OnInit {
         columnDefinition: [
             new TextColumn('admAccountIdPresenterName', 'Nhà đầu tư', 10),
             new TextColumn('transactionCode', 'Giao dịch chuyển nhượng', 10),
-            new TextColumn('amount', 'Phí giao dịch (VNĐ)', 10, false, 3),
+            new TextColumn('amount', 'Phí giao dịch (VND)', 10, false, 3),
         ],
         isViewDetail: false
     };

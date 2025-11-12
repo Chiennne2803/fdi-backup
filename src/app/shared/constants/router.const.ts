@@ -195,6 +195,14 @@ export const ROUTER_CONST = {
                 root: 'process-config',
                 link: '/admin/process-config'
             },
+            maintenanceConfig: {
+                root: 'maintenance-config',
+                link: '/admin/maintenance-config'
+            },
+            emailTemplate: {
+                root: 'email-template',
+                link: '/admin/email-template'
+            },
             customerAppConfig: {
                 root: 'customer-app-config',
                 link: '/admin/customer-app-config'
@@ -286,7 +294,8 @@ export const ROUTER_CONST = {
             investorChargeTransaction: {
                 root: 'investor-charge-transaction',
                 add: '',
-                link: '/application/investor-charge-transaction'
+                link: '/application/investor-charge-transaction',
+                wait: '/application/investor-charge-transaction/wait'
             },
             disbursementManagement: {
                 root: 'disbursement-management',
@@ -374,7 +383,10 @@ export const ROUTER_CONST = {
         },
         statisticalReport: {
             root: 'statistical-report',
-
+            reportPromotionalStatement: {
+                root: 'report-promotional-statement',
+                link: '/statistical-report/report-promotional-statement'
+            },
             //saleInvestor
             reportAccountInvestor: {
                 root: 'report-account-investor',

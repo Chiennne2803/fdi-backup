@@ -1,0 +1,7 @@
+<div class="flex flex-col justify-center items-center py-10 text-gray-500">
+    <img *ngIf="showIcon" 
+         src="assets/icons/no-data.svg" 
+         [alt]="message" 
+         [class]="iconSize + ' mb-3'" />
+    <p class="text-lg font-medium">{{ message }}</p>
+</div>

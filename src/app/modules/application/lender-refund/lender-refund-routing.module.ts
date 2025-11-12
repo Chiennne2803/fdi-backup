@@ -21,6 +21,7 @@ const router: Route[] = [
         component: LenderRefundComponent,
         children: [
             {
+                data: { title: 'Lập yêu cầu thanh toán' },
                 path: '',
                 component: WaitPayTransComponent,
                 resolve: {
@@ -28,6 +29,7 @@ const router: Route[] = [
                 }
             },
             {
+                data: { title: 'Chờ xử lý' },
                 path: ROUTER_CONST.config.application.lenderRefund.waitProcessTransaction.root,
                 component: WaitProcessTransComponent,
                 resolve: {
@@ -35,6 +37,7 @@ const router: Route[] = [
                 }
             },
             {
+                data: { title: 'Chờ phê duyệt' },
                 path: ROUTER_CONST.config.application.lenderRefund.waitApproveTrans.root,
                 component: WaitApproveTransComponent,
                 resolve: {
@@ -42,6 +45,7 @@ const router: Route[] = [
                 }
             },
             {
+                data: { title: 'Đã phê duyệt' },
                 path: ROUTER_CONST.config.application.lenderRefund.processedTrans.root,
                 component: ProcessedTransComponent,
                 resolve: {
@@ -49,6 +53,7 @@ const router: Route[] = [
                 }
             },
             {
+                data: { title: 'Giao dịch lỗi' },
                 path: ROUTER_CONST.config.application.lenderRefund.errorTrans.root,
                 component: ErrorTransComponent,
                 resolve: {
@@ -56,6 +61,7 @@ const router: Route[] = [
                 }
             },
             {
+                data: { title: 'Giao dịch hết hạn' },
                 path: ROUTER_CONST.config.application.lenderRefund.timeoutTrans.root,
                 component: TimeoutTransComponent,
                 resolve: {

@@ -1,4 +1,11 @@
-<div mat-dialog-title class="max-w-180 w-180">
+<div class="flex flex-col max-w-240 md:min-w-160 sm:min-w-120 max-h-screen -m-6">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Lập yêu cầu rút tiền</div>
+        <button mat-icon-button mat-dialog-close tabindex="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+    <!-- <div mat-dialog-title class="max-w-180 w-180">
     <div class="flex justify-between">
         <h2>Lập yêu cầu rút tiền</h2>
         <a
@@ -20,11 +27,12 @@
         </fuse-alert>
     </div>
 </div>
-<mat-divider class="my-5"></mat-divider>
-<mat-dialog-content>
-    <div class="flex flex-col flex-auto overflow-hidden sm:overflow-y-auto">
+<mat-divider class="my-5"></mat-divider> -->
+    <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto h-120">
+        <!-- <div class="flex flex-col flex-auto"> -->
         <article class="prose break-words">
-            <p>Số dư khả dụng(VNĐ): <br> <b style="font-size: 2.7rem; color: orange">{{ (data.withdrawDetail ? data.withdrawDetail.weu : 0) | currencyFormatPipe : 10 }}</b></p>
+            <p>Số dư khả dụng (VND): <br> <b class="text-primary text-xl sm:text-3xl">{{ (data.withdrawDetail ?
+                    data.withdrawDetail.weu : 0) | currencyFormatPipe : 10 }}</b></p>
         </article>
         <article class="prose break-words">
             <p>Mã giao dịch: <br> <b>{{ data.withdrawDetail ? data.withdrawDetail.transCode : '' }}</b></p>
@@ -42,51 +50,44 @@
             <p>Số tài khoản: <br> <b>{{ data.withdrawDetail ? data.withdrawDetail.accNo : '' }}</b></p>
         </article>
         <article class="prose break-words">
-            <p>Phí rút tiền (VNĐ): <br> <b>{{ (data.withdrawDetail ? data.withdrawDetail.fee : 0) | currencyFormatPipe : 10 }}</b></p>
+            <p>Phí rút tiền (VND): <br> <b>{{ (data.withdrawDetail ? data.withdrawDetail.fee : 0) |
+                    currencyFormatPipe : 10 }}</b></p>
         </article>
 
+        <!-- </div> -->
+        <form class="grid grid-cols-1" [formGroup]="withdrawForm">
+            <mat-form-field class="flex-auto" floatLabel="always">
+                <mat-label>Số tiền cần rút (VND):</mat-label>
+                <input matInput [placeholder]="'0'" formControlName="amount" currencyMask autocomplete="off"
+                    [maxlength]="15" class="text-left"
+                    placeholder="Nhập số tiền cần rút..."
+                    [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }">
+                <span class="ml-2" matSuffix>VND</span>
+                <mat-error *ngIf="withdrawForm.get('amount').hasError('required')">
+                    {{ 'COIV80026' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="withdrawForm.get('amount').hasError('min')">
+                    {{ 'COIV80010' | transloco }}
+                </mat-error>
+                <mat-error *ngIf="withdrawForm.get('amount').hasError('maxlength')">
+                    {{ 'COIV80006' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="flex-auto">
+                <mat-label>Nội dung giao dịch</mat-label>
+                <input matInput disabled [value]="info">
+            </mat-form-field>
+        </form>
+        <div class="grid grid-cols-2">
+            <article class="prose break-words">
+                <p>Người lập: <br> <b>{{ createdByName ? createdByName : '' }}</b></p>
+            </article>
+            <article class="prose break-words">
+                <p>Ngày lập: <br> <b>{{ createdDate | datetimeformat: 'DD/MM/YYYY' }}</b></p>
+            </article>
+        </div>
     </div>
-    <form class="grid grid-cols-1" [formGroup]="withdrawForm">
-        <mat-form-field class="flex-auto">
-            <mat-label>Số tiền cần rút (VNĐ):</mat-label>
-            <input
-                matInput
-                [placeholder]="'0'"
-                formControlName="amount"
-                currencyMask autocomplete="off"
-                [maxlength]="15"
-                class="text-left"
-                [options]="{ prefix: '', thousands: ',', precision: 0, allowNegative: false }"
-            >
-            <span class="ml-2" matSuffix>VND</span>
-            <mat-error *ngIf="withdrawForm.get('amount').hasError('required')">
-                {{ 'COIV80026' | transloco }}
-            </mat-error>
-            <mat-error *ngIf="withdrawForm.get('amount').hasError('min')">
-                {{ 'COIV80010' | transloco }}
-            </mat-error>
-            <mat-error *ngIf="withdrawForm.get('amount').hasError('maxlength')">
-                {{ 'COIV80006' | transloco }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="flex-auto">
-            <mat-label>Nội dung giao dịch</mat-label>
-            <input
-                matInput
-                disabled
-                [value]="info"
-            >
-        </mat-form-field>
-    </form>
-    <div class="flex flex-col flex-auto overflow-hidden sm:overflow-y-auto">
-        <article class="prose break-words">
-            <p>Người lập: <br> <b>{{ createdByName ? createdByName : '' }}</b></p>
-        </article>
-        <article class="prose break-words">
-            <p>Ngày lập: <br> <b>{{ createdDate  | datetimeformat: 'DD/MM/YYYY' }}</b></p>
-        </article>
+    <div class="flex justify-center items-center mb-4 sm:mb-6">
+        <button mat-flat-button color="primary" (click)="transWithdrawCash()">Xác nhận</button>
     </div>
-</mat-dialog-content>
-<mat-dialog-actions align="center">
-    <button mat-flat-button color="primary" (click)="transWithdrawCash()">Xác nhận</button>
-</mat-dialog-actions>
+</div>

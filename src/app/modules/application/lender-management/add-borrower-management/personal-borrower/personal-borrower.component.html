@@ -1,17 +1,14 @@
-<form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+<form class="flex flex-col flex-auto"
       [formGroup]="personForm">
-    <div class="flex justify-center text-2xl font-bold uppercase mb-4">
-        Tạo mới bên huy động vốn là cá nhân
-    </div>
-
     <!-- Info Login -->
-    <div class="flex flex-col p-4 border rounded-md mb-4">
+    <div class="flex flex-col p-4 border rounded-md mb-6">
         <strong class="mb-4 text-xl">Thông tin tài khoản đăng nhập</strong>
-        <div class="flex flex-row w-full gap-6">
-            <mat-form-field class="w-full">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Tên tài khoản</mat-label>
                 <input id="accountName"
                        matInput
+                       placeholder="Nhập..." 
                        maxlength="50"
                        autocomplete="new-username"
                        formControlName="accountName"
@@ -20,10 +17,11 @@
                     {{ getErrorAccount() | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Mật khẩu</mat-label>
                 <input id="passwd"
                        matInput
+                       placeholder="Nhập..."
                        maxlength="50"
                        autocomplete="new-password"
                        type="password"
@@ -45,11 +43,11 @@
                     {{ getErrorPassword() | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>SĐT liên hệ</mat-label>
                 <input id="mobile"
                        matInput
-
+                        placeholder="Nhập..."
                        inputMask
                        maskType="number"
                        maxlength="11"
@@ -59,9 +57,10 @@
                     {{ getErrorMobile() | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Email</mat-label>
                 <input matInput
+                        placeholder="Nhập..."
                        id="email"
                        maxlength="100"
                        formControlName="email"
@@ -76,9 +75,9 @@
                     {{ 'QLVV010' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Nhân viên phụ trách</mat-label>
-                <mat-select formControlName="manageStaff">
+                <mat-select placeholder="Chọn..." formControlName="manageStaff">
                     <mat-option *ngFor="let item of lstManagerStaff"
                                 [value]="item.admAccountDetailId">{{ item.fullName }}</mat-option>
                 </mat-select>
@@ -90,14 +89,14 @@
     </div>
 
     <!-- Info  -->
-    <div class="flex flex-col p-4 border rounded-md mb-4">
+    <div class="flex flex-col p-4 border rounded-md mb-6">
         <strong class="mb-4 text-xl">Thông tin cá nhân</strong>
-        <div class="grid grid-flow-row-dense grid-cols-4 gap-6 ...">
-            <div class="row-span-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4">
+            <div class="row-span-1 col-span-2 md:row-span-3 md:col-span-1 mb-4 sm:mb-0">
                 <app-dropzone
                     [hasPreview]="true"
                     title="Ảnh đại diện"
-                    styleClass="justify-center w-full h-full"
+                    styleClass="justify-center w-full h-50 sm:h-full"
                     [formGroup]="personForm"
                     field="avatar"
                     [maxFile]="1"
@@ -107,10 +106,11 @@
                 >
                 </app-dropzone>
             </div>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Họ và tên</mat-label>
                 <input id="fullname"
                        matInput
+                       placeholder="Nhập..."
                        maxlength="50"
                        formControlName="fullName"
                        trim="blur">
@@ -121,11 +121,12 @@
                     {{ 'QLVV024' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
-                <mat-label>CCCD/Hộ Chiếu</mat-label>
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>CCCD/Hộ chiếu</mat-label>
                 <input id="identification"
                        matInput
                        maxlength="12"
+                       placeholder="Nhập..."
                        formControlName="identification"
                        trim="blur">
                 <mat-error *ngIf="personForm.get('identification')?.hasError('required')">
@@ -144,11 +145,12 @@
                 formControlName="dateOfIdnumber"
                 [validationType]="['today']" >
             </app-date-picker>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Nơi cấp</mat-label>
                 <input id="placeOfIdnumber"
                        maxlength="100"
                        matInput
+                       placeholder="Nhập..."
                        formControlName="placeOfIdnumber"
                        trim="blur">
                 <mat-error *ngIf="personForm.get('placeOfIdnumber')?.hasError('required')">
@@ -158,9 +160,9 @@
                     {{ 'QLVV033' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Giới tính</mat-label>
-                <mat-select formControlName="gender">
+                <mat-select placeholder="Chọn..." formControlName="gender">
                     <mat-option *ngFor="let item of genders"
                                 [value]="item.id">{{ item.label }}</mat-option>
                 </mat-select>
@@ -179,9 +181,9 @@
             >
             </app-date-picker>
 
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Tình trạng hôn nhân</mat-label>
-                <mat-select formControlName="marital">
+                <mat-select placeholder="Chọn..." formControlName="marital">
                     <mat-option *ngFor="let item of marriageCode"
                                 [value]="item.id">{{ item.label }}</mat-option>
                 </mat-select>
@@ -189,9 +191,9 @@
                     {{ 'QLVV041' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Nghề nghiệp</mat-label>
-                <mat-select formControlName="job">
+                <mat-select placeholder="Chọn..." formControlName="job">
                     <mat-option *ngFor="let item of jobCode"
                                 [value]="item.id">{{ item.label }}</mat-option>
                 </mat-select>
@@ -199,29 +201,31 @@
                     {{ 'QLVV043' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Đơn vị công tác</mat-label>
                 <input id="jobAddress"
                        maxlength="100"
                        matInput
+                       placeholder="Nhập..."
                        formControlName="jobAddress"
                        trim="blur">
                 <mat-error *ngIf="personForm.get('jobAddress')?.hasError('maxlength')">
                     {{ 'QLVV043' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>MST cá nhân</mat-label>
                 <input id="taxCode"
                        inputMask
                        maskType="number"
                        matInput
+                       placeholder="Nhập..."
                        maxlength="13"
                        formControlName="taxCode"
                        trim="blur"
                        required="true"
                        requiredMsg="TKDT051"
-                       placeholder=" Nhập '0' nếu chưa có Mã số thuế">
+                       >
                 <mat-error *ngIf="personForm.get('taxCode').hasError('required')">
                     {{ 'TKDT051' | transloco }}
                 </mat-error>
@@ -230,20 +234,35 @@
                 </mat-error>
 
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Facebook</mat-label>
                 <input id="facebook"
                        matInput
+                       placeholder="Nhập..."
                        formControlName="facebook"
                        trim="blur">
                 <mat-error *ngIf="personForm.get('facebook')?.hasError('maxlength')">
                     {{ 'QLVV046' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
-                <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Địa chỉ thường trú</mat-label>
+                <input
+                    matInput
+                    readonly
+                    placeholder="Nhập..."
+                    formControlName="address1"
+                    (click)="choseAddress('address1')"
+                    trim="blur">
+                <mat-error *ngIf="personForm.get('address1')?.hasError('required')">
+                    {{ 'QLVV047' | transloco }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-label>Địa chỉ hiện tại</mat-label>
                 <input id="address2"
                        matInput
+                       placeholder="Nhập..."
                        formControlName="address2"
                        readonly
                        (click)="choseAddress('address2')"
@@ -252,23 +271,11 @@
                     {{ 'QLVV048' | transloco }}
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="w-full">
-                <mat-label>Địa chỉ hiện tại</mat-label>
-                <input
-                    matInput
-                    readonly
-                    formControlName="address1"
-                    (click)="choseAddress('address1')"
-                    trim="blur">
-                <mat-error *ngIf="personForm.get('address1')?.hasError('required')">
-                    {{ 'QLVV047' | transloco }}
-                </mat-error>
-            </mat-form-field>
-            <div class="col-span-2">
+            <div class="col-span-2 mb-3">
                 <app-dropzone
                     inputId="frontPhotoIdentication"
-                    topTitle="Ảnh CCCD/Hộ Chiếu mặt trước"
-                    styleClass="max-h-12"
+                    topTitle="Ảnh CCCD/Hộ chiếu mặt trước"
+                    styleClass="h-[48px] mt-[3px]"
                     [maxFile]="1"
                     title="Tải lên"
                     [formGroup]="personForm"
@@ -278,10 +285,10 @@
                     field="frontPhotoIdentication"
                 ></app-dropzone>
             </div>
-            <div class="col-span-2"><app-dropzone
+            <div class="col-span-2 mb-3"><app-dropzone
                 inputId="backsitePhotoIdentication"
-                styleClass="max-h-12"
-                topTitle="Ảnh CCCD/Hộ Chiếu mặt sau"
+                styleClass="h-[48px] mt-[3px]"
+                topTitle="Ảnh CCCD/Hộ chiếu mặt sau"
                 [maxFile]="1"
                 title="Tải lên"
                 [formGroup]="personForm"
@@ -291,10 +298,10 @@
                 field="backsitePhotoIdentication"
             ></app-dropzone>
             </div>
-            <div class="col-span-2">
+            <div class="col-span-2 mb-3">
                 <app-dropzone
                     inputId="laborContract"
-                    styleClass="max-h-12"
+                    styleClass="h-[48px] mt-[3px]"
                     [maxFile]="1"
                     maxFileSize="10"
                     [isRequired]="false"
@@ -306,10 +313,10 @@
                     field="laborContract"
                 ></app-dropzone>
             </div>
-            <div class="col-span-2">
+            <div class="col-span-2 mb-3">
                 <app-dropzone
                     inputId="rentalContract"
-                    styleClass="max-h-12"
+                    styleClass="h-[48px] mt-[3px]"
                     [maxFile]="1"
                     maxFileSize="10"
                     [isRequired]="false"
@@ -321,10 +328,10 @@
                     field="rentalContract"
                 ></app-dropzone>
             </div>
-            <div class="col-span-2">
+            <div class="col-span-2 mb-3">
                 <app-dropzone
                     inputId="fileValues1"
-                    styleClass="max-h-12"
+                    styleClass="h-[48px] mt-[3px]"
                     [maxFile]="1"
                     maxFileSize="10"
                     [isRequired]="false"
@@ -336,10 +343,10 @@
                     field="fileValues1"
                 ></app-dropzone>
             </div>
-            <div class="col-span-2">
+            <div class="col-span-2 mb-3">
                 <app-dropzone
                     inputId="fileValues2"
-                    styleClass="max-h-12"
+                    styleClass="h-[48px] mt-[3px]"
                     [maxFile]="1"
                     maxFileSize="10"
                     [isRequired]="false"
@@ -355,7 +362,7 @@
     </div>
 
     <!--bo theo gp moi-->
-    <div *ngIf="false" class="flex flex-col p-4 border rounded-md" formArrayName="deputyContacts">
+    <!-- <div *ngIf="false" class="flex flex-col p-4 border rounded-md" formArrayName="deputyContacts">
         <strong class="mb-4 text-xl">Thông tin người liên hệ</strong>
         <mat-tab-group #tabGroup>
             <mat-tab *ngFor="let deputyForm of deputyContacts.controls; index as i">
@@ -371,7 +378,7 @@
                 <div class="flex flex-row w-full gap-6" [formGroupName]="i">
                     <div class="flex flex-col w-1/2 gap-6">
                         <div class="flex flex-row w-full gap-6">
-                            <mat-form-field class="w-full">
+                            <mat-form-field class="w-full" floatLabel="always">
                                 <mat-label>Họ và tên</mat-label>
                                 <input id="deputy-fullName"
                                        matInput
@@ -382,8 +389,8 @@
                                     Dữ liệu chưa được nhập
                                 </mat-error>
                             </mat-form-field>
-                            <mat-form-field class="w-full">
-                                <mat-label>CCCD/Hộ Chiếu</mat-label>
+                            <mat-form-field class="w-full" floatLabel="always">
+                                <mat-label>CCCD/Hộ chiếu</mat-label>
                                 <input id="deputy-identification"
                                        matInput
                                        maxlength="12"
@@ -440,7 +447,7 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <mat-form-field class="w-full">
+                        <mat-form-field class="w-full" floatLabel="always">
                             <mat-label>Nguyên quán</mat-label>
                             <input id="deputy-address1"
                                    matInput
@@ -463,7 +470,7 @@
                                 >
                                 </app-date-picker>
                             </div>
-                            <mat-form-field class="w-full">
+                            <mat-form-field class="w-full" floatLabel="always">
                                 <mat-label>Nơi cấp</mat-label>
                                 <input id="deputy-placeOfIdnumber"
                                        matInput
@@ -527,8 +534,8 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <mat-form-field class="w-full">
-                            <mat-label>Địa chỉ (theo CCCD/Hộ chiếu)</mat-label>
+                        <mat-form-field class="w-full" floatLabel="always">
+                            <mat-label>Địa chỉ thường trú</mat-label>
                             <input id="deputy-address2"
                                    matInput
                                    formControlName="address2"
@@ -549,34 +556,34 @@
                 </ng-template>
             </mat-tab>
         </mat-tab-group>
-    </div>
+    </div> -->
 
     <!-- Another Info -->
     <div class="flex flex-col p-4 border rounded-md">
         <strong class="mb-4 text-xl">Thông tin khác</strong>
-        <div class="flex flex-row w-full gap-6">
-            <mat-form-field class="w-full">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Ngày tạo</mat-label>
                 <input id="createdDate"
                        matInput
                        formControlName="createdDate"
                        trim="blur">
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Người tạo</mat-label>
                 <input id="createdByName"
                        matInput
                        formControlName="createdByName"
                        trim="blur">
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Ngày cập nhật</mat-label>
                 <input id="lastUpdatedDate"
                        matInput
                        formControlName="lastUpdatedDate"
                        trim="blur">
             </mat-form-field>
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full" floatLabel="always">
                 <mat-label>Người cập nhật</mat-label>
                 <input id="lastUpdatedByName"
                        matInput

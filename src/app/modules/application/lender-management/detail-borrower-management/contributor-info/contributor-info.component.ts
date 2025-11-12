@@ -1,20 +1,19 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {ProfileService} from '../../../../../service/common-service';
-import {Subscription} from 'rxjs';
-import {AdmAccountDetailDTO, AdmCategoriesDTO, AdmDeputyContactDTO} from '../../../../../models/admin';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AdmAccountDetailDTO, AdmCategoriesDTO, AdmDeputyContactDTO } from '../../../../../models/admin';
 import _ from 'lodash';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {APP_TEXT} from '../../../../../shared/constants';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { APP_TEXT } from '../../../../../shared/constants';
 import {
     AddressKycDialogComponent
 } from '../../../../../shared/components/dialog/address-dialog/address-dialog.component';
-import {IAddressData} from '../../../../../shared/models/address.model';
-import {MatDialog} from '@angular/material/dialog';
+import { IAddressData } from '../../../../../shared/models/address.model';
+import { MatDialog } from '@angular/material/dialog';
 import moment from 'moment';
-import {DialogService} from '../../../../../service/common-service/dialog.service';
-import {FuseAlertService} from '../../../../../../@fuse/components/alert';
-import {DeputyType} from '../../../../../enum';
-import {ManagementLenderService} from '../../../../../service';
+import { DialogService } from '../../../../../service/common-service/dialog.service';
+import { FuseAlertService } from '../../../../../../@fuse/components/alert';
+import { DeputyType } from '../../../../../enum';
+import { ManagementLenderService } from '../../../../../service';
 
 @Component({
     selector: 'admin-lender-contributor-info',
@@ -38,9 +37,10 @@ export class ContributorInfoComponent implements OnChanges, OnInit {
     genders: AdmCategoriesDTO[];
     yesterday = moment().subtract(1, 'days');
     subscription: Subscription = new Subscription();
+    addressModes: 'new' | 'old';
+
 
     constructor(
-        private _profileService: ProfileService,
         private _managementLenderService: ManagementLenderService,
         private _fb: FormBuilder,
         private _dialogService: DialogService,
@@ -78,12 +78,16 @@ export class ContributorInfoComponent implements OnChanges, OnInit {
 
     searchContact(event: Event): void {
         const value = (event.target as HTMLInputElement).value;
-        if (value) {
-            this.contactInfoData = this.fixedContactInfoData.filter(
-                c => c.fullName.toLowerCase().includes(value.toLowerCase().trim())
-            );
-        } else {
-            this.contactInfoData = [...this.fixedContactInfoData];
+        if (this.fixedContactInfoData) {
+            if (value) {
+                const search = value.toLowerCase().trim();
+                this.contactInfoData = this.fixedContactInfoData.filter(c => {
+                    const name = c.fullName ? c.fullName.toLowerCase() : '';
+                    return name.includes(search);
+                });
+            } else {
+                this.contactInfoData = [...this.fixedContactInfoData];
+            }
         }
     }
 
@@ -122,7 +126,7 @@ export class ContributorInfoComponent implements OnChanges, OnInit {
                             if (response.errorCode === '0') {
                                 this._fuseAlertService.showMessageSuccess('Dữ liệu đã được lưu thành công');
                                 this._managementLenderService.getDetail(
-                                    {admAccountDetailId: this.detailLender.admAccountDetailId},
+                                    { admAccountDetailId: this.detailLender.admAccountDetailId },
                                     'Người góp vốn lớn nhất'
                                 ).subscribe(() => this.backToViewOnly());
                             } else {
@@ -136,13 +140,19 @@ export class ContributorInfoComponent implements OnChanges, OnInit {
     }
 
     openAddressDialog(formControlName: string): void {
+        const type = this.addressModes || 'old';
+
         const dialogRef = this._matDialog.open(AddressKycDialogComponent, {
             disableClose: true,
             width: '450px',
-            data: this.contactForm.get(formControlName).value,
+            data: {
+                type,
+                value: this.contactForm.get(formControlName).value,
+            }
         });
         dialogRef.afterClosed().subscribe((res: IAddressData) => {
-            if (res && res.payload) {
+            if (res && res.payload && res.type) {
+                this.addressModes = res.type
                 this.contactForm.get(formControlName).patchValue(res.payload);
                 this.contactForm.markAsDirty();
             }

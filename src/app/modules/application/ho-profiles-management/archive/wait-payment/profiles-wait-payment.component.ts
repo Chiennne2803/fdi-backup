@@ -27,7 +27,7 @@ import {
 export class ProfilesWaitPaymentComponent implements OnInit {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
 
-    public _tableConfig = { ...TABLE_PROFILE_MANAGEMENT_CONFIG, title: 'Hồ sơ chờ tất toán khoản vay', isViewDetail: false };
+    public _tableConfig = { ...TABLE_PROFILE_MANAGEMENT_CONFIG, title: 'Hồ sơ chờ tất toán huy động vốn', isViewDetail: false };
     public _tableButtonConfig = TABLE_BUTTON_ACTION_CONFIG;
     public _taskbarConfig = TASK_BAR_CONFIG;
 
@@ -50,11 +50,11 @@ export class ProfilesWaitPaymentComponent implements OnInit {
         this._profilesManagementService.setDrawer(this.matDrawer);
         this._profilesManagementService.getPrepareLoadingPage().subscribe((res) => {
             if (res.payload.listInvestmentTime != undefined && res.payload.listInvestmentTime.length > 0) {
-                this.listInvestmentTime.push({label: 'Tẩt cả', value: null});
+                this.listInvestmentTime.push({label: 'Tẩt cả', value: ''});
                 res.payload.listInvestmentTime.forEach(x => this.listInvestmentTime.push({label: x, value: x}));
             }
             if (res.payload.lstReasons != undefined && res.payload.lstReasons.length > 0) {
-                this.lstReasons.push({label: 'Tẩt cả', value: null});
+                this.lstReasons.push({label: 'Tẩt cả', value: ''});
                 res.payload.lstReasons.forEach(x => this.lstReasons.push({label: x.categoriesName, value: x.admCategoriesId}));
             }
         });

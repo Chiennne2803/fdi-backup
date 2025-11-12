@@ -3,10 +3,10 @@
     <!-- Sidebar drawer -->
     <mat-drawer
         class="w-60"
-        [mode]="'side'"
-        [opened]="true"
+        [mode]="isMobile ? 'over' : 'side'"
+        [opened]="!isMobile"
         [position]="'start'"
-        [disableClose]="true"
+        [disableClose]="!isMobile"
         #sidebarDrawer>
         <fuse-vertical-navigation
             [appearance]="'default'"
@@ -17,6 +17,9 @@
             [opened]="true"></fuse-vertical-navigation>
     </mat-drawer>
     <mat-drawer-content class="flex flex-col">
+        <button *ngIf="isMobile" mat-icon-button (click)="sidebarDrawer.toggle()" class="ml-4 mt-4">
+            <mat-icon>menu</mat-icon>
+        </button>
         <router-outlet></router-outlet>
     </mat-drawer-content>
 </mat-drawer-container>

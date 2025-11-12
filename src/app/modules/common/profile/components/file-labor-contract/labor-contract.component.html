@@ -1,39 +1,32 @@
-<mat-drawer-container class="relative flex h-full min-w-0 md:w-full ">
-    <mat-drawer
-        class="w-full sm:w-100"
-        [mode]="'side'"
-        [opened]="false"
-        [position]="'end'"
-        #fileDrawer>
-        <file-detail
-            containerClass="relative"
-            backgroundClass="min-h-[250px]"
-            [fileDrawer]="fileDrawer"
-            [selectedFile]="selectedFile"
-            [replaceBtnV2]="true"
-            (handleReplaceFile)="onReplaceFile($event)"
-        ></file-detail>
+<mat-drawer-container class="relative flex h-full min-w-0 md:w-full">
+    <mat-drawer class="w-full sm:w-100" [mode]="'side'" [opened]="false" [position]="'end'" #fileDrawer>
+        <file-detail containerClass="relative" backgroundClass="min-h-[250px]" [fileDrawer]="fileDrawer"
+            [selectedFile]="selectedFile" [replaceBtnV2]="true"
+            (handleReplaceFile)="onReplaceFile($event)"></file-detail>
     </mat-drawer>
 
     <mat-drawer-content class="flex-auto bg-white">
         <change-id-gpkd></change-id-gpkd>
-        <div class="flex flex-col p-4 max-h-full overflow-y-auto">
-            <div class="flex justify-end ">
-                <button mat-flat-button color="primary" (click)="clickUploadFile()">Tải lên</button>
+        <div class="flex flex-col p-4">
+            <div class="flex justify-end mb-4">
+                <button mat-flat-button color="primary" class="min-w-26" (click)="clickUploadFile()">
+                    <span class="flex items-center gap-1.5">
+                        <img src="assets/icons/file-up.svg" alt="Icon" />
+                        Tải file lên
+                    </span>
+                </button>
             </div>
-            <ng-container *ngIf="laborDocumentsFiles else noData">
-                <div class="flex flex-wrap">
-                    <file-ui
-                        *ngFor="let file of laborDocumentsFiles"
-                        [file]="file"
-                        (click)="onClickFile(file)"
-                    ></file-ui>
-                </div>
-            </ng-container>
-            <ng-template #noData>
-                <h4 class="uppercase text-center text-2xl">Không có dữ liệu</h4>
-            </ng-template>
-
+            <div class="border border-primary-grayLight-2 rounded-lg p-2 py-4 sm:p-4">
+                <ng-container *ngIf="laborDocumentsFiles else noData">
+                    <div class="flex flex-wrap justify-center sm:justify-start gap-4">
+                        <file-ui *ngFor="let file of laborDocumentsFiles" [file]="file"
+                            (click)="onClickFile(file)"></file-ui>
+                    </div>
+                </ng-container>
+                <ng-template #noData>
+                    <app-no-data></app-no-data>
+                </ng-template>
+            </div>
         </div>
     </mat-drawer-content>
 </mat-drawer-container>

@@ -1,10 +1,9 @@
 .custom-dropzone {
     border: 1px solid rgb(203 213 225 / var(--tw-border-opacity)) !important;
     font-size: 14px !important;
-    align-items: unset !important;
-    flex-wrap: wrap;
-    overflow-y: auto;
-
+    align-items: center !important;
+    padding: 0 20px !important;
+    gap: 8px;
     &.dropzone-error {
         border-color: rgba(var(--fuse-warn-rgb), var(--tw-border-opacity)) !important;
     }
@@ -21,6 +20,7 @@
     border: 1px solid rgb(203 213 225 / var(--tw-border-opacity)) !important;
     width: 130px;
     min-width: 130px !important;
+    margin: 0 !important;
 }
 .custom-dropzone ngx-dropzone-preview:hover {
     background-image: unset !important;

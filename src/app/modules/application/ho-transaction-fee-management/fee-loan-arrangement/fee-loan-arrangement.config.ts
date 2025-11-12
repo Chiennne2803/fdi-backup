@@ -52,10 +52,10 @@ export const TABLE_FEE_LOAN_ARRANGEMENT_LIST: ITableConfig = {
         new TextColumn('transDate', 'Ngày giải ngân', 20, false, 'DD/MM/YYYY HH:mm:ss'),
         new TextColumn('fsLoanProfilesId', 'Số hồ sơ', 10, false),
         new TextColumn('admAccountIdPresenterName', 'Bên huy động', 20, false),
-        new TextColumn('cardDownAmount', 'Số tiền giải ngân (VNĐ)', 20, false, 1),
+        new TextColumn('cardDownAmount', 'Số tiền giải ngân (VND)', 20, false, 1),
         new TextColumn('loanTimeCycle', 'Kỳ hạn', 20, false),
         new TextColumn('fee', 'Phí kêt nối khoản huy động (%)', 20, false),
-        new TextColumn('amount', 'Phí kết nối (VNĐ)', 20, false, 1),
+        new TextColumn('amount', 'Phí kết nối (VND)', 20, false, 1),
     ],
     title: 'Danh sách giao dịch', isViewDetail: false
 };

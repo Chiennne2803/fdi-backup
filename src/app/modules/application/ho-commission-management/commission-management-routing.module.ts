@@ -11,8 +11,8 @@ const route: Route[] = [
             commissionManagement: CommissionManagementResolver,
         }, children: [
             { path: '', pathMatch: 'full', redirectTo: 'transaction' },
-            { path: 'transaction', component: ListTransactionComponent },
-            { path: 'request-payment', component: ListRequestPaymentCommissionComponent }
+            { path: 'transaction',  data: { title: 'Danh sách thanh toán hoa hồng' },component: ListTransactionComponent },
+            { path: 'request-payment',  data: { title: 'Yêu cầu thanh toán hoa hồng' }, component: ListRequestPaymentCommissionComponent }
         ]
     }
 ];

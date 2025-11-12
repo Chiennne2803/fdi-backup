@@ -31,6 +31,7 @@ const investedProfileRoutes: Route[] = [
         path     : '',
         children: [
             {
+                data: { title: 'Danh sách phí giao dịch chuyển nhượng' },
                 path: 'list',
                 component: FeeTransferTransactionListComponent,
                 resolve: {
@@ -38,6 +39,7 @@ const investedProfileRoutes: Route[] = [
                 },
             },
             {
+                data: { title: 'Yêu cầu phí giao dịch chuyển nhượng' },
                 path: 'request',
                 component: FeeTransferTransactionRequestComponent,
                 resolve: {

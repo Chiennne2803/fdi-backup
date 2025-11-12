@@ -26,7 +26,7 @@ export class PersonalIncomeTaxDialogComponent implements OnInit {
         columnDefinition: [
             new TextColumn('admAccountIdPresenterName', 'Khách hàng', 10),
             new TextColumn('fsLoanProfilesId', 'Số hồ sơ', 10),
-            new TextColumn('amount', 'Tiền thuế TNCN (VNĐ)', 10, false, 3),
+            new TextColumn('amount', 'Tiền thuế TNCN (VND)', 10, false, 3),
         ],
         isViewDetail: false
     };

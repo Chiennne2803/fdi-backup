@@ -52,7 +52,7 @@ export const TABLE_OVERDUE_INTEREST_LIST: ITableConfig = {
         new TextColumn('fsLoanProfilesId', 'Hồ sơ huy động vốn', 25, false),
         new TextColumn('admAccountIdPresenterName', 'Khách hàng', 25, false),
         new TextColumn('transactionCode', 'Yêu cầu thanh toán khoản vay', 25, false),
-        new TextColumn('amount', 'Lãi quá hạn (VNĐ)', 25, false, 1),
+        new TextColumn('amount', 'Lãi quá hạn (VND)', 25, false, 1),
     ],
     title: 'Danh sách giao dịch', isViewDetail: false
 };

@@ -15,16 +15,19 @@ const route: Route[] = [
         component: InvestorRefundComponent,
         children: [
             {
+                 data: { title: 'Soạn thảo' },
                 path: '',
                 component: DraftTransComponent,
                 resolve: {draftTrans: DraftTransResolver}
             },
             {
+                 data: { title: 'Chờ xử lý' },
                 path: ROUTER_CONST.config.application.investorRefund.waitProcessTransaction.root,
                 component: WaitProcessTransComponent,
                 resolve: {waitProcessTrans: WaitProcessTransResolver}
             },
             {
+                 data: { title: 'Đã xử lý' },
                 path: ROUTER_CONST.config.application.investorRefund.processedTrans.root,
                 component: ProcessedTransComponent,
                 resolve: {processTrans: ProcessedTransResolver}

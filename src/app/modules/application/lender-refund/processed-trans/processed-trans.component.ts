@@ -117,13 +117,13 @@ export class ProcessedTransComponent implements OnInit {
                         new InputSearch('transCode', 'Mã giao dịch', null, false),
                         new InputSearch('fsLoanProfilesId', 'Số hồ sơ huy động vốn', null, false),
                         new InputSearch('admAccountId', 'Bên huy động vốn', null, false),
-                        new InputSearch('amount', 'Tổng tiền thanh toán (VNĐ) ', null, false, 'number'),
+                        new InputSearch('amount', 'Tổng tiền thanh toán (VND) ', null, false, 'number'),
                         new InputSearch('fullNameSent', 'Tên người chuyển', null, false),
                         new InputSearch('accNoSent', 'Tài khoản chuyển', null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
-                            {label: 'Bị từ chối', value: 4},
-                            {label: 'Đã phê duyệt', value: 3},
+                            {label: 'Tẩt cả', value: ''},
+                            {label: 'Bị từ chối', value: 5},
+                            {label: 'Đã phê duyệt', value: 4},
                         ], null),
                         new InputSearch('paidAmount', 'Số tiền chuyển', null, false),
                     ]

@@ -97,7 +97,7 @@ export class ErrorListComponent implements OnInit {
                     config: [
                         new InputSearch('transCode', 'Mã yêu cầu', null, false),
                         new DropListSearch('transType', 'Loại yêu cầu', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Không xác định được yêu cầu tiếp quỹ tiền mặt', value: 7},
                             {label: 'Số tiền giao dịch không hợp lệ', value: 3},
                         ], null),

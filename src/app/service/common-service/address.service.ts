@@ -1,11 +1,11 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BaseResponse} from 'app/models/base';
-import {IAddressData, IAddressForm} from 'app/shared/models/address.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BaseResponse } from 'app/models/base';
+import { IAddressData, IAddressForm } from 'app/shared/models/address.model';
 
-import {HttpService} from 'app/shared/services/common/http.service';
-import {environment} from 'environments/environment';
-import {Observable} from 'rxjs';
+import { HttpService } from 'app/shared/services/common/http.service';
+import { environment } from 'environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -30,13 +30,20 @@ export class AddressService extends HttpService {
     }
 
     getAddressSelectionData(value: IAddressForm): IAddressData {
-        const payload = `${value.street}, ${value.commune}, ${value.district.categoriesName}, ${value.province.categoriesName}`;
+        const province = value?.province?.categoriesName || '';
+        const district = value?.district?.categoriesName || '';
+        const commune = value?.commune?.categoriesName || '';
+        const street = value?.street || '';
+
+        const payload = [street, commune, district, province].filter(Boolean).join(', ');
+
         return {
-            province: value.province.categoriesName,
-            district: value.district.categoriesName,
-            commune: value.commune,
-            street: value.street,
-            payload: payload,
+            province,
+            district,
+            commune,
+            street,
+            payload,
         };
     }
+
 }

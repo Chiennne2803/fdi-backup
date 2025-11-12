@@ -1,7 +1,7 @@
 <div class="flex flex-col  md:min-w-160 max-h-screen -m-6">
 
     <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="flex flex-0 items-center justify-between h-14 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium" *ngIf="data">
             {{isEditable ? 'Cập nhật lãi suất và kỳ hạn vay thế chấp' : 'Chi tiết lãi suất và kỳ hạn vay thế chấp'}}
         </div>
@@ -126,7 +126,7 @@
                                formControlName="periodPay">
                     </mat-form-field>-->
                     <mat-form-field class="w-1/2">
-                        <mat-label>Số tiền đầu tư tối thiểu (VNĐ)</mat-label>
+                        <mat-label>Số tiền đầu tư tối thiểu (VND)</mat-label>
                         <input id="minAmount"
                                [maxlength]="15"
                                matInput
@@ -277,7 +277,7 @@
                     <strong>{{detailCredit.periodPay}}</strong>
                 </div>-->
                 <div class="w-1/2 flex flex-col gap-4">
-                    <mat-label>Số tiền đầu tư tối thiểu (VNĐ)</mat-label>
+                    <mat-label>Số tiền đầu tư tối thiểu (VND)</mat-label>
                     <strong>{{detailCredit.minAmount | currencyFormatPipe: 3}}</strong>
                 </div>
             </div>

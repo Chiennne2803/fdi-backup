@@ -1,18 +1,18 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation} from '@angular/core';
-import {MatDrawer} from '@angular/material/sidenav';
-import {FileService} from 'app/service/common-service';
-import {Observable} from 'rxjs';
-import {ManagementDebtService} from 'app/service/admin/management-debt.service';
-import {ConfirmDebtComponent} from '../confirm-debt/confirm-debt.component';
-import {MatDialog} from '@angular/material/dialog';
-import {FsDocuments} from 'app/models/admin';
-import {FuseAlertService} from '../../../../../@fuse/components/alert';
-import {fuseAnimations} from '../../../../../@fuse/animations';
-import {FsReportDebtManagersDTO} from "../../../../models/service/FsReportDebtManagersDTO.model";
-import {FsReportDebtDTO} from "../../../../models/service/FsReportDebtDTO.model";
-import {FsReportDebtHistoryDTO} from "../../../../models/service/FsReportDebtHistoryDTO.model";
-import {CreateDebtHistoryDialogComponent} from "../create-history/create-debt-history-dialog.component";
-import {ValuationHistoryDialogComponent} from "../../lender-management/detail-borrower-management/create-collateral-history/valuation-history-dialog.component";
+import { Component, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
+import { FileService } from 'app/service/common-service';
+import { Observable } from 'rxjs';
+import { ManagementDebtService } from 'app/service/admin/management-debt.service';
+import { ConfirmDebtComponent } from '../confirm-debt/confirm-debt.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FsDocuments } from 'app/models/admin';
+import { FuseAlertService } from '../../../../../@fuse/components/alert';
+import { fuseAnimations } from '../../../../../@fuse/animations';
+import { FsReportDebtManagersDTO } from "../../../../models/service/FsReportDebtManagersDTO.model";
+import { FsReportDebtDTO } from "../../../../models/service/FsReportDebtDTO.model";
+import { FsReportDebtHistoryDTO } from "../../../../models/service/FsReportDebtHistoryDTO.model";
+import { CreateDebtHistoryDialogComponent } from "../create-history/create-debt-history-dialog.component";
+import { ValuationHistoryDialogComponent } from "../../lender-management/detail-borrower-management/create-collateral-history/valuation-history-dialog.component";
 
 @Component({
     selector: 'detail-debit-management',
@@ -21,7 +21,7 @@ import {ValuationHistoryDialogComponent} from "../../lender-management/detail-bo
     animations: fuseAnimations,
 })
 export class DetailDebitManagementComponent implements OnInit {
-    @ViewChild('fileDrawer', {static: true}) fileDrawer: MatDrawer;
+    @ViewChild('fileDrawer', { static: true }) fileDrawer: MatDrawer;
     @Output() public handleCloseDetailPanel: EventEmitter<Event> = new EventEmitter<Event>();
     viewMode = 1;
 
@@ -83,9 +83,9 @@ export class DetailDebitManagementComponent implements OnInit {
     }
 
     public onClickApprove(fsLoanProfilesId: any): void {
-        this._managementDebtService.initCreateReportDebt({fsLoanProfilesId: fsLoanProfilesId}).subscribe((res) => {
+        this._managementDebtService.initCreateReportDebt({ fsLoanProfilesId: fsLoanProfilesId }).subscribe((res) => {
             const dialogRef = this.matDialog.open(ConfirmDebtComponent, {
-                width: '50%',
+                // width: '50%',
                 data: {
                     title: 'Xử lý công nợ',
                     subTitle: 'Xác nhận phê duyệt hồ sơ vay',
@@ -120,11 +120,13 @@ export class DetailDebitManagementComponent implements OnInit {
         });
     }
     public onClickCreateHistory(fsReportDebtManagersDTO: FsReportDebtManagersDTO): void {
-        this._managementDebtService.initCreateHistoryDebt({fsLoanProfilesId: fsReportDebtManagersDTO.fsLoanProfilesId}).subscribe((res) => {
-            this.matDialog.open(CreateDebtHistoryDialogComponent, {disableClose: true, data: {
+        this._managementDebtService.initCreateHistoryDebt({ fsLoanProfilesId: fsReportDebtManagersDTO.fsLoanProfilesId }).subscribe((res) => {
+            this.matDialog.open(CreateDebtHistoryDialogComponent, {
+                disableClose: true, data: {
                     fsReportDebtManagers: fsReportDebtManagersDTO,
                     lstFsCardDown: res.payload.fsCardDownDTOS,
-                }});
+                }
+            });
         });
     }
 
@@ -143,7 +145,7 @@ export class DetailDebitManagementComponent implements OnInit {
             fsReportDebtManagersId: this.fsReportDebtManagers.fsReportDebtManagersId,
             fsCardDownId: fsCardDownId,
         }).subscribe((res) => {
-            if (res) {
+            if (res.payload.length > 0 && res.errorCode === '0') {
                 this.viewMode = 2;
                 this.fsReportDebtHistoryDTOS = res.payload;
                 if (this.fsReportDebtHistoryDTOS?.length > 0) {
@@ -156,6 +158,9 @@ export class DetailDebitManagementComponent implements OnInit {
                     });
                     this.indexShow = this.fsReportDebtHistoryDTOS.length - 1;
                 }
+            }
+            else {
+                this._fuseAlertService.showMessageError('Không có dữ liệu');
             }
         });
     }

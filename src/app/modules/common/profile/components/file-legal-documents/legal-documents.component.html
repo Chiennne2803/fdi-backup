@@ -1,40 +1,33 @@
-<mat-drawer-container class="relative flex h-full min-w-0 md:w-full  overflow-hidden">
-    <mat-drawer
-        class="w-full sm:w-100"
-        [mode]="'side'"
-        [opened]="false"
-        [position]="'end'"
-        #fileDrawer>
-        <file-detail
-            containerClass="relative"
-            backgroundClass="min-h-[250px]"
-            [fileDrawer]="fileDrawer"
-            [selectedFile]="selectedFile"
-            [replaceBtnV2]="true"
-            (handleReplaceFile)="onReplaceFile($event)"
-        ></file-detail>
+<mat-drawer-container class="relative flex h-full min-w-0 md:w-full overflow-hidden">
+    <mat-drawer class="w-full sm:w-100" [mode]="'side'" [opened]="false" [position]="'end'" #fileDrawer>
+        <file-detail containerClass="relative" backgroundClass="min-h-[250px]" [fileDrawer]="fileDrawer"
+            [selectedFile]="selectedFile" [replaceBtnV2]="true"
+            (handleReplaceFile)="onReplaceFile($event)"></file-detail>
     </mat-drawer>
 
     <mat-drawer-content class="flex-auto bg-white overflow-y-auto">
         <change-id-gpkd></change-id-gpkd>
-        <div class="flex flex-col p-4 max-h-full my-5 border-b-2" *ngFor="let c of lstConfig ">
-            <div class="flex justify-between">
-                <div class="text-1xl font-semibold leading-tight">
-                    {{c.title}}
+        <div class="p-4 space-y-6">
+            <div class="border border-primary-grayLight-2 rounded-lg p-2 py-4 sm:p-4" *ngFor="let c of lstConfig ">
+                <div class="flex items-center justify-between">
+                    <div class="text-1xl font-semibold leading-tight">
+                        {{c.title}}
+                    </div>
+                    <button mat-flat-button color="primary" class="min-w-26" (click)="clickUploadLegalDocuments(c.config, c.key)">
+                        <span class="flex items-center gap-1.5">
+                            <img src="assets/icons/file-up.svg" alt="Icon" />
+                            Tải file lên
+                        </span>
+                    </button>
                 </div>
-                <div class="flex justify-end mt-0 ">
-                    <button mat-flat-button color="primary" (click)="clickUploadLegalDocuments(c.config, c.key)">Tải lên</button>
-                </div>
+                <ng-container>
+                    <div class="flex flex-wrap justify-center sm:justify-start gap-4 mt-2">
+                        <file-ui *ngFor="let file of c.lstFile" [file]="file"
+                            (click)="viewDetailFile(file, c.key)"></file-ui>
+                    </div>
+                </ng-container>
             </div>
-            <ng-container >
-                <div class="flex flex-wrap">
-                    <file-ui
-                        *ngFor="let file of c.lstFile"
-                        [file]="file"
-                        (click)="viewDetailFile(file, c.key)"
-                    ></file-ui>
-                </div>
-            </ng-container>
         </div>
+
     </mat-drawer-content>
 </mat-drawer-container>

@@ -1,223 +1,278 @@
-<div class="relative flex overflow-hidden border h-full min-w-0 md:w-full">
-    <!-- <div class="cdk-visually-hidden cdk-focus-trap-anchor" aria-hidden="true"></div> -->
-    <fuse-drawer [name]="'leftDrawer'" [mode]="isScreenSmall ? 'over' : 'side'" [opened]="!isScreenSmall"
-        class="shadow-none border-r z-999" #leftDrawer>
-        <div class="flex flex-col w-full max-w-140">
-            <div class="flex flex-col p-5 items-start border-b">
-                <p class="flex-1 text-[#E83E3C] font-semibold text-xl pb-3">
-                    Xác minh thông tin tài khoản
-                </p>
-                <span class="flex-1 text-primary-grayNeutral-1">
-                    Bạn vui lòng cung cấp đầy đủ và chính xác các thông tin dưới đây
-                </span>
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container class="flex-auto h-full">
+        <!-- Drawer -->
+        <mat-drawer class="flex w-72 min-w-72" [autoFocus]="false" [mode]="isMobile ? 'over' : 'side'"
+            [opened]="!isMobile" [position]="'start'" [disableClose]="!isMobile" #matDrawer>
+            <div class="flex flex-col w-full max-w-140">
+                <div class="flex flex-col p-5 items-start border-b">
+                    <p class="flex-1 text-[#E83E3C] font-semibold text-xl pb-3">
+                        Xác minh thông tin tài khoản
+                    </p>
+                    <span class="flex-1 text-primary-grayNeutral-1">
+                        Bạn vui lòng cung cấp đầy đủ và chính xác các thông tin dưới đây
+                    </span>
+                </div>
+                <!-- Mat stepper -->
+                <mat-vertical-stepper class="kyc-stepper" linear #stepper [selectedIndex]="indexTabActive">
+                    <mat-step *ngFor="let step of kycPayload; let idx = index"
+                        [completed]="getFormControlInPayload(idx, 'isPosted').value">
+                        <!-- (click)="goToStep(idx, stepper)" -->
+                        <ng-template matStepLabel>
+                            <span class="step-label">
+                                {{ step.title }}
+                            </span>
+                        </ng-template>
+
+                    </mat-step>
+                </mat-vertical-stepper>
+                <!-- End Mat stepper -->
             </div>
-            <!-- Mat stepper -->
-            <mat-vertical-stepper class="kyc-stepper" linear #stepper [selectedIndex]="indexTabActive">
-                <mat-step *ngFor="let step of kycPayload;let idx = index"
-                    [completed]="getFormControlInPayload(idx, 'isPosted').value">
-                    <ng-template matStepLabel>{{ step.title }}</ng-template>
-                </mat-step>
-            </mat-vertical-stepper>
-            <!-- End Mat stepper -->
-        </div>
-    </fuse-drawer>
-    <!-- <div class="cdk-visually-hidden cdk-focus-trap-anchor" aria-hidden="true"></div> -->
-    <form [formGroup]="formGroup" class="flex-auto bg-white" (keydown.enter)="$event.preventDefault()">
-        <!-- Progress Bar -->
-        <mat-progress-bar mode="determinate" color="primary"
-            [value]="(indexTabActive + 1) * 100 / kycPayload.length"></mat-progress-bar>
-        <!-- End Progress Bar -->
-        <ng-container *ngIf="prepareLoadingPageFormArray.length > 0">
-            <!-- <div class="p-9"> -->
-            <!-- Tab Group -->
-            <mat-tab-group class="fuse-mat-no-header" [selectedIndex]="indexTabActive">
-                <ng-container formArrayName="prepareLoadingPage">
-                    <!-- Tab Card -->
-                    <mat-tab *ngFor="let payload of kycPayload; let indexTab = index; trackBy: trackByFn">
-                        <ng-container [formGroupName]="indexTab">
-                            <ng-container formGroupName="payload">
-                                <ng-container [formGroupName]="payload.formGroupName">
-                                    <!-- Fuse Card -->
-                                    <div class="flex flex-col md:px-4 pb-4 pt-0">
-                                        <div
-                                            class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
-                                            <!-- Icon menu (ẩn trên desktop, hiện trên mobile) -->
-                                            <mat-icon class="md:hidden cursor-pointer" *ngIf="isScreenSmall"
-                                                (click)="leftDrawer.toggle()" svgIcon="heroicons_outline:menu">
-                                            </mat-icon>
 
-                                            <!-- Title: căn giữa trên mobile, trái trên desktop -->
-                                            <h3 class="text-2xl md:text-4xl text-black font-bold text-left">
-                                                {{ payload.title }}
-                                            </h3>
+        </mat-drawer>
 
-                                            <!-- Action Buttons: full width trên mobile, inline trên desktop -->
-                                            <div
-                                                class="flex flex-col md:flex-row gap-2 md:gap-4 items-center md:items-start justify-center md:justify-end">
+        <!-- Drawer content -->
+        <mat-drawer-content class="flex flex-col" cdkScrollable>
+            <!-- Main -->
+            <div class="flex-auto bg-white">
+                <form [formGroup]="formGroup" class="flex-auto" (keydown.enter)="$event.preventDefault()" cdkScrollable>
+                    <!-- Progress Bar -->
+                    <mat-progress-bar mode="determinate" color="primary"
+                        [value]="(indexTabActive + 1) * 100 / kycPayload.length"></mat-progress-bar>
+                    <!-- End Progress Bar -->
+                    <ng-container *ngIf="prepareLoadingPageFormArray.length > 0">
+                        <!-- <div class="p-9"> -->
+                        <!-- Tab Group -->
+                        <mat-tab-group class="fuse-mat-no-header" [selectedIndex]="indexTabActive">
+                            <ng-container formArrayName="prepareLoadingPage">
+                                <!-- Tab Card -->
+                                <mat-tab *ngFor="let payload of kycPayload; let indexTab = index; trackBy: trackByFn">
+                                    <ng-container [formGroupName]="indexTab">
+                                        <ng-container formGroupName="payload">
+                                            <ng-container [formGroupName]="payload.formGroupName">
+                                                <!-- Fuse Card -->
+                                                <div class="flex flex-col md:px-4 p-4 pt-0">
+                                                    <div
+                                                        class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+                                                        <!-- Icon menu (ẩn trên desktop, hiện trên mobile) -->
+                                                        <button type="button" class="md:hidden self-start" mat-icon-button
+                                                            *ngIf="isScreenSmall" (click)="matDrawer.toggle()">
+                                                            <mat-icon svgIcon="heroicons_outline:menu"></mat-icon>
+                                                        </button>
 
-                                                <button mat-raised-button class="w-full md:w-auto"
-                                                    *ngIf="_authService.authenticatedUser.accountType === 2 && _authService.authenticatedUser.type === 2"
-                                                    color="primary" (click)="downloadBCCTTemplate()">
-                                                    Tải file mẫu BCTC
-                                                </button>
+                                                        <!-- Title: căn giữa trên mobile, trái trên desktop -->
+                                                        <h3 class="text-2xl md:text-4xl text-black font-bold text-left">
+                                                            {{ payload.title }}
+                                                        </h3>
 
-                                                <button mat-raised-button class="w-full md:w-auto" color="warn"
-                                                    (click)="onClickContactCustomerService()">
-                                                    Liên hệ CSKH
-                                                </button>
-                                            </div>
-                                        </div>
+                                                        <!-- Action Buttons: full width trên mobile, inline trên desktop -->
+                                                        <div
+                                                            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                                                            <div class="flex items-center space-x-3 w-full md:w-auto">
+                                                                <button mat-raised-button type="button"
+                                                                    class="w-full md:w-auto flex items-center justify-center"
+                                                                    *ngIf="_authService.authenticatedUser?.accountType === 2 && _authService.authenticatedUser?.type === 2"
+                                                                    color="primary" (click)="downloadBCCTTemplate()">
+                                                                    Tải file mẫu BCTC
+                                                                </button>
+
+                                                                <button mat-raised-button type="button"
+                                                                    class="w-full md:w-auto flex items-center justify-center"
+                                                                    color="warn"
+                                                                    (click)="onClickContactCustomerService()">
+                                                                    Liên hệ CSKH
+                                                                </button>
+                                                            </div>
+                                                            <button mat-stroked-button type="button"
+                                                                class="flex items-center justify-center"
+                                                                (click)="signOut()">
+                                                                Đăng xuất
+                                                            </button>
+                                                        </div>
+                                                    </div>
 
 
-                                        <!-- Grid form control -->
-                                        <div class="grid overflow-hidden grid-cols-1
-                                                   sm:grid-cols-1 md:grid-cols-2 gap-x-5 border rounded-lg p-4">
-                                                <ng-container *ngFor="let form of payload.forms">
-                                                    <div [class]="form.type === 'Avata'
-                                                           ? 'row-span-4 mb-3 col-span-' + form.colspan
-                                                           : 'col-span-2 md:col-span-' + isColEmail(form.colspan, form.name) " 
-                                                           [ngClass]="{ 'mb-3': form.type === 'File' }"
-                                                           class="box ">
-                                                    <ng-container [ngSwitch]="form.type">
-                                                        <!-- Avatar -->
-                                                        <avatar-component-shared *ngSwitchCase="'Avata'"
-                                                            [formGroup]="getDTOFormGroup(indexTab, payload.formGroupName)"
-                                                            [field]="form.formControlName" styleClass="">
-                                                        </avatar-component-shared>
+                                                    <!-- Grid form control -->
+                                                    <div
+                                                        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 sm:gap-x-5 gap-x-0 border rounded-lg p-4">
+                                                        <ng-container *ngFor="let form of payload.forms">
+                                                            <div [class]="
+                                                                form.type === 'Avata'
+                                                                ? 'row-span-3 sm:mb-0 mb-4 col-span-1'
+                                                                : isOneColumnFile(form.formControlName)
+                                                                    ? 'col-span-2'
+                                                                    : 'col-span-2 md:col-span-1'
+                                                                " [ngClass]="{ 'mb-3': form.type === 'File' }"
+                                                                class="box">
+                                                                <ng-container [ngSwitch]="form.type">
+                                                                    <!-- Avatar -->
+                                                                    <avatar-component-shared *ngSwitchCase="'Avata'"
+                                                                        [disabled]="isUploadingFile"
+                                                                        (uploadingChange)="onUploadingChange($event, payload.formGroupName)"
+                                                                        [formGroup]="getDTOFormGroup(indexTab, payload.formGroupName)"
+                                                                        [field]="form.formControlName"
+                                                                        (avatarChanged)="handleBlur(indexTab, payload)">
+                                                                    </avatar-component-shared>
+                                                                    <!-- Input -->
+                                                                    <mat-form-field class="w-full" floatLabel="always"
+                                                                        *ngSwitchCase="'Textbox'">
+                                                                        <mat-label>{{ form.label }}</mat-label>
+                                                                        <input matInput type="text"
+                                                                            (blur)="handleBlur(indexTab, payload)"
+                                                                            (input)="onInput($event, form.inputType, form.formControlName, form, payload.formGroupName)"
+                                                                            (compositionend)="onInput($event, form.inputType, form.formControlName, form)"
+                                                                            (keypress)="setMaxLength($event, form.maxlength)"
+                                                                            [formControlName]="form.formControlName"
+                                                                            [placeholder]="'Nhập ' + form.label + '...'"
+                                                                            autocomplete="off" />
 
-                                                        <!-- Input -->
-                                                        <mat-form-field class="w-full" floatLabel="always"
-                                                            *ngSwitchCase="'Textbox'">
-                                                            <mat-label>{{ form.label }}</mat-label>
-                                                            <input 
-                                                                matInput 
-                                                                type="text"
-                                                                (blur)="onBlur($event, form)"
-                                                                (input)="onInput($event, form.inputType, form.formControlName, form)"
-                                                                (keypress)="setMaxLength($event, form.maxlength)"
-                                                                [formControlName]="form.formControlName"
-                                                                [placeholder]="'Nhập '+form.label+'...'"
-                                                                autocomplete="off">
-                                                            <mat-error
-                                                                *ngIf="isInvalidRequired(indexTab, payload.formGroupName, form.formControlName)">
-                                                                {{ appConfig.form.errors.required }}
-                                                            </mat-error>
-                                                            <mat-error
-                                                                *ngIf="isInvalidPattern(indexTab, payload.formGroupName, form.formControlName)">
-                                                                {{ appConfig.form.errors.pattern }}
-                                                            </mat-error>
-                                                        </mat-form-field>
+                                                                        <mat-error
+                                                                            *ngIf="isInvalidRequired(indexTab, payload.formGroupName, form.formControlName)">
+                                                                            {{ appConfig.form.errors.required }}
+                                                                        </mat-error>
+                                                                        <!-- <mat-error
+                                                                            *ngIf="isInvalidPattern(indexTab, payload.formGroupName, form.formControlName)">
+                                                                            {{ appConfig.form.errors.pattern }}
+                                                                        </mat-error> -->
+                                                                        <mat-error
+                                                                            *ngIf="isInvalidPattern(indexTab, payload.formGroupName, form.formControlName)">
+                                                                            {{(['financeLastTime','financeTime'].includes(form.formControlName)
+                                                                            && getFormControlInstance(indexTab,
+                                                                            payload.formGroupName,
+                                                                            form.formControlName)?.hasError('futureYear'))
+                                                                            ? 'Không được nhập năm trong tương lai'
+                                                                            : appConfig.form.errors.pattern
+                                                                            }}
+                                                                        </mat-error>
 
-                                                        <!-- Area Dialog -->
-                                                        <mat-form-field floatLabel="always"
-                                                            class="w-full overflow-hidden" *ngSwitchCase="'Area'">
-                                                            <mat-label>{{ form.label }}</mat-label>
-                                                            <input [placeholder]="'Nhập '+form.label+'...'"
-                                                                (click)="openAddressDialog(indexTab, payload.formGroupName, form.formControlName)"
-                                                                class="cursor-pointer" matInput readonly
-                                                                [formControlName]="form.formControlName">
-                                                            <mat-error
-                                                                *ngIf="isInvalidRequired(indexTab, payload.formGroupName, form.formControlName)">
-                                                                {{ appConfig.form.errors.required }}
-                                                            </mat-error>
-                                                            <mat-error
-                                                                *ngIf="isInvalidPattern(indexTab, payload.formGroupName, form.formControlName)">
-                                                                {{ appConfig.form.errors.pattern }}
-                                                            </mat-error>
-                                                        </mat-form-field>
+                                                                    </mat-form-field>
 
-                                                        <!-- Select -->
-                                                        <mat-form-field floatLabel="always"
-                                                            class="w-full overflow-hidden" *ngSwitchCase="'Selectbox'">
-                                                            <mat-label>{{ form.label }}</mat-label>
-                                                            <mat-select *ngSwitchCase="'Selectbox'"
-                                                                [placeholder]="'Chọn '+form.label+'...'"
-                                                                [formControlName]="form.formControlName" #matSelect
-                                                                [matTooltip]="matSelect.triggerValue">
-                                                                <ng-container *ngIf="form?.dateSourceObj"
-                                                                    [ngSwitch]="form.extraField">
-                                                                    <ng-container *ngSwitchDefault>
-                                                                        <mat-option
-                                                                            *ngFor="let obj of form.dateSourceObj"
-                                                                            [value]="obj.admCategoriesId">
-                                                                            {{ obj.categoriesName }}
-                                                                        </mat-option>
-                                                                    </ng-container>
-                                                                    <ng-container *ngSwitchCase="'Filter'">
-                                                                        <input class="input-search-mat-select"
-                                                                            (keydown)="$event.stopPropagation(); onKey($event.target, form?.dateSourceObj, payload.kycStep +'_'+ form.dateSource)"
-                                                                            autoFocus>
-                                                                        <mat-option
-                                                                            *ngIf="checkLength(payload.kycStep +'_'+ form.dateSource)">Không
-                                                                            có dữ liệu</mat-option>
-                                                                        <mat-option
-                                                                            *ngFor="let obj of getSelectListFilter(form?.dateSourceObj, payload.kycStep +'_'+ form.dateSource)"
-                                                                            [value]="obj.admCategoriesId">
-                                                                            {{ obj.categoriesName }}
-                                                                        </mat-option>
-                                                                    </ng-container>
+                                                                    <!-- Area Dialog -->
+                                                                    <mat-form-field floatLabel="always"
+                                                                        class="w-full overflow-hidden"
+                                                                        *ngSwitchCase="'Area'">
+                                                                        <mat-label>{{ form.label }}</mat-label>
+                                                                        <input [placeholder]="'Nhập '+form.label+'...'"
+                                                                            (blur)="handleBlur(indexTab, payload)"
+                                                                            (click)="openAddressDialog(indexTab, payload.formGroupName, form.formControlName)"
+                                                                            class="cursor-pointer" matInput readonly
+                                                                            [formControlName]="form.formControlName">
+                                                                        <mat-error
+                                                                            *ngIf="isInvalidRequired(indexTab, payload.formGroupName, form.formControlName)">
+                                                                            {{ appConfig.form.errors.required }}
+                                                                        </mat-error>
+                                                                        <mat-error
+                                                                            *ngIf="isInvalidPattern(indexTab, payload.formGroupName, form.formControlName)">
+                                                                            {{ appConfig.form.errors.pattern }}
+                                                                        </mat-error>
+                                                                    </mat-form-field>
+
+                                                                    <!-- Select -->
+                                                                    <mat-form-field floatLabel="always"
+                                                                        class="w-full overflow-hidden"
+                                                                        *ngSwitchCase="'Selectbox'">
+                                                                        <mat-label>{{ form.label }}</mat-label>
+                                                                        <mat-select *ngSwitchCase="'Selectbox'"
+                                                                            (selectionChange)="handleBlur(indexTab, payload)"
+                                                                            [placeholder]="'Chọn '+form.label+'...'"
+                                                                            [formControlName]="form.formControlName"
+                                                                            #matSelect
+                                                                            [matTooltip]="matSelect.triggerValue">
+                                                                            <ng-container *ngIf="form?.dateSourceObj"
+                                                                                [ngSwitch]="form.extraField">
+                                                                                <ng-container *ngSwitchDefault>
+                                                                                    <mat-option
+                                                                                        *ngFor="let obj of form.dateSourceObj"
+                                                                                        [value]="obj.admCategoriesId">
+                                                                                        {{ obj.categoriesName }}
+                                                                                    </mat-option>
+                                                                                </ng-container>
+                                                                                <ng-container *ngSwitchCase="'Filter'">
+                                                                                    <input
+                                                                                        class="input-search-mat-select"
+                                                                                        (keydown)="$event.stopPropagation(); onKey($event.target, form?.dateSourceObj, payload.kycStep +'_'+ form.dateSource)"
+                                                                                        autoFocus>
+                                                                                    <mat-option
+                                                                                        *ngIf="checkLength(payload.kycStep +'_'+ form.dateSource)">Không
+                                                                                        có dữ liệu</mat-option>
+                                                                                    <mat-option
+                                                                                        *ngFor="let obj of getSelectListFilter(form?.dateSourceObj, payload.kycStep +'_'+ form.dateSource)"
+                                                                                        [value]="obj.admCategoriesId">
+                                                                                        {{ obj.categoriesName }}
+                                                                                    </mat-option>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </mat-select>
+                                                                        <mat-error
+                                                                            *ngIf="isInvalidRequired(indexTab, payload.formGroupName, form.formControlName)">
+                                                                            {{ appConfig.form.errors.required }}
+                                                                        </mat-error>
+                                                                        <mat-error
+                                                                            *ngIf="isInvalidPattern(indexTab, payload.formGroupName, form.formControlName)">
+                                                                            {{ appConfig.form.errors.pattern }}
+                                                                        </mat-error>
+                                                                    </mat-form-field>
+
+                                                                    <!-- Date Picker -->
+                                                                    <app-date-picker *ngSwitchCase="'Datepicker'"
+                                                                        [maxDate]="form.maxDate" [label]="form.label"
+                                                                        [isRequired]="form.require == 'true'"
+                                                                        [formControlName]="form.formControlName"
+                                                                        [validationType]="form.dateValidation"
+                                                                        (dateChanged)="handleBlur(indexTab, payload)">
+                                                                    </app-date-picker>
+
+                                                                    <!-- File -->
+                                                                    <app-dropzone *ngSwitchCase="'File'" class="mt-3"
+                                                                        [multiple]="form.maxlength > 1"
+                                                                        [maxFile]="form.maxlength"
+                                                                        [topTitle]="form.label"
+                                                                        [maxFileSize]="form.extraField"
+                                                                        [pattern]="form.pattern" [accept]="form.pattern"
+                                                                        [requiredMsg]="form.requireMesage"
+                                                                        [typeMsg]="form.typeMessage"
+                                                                        [title]="form.placeholder || 'Tải file lên'"
+                                                                        styleClass="h-[48px] mt-[3px]"
+                                                                        [isRequired]="form.require == 'true'"
+                                                                        [formGroup]="getDTOFormGroup(indexTab, payload.formGroupName)"
+                                                                        [field]="form.formControlName"
+                                                                        [disabled]="isUploadingFile"
+                                                                        (uploadingChange)="onUploadingChange($event, payload.formGroupName)"
+                                                                        (fileChanged)="handleBlur(indexTab, payload)">
+                                                                    </app-dropzone>
                                                                 </ng-container>
-                                                            </mat-select>
-                                                            <mat-error
-                                                                *ngIf="isInvalidRequired(indexTab, payload.formGroupName, form.formControlName)">
-                                                                {{ appConfig.form.errors.required }}
-                                                            </mat-error>
-                                                            <mat-error
-                                                                *ngIf="isInvalidPattern(indexTab, payload.formGroupName, form.formControlName)">
-                                                                {{ appConfig.form.errors.pattern }}
-                                                            </mat-error>
-                                                        </mat-form-field>
-
-                                                        <!-- Date Picker -->
-                                                        <app-date-picker *ngSwitchCase="'Datepicker'"
-                                                            [maxDate]="form.maxDate" [label]="form.label"
-                                                            [isRequired]="form.require == 'true'"
-                                                            [formControlName]="form.formControlName"
-                                                            [validationType]="form.dateValidation">
-                                                        </app-date-picker>
-
-                                                        <!-- File -->
-                                                        <app-dropzone 
-                                                            class="mt-3"
-                                                            [multiple]="form.maxlength > 1"
-                                                            [maxFile]="form.maxlength" *ngSwitchCase="'File'"
-                                                            [topTitle]="form.label" [maxFileSize]="form.extraField"
-                                                            [pattern]="form.pattern" [requiredMsg]="form.requireMesage"
-                                                            [typeMsg]="form.typeMessage"
-                                                            [title]="form.placeholder || 'Tải file lên'"
-                                                            styleClass="h-12 mt-[3px]"
-                                                            [isRequired]="form.require == 'true'"
-                                                            [formGroup]="getDTOFormGroup(indexTab, payload.formGroupName)"
-                                                            [field]="form.formControlName">
-                                                        </app-dropzone>
-                                                    </ng-container>
+                                                            </div>
+                                                        </ng-container>
+                                                    </div>
+                                                    <!-- End grid form control -->
+                                                    <div class="text-end mt-5">
+                                                        <!--  -->
+                                                        <button *ngIf="indexTabActive" [disabled]="isUploadingFile" type="button" mat-raised-button
+                                                            color="warn" class="mr-2" (click)="onClickBackButton()">
+                                                            Quay lại
+                                                        </button>
+                                                        <button type="button" class="button-submit" mat-raised-button
+                                                            color="primary" [disabled]="isUploadingFile"
+                                                            (click)="onSubmit(payload.isEnd, payload.formGroupName)">
+                                                            {{ payload.isEnd ? 'Hoàn thành' : 'Tiếp Theo' }}
+                                                        </button>
+                                                    </div>
                                                 </div>
+                                                <!-- End Fuse Card -->
                                             </ng-container>
-                                        </div>
-                                        <!-- End grid form control -->
-                                        <div class="text-end mt-5">
-                                            <!--  -->
-                                            <button *ngIf="indexTabActive" [type]="'button'" mat-raised-button
-                                                color="warn" class="mr-2" (click)="onClickBackButton()">
-                                                Quay lại
-                                            </button>
-                                            <button type="button" class="button-submit" mat-raised-button
-                                                color="primary"
-                                                (click)="onSubmit(payload.isEnd, payload.formGroupName)">
-                                                {{ payload.isEnd ? 'Hoàn thành' : 'Tiếp Theo' }}
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!-- End Fuse Card -->
-                                </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                </mat-tab>
+                                <!-- End Tab Card -->
                             </ng-container>
-                        </ng-container>
-                    </mat-tab>
-                    <!-- End Tab Card -->
-                </ng-container>
-            </mat-tab-group>
-            <!-- End Tab Group -->
-            <!-- </div> -->
-        </ng-container>
-    </form>
+                        </mat-tab-group>
+                        <!-- End Tab Group -->
+                        <!-- </div> -->
+                    </ng-container>
+                </form>
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
 </div>

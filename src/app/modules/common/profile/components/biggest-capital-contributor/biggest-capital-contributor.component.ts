@@ -17,7 +17,12 @@ import { forbiddenPhoneNumberValidator } from "../../../../../shared/validator/f
 
 @Component({
     selector: 'biggest-capital-contributor',
-    templateUrl: './biggest-capital-contributor.component.html'
+    templateUrl: './biggest-capital-contributor.component.html',
+    styles: [`
+        ::ng-deep .input-search .mat-form-field-wrapper {
+            margin-bottom: 0px !important
+        }
+        `]
 })
 export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, AfterViewInit {
     contactForm: FormGroup;
@@ -30,6 +35,7 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
     genders: AdmCategoriesDTO[];
     yesterday = moment().subtract(1, 'days');
     subscription: Subscription = new Subscription();
+    addressModes: 'new' | 'old';
 
     constructor(
         private _profileService: ProfileService,
@@ -55,7 +61,6 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
                         this.contactSelected = acc.capitalContributors[0];
                         this.genders = acc.sex;
 
-                        console.log('Genders:', this.genders);
                     }
                 })
             ).subscribe()
@@ -76,35 +81,46 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
         const value = (event.target as HTMLInputElement).value;
         if (this.fixedContactInfoData) {
             if (value) {
-                this.contactInfoData = this.fixedContactInfoData.filter(
-                    c => c.fullName.toLowerCase().includes(value.toLowerCase().trim())
-                );
-            }
-            else {
+                const search = value.toLowerCase().trim();
+                this.contactInfoData = this.fixedContactInfoData.filter(c => {
+                    const name = c.fullName ? c.fullName.toLowerCase() : '';
+                    return name.includes(search);
+                });
+            } else {
                 this.contactInfoData = [...this.fixedContactInfoData];
             }
         }
     }
 
+
     initFormToEditing(title: string, contact?: AdmDeputyContactDTO): void {
-        if (!contact) {
-            this.contactSelected = null;
-        }
         this.isEditing = true;
         this.titleEditing = title;
+
+        // Tạo form group
         this.contactForm = this._fb.group({
-            type: DeputyType.CAPITAL_CONTRIBUTOR,
-            admDeputyContactId: contact?.admDeputyContactId || null,
-            fullName: this._fb.control(contact?.fullName || '', Validators.required),
-            dateOfBirth: this._fb.control(contact?.dateOfBirth ? new Date(contact?.dateOfBirth) : '', Validators.required),
-            gender: this._fb.control(Number(contact?.gender) || '', Validators.required),
-            identification: this._fb.control(contact?.identification || '', Validators.required),
-            mobile: this._fb.control(contact?.mobile || '', [Validators.required, forbiddenPhoneNumberValidator()]),
-            email: this._fb.control(contact?.email || '', [Validators.required, Validators.email]),
-            address2: this._fb.control(contact?.address2 || '', Validators.required),
-            positionCompany: this._fb.control(contact?.positionCompany || '', Validators.required)
+            type: [DeputyType.CAPITAL_CONTRIBUTOR],
+            admDeputyContactId: [contact?.admDeputyContactId || null],
+            fullName: [contact?.fullName || '', Validators.required],
+            dateOfBirth: [contact?.dateOfBirth ? new Date(contact.dateOfBirth) : null, Validators.required],
+            gender: [contact?.gender ? Number(contact.gender) : '', Validators.required],
+            identification: [contact?.identification || '', Validators.required],
+            mobile: [contact?.mobile || '', [Validators.required, forbiddenPhoneNumberValidator()]],
+            email: [contact?.email || '', [Validators.required, Validators.email]],
+            address2: [contact?.address2 || '', Validators.required],
+            positionCompany: [contact?.positionCompany || '', Validators.required],
         });
+
+        if (!contact) {
+            // Nếu thêm mới thì reset form sạch, giữ type và gender mặc định
+            this.contactSelected = null;
+            this.contactForm.reset({
+                type: DeputyType.CAPITAL_CONTRIBUTOR,
+                gender: '',
+            });
+        }
     }
+
 
     onSubmit(): void {
         this.contactForm.markAllAsTouched();
@@ -132,13 +148,18 @@ export class BiggestCapitalContributorComponent implements OnInit, OnDestroy, Af
     }
 
     openAddressDialog(formControlName: string): void {
+        const type = this.addressModes || 'old';
         const dialogRef = this._matDialog.open(AddressKycDialogComponent, {
             disableClose: true,
             width: '450px',
-            data: this.contactForm.get(formControlName).value,
+            data: {
+                type,
+                value: this.contactForm.get(formControlName).value
+            },
         });
         dialogRef.afterClosed().subscribe((res: IAddressData) => {
-            if (res && res.payload) {
+            if (res && res.payload && res.type) {
+                this.addressModes = res.type
                 this.contactForm.get(formControlName).patchValue(res.payload);
                 this.contactForm.markAsDirty();
             }

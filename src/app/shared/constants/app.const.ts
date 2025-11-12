@@ -16,5 +16,5 @@ export class AppConst {
     static readonly acceptPhotoType = 'image/png, image/jpeg';
 
     static readonly acceptFileType
-        = 'application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        = 'application/pdf, application/VND.openxmlformats-officedocument.wordprocessingml.document, application/VND.openxmlformats-officedocument.spreadsheetml.sheet';
 }

@@ -1,0 +1,11 @@
+.custom-paginator {
+  .mat-paginator {
+    flex-grow: 1;
+  }
+
+  input[type='number'] {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 4px 8px;
+  }
+}

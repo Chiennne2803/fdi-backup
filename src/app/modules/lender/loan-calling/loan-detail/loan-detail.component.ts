@@ -1,25 +1,26 @@
-import {Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatDrawer} from '@angular/material/sidenav';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {UserType} from 'app/enum';
-import {AdmAccountDetailDTO, FsDocuments} from 'app/models/admin';
-import {FsCardDownDTO, FsLoanProfilesDTO, FsTransInvestorDTO, FsTranspayReqDTO,} from 'app/models/service';
-import {FileService} from 'app/service/common-service';
-import {Subscription} from 'rxjs';
-import {FsCardDownInvestorDTO} from '../../../../models/service/FsCardDownInvestorDTO.model';
-import {FuseAlertService} from '@fuse/components/alert';
-import {OtpSmsConfirmComponent} from '../../../../shared/components/otp-sms-confirm/otp-sms-confirm.component';
-import {SelectionModel} from '@angular/cdk/collections';
-import {ConfirmProcessingComponent} from '../../../../shared/components/confirm-processing/confirm-processing.component';
-import {FuseConfirmationService} from '../../../../../@fuse/services/confirmation';
-import {LoanProfilesService, LoanProfilesStoreService} from "../../../../service/borrower";
-import {FormBuilder} from "@angular/forms";
-import {DateTimeformatPipe} from "../../../../shared/components/pipe/date-time-format.pipe";
-import {fuseAnimations} from "../../../../../@fuse/animations";
-import {AuthService} from "../../../../core/auth/auth.service";
-import {DialogService} from "../../../../service/common-service/dialog.service";
-import {MatTabChangeEvent, MatTabGroup} from "@angular/material/tabs";
+
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDrawer } from '@angular/material/sidenav';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { UserType } from 'app/enum';
+import { AdmAccountDetailDTO, FsDocuments } from 'app/models/admin';
+import { FsCardDownDTO, FsLoanProfilesDTO, FsTransInvestorDTO, FsTranspayReqDTO, } from 'app/models/service';
+import { FileService } from 'app/service/common-service';
+import { Subscription } from 'rxjs';
+import { FsCardDownInvestorDTO } from '../../../../models/service/FsCardDownInvestorDTO.model';
+import { FuseAlertService } from '@fuse/components/alert';
+import { OtpSmsConfirmComponent } from '../../../../shared/components/otp-sms-confirm/otp-sms-confirm.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { ConfirmProcessingComponent } from '../../../../shared/components/confirm-processing/confirm-processing.component';
+import { FuseConfirmationService } from '../../../../../@fuse/services/confirmation';
+import { LoanProfilesService, LoanProfilesStoreService } from "../../../../service/borrower";
+import { FormBuilder } from "@angular/forms";
+import { DateTimeformatPipe } from "../../../../shared/components/pipe/date-time-format.pipe";
+import { fuseAnimations } from "../../../../../@fuse/animations";
+import { AuthService } from "../../../../core/auth/auth.service";
+import { DialogService } from "../../../../service/common-service/dialog.service";
+import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
 
 @Component({
     selector: 'borrower-loan-detail',
@@ -30,8 +31,8 @@ import {MatTabChangeEvent, MatTabGroup} from "@angular/material/tabs";
     animations: fuseAnimations
 })
 export class LoanDetailComponent implements OnInit, OnDestroy {
-    @ViewChild('fileDrawer', {static: true}) fileDrawer: MatDrawer;
-    @ViewChild('detailFsCardDown', {static: true}) detailFsCardDown: MatDrawer;
+    @ViewChild('fileDrawer', { static: true }) fileDrawer: MatDrawer;
+    @ViewChild('detailFsCardDown', { static: true }) detailFsCardDown: MatDrawer;
     @ViewChild(MatTabGroup) matTabGroup: MatTabGroup;
 
     public loanProfile: FsLoanProfilesDTO;
@@ -50,6 +51,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
 
     public userType = UserType;
     public displayTranspayReq: boolean = false;
+    public showStopFundingBtn = false;
     fsTranspayReqDTO: FsTranspayReqDTO;
 
     public investorsDisplayColumn = ['select', 'index', 'transInvestorName', 'amount', 'createdDate', 'status'];
@@ -76,8 +78,8 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     public legal_documents_config: any[];
     public legal_documents_lst: string[] = [
         'Giấy chứng nhận đăng ký kinh doanh (bản thay đổi gần nhất)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
         'Đăng ký mẫu dấu, chứng chỉ ngành nghề hoặc giấy chứng nhận đủ điều kiện kinh doanh',
         'Quyết định bổ nhiệm kế toán trưởng',
         'Điều lệ công ty',
@@ -221,6 +223,8 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
                 if (res.stopCapital) {
                     this.stopCapital = res.stopCapital;
                 }
+                this.updateStopFunding();
+
                 if (res.admAccountDetail.avatar) {
                     this._fileService
                         .getFileFromServer(res.admAccountDetail.avatar)
@@ -422,7 +426,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
                                         otpType: 'LOAN_PROFILES_STOP_FUNDING',
                                     },
                                     title: 'Điền mã xác nhận OTP',
-                                    content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                                    content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                                     complete: () => {
                                         dialogRef.close();
                                         this._fuseAlertService.showMessageSuccess('Dừng gọi vốn thành công');
@@ -438,11 +442,12 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
         });
     }
 
-    public canStopFunding(): boolean {
+    updateStopFunding(): void {
         if (this.loanProfile && this.stopCapital) {
-            return this.loanProfile.remainAmount >= this.stopCapital && this.loanProfile.remainAmount < 100;
+            this.showStopFundingBtn =
+                this.loanProfile.remainAmount >= this.stopCapital &&
+                this.loanProfile.remainAmount < 100;
         }
-        return false;
     }
 
     public updateIsAuto(): void {
@@ -481,7 +486,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
                     otpType: 'LOAN_PROFILES_IS_AUTO',
                 },
                 title: 'Điền mã xác nhận OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                     'Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất thay đổi hình thức phê duyệt khoản đầu tư',
                 complete: () => {
                     dialogRef.close();
@@ -512,7 +517,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
 
     onApproveInvestor(): void {
         const dialogRef = this.matDialog.open(ConfirmProcessingComponent, {
-            width: '450px',
+            // width: '450px',
             data: {
                 title: 'Xác nhận nội dung xử lý',
                 valueDefault: 2,
@@ -553,7 +558,7 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
                                     otpType: 'LOAN_PROFILES_APPROVAL_INVESTOR',
                                 },
                                 title: 'Điền mã xác nhận OTP',
-                                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                     'Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất phê duyệt khoản đầu tư',
                                 complete: () => {
                                     otpDialog.close();

@@ -7,7 +7,7 @@ export const TABLE_LOAN_CONFIG: ITableConfig = {
         new CheckboxColumn(),
         new TextColumn('fsLoanProfilesId', 'Số hồ sơ', 10, true),
         new TextColumn('loanTimeCycle', 'Kỳ hạn(ngày)', 10),
-        new TextColumn('amount', 'Số tiền huy động(VNĐ)', 15, false, 1),
+        new TextColumn('amount', 'Số tiền huy động(VND)', 15, false, 1),
         new TextColumn('rate', 'Lãi suất(%)', 10, false),
         new TextColumn('reasons', 'Mục đích', 10, false),
         new TextColumn('createdDate', 'Ngày lập', 10, false, 'DD/MM/YYYY HH:mm:ss'),

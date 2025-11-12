@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { ROUTER_CONST } from 'app/shared/constants';
 import { BorrowerComponent } from './borrower.component';
-import {DashBoardResolvers, LoanArchiveResolvers, LoanCallingResolvers, LoanReviewResolvers} from './loan.resolvers';
+import { DashBoardResolvers, LoanArchiveResolvers, LoanCallingResolvers, LoanReviewResolvers } from './loan.resolvers';
 
 const router: Route[] = [
     {
@@ -15,10 +15,12 @@ const router: Route[] = [
                 pathMatch: 'full'
             },
             {
+                data: { title: 'Tạo hồ sơ huy động' },
                 path: ROUTER_CONST.config.borrower.loan.create.root,
                 loadChildren: () => import('./create-loan/create-loan.module').then(m => m.CreateLoanModule)
             },
             {
+                data: { title: 'Hồ đang xem xét' },
                 path: ROUTER_CONST.config.borrower.loan.review.root,
                 loadChildren: () => import('./loan-review/loan-review.module').then(m => m.LoanReviewModule),
                 resolve: {
@@ -26,6 +28,7 @@ const router: Route[] = [
                 }
             },
             {
+                data: { title: 'Hồ sơ đang huy động' },
                 path: ROUTER_CONST.config.borrower.loan.calling.root,
                 loadChildren: () => import('./loan-calling/loan-calling.module').then(m => m.LoanCallingModule),
                 resolve: {
@@ -33,6 +36,7 @@ const router: Route[] = [
                 }
             },
             {
+                data: { title: 'Hồ sơ lưu trữ' },
                 path: ROUTER_CONST.config.borrower.loan.archive.root,
                 loadChildren: () => import('./loan-archive/loan-archive.module').then(m => m.LoanArchiveModule),
                 resolve: {
@@ -40,6 +44,7 @@ const router: Route[] = [
                 }
             },
             {
+                data: { title: 'Thống kê' },
                 path: ROUTER_CONST.config.borrower.dashboard.root,
                 loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
                 resolve: {
@@ -47,14 +52,19 @@ const router: Route[] = [
                 }
             },
             {
+                data: {
+                    layout: 'empty',
+                    title: 'Xác minh tài khoản'
+                },
                 path: ROUTER_CONST.config.borrower.kyc.root,
                 loadChildren: () => import('./kyc/kyc.module').then(m => m.BorrowerKycModule),
             },
             {
+                data: { layout: 'empty',title: 'Xác minh thành công' },
                 path: ROUTER_CONST.config.borrower.kycSuccess.root,
                 loadChildren: () => import('../common/kyc-success/kyc-success.module').then(m => m.KycSuccessModule)
             },
-            {path: '**', redirectTo: ROUTER_CONST.config.borrower.dashboard.root}
+            { path: '**', redirectTo: ROUTER_CONST.config.borrower.dashboard.root }
         ]
     }
 ];

@@ -1,30 +1,32 @@
-<mat-drawer-container
-    class="flex-auto h-full bg-card dark:bg-transparent">
-     Drawer
-    <mat-drawer
-        class="w-full md:w-10/12"
-        [mode]="'side'"
-        [opened]="false"
-        [position]="'end'"
-        [disableClose]="true"
-        #matDrawer>
-        <router-outlet></router-outlet>
-    </mat-drawer>
-    <button mat-button *ngIf=" 'INVESTOR_TOPUP_CREATE_DEPOSIT_ORDER' | permission" >
-        <span>Nạp</span>
-    </button>
-    <mat-drawer-content class="flex flex-col">
-        <app-datatable
-            [containerStyle]="{width: '100%'}"
-            [tableConfig]="_tableTopUpConfig"
-            [taskbarConfig]="_taskbarConfig"
-            [tableConfigBtns]="_dataButtonConfig"
-            [dataSource]="_dataSource$"
-            (handleSearch)="handleSearch($event)"
-            (tableEvent)="handleTableEvent($event)"
-            (rowClick)="handleRowClick($event)"
-            (pageSwitch)="handlePageSwitch($event)"
-        >
-        </app-datatable>
-    </mat-drawer-content>
-</mat-drawer-container>
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container
+        class="flex-auto h-full bg-white">
+        Drawer
+        <mat-drawer
+            class="w-full md:w-10/12"
+            [mode]="'side'"
+            [opened]="false"
+            [position]="'end'"
+            [disableClose]="true"
+            #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+        <button mat-button *ngIf=" 'INVESTOR_TOPUP_CREATE_DEPOSIT_ORDER' | permission" >
+            <span>Nạp</span>
+        </button>
+        <mat-drawer-content class="flex flex-col">
+            <app-datatable
+                [containerStyle]="{width: '100%'}"
+                [tableConfig]="_tableTopUpConfig"
+                [taskbarConfig]="_taskbarConfig"
+                [tableConfigBtns]="_dataButtonConfig"
+                [dataSource]="_dataSource$"
+                (handleSearch)="handleSearch($event)"
+                (tableEvent)="handleTableEvent($event)"
+                (rowClick)="handleRowClick($event)"
+                (pageSwitch)="handlePageSwitch($event)"
+            >
+            </app-datatable>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

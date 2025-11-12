@@ -6,6 +6,18 @@
 
     <!-- Content -->
     <div class="flex flex-col flex-auto">
+        <div class=" fixed w-150 top-5 right-15"
+             style="z-index: 1001">
+            <fuse-alert *ngFor="let noti of lstNotify;"
+                        class="pb-2"
+                        [appearance]="'outline'"
+                        [dismissible]="true"
+                        [dismissed]="false"
+                        [name]="noti.idMessage"
+                        [type]="noti.type">
+                {{noti.message | transloco}}
+            </fuse-alert>
+        </div>
         <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
              Otherwise, layout changes won't be registered and the view won't be updated! -->
         <router-outlet *ngIf="true"></router-outlet>

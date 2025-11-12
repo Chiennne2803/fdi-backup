@@ -1,0 +1,8 @@
+<div  [matTooltip]="avatar ? 'Click để xem lớn' : null"
+    class="w-full h-50 rounded-lg border border-primary-grayLight-2 bg-primary-grayNeutral-5
+    bg-center bg-contain bg-no-repeat"
+    [ngClass]="avatar && 'cursor-pointer'"
+    [ngStyle]="{
+'background-image': 'url(' + (avatar ? avatar : defaultImage) + ')'
+}" (click)="openPreview()">
+</div>

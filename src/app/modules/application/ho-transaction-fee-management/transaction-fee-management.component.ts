@@ -105,46 +105,46 @@ export class TransactionFeeManagementComponent
                             }
                         ]
                     },
-                    {
-                        title: 'Phí giao dịch nạp tiền',
-                        type : 'collapsable',
-                        link: `${ROUTER_CONST.config.application.transactionFeeManagement.link}`,
-                        exactMatch: true,
-                        children: [
-                            {
-                                title: 'Danh sách giao dịch',
-                                type : 'basic',
-                                link: `${ROUTER_CONST.config.application.transactionFeeManagement.feeDepositTransaction.link}/list`,
-                                exactMatch: true,
-                            },
-                            {
-                                title: 'Yêu cầu điều chuyển tiền ví',
-                                type : 'basic',
-                                link: `${ROUTER_CONST.config.application.transactionFeeManagement.feeDepositTransaction.link}/request`,
-                                exactMatch: true,
-                            }
-                        ]
-                    },
-                    {
-                        title: 'Phí giao dịch rút tiền',
-                        type : 'collapsable',
-                        link: `${ROUTER_CONST.config.application.transactionFeeManagement.link}`,
-                        exactMatch: true,
-                        children: [
-                            {
-                                title: 'Danh sách giao dịch',
-                                type : 'basic',
-                                link: `${ROUTER_CONST.config.application.transactionFeeManagement.feeWithdrawTransaction.link}/list`,
-                                exactMatch: true,
-                            },
-                            {
-                                title: 'Yêu cầu điều chuyển tiền ví',
-                                type : 'basic',
-                                link: `${ROUTER_CONST.config.application.transactionFeeManagement.feeWithdrawTransaction.link}/request`,
-                                exactMatch: true,
-                            }
-                        ]
-                    },
+                    // {
+                    //     title: 'Phí giao dịch nạp tiền',
+                    //     type : 'collapsable',
+                    //     link: `${ROUTER_CONST.config.application.transactionFeeManagement.link}`,
+                    //     exactMatch: true,
+                    //     children: [
+                    //         {
+                    //             title: 'Danh sách giao dịch',
+                    //             type : 'basic',
+                    //             link: `${ROUTER_CONST.config.application.transactionFeeManagement.feeDepositTransaction.link}/list`,
+                    //             exactMatch: true,
+                    //         },
+                    //         {
+                    //             title: 'Yêu cầu điều chuyển tiền ví',
+                    //             type : 'basic',
+                    //             link: `${ROUTER_CONST.config.application.transactionFeeManagement.feeDepositTransaction.link}/request`,
+                    //             exactMatch: true,
+                    //         }
+                    //     ]
+                    // },
+                    // {
+                    //     title: 'Phí giao dịch rút tiền',
+                    //     type : 'collapsable',
+                    //     link: `${ROUTER_CONST.config.application.transactionFeeManagement.link}`,
+                    //     exactMatch: true,
+                    //     children: [
+                    //         {
+                    //             title: 'Danh sách giao dịch',
+                    //             type : 'basic',
+                    //             link: `${ROUTER_CONST.config.application.transactionFeeManagement.feeWithdrawTransaction.link}/list`,
+                    //             exactMatch: true,
+                    //         },
+                    //         {
+                    //             title: 'Yêu cầu điều chuyển tiền ví',
+                    //             type : 'basic',
+                    //             link: `${ROUTER_CONST.config.application.transactionFeeManagement.feeWithdrawTransaction.link}/request`,
+                    //             exactMatch: true,
+                    //         }
+                    //     ]
+                    // },
                     {
                         title: 'Thuế thu nhập cá nhân',
                         type : 'collapsable',

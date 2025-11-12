@@ -35,7 +35,6 @@ export class ReportLenderComponent implements OnInit {
     private lstStaff: IDropList[] = [];
     private _dataSearchDialog: object;
     private searchPayload: BaseRequest = new BaseRequest();
-    private isFirstLoad = true;
 
     constructor(
         private _dialogService: DialogService,
@@ -49,7 +48,7 @@ export class ReportLenderComponent implements OnInit {
         this._investorService.getPrepareLoadingPage().subscribe(ret => {
             if (ret) {
                 this.lstStaff = [];
-                this.lstStaff.push({label: 'Tẩt cả', value: null});
+                this.lstStaff.push({label: 'Tẩt cả', value: ''});
                 ret.payload.lstStaff.forEach(el => this.lstStaff.push({
                     label: el.fullName,
                     value: el.admAccountDetailId
@@ -57,11 +56,7 @@ export class ReportLenderComponent implements OnInit {
             }
         });
         this._reportLenderService.lazyLoad.subscribe((res) => {
-            if(!this.isFirstLoad) {
                 this.dataSource$ =  this._reportLenderService.lazyLoad;
-            } else {
-                this.isFirstLoad = false;
-            }
         });
     }
 

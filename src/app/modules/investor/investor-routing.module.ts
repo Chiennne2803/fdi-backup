@@ -18,19 +18,23 @@ const route: Route[] = [
                 pathMatch: 'full'
             },
             {
+                data: { title: 'Hồ sơ đã đầu tư' },
                 path: ROUTER_CONST.config.investor.investedProfileManagement.root,
                 loadChildren: () => import('./invested-profile-management/invested-profile.module').then(m => m.InvestedProfileModule)
             },
             {
+                data: { title: 'Sao kê tài khoản' },
                 path: ROUTER_CONST.config.investor.accountStatement.root,
                 loadChildren: () => import('./account-statement/account-statement.module').then(m => m.AccountStatementModule),
                 resolve: {investorArchive: InvestorResolvers}
             },
             {
+                data: { title: 'Chuyển nhượng khoản đầu tư' },
                 path: ROUTER_CONST.config.investor.investmentTransfer.root,
                 loadChildren: () => import('./investment-transfer-p2p/investment-transfer.module').then(m => m.InvestmentTransferModule),
             },
             {
+                data: { title: 'Nạp tiền đầu tư' },
                 path: ROUTER_CONST.config.investor.topupInvestment.root,
                 loadChildren: () => import('./investment-topup/investment-topup.module').then(m => m.InvestmentTopupModule),
                 resolve: {
@@ -38,6 +42,7 @@ const route: Route[] = [
                 },
             },
             {
+                data: { title: 'Rút tiền' },
                 path: ROUTER_CONST.config.investor.withdraw.root,
                 loadChildren: () => import('./withdraw/withdraw.module').then(m => m.WithdrawModule),
                 resolve: {
@@ -45,23 +50,31 @@ const route: Route[] = [
                 }
             },
             {
+                data: { title: 'Đầu tư tự chọn' },
                 path: ROUTER_CONST.config.investor.manualInvestment.root,
                 loadChildren: () => import('./manual-investment/manual-investment.module').then(m => m.ManualInvestmentModule)
             },
             {
+                data: { title: 'Đầu tư tự động' },
                 path: ROUTER_CONST.config.investor.autoInvestment.root,
                 loadChildren: () => import('./automatic-investment/automatic-investment.module').then(m => m.AutomaticInvestmentModule),
                 resolve: { autoInvestmentPrepare: AutomaticInvestmentResolvers }
             },
             {
+                data: {
+                    layout: 'empty',
+                    title: 'Xác minh tài khoản'
+                },
                 path: ROUTER_CONST.config.investor.kyc.root,
                 loadChildren: () => import('./kyc/kyc.module').then(m => m.InvestorKYCModule)
             },
             {
+                data: { layout: 'empty',title: 'Xác minh thành công' },
                 path: ROUTER_CONST.config.investor.kycSuccess.root,
                 loadChildren: () => import('../common/kyc-success/kyc-success.module').then(m => m.KycSuccessModule)
             },
             {
+                data: { title: 'Thống kê' },
                 path: ROUTER_CONST.config.investor.dashboard.root,
                 loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
                 resolve: {

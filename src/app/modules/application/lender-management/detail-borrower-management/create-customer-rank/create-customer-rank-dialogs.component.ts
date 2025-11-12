@@ -43,8 +43,8 @@ export class CreateCustomerRankDialogsComponent implements OnInit {
         this.formGroup = this._fb.group({
             fsConfCreditId: new FormControl(null, [Validators.required]),
             scores: new FormControl(null, Validators.required),
-            createdByName: new FormControl(this._authService.authenticatedUser.fullName),
-            createdDate: new FormControl(this._datetimePipe.transform(new Date().getTime(), 'DD/MM/YYYY')),
+            createdByName: new FormControl( {value:this._authService.authenticatedUser.fullName, disabled: true}),
+            createdDate: new FormControl({value: this._datetimePipe.transform(new Date().getTime(), 'DD/MM/YYYY'), disabled: true}),
         });
     }
 

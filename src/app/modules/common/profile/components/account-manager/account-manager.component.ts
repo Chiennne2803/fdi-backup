@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { fuseAnimations } from '@fuse/animations';
 import { AdmAccountType } from 'app/core/user/user.types';
@@ -9,12 +9,13 @@ import { AccountModel, FsAccountBankDTO } from 'app/models/service/FsAccountBank
 import { ProfileService } from 'app/service/common-service';
 import * as moment from 'moment';
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
-import {FuseAlertService} from "../../../../../../@fuse/components/alert";
-import {DialogService} from "../../../../../service/common-service/dialog.service";
-import {ChangeMobileDialogComponent} from "../change-mobile-dialog/change-mobile-dialog.component";
-import {ChangeEmailDialogComponent} from "../change-email-dialog/change-email-dialog.component";
-import {AuthService} from "../../../../../core/auth/auth.service";
-import {OtpSmsConfirmComponent} from "../../../../../shared/components/otp-sms-confirm/otp-sms-confirm.component";
+import { FuseAlertService } from "../../../../../../@fuse/components/alert";
+import { DialogService } from "../../../../../service/common-service/dialog.service";
+import { ChangeMobileDialogComponent } from "../change-mobile-dialog/change-mobile-dialog.component";
+import { ChangeEmailDialogComponent } from "../change-email-dialog/change-email-dialog.component";
+import { AuthService } from "../../../../../core/auth/auth.service";
+import { OtpSmsConfirmComponent } from "../../../../../shared/components/otp-sms-confirm/otp-sms-confirm.component";
+import { ComponentType } from '@angular/cdk/portal';
 @Component({
     selector: 'account-manager',
     templateUrl: './account-manager.component.html',
@@ -57,11 +58,12 @@ export class AccountManagerComponent implements OnInit, AfterViewInit {
                 return (this.account?.accountBank?.accName !== this.accountForm?.value?.accName
                     || this.account?.accountBank?.bankName !== this.accountForm?.value?.bankName
                     || this.account?.accountBank?.accNo !== this.accountForm?.value?.accNo
-                    || this.account?.accountBank?.bankBranch !== this.accountForm?.value?.bankBranch)
+                    // || this.account?.accountBank?.bankBranch !== this.accountForm?.value?.bankBranch
+                )
                     && this.accountForm?.value?.accName
                     && this.accountForm?.value?.bankName
                     && this.accountForm?.value?.accNo
-                    && this.accountForm?.value?.bankBranch
+                    // && this.accountForm?.value?.bankBranch
                     && this.accountForm?.value?.accName;
             default:
                 return false;
@@ -91,7 +93,7 @@ export class AccountManagerComponent implements OnInit, AfterViewInit {
         }
         const confirmDialog = this._dialogService.openConfirmDialog('Đây là thông tin tài khoản nhận tiền của bạn. Hãy bảo đảm thông tin đăng ký là chính xác !');
         confirmDialog.afterClosed().subscribe((res) => {
-            if ( res === 'confirmed' ) {
+            if (res === 'confirmed') {
                 this.accountForm.disable();
                 const payload = {
                     payload: {
@@ -115,7 +117,7 @@ export class AccountManagerComponent implements OnInit, AfterViewInit {
                                     otpType: 'UPDATE_ACCOUNT_BANK',
                                 },
                                 title: 'Điền mã xác nhận OTP',
-                                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. ' +
+                                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                     'Vui lòng kiểm tra và điền vào mã xác nhận!',
                                 complete: () => {
                                     dialogRef.close();
@@ -157,43 +159,28 @@ export class AccountManagerComponent implements OnInit, AfterViewInit {
         this.accountForm.controls['bankName'].setValue(bankSelect[0].categoriesName);
     }
 
+    private openDialog<T>(component: ComponentType<T>, config?: MatDialogConfig): void {
+        const dialogConfig: MatDialogConfig = {
+            autoFocus: true,
+            disableClose: true,
+            width: '450px',
+            ...config
+        };
+
+        this._matDialog.open(component, dialogConfig);
+    }
     public changePassword(): void {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.autoFocus = true;
-        dialogConfig.disableClose = true;
-        let dialog;
-        setTimeout(() => {
-            dialog = this._matDialog.open(ChangePasswordDialogComponent, dialogConfig);
-        }, 0);
-
+        this.openDialog(ChangePasswordDialogComponent);
     }
 
     public changeMobileNumber(): void {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.autoFocus = true;
-        dialogConfig.disableClose = true;
-        dialogConfig.data = 0;
-        let dialog;
-        setTimeout(() => {
-            dialog = this._matDialog.open(ChangeMobileDialogComponent, dialogConfig);
-        }, 0);
-
+        this.openDialog(ChangeMobileDialogComponent, { data: 0 });
     }
 
     public changeEmail(): void {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.autoFocus = true;
-        dialogConfig.disableClose = true;
-        dialogConfig.data = 0;
-        let dialog;
-        setTimeout(() => {
-            dialog = this._matDialog.open(ChangeEmailDialogComponent, dialogConfig);
-        }, 0);
-
+        this.openDialog(ChangeEmailDialogComponent, { data: 0 });
     }
+
 
     private initForm(data?: AccountModel): void {
         this.accountForm = this._formBuilder.group({
@@ -204,7 +191,7 @@ export class AccountManagerComponent implements OnInit, AfterViewInit {
             accEmail: new FormControl(data ? data.accountDetail.email : null, [Validators.required]),
             accPhoneNumber: new FormControl(data ? data.accountDetail.mobile : null, [Validators.required]),
             admAccountId: new FormControl(data ? data.accountBank.admAccountId : null),
-            bankBranch: new FormControl(data ? data.accountBank.bankBranch : null, [Validators.required]),
+            bankBranch: new FormControl(data ? data.accountBank.bankBranch : null),
             bankId: new FormControl(data ? data.accountBank.bankId : null),
             bankName: new FormControl(data ? data.accountBank.bankName : null, [Validators.required]),
             fsAccountBankId: new FormControl(data ? data.accountBank.fsAccountBankId : null),

@@ -182,7 +182,7 @@ export class RoleManagementComponent implements OnInit {
                     config: [
                         new InputSearch('groupRoleName', 'Tên nhóm quyền', null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Hoạt động', value: ADM_GROUP_ROLE_STATUS.ACTIVE},
                             {label: 'Không hoạt động', value: ADM_GROUP_ROLE_STATUS.DEACTIVE}
                         ], null),

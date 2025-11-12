@@ -1,40 +1,24 @@
-<mat-drawer-container
-    class="flex-auto h-full bg-card dark:bg-transparent">
+<mat-drawer-container class="flex-auto h-full bg-white">
     <!-- Sidebar drawer -->
-    <mat-drawer
-        class="w-80"
-        [mode]="'side'"
-        [opened]="true"
-        [position]="'start'"
-        [disableClose]="true"
-        #sidebarDrawer>
-        <fuse-card class="flex m-3 flex-col max-w-70 w-full p-6 filter-info text-white" style="background: linear-gradient(106.46deg, #2854F2 18.36%, #394EE4 27.43%, #6641C1 42.73%, #BA219D 65.37%, #FF6C0E 92.94%);">
-            <div class="flex justify-between">
-                <div class="text-2xl font-semibold leading-tight">Số dư khả dụng(VNĐ)</div>
+    <mat-drawer class="w-80" [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" [position]="'start'"
+        [disableClose]="!isMobile" #sidebarDrawer>
+        <div class="m-3">
+            <div *ngIf="!isMobile">
+                <app-balance-card [amount]="wControlEuDTO?.weu" label="Số dư khả dụng (VND)">
+                </app-balance-card>
             </div>
-            <div class="mt-3 text-3xl"><strong>{{wControlEuDTO?.weu | currencyFormatPipe : 10}}</strong></div>
-            <div class="mt-3 text-1xl">{{ fullName }}</div>
-<!--            <div class="mt-3 text-1xl">{{wControlEuDTO?.waccountName}}</div>-->
-<!--            <div class="flex justify-end pt-2 text-2xl ">-->
-<!--                <button-->
-<!--                    mat-button-->
-<!--                    class="text-2xl"-->
-<!--                    (click)="oepnTopupDialog()">-->
-<!--                    <mat-icon class="cursor-pointer text-white icon-size-10"-->
-<!--                              svgIcon="add_to_photos"></mat-icon>-->
-<!--                    <span>Nạp tiền</span>-->
-<!--                </button>-->
-<!--            </div>-->
-        </fuse-card>
-        <fuse-vertical-navigation
-            [appearance]="'default'"
-            [navigation]="menuData"
-            [inner]="true"
-            [mode]="'side'"
-            [name]="'sidebar-navigation'"
-            [opened]="true"></fuse-vertical-navigation>
+        </div>
+        <fuse-vertical-navigation [appearance]="'default'" [navigation]="menuData" [inner]="true" [mode]="'side'"
+            [name]="'sidebar-navigation'" [opened]="true"></fuse-vertical-navigation>
     </mat-drawer>
     <mat-drawer-content class="flex flex-col">
+        <button *ngIf="isMobile" mat-icon-button (click)="sidebarDrawer.toggle()" class="ml-4 mt-4">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <div class="px-6" *ngIf="isMobile">
+            <app-balance-card [amount]="wControlEuDTO?.weu" label="Số dư khả dụng (VND)">
+            </app-balance-card>
+        </div>
         <router-outlet></router-outlet>
     </mat-drawer-content>
 </mat-drawer-container>

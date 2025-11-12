@@ -32,8 +32,8 @@ export class TransferMoneyProcessComponent implements OnInit {
         { id: 2, label: 'Phí quản lý tài khoản' },
         { id: 3, label: 'Phí giao dịch chuyển nhượng' },
         { id: 4, label: 'Phí kết nối đầu tư' },
-        { id: 5, label: 'Phí giao dịch nạp tiền' },
-        { id: 6, label: 'Phí giao dịch rút tiền' },
+        // { id: 5, label: 'Phí giao dịch nạp tiền' },
+        // { id: 6, label: 'Phí giao dịch rút tiền' },
         { id: 7, label: 'Thuế thu nhập cá nhân' },
         { id: 8, label: 'Lãi quá hạn' },
     ];
@@ -223,7 +223,7 @@ export class TransferMoneyProcessComponent implements OnInit {
                     config: [
                         new InputSearch('transCode', 'Mã yêu cầu', null, false),
                         new DropListSearch('status', 'Trạng thái', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Soạn thảo', value: 1},
                             {label: 'Chờ xử lý', value: 2},
                             {label: 'Phê duyệt', value: 3},

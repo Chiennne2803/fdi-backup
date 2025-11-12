@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FuseNavigationItem} from '../../../../@fuse/components/navigation';
 import {MatDrawer} from '@angular/material/sidenav';
 import {RechargeTransactionService} from '../../../service/admin/recharge-transaction.service';
@@ -13,6 +13,7 @@ export class DisbursementManagementComponent
 {
     menuData: FuseNavigationItem[];
     @ViewChild('detailDrawer', { static: true }) detailDrawer: MatDrawer;
+    isMobile = false;
 
     /**
      * Constructor
@@ -20,6 +21,7 @@ export class DisbursementManagementComponent
     constructor(
         private _rechargeTransactionService: RechargeTransactionService,
     ) {
+        this.checkScreenSize();
         this.menuData = [
             {
                 title   : 'Xử lý giao dịch giải ngân',
@@ -44,6 +46,15 @@ export class DisbursementManagementComponent
                 ]
             },
         ];
+    }
+
+    @HostListener('window:resize', [])
+    onResize() {
+        this.checkScreenSize();
+    }
+
+    private checkScreenSize() {
+        this.isMobile = window.innerWidth < 1024; // < 1024px thì coi là mobile/tablet
     }
 
     // ngOnInit(): void {

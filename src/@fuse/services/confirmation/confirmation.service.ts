@@ -19,7 +19,7 @@ export class FuseConfirmationService
             confirm: {
                 show : true,
                 label: 'Confirm',
-                color: 'warn'
+                color: 'primary'
             },
             cancel : {
                 show : true,
@@ -28,6 +28,8 @@ export class FuseConfirmationService
         },
         dismissible: false
     };
+
+        // return this._confirmService.open(config);
 
     /**
      * Constructor

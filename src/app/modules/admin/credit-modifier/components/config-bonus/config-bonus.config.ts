@@ -12,7 +12,7 @@ export const TABLE_BONUS_CONFIG: ITableConfig = {
         new CheckboxColumn(),
         new TextColumn('transTypeName', ' Giao dịch hưởng hoa hồng', 20, true),
         new TextColumn('calcMethodName', 'Hình thức tính hoa hồng', 20, false),
-        new TextColumn('amount', ' Số tiền (VNĐ)', 15, false, 3),
+        new TextColumn('amount', ' Số tiền (VND)', 15, false, 3),
         new TextColumn('bonusRate', ' Tỉ lệ hoa hồng (%)', 20, false),
         new TextColumn('conditionsByName', ' Điều kiện áp dụng', 20, false),
         new TextColumn('dateBonusRange', ' Khoảng thời gian tính hoa hồng', 20, false),

@@ -13,6 +13,7 @@ import {MatTableDataSource} from "@angular/material/table";
 @Component({
     selector: 'profile-investment-detail',
     templateUrl: './detail-profile.component.html',
+    styleUrls: ['./detail-profile.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class DetailProfileComponent implements OnInit, AfterViewInit {

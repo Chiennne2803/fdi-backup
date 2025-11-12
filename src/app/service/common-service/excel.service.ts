@@ -9,7 +9,7 @@ import * as FileSaver from 'file-saver';
     providedIn: 'root'
 })
 export class ExcelService  {
-    private fileType: string = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    private fileType: string = 'application/VND.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     private fileExtension: string = '.xlsx';
     private cellName: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 

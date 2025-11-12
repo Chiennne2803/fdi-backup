@@ -41,8 +41,8 @@ export class LoanDetailComponent implements OnInit, OnDestroy {
     public legal_documents_config: any[];
     public legal_documents_lst: string[] = [
         'Giấy chứng nhận đăng ký kinh doanh (bản thay đổi gần nhất)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
-        'CCCD/Hộ Chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất (mặt trước)',
+        'CCCD/Hộ chiếu của Đại diện pháp luật và các cổ đông lớn nhất  ( mặt sau)',
         'Đăng ký mẫu dấu, chứng chỉ ngành nghề hoặc giấy chứng nhận đủ điều kiện kinh doanh',
         'Quyết định bổ nhiệm kế toán trưởng',
         'Điều lệ công ty',

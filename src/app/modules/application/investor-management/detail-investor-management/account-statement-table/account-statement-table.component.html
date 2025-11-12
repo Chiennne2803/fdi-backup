@@ -1,36 +1,26 @@
-<div
-    @fadeOutTop
-    @slideInTop
-    class="mb-5"
-    *ngIf="checkDisplayBtnExport">
+<div @fadeOutTop @slideInTop class="mb-5" *ngIf="checkDisplayBtnExport">
     <button mat-flat-button color="primary" (click)="onExportTrans()">
         <mat-icon class="mr-2">check</mat-icon>
         Export
     </button>
 </div>
 <table mat-table [dataSource]="dataSource" class="w-full">
-    <ng-container matColumnDef="select" >
-        <th class="bg-gray-100" style="width: 15px !important;" mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-                (change)="$event ? masterToggle() : null"
+    <ng-container matColumnDef="select">
+        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
                 [checked]="selectionTransactionHistory.hasValue() && isAllSelected()"
-                [indeterminate]="selectionTransactionHistory.hasValue() && !isAllSelected()"
-                color="primary"
-            >
+                [indeterminate]="selectionTransactionHistory.hasValue() && !isAllSelected()" color="primary">
             </mat-checkbox>
         </th>
-        <td mat-cell style="width: 15px !important;"  *matCellDef="let row">
-            <mat-checkbox
-                (click)="$event.stopPropagation()"
+        <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
                 (change)="$event ? selectionTransactionHistory.toggle(row) : null"
-                [checked]="selectionTransactionHistory.isSelected(row)"
-                color="primary"
-            >
+                [checked]="selectionTransactionHistory.isSelected(row)" color="primary">
             </mat-checkbox>
         </td>
     </ng-container>
     <ng-container matColumnDef="transDate">
-        <th mat-header-cell *matHeaderCellDef>
+        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
             <div class="cell-overflow table-header">
                 Thời gian giao dịch
             </div>
@@ -42,19 +32,27 @@
         </td>
     </ng-container>
     <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef>
+        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
             <div class="cell-overflow table-header">
-                Số tiền giao dịch (VNĐ)
+                Số tiền giao dịch(VND)
             </div>
         </th>
         <td mat-cell *matCellDef="let element">
             <div class="cell-overflow">
-                {{ element.amount | currencyFormatPipe : 10 }}
+                <span class="font-semibold" [ngClass]="{
+                    'text-[#16a34a]': element.newAmount > element.oldAmount,
+                    'text-[#ef4444]': element.newAmount < element.oldAmount,
+                    'text-gray-500': element.newAmount === element.oldAmount
+                }">
+                    {{ element.newAmount > element.oldAmount ? '+' : element.newAmount < element.oldAmount ? '-' : '' }}
+                        {{ (element.amount ?? element.newAmount) | currencyFormatPipe:10 }} </span>
+
+                        <!-- {{ element.amount | currencyFormatPipe : 10 }} -->
             </div>
         </td>
     </ng-container>
     <ng-container matColumnDef="transTypeName">
-        <th mat-header-cell *matHeaderCellDef>
+        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
             <div class="cell-overflow table-header">
                 Loại giao dịch
             </div>
@@ -66,7 +64,7 @@
         </td>
     </ng-container>
     <ng-container matColumnDef="fsLoanProfilesId">
-        <th mat-header-cell *matHeaderCellDef>
+        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
             <div class="cell-overflow table-header">
                 Số hồ sơ
             </div>
@@ -78,7 +76,7 @@
         </td>
     </ng-container>
     <ng-container matColumnDef="transCode">
-        <th mat-header-cell *matHeaderCellDef>
+        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
             <div class="cell-overflow table-header">
                 Mã giao dịch
             </div>
@@ -90,9 +88,9 @@
         </td>
     </ng-container>
     <ng-container matColumnDef="newAmount">
-        <th mat-header-cell *matHeaderCellDef>
+        <th class="bg-primary-grayNeutral-5" mat-header-cell *matHeaderCellDef>
             <div class="cell-overflow table-header">
-                Số dư khả dụng tại thời điểm (VNĐ)
+                Số dư khả dụng tại thời điểm(VND)
             </div>
         </th>
         <td mat-cell *matCellDef="let element">
@@ -101,8 +99,7 @@
             </div>
         </td>
     </ng-container>
-    <tr mat-header-row
-        *matHeaderRowDef="[
+    <tr mat-header-row *matHeaderRowDef="[
                                             'select',
                                             'transDate',
                                             'amount',
@@ -111,8 +108,7 @@
                                             'transCode',
                                             'newAmount',
                                              ]"></tr>
-    <tr mat-row
-        *matRowDef="let row; columns: [
+    <tr mat-row *matRowDef="let row; columns: [
                                             'select',
                                             'transDate',
                                             'amount',
@@ -120,12 +116,8 @@
                                             'fsLoanProfilesId',
                                             'transCode',
                                             'newAmount',
-                                                ];"
-        class="hover:bg-accent-50 hover:cursor-pointer"></tr>
+                                                ];" class="hover:bg-accent-50 hover:cursor-pointer"></tr>
 </table>
-<mat-paginator #transHistoryPaginator
-               [pageSizeOptions]="pageSizeOptions"
-               [length]="dataSource?.data?.length"
-               [pageSize]="transHistoryPageSize"
-               [showFirstLastButtons]="true">
+<mat-paginator #transHistoryPaginator [pageSizeOptions]="pageSizeOptions" [length]="dataSource?.data?.length"
+    [pageSize]="transHistoryPageSize" [showFirstLastButtons]="true">
 </mat-paginator>

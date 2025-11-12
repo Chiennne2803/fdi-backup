@@ -10,6 +10,7 @@ import {forEach} from "lodash-es";
 })
 export class FuseAlertService {
     public _notify: BehaviorSubject<Array<AlertDTO>> = new BehaviorSubject(null);
+    public _notifyAuth: BehaviorSubject<Array<AlertDTO>> = new BehaviorSubject(null);
     public arrNotify: Array<AlertDTO> = [];
     private readonly _onDismiss: ReplaySubject<string> = new ReplaySubject<string>(1);
     private readonly _onShow: ReplaySubject<string> = new ReplaySubject<string>(1);
@@ -28,6 +29,11 @@ export class FuseAlertService {
     get lstNotify(): Observable<any> {
         return this._notify.asObservable();
     }
+    get lstNotifyAuth(): Observable<any> {
+        return this._notifyAuth.asObservable();
+    }
+
+    
 
     /**
      * Getter for onDismiss
@@ -80,6 +86,7 @@ export class FuseAlertService {
 
     showMessageSuccess(message: string, timeout?: number): void {
         // Return if the name is not provided
+        console.log(message)
         if (!message) {
             return;
         }
@@ -92,6 +99,32 @@ export class FuseAlertService {
         this.pushAlert(alertObj, timeout);
     }
 
+    showMessageSuccessAuth(message: string, timeout?: number): void {
+        // Return if the name is not provided
+        if (!message) {
+            return;
+        }
+        const alertObj = new AlertDTO({
+            idMessage: this._fuseUtilsService.randomId() + new Date().getTime(),
+            name: 'messageSuccessAuth',
+            message: message,
+            type: 'success'
+        });
+        this.pushAlertAth(alertObj, timeout);
+    }
+    showMessageErrorAuth(message: string, timeout?: number): void {
+        // Return if the name is not provided
+        if (!message) {
+            return;
+        }
+        const alertObj = new AlertDTO({
+            idMessage: this._fuseUtilsService.randomId() + new Date().getTime(),
+            name: 'messageErrorAuth',
+            message: message,
+            type: 'error'
+        });
+        this.pushAlertAth(alertObj, timeout);
+    }
     showMessageError(message: string, timeout?: number): void {
         // Return if the name is not provided
         if (!message) {
@@ -99,7 +132,7 @@ export class FuseAlertService {
         }
         const alertObj = new AlertDTO({
             idMessage: this._fuseUtilsService.randomId() + new Date().getTime(),
-            name: 'messageSuccess',
+            name: 'messageError',
             message: message,
             type: 'error'
         });
@@ -121,6 +154,32 @@ export class FuseAlertService {
         this.pushAlert(alertObj, timeout);
     }
 
+    private pushAlertAth(alertObj: AlertDTO, timeout?: number): void {
+        let checkDuplicateMsg = false;
+        if (this.arrNotify != undefined && this.arrNotify.length > 0) {
+            this.arrNotify.forEach((alt) => {
+                if (alt.message === alertObj.message) {
+                    checkDuplicateMsg = true;
+                    return;
+                }
+            });
+        }
+        if (checkDuplicateMsg) {
+            return;
+        }
+        this.arrNotify.push(alertObj);
+        this._notifyAuth.next(this.arrNotify);
+        // Execute the observable
+        this._onShow.next(alertObj.idMessage);
+        setTimeout(() => {
+            this.dismiss(alertObj.idMessage);
+
+            const index: number = this.arrNotify.indexOf(alertObj);
+            if (index !== -1) {
+                this.arrNotify.splice(index, 1);
+            }
+        }, timeout ?? 3000);
+    }
     private pushAlert(alertObj: AlertDTO, timeout?: number): void {
         let checkDuplicateMsg = false;
         if (this.arrNotify != undefined && this.arrNotify.length > 0) {
@@ -145,7 +204,7 @@ export class FuseAlertService {
             if (index !== -1) {
                 this.arrNotify.splice(index, 1);
             }
-        }, timeout ?? 5000);
+        }, timeout ?? 3000);
     }
 
 }

@@ -133,7 +133,7 @@ export class DebitManagementComponent implements OnInit {
                         new InputSearch('fullName', 'Bên huy động vốn', null, false),
                         new DropListSearch('lstLoanTimeCycle', 'Kỳ hạn(ngày)', this._dataTenor, null, true),
                         new DropListSearch('isOverdueDeb', 'Hồ sơ quá hạn', [
-                            {label: 'Tẩt cả', value: null},
+                            {label: 'Tẩt cả', value: ''},
                             {label: 'Có nợ', value: 1},
                             {label: 'Không nợ', value: 2},], null, false),
                     ]

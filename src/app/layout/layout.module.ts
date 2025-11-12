@@ -14,6 +14,7 @@ import { CompactLayoutModule } from 'app/layout/layouts/vertical/compact/compact
 import { SettingsModule } from 'app/layout/common/settings/settings.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { AuthLayoutModule } from 'app/layout/layouts/auth/auth.module';
+import { FuseAlertModule } from "@fuse/components/alert";
 
 const layoutModules = [
     // Empty
@@ -41,11 +42,12 @@ const layoutModules = [
     declarations: [
         LayoutComponent,
     ],
-    imports     : [
-        SharedModule,
-        SettingsModule,
-        ...layoutModules
-    ],
+    imports: [
+    SharedModule,
+    SettingsModule,
+    ...layoutModules,
+    FuseAlertModule
+],
     exports     : [
         LayoutComponent,
         ...layoutModules

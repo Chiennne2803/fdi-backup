@@ -27,7 +27,7 @@ export class OverdueInterestDialogComponent implements OnInit {
             new TextColumn('fsLoanProfilesId', 'Hồ sơ huy động vốn', 10),
             new TextColumn('admAccountIdPresenterName', 'Khách hàng', 10),
             new TextColumn('transactionCode', 'Yêu cầu thanh toán khoản vay', 10),
-            new TextColumn('amount', 'Phí giao dịch (VNĐ)', 10, false, 3),
+            new TextColumn('amount', 'Phí giao dịch (VND)', 10, false, 3),
         ],
         isViewDetail: false
     };

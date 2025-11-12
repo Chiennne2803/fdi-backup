@@ -64,7 +64,7 @@ export class WaitingWithdrawComponent implements OnInit {
         this._withdrawCashManagerService.setDrawer(this.detailDrawer);
         this._withdrawCashManagerService.getPrepareLoadingPage().subscribe((res: BaseResponse) => {
             if (res.payload.lstBank != undefined && res.payload.lstBank.length > 0) {
-                this.lstBank.push({label: 'Tẩt cả', value: null});
+                this.lstBank.push({label: 'Tẩt cả', value: ''});
                 res.payload.lstBank.forEach(admCategoriesDTO => {
                     this.lstBank.push({
                         label: admCategoriesDTO.categoriesName,
@@ -117,7 +117,7 @@ export class WaitingWithdrawComponent implements OnInit {
 
     private openDialogApprove(withdrawCashDTOS: FsTransWithdrawCashDTO[]): void {
         const dialogRef = this._dialog.open(ConfirmProcessingComponent, {
-            width: '450px',
+            // width: '450px',
             data: {
                 title: 'Xác nhận nội dung xử lý?',
                 valueDefault: 1,
@@ -165,7 +165,7 @@ export class WaitingWithdrawComponent implements OnInit {
                 searchConfig: {
                     config: [
                         new InputSearch('transCode', 'Mã giao dịch', null, false),
-                        new InputSearch('amount', 'Số tiền rút (VNĐ)', null, false, 'number'),
+                        new InputSearch('amount', 'Số tiền rút (VND)', null, false, 'number'),
                         new InputSearch('accNo', 'Số tài khoản', null, false),
                         new InputSearch('accName', 'Người thụ hưởng', null, false),
                         new DropListSearch('bankName', 'Tên ngân hàng', this.lstBank, null, false),

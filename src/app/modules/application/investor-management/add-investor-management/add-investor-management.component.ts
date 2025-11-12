@@ -13,12 +13,13 @@ import CryptoJS from 'crypto-js';
 import {environment} from '../../../../../environments/environment';
 import {FormGroup} from '@angular/forms';
 import {FuseAlertService} from '../../../../../@fuse/components/alert';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'app-add-investor-management',
     templateUrl: './add-investor-management.component.html',
     styleUrls: ['./add-investor-management.component.scss'],
-    providers: [DateTimeformatPipe]
+    providers: [DateTimeformatPipe, CdkScrollable]
 })
 export class AddInvestorManagementComponent implements OnInit {
     @ViewChild(PersonalInvestorComponent) personal: PersonalInvestorComponent;
@@ -92,7 +93,7 @@ export class AddInvestorManagementComponent implements OnInit {
                     otpType: "ACCOUNT_INVESTOR_REQUEST",
                 },
                 title: 'Điền mã xác nhận OTP',
-                content: 'Hệ thống đã gửi mã OTP xác thực vào số điện thoại bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
+                content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. Vui lòng kiểm tra và điền vào mã xác nhận để hoàn tất!',
                 complete: () => {
                     dialogRef.close();
                     const dialogEmailRef = this._dialog.open(OtpSmsConfirmComponent, {
@@ -105,7 +106,7 @@ export class AddInvestorManagementComponent implements OnInit {
                             content: 'Hệ thống đã gửi mã OTP xác thực vào email bạn đã đăng ký. ' +
                                 'Vui lòng kiểm tra và điền vào mã xác nhận!',
                             type: 'Email',
-                            resendTime: 300,
+                            resendTime: 180,
                             complete: () => {
                                 this._fuseAlertService.showMessageSuccess('Tạo mới nhà đầu tư thành công');
                                 this.back();

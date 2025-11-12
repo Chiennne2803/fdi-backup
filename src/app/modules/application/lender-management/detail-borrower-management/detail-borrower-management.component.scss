@@ -1,0 +1,24 @@
+::ng-deep .mat-tab-body-content {
+  padding: 24px 0 !important;
+}
+
+::ng-deep .mat-tab-group .mat-tab-header .mat-tab-label-container{
+    padding: 0 !important;
+ 
+}
+// ::ng-deep .mat-tab-header{
+//   border-bottom: none !important;
+// }
+::ng-deep .custom-tab-group .mat-tab-header {
+  overflow-x: auto;        /* Cho phép scroll ngang */
+  overflow-y: hidden;
+  scrollbar-width: thin;   /* Firefox */
+}
+
+::ng-deep .custom-tab-group .mat-tab-list {
+  flex-wrap: nowrap !important; /* Không xuống dòng */
+}
+
+::ng-deep .custom-tab-group .mat-tab-labels {
+  flex-wrap: nowrap !important;
+}

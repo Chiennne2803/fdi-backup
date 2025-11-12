@@ -38,7 +38,7 @@ export class DetailWithdrawComponent {
 
     public openDialog(): void {
         const dialogRef = this.matDialog.open(ConfirmProcessingComponent, {
-            width: '450px',
+            // width: '450px',
             data: {
                 payload: {
                     fsTransWithdrawCashId: this.detailWithdraw.fsTransWithdrawCashId,
