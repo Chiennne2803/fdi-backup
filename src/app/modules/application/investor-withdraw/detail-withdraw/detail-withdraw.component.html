@@ -1,119 +1,154 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-scroll">
 
-    <div class="flex items-center justify-between w-full mx-auto px-5 pt-3 pb-2">
-        <article class="prose break-words">
-
-        <h3 class="flex flex-col sm:flex-row items-center justify-start gap-3">
-            <span [matTooltip]="'Đóng'" (click)="closeDrawer()"
-                class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer">
-                <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
-                    svgIcon="heroicons_outline:chevron-left"></mat-icon>
-                Quay lại
-            </span>
-            Thông tin chi tiết yêu cầu rút tiền
-        </h3>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full mx-auto px-3 sm:px-5 pt-3 pb-2 gap-3">
+        <article class="prose break-words w-full sm:w-auto">
+            <h3 class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-2 sm:gap-3 text-base sm:text-xl">
+                <span [matTooltip]="'Đóng'" (click)="closeDrawer()"
+                    class="text-primary-grayNeutral-1 flex items-center justify-center gap-1 text-sm cursor-pointer whitespace-nowrap">
+                    <mat-icon class="icon-size-5 text-primary-grayNeutral-1"
+                        svgIcon="heroicons_outline:chevron-left"></mat-icon>
+                    Quay lại
+                </span>
+                <span class="text-sm sm:text-base">Thông tin chi tiết yêu cầu rút tiền</span>
+            </h3>
         </article>
 
-        <!-- <div class=""> -->
-            <!-- <button class="ml-auto sm:ml-0"
-                    mat-stroked-button
-                    (click)="closeDrawer()">
-                    Đóng
-            </button> -->
-            <!-- Submit -->
-            <button class="order-first sm:order-last ml-2" @fadeInRight
-                *ngIf="this.detailWithdraw && this.detailWithdraw.status === 0 && ('SFF_WITHDRAW_CASH_TRANSACTION_APPROVE' | permission)"
+        <!-- Submit Button - Desktop only -->
+        <button class="hidden sm:block ml-2" @fadeInRight
+            *ngIf="this.detailWithdraw && this.detailWithdraw.status === 0 && ('SFF_WITHDRAW_CASH_TRANSACTION_APPROVE' | permission)"
+            (click)="openDialog()" mat-flat-button [color]="'primary'">
+            Xử lý
+        </button>
+    </div>
+
+    <div class="flex flex-col flex-auto p-3 sm:p-5 pb-20 sm:pb-5">
+        <div class="border border-primary-grayLight-2 rounded-lg p-3 sm:p-4">
+            
+            <!-- Section 1: Basic Info -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Mã giao dịch:</p>
+                    <p class="font-bold text-sm sm:text-base break-all">{{ this.detailWithdraw ? this.detailWithdraw.transCode : '' }}</p>
+                </article>
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Họ và tên khách hàng:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ this.detailWithdraw ? this.detailWithdraw.admAccountIdRecipientName : '' }}</p>
+                </article>
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Số CCCD/Hộ chiếu:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ this.detailWithdraw ? this.detailWithdraw.identification : '' }}</p>
+                </article>
+            </div>
+
+            <div class="h-px bg-gray-200 my-4"></div>
+
+            <!-- Section 2: Bank Info -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Tên tài khoản thụ hưởng:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ this.detailWithdraw ? this.detailWithdraw.accName : '' }}</p>
+                </article>
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Số tài khoản:</p>
+                    <p class="font-bold text-sm sm:text-base break-all">{{ this.detailWithdraw ? this.detailWithdraw.accNo : '' }}</p>
+                </article>
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Ngân hàng:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ this.detailWithdraw ? this.detailWithdraw.bankName : '' }}</p>
+                </article>
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Chi nhánh:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ this.detailWithdraw ? this.detailWithdraw.branchName : '' }}</p>
+                </article>
+            </div>
+
+            <div class="h-px bg-gray-200 my-4"></div>
+
+            <!-- Section 3: Processing Info -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Người lập yêu cầu:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ this.detailWithdraw ? this.detailWithdraw.createdByName : '' }}</p>
+                </article>
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Ngày lập:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ (this.detailWithdraw ? this.detailWithdraw.createdDate : 0) | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</p>
+                </article>
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Người xử lý:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ this.detailWithdraw ? this.detailWithdraw.approvalByName : '' }}</p>
+                </article>
+                <article class="prose break-words">
+                    <p class="text-sm sm:text-base mb-1">Ngày xử lý:</p>
+                    <p class="font-bold text-sm sm:text-base">{{ (this.detailWithdraw ? this.detailWithdraw.approvalDate : 0) | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</p>
+                </article>
+            </div>
+
+            <div class="h-px bg-gray-200 my-4"></div>
+
+            <!-- Section 4: Transaction Details - Mobile Cards / Desktop Table -->
+            <div class="grid grid-cols-1">
+                <!-- Mobile View: Card Layout -->
+                <div class="block lg:hidden space-y-3">
+                    <div class="border rounded-lg p-4 bg-white shadow-sm">
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Số tiền cần rút (VND)</p>
+                                <p class="font-bold text-lg text-gray-900">{{ (this.detailWithdraw ? this.detailWithdraw.amount : 0) | currencyFormatPipe: 10 }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Phí giao dịch rút tiền (VND)</p>
+                                <p class="font-bold text-base text-gray-900">{{ (this.detailWithdraw ? this.detailWithdraw.fee : 0) | currencyFormatPipe: 10 }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Nội dung giao dịch</p>
+                                <p class="font-medium text-sm text-gray-900 break-words">{{ this.detailWithdraw ? this.detailWithdraw.info : '' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Trạng thái</p>
+                                <p class="font-medium text-sm text-gray-900">{{ this.detailWithdraw ? this.detailWithdraw.statusName : '' }}</p>
+                            </div>
+                            <div *ngIf="(this.detailWithdraw ? this.detailWithdraw.status : 0) === 2">
+                                <p class="text-xs text-gray-500 mb-1">Ghi chú</p>
+                                <p class="font-medium text-sm text-gray-900 break-words">{{ this.detailWithdraw ? this.detailWithdraw.approvalComment : '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop View: Table Layout -->
+                <div class="hidden lg:block overflow-x-auto">
+                    <table class="min-w-full text-left text-sm font-light border rounded-xl">
+                        <thead class="border-b bg-neutral-50 font-medium">
+                            <tr>
+                                <th scope="col" class="px-6 py-4">Số tiền cần rút (VND)</th>
+                                <th scope="col" class="px-6 py-4">Phí giao dịch rút tiền (VND)</th>
+                                <th scope="col" class="px-6 py-4">Nội dung giao dịch</th>
+                                <th scope="col" class="px-6 py-4">Trạng thái</th>
+                                <th *ngIf="(this.detailWithdraw ? this.detailWithdraw.status : 0) === 2" scope="col" class="px-6 py-4">Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 uppercase my-2">
+                            <tr class="border-b dark:border-neutral-500 font-bold text-lg uppercase">
+                                <td class="px-6 py-4 font-medium">{{ (this.detailWithdraw ? this.detailWithdraw.amount : 0) | currencyFormatPipe: 10 }}</td>
+                                <td class="px-6 py-4">{{ (this.detailWithdraw ? this.detailWithdraw.fee : 0) | currencyFormatPipe: 10 }}</td>
+                                <td class="px-6 py-4 font-medium">{{ this.detailWithdraw ? this.detailWithdraw.info : '' }}</td>
+                                <td class="px-6 py-4 font-medium">{{ this.detailWithdraw ? this.detailWithdraw.statusName : '' }}</td>
+                                <td class="px-6 py-4 font-medium" *ngIf="(this.detailWithdraw ? this.detailWithdraw.status : 0) === 2">{{ this.detailWithdraw ? this.detailWithdraw.approvalComment : '' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button - Mobile only (Fixed at bottom) -->
+        <div class="block sm:hidden fixed bottom-0 left-0 right-0 p-3 bg-white border-t shadow-lg z-10"
+            *ngIf="this.detailWithdraw && this.detailWithdraw.status === 0 && ('SFF_WITHDRAW_CASH_TRANSACTION_APPROVE' | permission)">
+            <button class="w-full" @fadeInRight
                 (click)="openDialog()" mat-flat-button [color]="'primary'">
                 Xử lý
             </button>
-        <!-- </div> -->
-    </div>
-    <div class="flex flex-col flex-auto p-5">
-        <div class="border border-primary-grayLight-2 rounded-lg p-4">
-            <div class="grid grid-cols-4 gap-4">
-                <article class="prose break-words">
-                    <p>Mã giao dịch: <br> <b>{{ this.detailWithdraw ? this.detailWithdraw.transCode : '' }}</b></p>
-                </article>
-                <article class="prose break-words">
-                    <p>Họ và tên khách hàng: <br> <b>{{ this.detailWithdraw ?
-                            this.detailWithdraw.admAccountIdRecipientName : ''
-                            }}</b></p>
-                </article>
-                <article class="prose break-words">
-                    <p>Số CCCD/Hộ chiếu : <br> <b>{{ this.detailWithdraw ? this.detailWithdraw.identification : ''
-                            }}</b></p>
-                </article>
-            </div>
-
-            <div class="grid grid-cols-4 gap-5 p-5">
-                <article class="prose break-words">
-                    <p>Tên tài khoản thụ hưởng: <br> <b>{{ this.detailWithdraw ? this.detailWithdraw.accName : '' }}</b>
-                    </p>
-                </article>
-                <article class="prose break-words">
-                    <p>Số tài khoản: <br> <b>{{ this.detailWithdraw ? this.detailWithdraw.accNo : '' }}</b></p>
-                </article>
-                <article class="prose break-words">
-                    <p>Ngân hàng: <br> <b>{{ this.detailWithdraw ? this.detailWithdraw.bankName : '' }}</b></p>
-                </article>
-                <article class="prose break-words">
-                    <p>Chi nhánh: <br> <b>{{ this.detailWithdraw ? this.detailWithdraw.branchName : '' }}</b></p>
-                </article>
-            </div>
-
-            <div class="grid grid-cols-4 gap-5 p-5">
-                <article class="prose break-words">
-                    <p>Người lập yêu cầu: <br> <b>{{ this.detailWithdraw ? this.detailWithdraw.createdByName : ''
-                            }}</b></p>
-                </article>
-                <article class="prose break-words">
-                    <p>Ngày lập: <br>
-                        <b>{{ (this.detailWithdraw ? this.detailWithdraw.createdDate : 0) | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</b>
-                    </p>
-                </article>
-                <article class="prose break-words">
-                    <p>Người xử lý: <br> <b>{{ this.detailWithdraw ? this.detailWithdraw.approvalByName : '' }}</b></p>
-                </article>
-                <article class="prose break-words">
-                    <p>Ngày xử lý: <br>
-                        <b>{{ (this.detailWithdraw ? this.detailWithdraw.approvalDate : 0) | datetimeformat : 'DD/MM/YYYY HH:mm:ss' }}</b>
-                    </p>
-                </article>
-            </div>
-
-            <div class="grid grid-cols-1">
-                <table class="min-w-full text-left text-sm font-light border rounded-xl">
-                    <thead class="border-b bg-neutral-50 font-medium">
-                        <tr>
-                            <th scope="col" class="px-6 py-4">Số tiền cần rút (VND)</th>
-                            <th scope="col" class="px-6 py-4">Phí giao dịch rút tiền (VND)</th>
-                            <th scope="col" class="px-6 py-4">Nội dung giao dịch</th>
-                            <th scope="col" class="px-6 py-4">Trạng thái </th>
-                            <th *ngIf="(this.detailWithdraw ? this.detailWithdraw.status : 0) === 2" scope="col"
-                                class="px-6 py-4">Ghi chú </th>
-                        </tr>
-                    </thead>
-                    <tbody class=" text-gray-700 uppercase my-2 ">
-                        <tr class="border-b dark:border-neutral-500 font-bold text-lg uppercase">
-                            <td class=" px-6 py-4 font-medium">{{ (this.detailWithdraw ? this.detailWithdraw.amount : 0)
-                                |
-                                currencyFormatPipe: 10 }}</td>
-                            <td class=" px-6 py-4">{{ (this.detailWithdraw ? this.detailWithdraw.fee : 0) |
-                                currencyFormatPipe:
-                                10 }}</td>
-                            <td class=" px-6 py-4 font-medium">{{ this.detailWithdraw ? this.detailWithdraw.info : '' }}
-                            </td>
-                            <td class=" px-6 py-4 font-medium">{{ this.detailWithdraw ? this.detailWithdraw.statusName :
-                                '' }}
-                            </td>
-                            <td class=" px-6 py-4 font-medium"
-                                *ngIf="(this.detailWithdraw ? this.detailWithdraw.status : 0)=== 2">{{
-                                this.detailWithdraw ?
-                                this.detailWithdraw.approvalComment : '' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 
